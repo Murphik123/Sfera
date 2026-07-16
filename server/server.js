@@ -1,35 +1,39 @@
-// ============================================================
-// СЕРВЕРНАЯ ТОЧКА ВХОДА
-// Путь: server/server.js
-// ============================================================
 require('dotenv').config();
-const app = require('./src/app');
-const http = require('http');
-const socketio = require('socket.io');
-const connectDB = require('./src/config/db');
-const redisClient = require('./src/config/redis');
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
 
+const app = express();
 const PORT = process.env.PORT || 5000;
 
-const server = http.createServer(app);
-const io = socketio(server, {
-  cors: {
-    origin: '*',
-    methods: ['GET', 'POST']
-  }
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Подключение к MongoDB (если есть URI)
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('✅ MongoDB connected'))
+    .catch(err => console.error('❌ MongoDB error:', err));
+}
+
+// Простой маршрут для проверки
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK', message: 'Server is running' });
 });
 
-// Подключение к MongoDB
-connectDB();
-
-// Подключение к Redis
-redisClient.on('connect', () => console.log('✅ Redis connected'));
-redisClient.on('error', (err) => console.error('❌ Redis error:', err));
-
-// Инициализация Socket.io (обработчики событий)
-require('./src/sockets')(io);
+// Заглушка для /api/stats (чтобы фронтенд получал данные)
+app.get('/api/stats', (req, res) => {
+  res.json({
+    online: 1842,
+    users: 2340000,
+    orders: 18540291,
+    docs: 11328901,
+    coin: 21000000
+  });
+});
 
 // Запуск сервера
-server.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
 });
