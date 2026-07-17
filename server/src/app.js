@@ -7,9 +7,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
 const { authMiddleware } = require('./middleware/auth');
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public/index.html'));
-});
 const errorHandler = require('./middleware/errorHandler');
 
 // Импорт маршрутов
@@ -21,7 +18,8 @@ const bankRoutes = require('./routes/bankRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 const statsRoutes = require('./routes/statsRoutes');
 
-const app = express(); // <-- обязательно до использования app
+// ========== ОБЪЯВЛЕНИЕ app ==========
+const app = express();
 
 // Защита заголовков
 app.use(helmet());
@@ -69,7 +67,15 @@ app.use((req, res) => {
 });
 
 // ============================================================
-// ОБРАБОТКА ОШИБОК
+// SPA FALLBACK – отдаём index.html для всех неизвестных маршрутов
+// (Должен быть ПОСЛЕ обработки 404 и ПОСЛЕ всех API-маршрутов)
+// ============================================================
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../public/index.html'));
+});
+
+// ============================================================
+// ОБРАБОТКА ОШИБОК (всегда в конце)
 // ============================================================
 app.use(errorHandler);
 
