@@ -3,6 +3,10 @@ const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
 const { authMiddleware } = require('./middleware/auth');
+// Отдача index.html для всех остальных маршрутов (SPA)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../public/index.html'));
+});
 const errorHandler = require('./middleware/errorHandler');
 
 const authRoutes = require('./routes/authRoutes');
