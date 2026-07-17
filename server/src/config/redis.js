@@ -1,21 +1,67 @@
 // ============================================================
-// ПОДКЛЮЧЕНИЕ К REDIS
+// ЗАГЛУШКА REDIS (без реального подключения)
 // Путь: server/src/config/redis.js
 // ============================================================
-const redis = require('redis');
+// Эмуляция Redis client для случаев, когда Redis не используется
+class RedisMock {
+  constructor() {
+    this.store = new Map();
+  }
 
-const client = redis.createClient({
-  url: process.env.REDIS_URL || 'redis://localhost:6379',
-});
+  async get(key) {
+    return this.store.get(key) || null;
+  }
 
-client.on('connect', () => {
-  console.log('✅ Redis connected');
-});
+  async set(key, value, mode, duration) {
+    this.store.set(key, value);
+    return 'OK';
+  }
 
-client.on('error', (err) => {
-  console.error('❌ Redis error:', err);
-});
+  async del(key) {
+    this.store.delete(key);
+    return 1;
+  }
 
-client.connect();
+  async sadd(key, value) {
+    if (!this.store.has(key)) {
+      this.store.set(key, new Set());
+    }
+    this.store.get(key).add(value);
+    return 1;
+  }
 
+  async srem(key, value) {
+    if (this.store.has(key)) {
+      this.store.get(key).delete(value);
+    }
+    return 1;
+  }
+
+  async scard(key) {
+    return this.store.has(key) ? this.store.get(key).size : 0;
+  }
+
+  async smembers(key) {
+    return this.store.has(key) ? Array.from(this.store.get(key)) : [];
+  }
+
+  on(event, callback) {
+    if (event === 'connect') {
+      // Имитируем подключение через 10 мс
+      setTimeout(callback, 10);
+    }
+    return this;
+  }
+
+  connect() {
+    console.log('⚠️ Redis mock: using in-memory storage');
+    return this;
+  }
+
+  quit() {
+    return Promise.resolve('OK');
+  }
+}
+
+const client = new RedisMock();
 module.exports = client;
