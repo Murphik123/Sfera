@@ -7,6 +7,9 @@ const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
 const { authMiddleware } = require('./middleware/auth');
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../public/index.html'));
+});
 const errorHandler = require('./middleware/errorHandler');
 
 // Импорт маршрутов
