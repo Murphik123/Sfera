@@ -11,17 +11,16 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ============================================================
-// НАСТРОЙКА CORS (разрешаем только ваш фронтенд)
+// НАСТРОЙКА CORS (разрешаем фронтенд)
 // ============================================================
 const allowedOrigins = [
   'https://sfera-ot4f.onrender.com',
-  'http://localhost:3000', // для локальной разработки (если нужно)
+  'http://localhost:3000',
   'http://localhost:5000'
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Если origin не передан (например, запрос с сервера) или разрешён – пропускаем
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -52,17 +51,17 @@ if (process.env.MONGODB_URI) {
 // МАРШРУТЫ
 // ============================================================
 
-// 1. Проверка работоспособности сервера
+// Проверка работоспособности
 app.get('/ping', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// 2. Состояние сервера (health)
+// Состояние сервера
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
 });
 
-// 3. Статистика для фронтенда (заглушка)
+// Статистика для фронтенда
 app.get('/api/stats', (req, res) => {
   res.json({
     online: 1842,
@@ -73,19 +72,19 @@ app.get('/api/stats', (req, res) => {
   });
 });
 
-// 4. Обработка OPTIONS-запросов (для CORS)
-app.options('*', cors()); // автоматически обрабатывает предварительные запросы
+// Обработка OPTIONS
+app.options('*', cors());
 
-// 5. Обработка 404 (если маршрут не найден)
+// 404
 app.use((req, res) => {
   res.status(404).json({ error: 'Not Found' });
 });
 
 // ============================================================
-// ЗАПУСК СЕРВЕРА
+// ЗАПУСК
 // ============================================================
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`   Health check: /ping`);
+  console.log(`   Health: /ping`);
   console.log(`   Stats: /api/stats`);
 });
