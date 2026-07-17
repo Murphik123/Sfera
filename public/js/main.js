@@ -6,7 +6,6 @@
 // =====================================================
 // НАСТРОЙКА API
 // =====================================================
-// Для локальной разработки можно заменить на 'http://localhost:5000'
 const API_BASE_URL = 'https://sfera-1.onrender.com';
 
 // =====================================================
@@ -222,15 +221,22 @@ function animateCounter(element, target, duration = 3000) {
 }
 
 function startCounters() {
-    animateCounter(document.getElementById('online'), statsData.online.target, 2000);
-    animateCounter(document.getElementById('users'), statsData.users.target, 4000);
-    animateCounter(document.getElementById('orders'), statsData.orders.target, 4000);
-    animateCounter(document.getElementById('docs'), statsData.docs.target, 4000);
-    animateCounter(document.getElementById('coin'), statsData.coin.target, 4000);
+    const ids = ['online', 'users', 'orders', 'docs', 'coin'];
+    const elements = ids.map(id => document.getElementById(id));
+    if (elements.some(el => el === null)) {
+        console.error('❌ Один из элементов счётчика не найден! Проверьте ID в index.html');
+        return;
+    }
+    animateCounter(elements[0], statsData.online.target, 2000);
+    animateCounter(elements[1], statsData.users.target, 4000);
+    animateCounter(elements[2], statsData.orders.target, 4000);
+    animateCounter(elements[3], statsData.docs.target, 4000);
+    animateCounter(elements[4], statsData.coin.target, 4000);
 }
 
 function updateOnline() {
     const onlineEl = document.getElementById('online');
+    if (!onlineEl) return;
     const base = statsData.online.target;
     const variation = Math.floor(Math.random() * 200 - 100);
     const newVal = Math.max(0, base + variation);
@@ -239,13 +245,16 @@ function updateOnline() {
 }
 
 // =====================================================
-// ПОЛУЧЕНИЕ СТАТИСТИКИ С БЭКЕНДА (используем полный URL)
+// ПОЛУЧЕНИЕ СТАТИСТИКИ С БЭКЕНДА (с логами)
 // =====================================================
 async function fetchStats() {
     try {
+        console.log(`🔍 Запрос к API: ${API_BASE_URL}/api/stats`);
         const res = await fetch(`${API_BASE_URL}/api/stats`);
-        if (!res.ok) throw new Error('API error');
+        console.log(`📡 Статус ответа: ${res.status}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
+        console.log('📊 Полученные данные:', data);
         statsData.online.target = data.online || 1842;
         statsData.users.target = data.users || 2340000;
         statsData.orders.target = data.orders || 18540291;
@@ -253,7 +262,8 @@ async function fetchStats() {
         statsData.coin.target = data.coin || 21000000;
         startCounters();
     } catch (e) {
-        console.log('Используем локальные данные');
+        console.error('❌ Ошибка fetchStats:', e);
+        // Всё равно запускаем счётчики с локальными данными
         startCounters();
     }
 }
@@ -263,26 +273,31 @@ async function fetchStats() {
 // =====================================================
 const hamburger = document.getElementById('hamburger');
 const nav = document.getElementById('mainNav');
-hamburger.addEventListener('click', function() {
-    this.classList.toggle('active');
-    nav.classList.toggle('active');
-});
-nav.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', function() {
+if (hamburger && nav) {
+    hamburger.addEventListener('click', function() {
+        this.classList.toggle('active');
+        nav.classList.toggle('active');
+    });
+    nav.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 1200) {
+                hamburger.classList.remove('active');
+                nav.classList.remove('active');
+            }
+        });
+    });
+}
+
+const dropdown = document.getElementById('dropdownMarketplace');
+if (dropdown) {
+    const dropdownLink = dropdown.querySelector('a'); // исправлено
+    dropdownLink.addEventListener('click', function(e) {
         if (window.innerWidth <= 1200) {
-            hamburger.classList.remove('active');
-            nav.classList.remove('active');
+            e.preventDefault();
+            dropdown.classList.toggle('open');
         }
     });
-});
-const dropdown = document.getElementById('dropdownMarketplace');
-const dropdownLink = dropdown.querySelector('> a');
-dropdownLink.addEventListener('click', function(e) {
-    if (window.innerWidth <= 1200) {
-        e.preventDefault();
-        dropdown.classList.toggle('open');
-    }
-});
+}
 
 // =====================================================
 // CANVAS (линии данных)
