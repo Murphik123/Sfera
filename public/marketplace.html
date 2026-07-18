@@ -122,7 +122,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Секции каталога */
         .section-title {
             font-size: 22px;
             font-weight: 700;
@@ -178,7 +177,7 @@
             padding: 8px;
         }
 
-        /* Корзина */
+        /* Корзина и админка */
         .cart-item {
             display: flex;
             justify-content: space-between;
@@ -268,6 +267,71 @@
         }
         .order-item .total {
             font-weight: 600;
+            color: #00d4ff;
+        }
+
+        /* Админ-панель */
+        .admin-panel {
+            margin-top: 20px;
+        }
+        .admin-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .admin-form .form-group {
+            margin-bottom: 16px;
+        }
+        .admin-form .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #dbe9ff;
+            margin-bottom: 6px;
+        }
+        .admin-form .form-group input,
+        .admin-form .form-group select,
+        .admin-form .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.15);
+            background: rgba(255,255,255,.05);
+            color: white;
+            font-size: 15px;
+            transition: .3s;
+            outline: none;
+        }
+        .admin-form .form-group input:focus,
+        .admin-form .form-group select:focus,
+        .admin-form .form-group textarea:focus {
+            border-color: #00d4ff;
+        }
+        .admin-form .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .admin-products-list {
+            margin-top: 30px;
+        }
+        .admin-products-list .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,.04);
+        }
+        .admin-products-list .product-item .info {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .admin-products-list .product-item .info .name {
+            font-weight: 500;
+        }
+        .admin-products-list .product-item .info .price {
             color: #00d4ff;
         }
 
@@ -365,13 +429,13 @@
                 <button class="active" data-tab="catalog" data-i18n="tab_catalog">Katalog</button>
                 <button data-tab="cart" data-i18n="tab_cart">Sebet (<span id="cartCount">0</span>)</button>
                 <button data-tab="profile" data-i18n="tab_profile">Şahsy kabinet</button>
+                <!-- Вкладка управления для админа -->
+                <button id="adminTab" data-tab="admin" style="display:none;" data-i18n="tab_admin">Admin</button>
             </div>
 
             <!-- Вкладка: Каталог -->
             <div class="tab-content active" id="tab-catalog">
-                <div id="catalogContent">
-                    <!-- Секции будут заполнены динамически -->
-                </div>
+                <div id="catalogContent"></div>
             </div>
 
             <!-- Вкладка: Корзина -->
@@ -397,16 +461,56 @@
                         <div class="row"><span class="label" data-i18n="username_label">Ulanyjy ady</span><span class="value" id="profileUsername">User</span></div>
                         <div class="row"><span class="label" data-i18n="email_label">Email</span><span class="value" id="profileEmail">user@example.com</span></div>
                         <div class="row"><span class="label" data-i18n="phone_label">Telefon</span><span class="value" id="profilePhone">+993 63 000000</span></div>
+                        <div class="row"><span class="label" data-i18n="role_label">Rol</span><span class="value" id="profileRole">user</span></div>
                         <div class="row"><span class="label" data-i18n="member_since">Agza bolan</span><span class="value" id="profileSince">2024</span></div>
                         <button class="btn btn-outline" style="margin-top:16px; width:100%;" data-i18n="edit_profile">Profil üýtget</button>
                     </div>
                     <div class="profile-card">
                         <h3 data-i18n="order_history">Sargyt taryhy</h3>
-                        <div id="orderHistory">
-                            <div class="empty-state" style="padding:20px 0;">
-                                <p data-i18n="no_orders">Sargyt ýok</p>
+                        <div id="orderHistory"><div class="empty-state" style="padding:20px 0;"><p data-i18n="no_orders">Sargyt ýok</p></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладка: Управление (только для админа) -->
+            <div class="tab-content" id="tab-admin">
+                <div class="admin-panel">
+                    <h3 style="font-size:22px; margin-bottom:20px;">Administrator panel – Haryt dolandyryş</h3>
+                    <div class="admin-form">
+                        <form id="adminProductForm">
+                            <div class="form-group">
+                                <label for="adminSection" data-i18n="section">Bölüm</label>
+                                <select id="adminSection" required>
+                                    <option value="food" data-i18n="section_food">Iýmit önümleri</option>
+                                    <option value="consumer" data-i18n="section_consumer">Önümçilik harytlary</option>
+                                    <option value="electronics" data-i18n="section_electronics">Elektronika</option>
+                                    <option value="agriculture" data-i18n="section_agriculture">Oba hojalyk harytlary</option>
+                                </select>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label for="adminName" data-i18n="product_name">Harydyň ady</label>
+                                <input type="text" id="adminName" required placeholder="Mysal: Telefon" />
+                            </div>
+                            <div class="form-group">
+                                <label for="adminPrice" data-i18n="product_price">Bahasy (TMT)</label>
+                                <input type="number" id="adminPrice" step="0.01" min="0.01" required placeholder="100" />
+                            </div>
+                            <div class="form-group">
+                                <label for="adminImage" data-i18n="product_image">Emoji (islege görä)</label>
+                                <input type="text" id="adminImage" placeholder="📱" value="📦" />
+                            </div>
+                            <div class="form-group">
+                                <label for="adminSeller" data-i18n="seller_name">Satyjy</label>
+                                <input type="text" id="adminSeller" required placeholder="Satyjy ady" />
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary" data-i18n="add_product">Haryt goş</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="admin-products-list">
+                        <h4 style="margin-bottom:16px;">Ähli harytlar</h4>
+                        <div id="adminProductsList"></div>
                     </div>
                 </div>
             </div>
@@ -425,6 +529,10 @@
             window.location.href = 'login.html';
         }
 
+        // Загружаем информацию о пользователе из localStorage (сохраняется при логине)
+        const currentUser = JSON.parse(localStorage.getItem('user') || '{"username":"Guest","email":"guest@example.com","role":"user"}');
+        const isAdmin = currentUser.role === 'admin';
+
         const translations = {
             tm: {
                 logout: "Çykmak",
@@ -433,12 +541,14 @@
                 tab_catalog: "Katalog",
                 tab_cart: "Sebet",
                 tab_profile: "Şahsy kabinet",
+                tab_admin: "Admin",
                 empty_cart: "Sebet boş",
                 checkout: "Sargyt et",
                 profile_info: "Profil maglumatlary",
                 username_label: "Ulanyjy ady",
                 email_label: "Email",
                 phone_label: "Telefon",
+                role_label: "Rol",
                 member_since: "Agza bolan",
                 edit_profile: "Profil üýtget",
                 order_history: "Sargyt taryhy",
@@ -448,10 +558,19 @@
                 product_added: "Haryt sebedä goşuldy!",
                 product_removed: "Haryt sebedä aýryldy!",
                 order_placed: "Sargyt üstünlikli ýerleşdirildi!",
+                section: "Bölüm",
                 section_food: "Iýmit önümleri",
                 section_consumer: "Önümçilik harytlary",
                 section_electronics: "Elektronika",
-                section_agriculture: "Oba hojalyk harytlary"
+                section_agriculture: "Oba hojalyk harytlary",
+                product_name: "Harydyň ady",
+                product_price: "Bahasy (TMT)",
+                product_image: "Emoji (islege görä)",
+                seller_name: "Satyjy",
+                add_product: "Haryt goş",
+                admin_only: "Bu bölüm diňe administratorlar üçin.",
+                product_added_admin: "Haryt üstünlikli goşuldy!",
+                product_deleted: "Haryt pozuldy!"
             },
             ru: {
                 logout: "Выйти",
@@ -460,12 +579,14 @@
                 tab_catalog: "Каталог",
                 tab_cart: "Корзина",
                 tab_profile: "Личный кабинет",
+                tab_admin: "Админ",
                 empty_cart: "Корзина пуста",
                 checkout: "Оформить заказ",
                 profile_info: "Информация профиля",
                 username_label: "Имя пользователя",
                 email_label: "Email",
                 phone_label: "Телефон",
+                role_label: "Роль",
                 member_since: "Участник с",
                 edit_profile: "Редактировать профиль",
                 order_history: "История заказов",
@@ -475,10 +596,19 @@
                 product_added: "Товар добавлен в корзину!",
                 product_removed: "Товар убран из корзины!",
                 order_placed: "Заказ успешно оформлен!",
+                section: "Раздел",
                 section_food: "Продукты питания",
                 section_consumer: "Промтовары",
                 section_electronics: "Электроника",
-                section_agriculture: "Сельхоз товары"
+                section_agriculture: "Сельхоз товары",
+                product_name: "Название товара",
+                product_price: "Цена (TMT)",
+                product_image: "Эмодзи (опционально)",
+                seller_name: "Продавец",
+                add_product: "Добавить товар",
+                admin_only: "Этот раздел доступен только администраторам.",
+                product_added_admin: "Товар успешно добавлен!",
+                product_deleted: "Товар удален!"
             },
             en: {
                 logout: "Logout",
@@ -487,12 +617,14 @@
                 tab_catalog: "Catalog",
                 tab_cart: "Cart",
                 tab_profile: "Profile",
+                tab_admin: "Admin",
                 empty_cart: "Cart is empty",
                 checkout: "Checkout",
                 profile_info: "Profile info",
                 username_label: "Username",
                 email_label: "Email",
                 phone_label: "Phone",
+                role_label: "Role",
                 member_since: "Member since",
                 edit_profile: "Edit profile",
                 order_history: "Order history",
@@ -502,46 +634,62 @@
                 product_added: "Product added to cart!",
                 product_removed: "Product removed from cart!",
                 order_placed: "Order placed successfully!",
+                section: "Section",
                 section_food: "Food products",
                 section_consumer: "Consumer goods",
                 section_electronics: "Electronics",
-                section_agriculture: "Agricultural products"
+                section_agriculture: "Agricultural products",
+                product_name: "Product name",
+                product_price: "Price (TMT)",
+                product_image: "Emoji (optional)",
+                seller_name: "Seller",
+                add_product: "Add product",
+                admin_only: "This section is for admins only.",
+                product_added_admin: "Product added successfully!",
+                product_deleted: "Product deleted!"
             }
         };
 
         let currentLang = localStorage.getItem('lang') || 'tm';
         let cart = [];
         let orders = [];
-        const userData = JSON.parse(localStorage.getItem('user') || '{"username":"Guest","email":"guest@example.com"}');
-        document.getElementById('username').textContent = userData.username || 'User';
 
-        // Товары по секциям
-        const products = {
-            food: [
-                { id: 'f1', name: 'Un (5 kg)', price: 45, image: '🌾', seller: 'Aýdar' },
-                { id: 'f2', name: 'Ýag (1 l)', price: 25, image: '🫒', seller: 'Meret' },
-                { id: 'f3', name: 'Süýt (1 l)', price: 12, image: '🥛', seller: 'Gülşat' },
-                { id: 'f4', name: 'Et (1 kg)', price: 60, image: '🥩', seller: 'Saparmyrat' },
-            ],
-            consumer: [
-                { id: 'c1', name: 'Çeňňek (şaý-seý)', price: 80, image: '🛋️', seller: 'Oguljeren' },
-                { id: 'c2', name: 'Gap-gaç toplumy', price: 120, image: '🍽️', seller: 'Aýdar' },
-                { id: 'c3', name: 'Köýnek (erkek)', price: 50, image: '👔', seller: 'Meret' },
-                { id: 'c4', name: 'Çanta (zenan)', price: 70, image: '👜', seller: 'Gülşat' },
-            ],
-            electronics: [
-                { id: 'e1', name: 'Telefon', price: 250, image: '📱', seller: 'Saparmyrat' },
-                { id: 'e2', name: 'Noutbuk', price: 600, image: '💻', seller: 'Aýdar' },
-                { id: 'e3', name: 'TV (32")', price: 350, image: '📺', seller: 'Meret' },
-                { id: 'e4', name: 'Ses ulgamy', price: 180, image: '🎵', seller: 'Gülşat' },
-            ],
-            agriculture: [
-                { id: 'a1', name: 'Bugdaý (100 kg)', price: 120, image: '🌾', seller: 'Saparmyrat' },
-                { id: 'a2', name: 'Sogan (50 kg)', price: 30, image: '🧅', seller: 'Oguljeren' },
-                { id: 'a3', name: 'Kartofel (50 kg)', price: 40, image: '🥔', seller: 'Aýdar' },
-                { id: 'a4', name: 'Çörekçilik uny', price: 55, image: '🍞', seller: 'Meret' },
-            ]
-        };
+        // Загрузка товаров из localStorage (для сохранения между сессиями)
+        let products = JSON.parse(localStorage.getItem('marketplace_products'));
+        if (!products) {
+            // Начальные данные
+            products = {
+                food: [
+                    { id: 'f1', name: 'Un (5 kg)', price: 45, image: '🌾', seller: 'Aýdar' },
+                    { id: 'f2', name: 'Ýag (1 l)', price: 25, image: '🫒', seller: 'Meret' },
+                    { id: 'f3', name: 'Süýt (1 l)', price: 12, image: '🥛', seller: 'Gülşat' },
+                    { id: 'f4', name: 'Et (1 kg)', price: 60, image: '🥩', seller: 'Saparmyrat' },
+                ],
+                consumer: [
+                    { id: 'c1', name: 'Çeňňek (şaý-seý)', price: 80, image: '🛋️', seller: 'Oguljeren' },
+                    { id: 'c2', name: 'Gap-gaç toplumy', price: 120, image: '🍽️', seller: 'Aýdar' },
+                    { id: 'c3', name: 'Köýnek (erkek)', price: 50, image: '👔', seller: 'Meret' },
+                    { id: 'c4', name: 'Çanta (zenan)', price: 70, image: '👜', seller: 'Gülşat' },
+                ],
+                electronics: [
+                    { id: 'e1', name: 'Telefon', price: 250, image: '📱', seller: 'Saparmyrat' },
+                    { id: 'e2', name: 'Noutbuk', price: 600, image: '💻', seller: 'Aýdar' },
+                    { id: 'e3', name: 'TV (32")', price: 350, image: '📺', seller: 'Meret' },
+                    { id: 'e4', name: 'Ses ulgamy', price: 180, image: '🎵', seller: 'Gülşat' },
+                ],
+                agriculture: [
+                    { id: 'a1', name: 'Bugdaý (100 kg)', price: 120, image: '🌾', seller: 'Saparmyrat' },
+                    { id: 'a2', name: 'Sogan (50 kg)', price: 30, image: '🧅', seller: 'Oguljeren' },
+                    { id: 'a3', name: 'Kartofel (50 kg)', price: 40, image: '🥔', seller: 'Aýdar' },
+                    { id: 'a4', name: 'Çörekçilik uny', price: 55, image: '🍞', seller: 'Meret' },
+                ]
+            };
+            localStorage.setItem('marketplace_products', JSON.stringify(products));
+        }
+
+        // Загрузка корзины и заказов
+        cart = JSON.parse(localStorage.getItem('marketplace_cart') || '[]');
+        orders = JSON.parse(localStorage.getItem('marketplace_orders') || '[]');
 
         // ============================================================
         // ФУНКЦИИ
@@ -554,6 +702,8 @@
                 if (translations[lang][key]) {
                     if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
                         el.placeholder = translations[lang][key];
+                    } else if (el.tagName === 'SELECT' && el.getAttribute('placeholder')) {
+                        // skip
                     } else {
                         el.textContent = translations[lang][key];
                     }
@@ -565,6 +715,7 @@
             renderCatalog();
             renderCart();
             renderProfile();
+            if (isAdmin) renderAdminProducts();
         }
 
         document.getElementById('langBtn').addEventListener('click', function() {
@@ -601,11 +752,12 @@
                 items.forEach(p => {
                     html += `
                         <div class="product-card">
-                            <div class="image">${p.image}</div>
+                            <div class="image">${p.image || '📦'}</div>
                             <div class="name">${p.name}</div>
                             <div class="price">${p.price.toFixed(2)} TMT</div>
-                            <div class="seller">${translations[lang].seller_label || 'Satyjy'}: ${p.seller}</div>
-                            <button class="btn btn-primary add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}" data-image="${p.image}" data-seller="${p.seller}">${translations[lang].add_to_cart}</button>
+                            <div class="seller">Satyjy: ${p.seller}</div>
+                            <button class="btn btn-primary add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}" data-image="${p.image || '📦'}" data-seller="${p.seller}">${translations[lang].add_to_cart}</button>
+                            ${isAdmin ? `<button class="btn btn-danger delete-product" data-id="${p.id}" style="margin-top:6px;">Poz</button>` : ''}
                         </div>
                     `;
                 });
@@ -624,6 +776,16 @@
                     addToCart({ id, name, price, image, seller });
                 });
             });
+
+            // Обработчики удаления для админа
+            if (isAdmin) {
+                container.querySelectorAll('.delete-product').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        deleteProduct(id);
+                    });
+                });
+            }
         }
 
         // ============================================================
@@ -636,12 +798,14 @@
             } else {
                 cart.push({ ...product, qty: 1 });
             }
+            localStorage.setItem('marketplace_cart', JSON.stringify(cart));
             renderCart();
             showMessage(translations[currentLang].product_added, 'success');
         }
 
         function removeFromCart(id) {
             cart = cart.filter(item => item.id !== id);
+            localStorage.setItem('marketplace_cart', JSON.stringify(cart));
             renderCart();
             showMessage(translations[currentLang].product_removed, 'success');
         }
@@ -654,6 +818,7 @@
                 removeFromCart(id);
                 return;
             }
+            localStorage.setItem('marketplace_cart', JSON.stringify(cart));
             renderCart();
         }
 
@@ -685,7 +850,7 @@
                 html += `
                     <div class="cart-item">
                         <div class="info">
-                            <span style="font-size:28px;">${item.image}</span>
+                            <span style="font-size:28px;">${item.image || '📦'}</span>
                             <span class="name">${item.name}</span>
                             <span class="price">${item.price.toFixed(2)} TMT</span>
                         </div>
@@ -729,7 +894,9 @@
                 date: new Date().toISOString()
             };
             orders.push(order);
+            localStorage.setItem('marketplace_orders', JSON.stringify(orders));
             cart = [];
+            localStorage.setItem('marketplace_cart', JSON.stringify(cart));
             renderCart();
             renderProfile();
             showMessage(translations[currentLang].order_placed, 'success');
@@ -739,9 +906,10 @@
         // ЛИЧНЫЙ КАБИНЕТ
         // ============================================================
         function renderProfile() {
-            document.getElementById('profileUsername').textContent = userData.username || 'User';
-            document.getElementById('profileEmail').textContent = userData.email || 'user@example.com';
+            document.getElementById('profileUsername').textContent = currentUser.username || 'User';
+            document.getElementById('profileEmail').textContent = currentUser.email || 'user@example.com';
             document.getElementById('profilePhone').textContent = '+993 63 000000';
+            document.getElementById('profileRole').textContent = currentUser.role || 'user';
             document.getElementById('profileSince').textContent = '2024';
 
             const historyDiv = document.getElementById('orderHistory');
@@ -765,6 +933,90 @@
         }
 
         // ============================================================
+        // АДМИНИСТРИРОВАНИЕ (только для admin)
+        // ============================================================
+        function renderAdminProducts() {
+            const container = document.getElementById('adminProductsList');
+            let html = '';
+            for (const [section, items] of Object.entries(products)) {
+                if (!items.length) continue;
+                items.forEach(p => {
+                    html += `
+                        <div class="product-item">
+                            <div class="info">
+                                <span style="font-size:24px;">${p.image || '📦'}</span>
+                                <span class="name">${p.name}</span>
+                                <span class="price">${p.price.toFixed(2)} TMT</span>
+                                <span style="color:#9fb5c8; font-size:12px;">(${section})</span>
+                            </div>
+                            <button class="btn btn-danger delete-admin-product" data-id="${p.id}" style="padding:4px 12px; font-size:12px;">Poz</button>
+                        </div>
+                    `;
+                });
+            }
+            container.innerHTML = html || `<div class="empty-state"><div class="icon">📭</div><p>Hiç hili haryt ýok</p></div>`;
+
+            // Обработчики удаления
+            container.querySelectorAll('.delete-admin-product').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    deleteProduct(id);
+                });
+            });
+        }
+
+        function deleteProduct(id) {
+            let found = false;
+            for (const section of ['food', 'consumer', 'electronics', 'agriculture']) {
+                const idx = products[section].findIndex(p => p.id === id);
+                if (idx !== -1) {
+                    products[section].splice(idx, 1);
+                    found = true;
+                    break;
+                }
+            }
+            if (found) {
+                localStorage.setItem('marketplace_products', JSON.stringify(products));
+                renderCatalog();
+                if (isAdmin) renderAdminProducts();
+                showMessage(translations[currentLang].product_deleted, 'success');
+            }
+        }
+
+        // Добавление товара админом
+        document.getElementById('adminProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!isAdmin) {
+                showMessage(translations[currentLang].admin_only, 'error');
+                return;
+            }
+            const section = document.getElementById('adminSection').value;
+            const name = document.getElementById('adminName').value.trim();
+            const price = parseFloat(document.getElementById('adminPrice').value);
+            const image = document.getElementById('adminImage').value.trim() || '📦';
+            const seller = document.getElementById('adminSeller').value.trim();
+
+            if (!name || !price || !seller) {
+                showMessage('Doldurmaly ýerler boş galdy!', 'error');
+                return;
+            }
+
+            const newProduct = {
+                id: 'p' + Date.now() + Math.random().toString(36).substr(2, 4),
+                name,
+                price,
+                image,
+                seller
+            };
+            products[section].push(newProduct);
+            localStorage.setItem('marketplace_products', JSON.stringify(products));
+            renderCatalog();
+            renderAdminProducts();
+            this.reset();
+            showMessage(translations[currentLang].product_added_admin, 'success');
+        });
+
+        // ============================================================
         // ВКЛАДКИ
         // ============================================================
         document.querySelectorAll('.mp-tabs button').forEach(btn => {
@@ -776,8 +1028,16 @@
                 document.getElementById('tab-' + tab).classList.add('active');
                 if (tab === 'profile') renderProfile();
                 if (tab === 'cart') renderCart();
+                if (tab === 'admin' && isAdmin) renderAdminProducts();
             });
         });
+
+        // ============================================================
+        // ПОКАЗ ВКЛАДКИ ADMIN ДЛЯ АДМИНА
+        // ============================================================
+        if (isAdmin) {
+            document.getElementById('adminTab').style.display = 'inline-block';
+        }
 
         // ============================================================
         // ОБНОВЛЕНИЕ
@@ -786,6 +1046,7 @@
             renderCatalog();
             renderCart();
             renderProfile();
+            if (isAdmin) renderAdminProducts();
             showMessage('Täzelendi!', 'success');
         });
 
@@ -826,7 +1087,8 @@
         renderCatalog();
         renderCart();
         renderProfile();
-        console.log('Marketplace with cabinet and cart loaded');
+        if (isAdmin) renderAdminProducts();
+        console.log('Marketplace with admin panel loaded. Is admin:', isAdmin);
     </script>
 </body>
 </html>
