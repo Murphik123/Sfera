@@ -67,10 +67,14 @@
             background: rgba(255,255,255,.1);
             border-color: #00d4ff;
         }
+        .btn-success {
+            background: linear-gradient(135deg, #00ffa3, #00b894);
+            color: #08131d;
+        }
 
         .ai-tabs {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 30px;
             border-bottom: 1px solid rgba(255,255,255,.08);
@@ -108,7 +112,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Общие карточки */
         .card-glass {
             background: rgba(255,255,255,.06);
             border: 1px solid rgba(255,255,255,.12);
@@ -123,81 +126,14 @@
             color: white;
         }
 
-        /* Помощник */
-        .chat-container {
-            display: flex;
-            flex-direction: column;
-            height: 450px;
-            background: rgba(0,0,0,.2);
-            border-radius: 18px;
-            overflow: hidden;
-        }
-        .chat-messages-ai {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .chat-messages-ai .msg {
-            max-width: 80%;
-            padding: 12px 18px;
-            border-radius: 18px;
-            font-size: 15px;
-            line-height: 1.5;
-        }
-        .chat-messages-ai .msg.bot {
-            align-self: flex-start;
-            background: rgba(255,255,255,.08);
-            color: white;
-            border-bottom-left-radius: 6px;
-        }
-        .chat-messages-ai .msg.user {
-            align-self: flex-end;
-            background: linear-gradient(135deg, #00d4ff, #008cff);
-            color: white;
-            border-bottom-right-radius: 6px;
-        }
-        .chat-input {
-            display: flex;
-            gap: 12px;
-            padding: 16px 20px;
-            border-top: 1px solid rgba(255,255,255,.08);
-            background: rgba(0,0,0,.1);
-        }
-        .chat-input input {
-            flex: 1;
-            padding: 12px 18px;
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,.15);
-            background: rgba(255,255,255,.05);
-            color: white;
-            font-size: 15px;
-            outline: none;
-        }
-        .chat-input input:focus {
-            border-color: #00d4ff;
-        }
-        .chat-input button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 24px;
-            background: linear-gradient(135deg, #00d4ff, #008cff);
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        /* Аналитика - отчёты */
-        .report-period {
+        .forecast-period {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
-        .report-period button {
-            padding: 8px 20px;
+        .forecast-period button {
+            padding: 6px 16px;
             border: 1px solid rgba(255,255,255,.15);
             border-radius: 20px;
             background: transparent;
@@ -206,87 +142,17 @@
             transition: .2s;
             font-size: 14px;
         }
-        .report-period button.active {
+        .forecast-period button.active {
             background: rgba(0,212,255,.15);
             border-color: #00d4ff;
             color: #00d4ff;
         }
-        .report-period button:hover {
-            background: rgba(255,255,255,.05);
-        }
-        .chart-container {
-            position: relative;
-            height: 250px;
-            margin-top: 10px;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
-            margin-top: 20px;
-        }
-        .stats-grid .stat-item {
-            background: rgba(255,255,255,.04);
-            border-radius: 16px;
-            padding: 16px;
-            text-align: center;
-        }
-        .stats-grid .stat-item .number {
-            font-size: 28px;
-            font-weight: 700;
-            color: #00d4ff;
-        }
-        .stats-grid .stat-item .label {
-            font-size: 13px;
-            color: #9fb5c8;
-            margin-top: 4px;
-        }
 
-        /* Проверка документов */
-        .upload-area {
-            border: 2px dashed rgba(255,255,255,.2);
-            border-radius: 18px;
-            padding: 40px;
-            text-align: center;
-            color: #bdd0df;
-            transition: .3s;
-            cursor: pointer;
-        }
-        .upload-area:hover {
-            border-color: #00d4ff;
-            background: rgba(0,212,255,.05);
-        }
-        .upload-area input {
-            display: none;
-        }
-        .upload-area .icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-        .verification-result {
-            margin-top: 20px;
-            padding: 16px 20px;
-            border-radius: 16px;
-            display: none;
-        }
-        .verification-result.valid {
-            display: block;
-            background: rgba(0,255,170,.1);
-            border: 1px solid rgba(0,255,170,.3);
-            color: #00ffa3;
-        }
-        .verification-result.invalid {
-            display: block;
-            background: rgba(255,0,0,.1);
-            border: 1px solid rgba(255,0,0,.3);
-            color: #ff6b6b;
-        }
-
-        /* Прогнозы */
         .forecast-list {
             display: flex;
             flex-direction: column;
             gap: 8px;
+            margin-top: 16px;
         }
         .forecast-item {
             display: flex;
@@ -309,11 +175,97 @@
             color: #bdd0df;
         }
 
+        /* Отчёты */
+        .report-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .report-form .form-group {
+            margin-bottom: 16px;
+        }
+        .report-form .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #dbe9ff;
+            margin-bottom: 6px;
+        }
+        .report-form .form-group input,
+        .report-form .form-group select,
+        .report-form .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.15);
+            background: rgba(255,255,255,.05);
+            color: white;
+            font-size: 15px;
+            transition: .3s;
+            outline: none;
+        }
+        .report-form .form-group input:focus,
+        .report-form .form-group select:focus,
+        .report-form .form-group textarea:focus {
+            border-color: #00d4ff;
+        }
+        .report-form .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .report-form .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .report-status {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-sent { background: rgba(0,212,255,.15); color: #00d4ff; }
+        .status-approved { background: rgba(0,255,170,.15); color: #00ffa3; }
+        .status-rejected { background: rgba(255,0,0,.15); color: #ff6b6b; }
+
+        .reports-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .reports-list li {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            display: none;
+        }
+        .message.error {
+            display: block;
+            background: rgba(255,0,0,.1);
+            border: 1px solid rgba(255,0,0,.2);
+            color: #ff6b6b;
+        }
+        .message.success {
+            display: block;
+            background: rgba(0,255,170,.1);
+            border: 1px solid rgba(0,255,170,.2);
+            color: #00ffa3;
+        }
+
         @media (max-width: 768px) {
-            .ai-header { flex-direction: column; align-items: stretch; gap: 12px; }
-            .ai-tabs { gap: 8px; }
             .ai-tabs button { padding: 8px 14px; font-size: 13px; }
-            .chat-container { height: 350px; }
+            .forecast-period button { font-size: 12px; padding: 4px 12px; }
         }
     </style>
 </head>
@@ -352,9 +304,9 @@
 
             <div class="header-right" style="display:flex; align-items:center; gap:12px;">
                 <span class="user-info" id="userDisplay">👤 <strong id="username">User</strong></span>
-                <a href="dashboard.html" class="btn btn-outline" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Dashboard</a>
+                <a href="dashboard.html" class="btn btn-outline" data-i18n="back" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Yza</a>
                 <button class="lang" id="langBtn">TM</button>
-                <button class="logout-btn" id="logoutBtn" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
+                <button class="logout-btn" id="logoutBtn" data-i18n="logout" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
             </div>
         </div>
     </header>
@@ -364,7 +316,7 @@
             <div class="ai-header">
                 <h1>🤖 AI analitika & Kömekçi</h1>
                 <div class="actions">
-                    <button class="btn btn-outline" id="refreshAiBtn">⟳ Täzele</button>
+                    <button class="btn btn-outline" id="refreshAiBtn" data-i18n="refresh">⟳ Täzele</button>
                 </div>
             </div>
 
@@ -373,6 +325,7 @@
                 <button class="active" data-tab="assistant">💬 Kömekçi</button>
                 <button data-tab="analytics">📊 Analitika</button>
                 <button data-tab="forecasts">📈 Prokgnozlar</button>
+                <button data-tab="reports">📄 Hasabatlar</button>
                 <button data-tab="documents">📄 Resmiýet barlag</button>
             </div>
 
@@ -380,50 +333,54 @@
             <!-- ВКЛАДКА 1: ПОМОЩНИК -->
             <div class="tab-content active" id="tab-assistant">
                 <div class="card-glass">
-                    <h3>Platforma boýunça kömekçi</h3>
-                    <p style="color:#bdd0df; margin-bottom:16px;">Sfera platformasynyň ähli meseleleri boýunça sorag beriň.</p>
-                    <div class="chat-container">
-                        <div class="chat-messages-ai" id="chatMessagesAi">
-                            <div class="msg bot">Salam! Men Sfera platformasynyň kömekçisi. Size nähili kömek edip bilerin? (Marketpleýs, Bank, Poçta, Messenjer, Resmiýetler, TM Coin)</div>
+                    <h3 data-i18n="assistant_title">Platforma boýunça kömekçi</h3>
+                    <p style="color:#bdd0df; margin-bottom:16px;" data-i18n="assistant_desc">Sfera platformasynyň ähli meseleleri boýunça sorag beriň.</p>
+                    <div class="chat-container" style="display:flex; flex-direction:column; height:400px; background:rgba(0,0,0,.2); border-radius:18px; overflow:hidden;">
+                        <div class="chat-messages-ai" id="chatMessagesAi" style="flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:12px;">
+                            <div class="msg bot" style="align-self:flex-start; background:rgba(255,255,255,.08); color:white; padding:12px 18px; border-radius:18px; border-bottom-left-radius:6px; max-width:80%;">Salam! Men Sfera platformasynyň kömekçisi. Size nähili kömek edip bilerin? (Marketpleýs, Bank, Poçta, Messenjer, Resmiýetler, TM Coin)</div>
                         </div>
-                        <div class="chat-input">
-                            <input type="text" id="aiChatInput" placeholder="Soragyňyzy ýazyň..." />
-                            <button id="aiChatSendBtn">Iber</button>
+                        <div class="chat-input" style="display:flex; gap:12px; padding:16px 20px; border-top:1px solid rgba(255,255,255,.08); background:rgba(0,0,0,.1);">
+                            <input type="text" id="aiChatInput" placeholder="Soragyňyzy ýazyň..." style="flex:1; padding:12px 18px; border-radius:24px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.05); color:white; font-size:15px; outline:none;" />
+                            <button id="aiChatSendBtn" style="padding:12px 24px; border:none; border-radius:24px; background:linear-gradient(135deg, #00d4ff, #008cff); color:white; font-weight:600; cursor:pointer;">Iber</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- ====================================================== -->
-            <!-- ВКЛАДКА 2: АНАЛИТИКА -->
+            <!-- ВКЛАДКА 2: АНАЛИТИКА (без изменений) -->
             <div class="tab-content" id="tab-analytics">
                 <div class="card-glass">
-                    <h3>Hasabatlar</h3>
-                    <div class="report-period" id="reportPeriod">
+                    <h3 data-i18n="analytics_title">Hasabatlar</h3>
+                    <div class="report-period" id="reportPeriod" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
                         <button class="active" data-period="day">Gün</button>
                         <button data-period="week">Hepde</button>
                         <button data-period="month">Aý</button>
                         <button data-period="quarter">Kvartal</button>
                         <button data-period="year">Ýyl</button>
                     </div>
-                    <div class="chart-container">
+                    <div class="chart-container" style="position:relative; height:250px; margin-top:10px;">
                         <canvas id="analyticsChart"></canvas>
                     </div>
-                    <div class="stats-grid" id="analyticsStats">
-                        <div class="stat-item"><div class="number" id="statTotal">0</div><div class="label">Jemi işjeňlik</div></div>
-                        <div class="stat-item"><div class="number" id="statUsers">0</div><div class="label">Ulanyjylar</div></div>
-                        <div class="stat-item"><div class="number" id="statOrders">0</div><div class="label">Söwdalar</div></div>
-                        <div class="stat-item"><div class="number" id="statRevenue">0 TMT</div><div class="label">Girdeji</div></div>
+                    <div class="stats-grid" id="analyticsStats" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:16px; margin-top:20px;">
+                        <div class="stat-item" style="background:rgba(255,255,255,.04); border-radius:16px; padding:16px; text-align:center;"><div class="number" id="statTotal" style="font-size:28px; font-weight:700; color:#00d4ff;">0</div><div class="label" style="font-size:13px; color:#9fb5c8;" data-i18n="total_activity">Jemi işjeňlik</div></div>
+                        <div class="stat-item" style="background:rgba(255,255,255,.04); border-radius:16px; padding:16px; text-align:center;"><div class="number" id="statUsers" style="font-size:28px; font-weight:700; color:#00d4ff;">0</div><div class="label" style="font-size:13px; color:#9fb5c8;" data-i18n="users">Ulanyjylar</div></div>
+                        <div class="stat-item" style="background:rgba(255,255,255,.04); border-radius:16px; padding:16px; text-align:center;"><div class="number" id="statOrders" style="font-size:28px; font-weight:700; color:#00d4ff;">0</div><div class="label" style="font-size:13px; color:#9fb5c8;" data-i18n="orders">Söwdalar</div></div>
+                        <div class="stat-item" style="background:rgba(255,255,255,.04); border-radius:16px; padding:16px; text-align:center;"><div class="number" id="statRevenue" style="font-size:28px; font-weight:700; color:#00d4ff;">0 TMT</div><div class="label" style="font-size:13px; color:#9fb5c8;" data-i18n="revenue">Girdeji</div></div>
                     </div>
                 </div>
             </div>
 
             <!-- ====================================================== -->
-            <!-- ВКЛАДКА 3: ПРОГНОЗЫ -->
+            <!-- ВКЛАДКА 3: ПРОГНОЗЫ (расширенные) -->
             <div class="tab-content" id="tab-forecasts">
                 <div class="card-glass">
-                    <h3>TM Coin prokgnozlary</h3>
-                    <p style="color:#bdd0df; margin-bottom:16px;">Iň soňky 7 gün üçin çaklamalar we ynam derejesi.</p>
+                    <h3 data-i18n="forecasts_title">TM Coin prokgnozlary</h3>
+                    <div class="forecast-period" id="forecastPeriod">
+                        <button class="active" data-period="7d">7 gün</button>
+                        <button data-period="6m">6 aý</button>
+                        <button data-period="1y">1 ýyl</button>
+                    </div>
                     <div class="forecast-list" id="forecastList"></div>
                     <div class="chart-container" style="height:200px; margin-top:20px;">
                         <canvas id="forecastChart"></canvas>
@@ -432,23 +389,64 @@
             </div>
 
             <!-- ====================================================== -->
-            <!-- ВКЛАДКА 4: ПРОВЕРКА ДОКУМЕНТОВ -->
+            <!-- ВКЛАДКА 4: ОТЧЁТЫ В АДМИНИСТРАЦИЮ И КАБМИН -->
+            <div class="tab-content" id="tab-reports">
+                <div class="card-glass">
+                    <h3 data-i18n="reports_title">Hasabatlar (Prezident & Kabmin)</h3>
+                    <p style="color:#bdd0df; margin-bottom:16px;" data-i18n="reports_desc">Administrasiýa we Kabinet Ministrleri üçin hasabat dörediň we iberiň.</p>
+                    <form id="reportForm" class="report-form">
+                        <div class="form-group">
+                            <label for="reportRecipient" data-i18n="recipient">Aljy</label>
+                            <select id="reportRecipient" required>
+                                <option value="president">Türkmenistanyň Prezidenti</option>
+                                <option value="cabinet">Türkmenistanyň Kabinet Ministrleri</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reportTitle" data-i18n="report_title">Hasabatyň ady</label>
+                            <input type="text" id="reportTitle" placeholder="Mysal: 2026-njy ýylyň I çärýegi üçin hasabat" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="reportPeriod" data-i18n="report_period">Döwür</label>
+                            <select id="reportPeriod">
+                                <option value="month">Aý</option>
+                                <option value="quarter">Kvartal</option>
+                                <option value="year" selected>Ýyl</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reportContent" data-i18n="report_content">Mazmuny</label>
+                            <textarea id="reportContent" placeholder="Hasabatyň jikme-jik beýany..." rows="5" required></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="submitReportBtn" data-i18n="send_report">Hasabat iber</button>
+                        </div>
+                    </form>
+                    <div style="margin-top:30px;">
+                        <h4 data-i18n="sent_reports">Iberilen hasabatlar</h4>
+                        <ul class="reports-list" id="reportsList"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====================================================== -->
+            <!-- ВКЛАДКА 5: ПРОВЕРКА ДОКУМЕНТОВ (без изменений) -->
             <div class="tab-content" id="tab-documents">
                 <div class="card-glass">
-                    <h3>Resmiýetleriň dogrulygyny barlamak</h3>
-                    <p style="color:#bdd0df; margin-bottom:16px;">Faýly ýüklemek bilen onuň hakykylygyny barlap bilersiňiz.</p>
-                    <div class="upload-area" id="uploadArea">
-                        <div class="icon">📤</div>
-                        <p>Faýly bu ýere süýşüriň ýa-da basyň</p>
-                        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.jpg,.png" />
+                    <h3 data-i18n="doc_verify_title">Resmiýetleriň dogrulygyny barlamak</h3>
+                    <p style="color:#bdd0df; margin-bottom:16px;" data-i18n="doc_verify_desc">Faýly ýüklemek bilen onuň hakykylygyny barlap bilersiňiz.</p>
+                    <div class="upload-area" id="uploadArea" style="border:2px dashed rgba(255,255,255,.2); border-radius:18px; padding:40px; text-align:center; color:#bdd0df; transition:.3s; cursor:pointer;">
+                        <div class="icon" style="font-size:48px; margin-bottom:12px;">📤</div>
+                        <p data-i18n="upload_hint">Faýly bu ýere süýşüriň ýa-da basyň</p>
+                        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.jpg,.png" style="display:none;" />
                     </div>
-                    <div class="verification-result" id="verificationResult"></div>
-                    <div style="margin-top:20px;">
-                        <button class="btn btn-primary" id="verifyBtn">Barlamak</button>
-                        <button class="btn btn-outline" id="clearDocBtn">Arassala</button>
+                    <div class="verification-result" id="verificationResult" style="margin-top:20px; padding:16px 20px; border-radius:16px; display:none; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08);"></div>
+                    <div style="margin-top:20px; display:flex; gap:12px; flex-wrap:wrap;">
+                        <button class="btn btn-primary" id="verifyBtn" data-i18n="verify_btn">Barlamak</button>
+                        <button class="btn btn-outline" id="clearDocBtn" data-i18n="clear_btn">Arassala</button>
                     </div>
                     <div style="margin-top:16px; color:#9fb5c8; font-size:14px;">
-                        <strong>Mümkin bolan formatlar:</strong> PDF, DOC, DOCX, JPG, PNG (100MB çenli)
+                        <strong data-i18n="supported_formats">Mümkin bolan formatlar:</strong> PDF, DOC, DOCX, JPG, PNG (100MB çenli)
                     </div>
                 </div>
             </div>
@@ -458,7 +456,7 @@
 
     <script>
         // ============================================================
-        // НАСТРОЙКА API
+        // НАСТРОЙКА API и переводы
         // ============================================================
         const API_BASE_URL = 'https://sfera-1.onrender.com';
         const token = localStorage.getItem('token');
@@ -467,72 +465,114 @@
             window.location.href = 'login.html';
         }
 
-        // ============================================================
-        // ПЕРЕВОДЫ
-        // ============================================================
         const translations = {
             tm: {
                 logout: "Çykmak",
+                back: "← Yza",
                 refresh: "Täzele",
-                assistant_tab: "Kömekçi",
-                analytics_tab: "Analitika",
-                forecasts_tab: "Prokgnozlar",
-                documents_tab: "Resmiýet barlag",
-                assistant_hello: "Salam! Men Sfera platformasynyň kömekçisi. Size nähili kömek edip bilerin? (Marketpleýs, Bank, Poçta, Messenjer, Resmiýetler, TM Coin)",
+                assistant_title: "Platforma boýunça kömekçi",
+                assistant_desc: "Sfera platformasynyň ähli meseleleri boýunça sorag beriň.",
+                analytics_title: "Hasabatlar",
                 total_activity: "Jemi işjeňlik",
                 users: "Ulanyjylar",
                 orders: "Söwdalar",
                 revenue: "Girdeji",
+                forecasts_title: "TM Coin prokgnozlary",
+                reports_title: "Hasabatlar (Prezident & Kabmin)",
+                reports_desc: "Administrasiýa we Kabinet Ministrleri üçin hasabat dörediň we iberiň.",
+                recipient: "Aljy",
+                report_title: "Hasabatyň ady",
+                report_period: "Döwür",
+                report_content: "Mazmuny",
+                send_report: "Hasabat iber",
+                sent_reports: "Iberilen hasabatlar",
+                doc_verify_title: "Resmiýetleriň dogrulygyny barlamak",
+                doc_verify_desc: "Faýly ýüklemek bilen onuň hakykylygyny barlap bilersiňiz.",
                 upload_hint: "Faýly bu ýere süýşüriň ýa-da basyň",
-                verify: "Barlamak",
-                clear: "Arassala",
-                valid: "Resmiýet tassyklandy!",
-                invalid: "Resmiýet ýalňyş!",
-                no_file: "Faýl saýlanylmady",
-                file_uploaded: "Faýl ýüklendi",
-                error: "Säwlik"
+                verify_btn: "Barlamak",
+                clear_btn: "Arassala",
+                supported_formats: "Mümkin bolan formatlar:",
+                status_sent: "Iberilen",
+                status_approved: "Tassyklandy",
+                status_rejected: "Ret edildi",
+                no_reports: "Hiç hili hasabat ýok.",
+                report_sent: "Hasabat üstünlikli iberildi!",
+                report_error: "Hasabat iberilmedi.",
+                forecast_7d: "7 gün",
+                forecast_6m: "6 aý",
+                forecast_1y: "1 ýyl"
             },
             ru: {
                 logout: "Выйти",
+                back: "← Назад",
                 refresh: "Обновить",
-                assistant_tab: "Помощник",
-                analytics_tab: "Аналитика",
-                forecasts_tab: "Прогнозы",
-                documents_tab: "Проверка документов",
-                assistant_hello: "Привет! Я помощник платформы Sfera. Чем могу помочь? (Маркетплейс, Банк, Почта, Мессенджер, Документы, TM Coin)",
+                assistant_title: "Помощник по платформе",
+                assistant_desc: "Задайте вопрос по всем модулям платформы Sfera.",
+                analytics_title: "Отчёты",
                 total_activity: "Всего активность",
                 users: "Пользователи",
                 orders: "Сделки",
                 revenue: "Доход",
+                forecasts_title: "Прогнозы TM Coin",
+                reports_title: "Отчёты (Президент & Кабмин)",
+                reports_desc: "Создайте и отправьте отчёт в Администрацию Президента или Кабинет Министров.",
+                recipient: "Получатель",
+                report_title: "Название отчёта",
+                report_period: "Период",
+                report_content: "Содержание",
+                send_report: "Отправить отчёт",
+                sent_reports: "Отправленные отчёты",
+                doc_verify_title: "Проверка документов",
+                doc_verify_desc: "Загрузите файл и проверьте его подлинность.",
                 upload_hint: "Перетащите файл или нажмите для выбора",
-                verify: "Проверить",
-                clear: "Очистить",
-                valid: "Документ подтверждён!",
-                invalid: "Документ недействителен!",
-                no_file: "Файл не выбран",
-                file_uploaded: "Файл загружен",
-                error: "Ошибка"
+                verify_btn: "Проверить",
+                clear_btn: "Очистить",
+                supported_formats: "Поддерживаемые форматы:",
+                status_sent: "Отправлен",
+                status_approved: "Утверждён",
+                status_rejected: "Отклонён",
+                no_reports: "Нет отправленных отчётов.",
+                report_sent: "Отчёт успешно отправлен!",
+                report_error: "Ошибка отправки отчёта.",
+                forecast_7d: "7 дней",
+                forecast_6m: "6 месяцев",
+                forecast_1y: "1 год"
             },
             en: {
                 logout: "Logout",
+                back: "← Back",
                 refresh: "Refresh",
-                assistant_tab: "Assistant",
-                analytics_tab: "Analytics",
-                forecasts_tab: "Forecasts",
-                documents_tab: "Document verification",
-                assistant_hello: "Hi! I'm the Sfera platform assistant. How can I help? (Marketplace, Bank, Mail, Messenger, Documents, TM Coin)",
+                assistant_title: "Platform Assistant",
+                assistant_desc: "Ask any question about Sfera platform modules.",
+                analytics_title: "Reports",
                 total_activity: "Total activity",
                 users: "Users",
                 orders: "Transactions",
                 revenue: "Revenue",
-                upload_hint: "Drag & drop file or click to select",
-                verify: "Verify",
-                clear: "Clear",
-                valid: "Document verified!",
-                invalid: "Document is invalid!",
-                no_file: "No file selected",
-                file_uploaded: "File uploaded",
-                error: "Error"
+                forecasts_title: "TM Coin forecasts",
+                reports_title: "Reports (President & Cabinet)",
+                reports_desc: "Create and send reports to the President's Administration or Cabinet of Ministers.",
+                recipient: "Recipient",
+                report_title: "Report title",
+                report_period: "Period",
+                report_content: "Content",
+                send_report: "Send report",
+                sent_reports: "Sent reports",
+                doc_verify_title: "Document verification",
+                doc_verify_desc: "Upload a file to verify its authenticity.",
+                upload_hint: "Drag & drop or click to select",
+                verify_btn: "Verify",
+                clear_btn: "Clear",
+                supported_formats: "Supported formats:",
+                status_sent: "Sent",
+                status_approved: "Approved",
+                status_rejected: "Rejected",
+                no_reports: "No sent reports.",
+                report_sent: "Report sent successfully!",
+                report_error: "Failed to send report.",
+                forecast_7d: "7 days",
+                forecast_6m: "6 months",
+                forecast_1y: "1 year"
             }
         };
 
@@ -541,6 +581,8 @@
         let selectedFile = null;
         let analyticsChart = null;
         let forecastChart = null;
+        let currentForecastPeriod = '7d';
+        let reports = [];
 
         function setLanguage(lang) {
             if (!translations[lang]) return;
@@ -548,7 +590,11 @@
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang][key]) {
-                    el.textContent = translations[lang][key];
+                    if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
+                        el.placeholder = translations[lang][key];
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
                 }
             });
             document.getElementById('langBtn').textContent = lang.toUpperCase();
@@ -559,23 +605,28 @@
         }
 
         function updateUI() {
-            // Обновляем текст на вкладках
-            const tabBtns = document.querySelectorAll('.ai-tabs button');
-            tabBtns.forEach(btn => {
-                const key = btn.dataset.tab + '_tab';
+            // Обновить текст вкладок
+            const tabMap = {
+                assistant: '💬 ',
+                analytics: '📊 ',
+                forecasts: '📈 ',
+                reports: '📄 ',
+                documents: '📄 '
+            };
+            document.querySelectorAll('.ai-tabs button').forEach(btn => {
+                const key = btn.dataset.tab + '_title';
                 if (translations[currentLang][key]) {
-                    btn.textContent = translations[currentLang][key];
+                    btn.textContent = (tabMap[btn.dataset.tab] || '') + translations[currentLang][key];
                 }
             });
-            // Обновляем приветствие помощника
+            // Обновить приветствие помощника
             const firstMsg = document.querySelector('.chat-messages-ai .msg.bot');
-            if (firstMsg && firstMsg.textContent.includes('Salam') || firstMsg.textContent.includes('Привет') || firstMsg.textContent.includes('Hi')) {
-                firstMsg.textContent = translations[currentLang].assistant_hello;
+            if (firstMsg) {
+                firstMsg.textContent = translations[currentLang].assistant_desc || 'Salam! Men Sfera platformasynyň kömekçisi. Size nähili kömek edip bilerin?';
             }
-            // Обновляем текст в загрузке
-            document.querySelector('.upload-area p').textContent = translations[currentLang].upload_hint;
-            document.getElementById('verifyBtn').textContent = translations[currentLang].verify;
-            document.getElementById('clearDocBtn').textContent = translations[currentLang].clear;
+            // Обновить прогнозы
+            renderForecasts(currentForecastPeriod);
+            renderReports();
         }
 
         document.getElementById('langBtn').addEventListener('click', function() {
@@ -609,12 +660,12 @@
                 document.getElementById('tab-' + tab).classList.add('active');
                 currentTab = tab;
                 if (tab === 'analytics') initAnalytics();
-                if (tab === 'forecasts') initForecasts();
+                if (tab === 'forecasts') renderForecasts(currentForecastPeriod);
             });
         });
 
         // ============================================================
-        // ПОМОЩНИК (чат-бот)
+        // ПОМОЩНИК (чат-бот) – без изменений
         // ============================================================
         const chatMessages = document.getElementById('chatMessagesAi');
         const chatInput = document.getElementById('aiChatInput');
@@ -654,10 +705,10 @@
             if (lower.includes('analitika') || lower.includes('analytics') || lower.includes('отчёт')) {
                 return 'Analitika bölüminde gün, hepde, aý, kvartal we ýyl üçin hasabatlar görkezilýär. Graphikler we statistikalar bilen tanyşyp bilersiňiz.';
             }
-            if (lower.includes('kömek') || lower.includes('help') || lower.includes('помощ')) {
-                return 'Elbetde! Men size platformanyň ähli meseleleri boýunça kömek edip bilerin. Soragyňyzy ýazyň, men jogap bererin.';
+            if (lower.includes('prezident') || lower.includes('kabmin') || lower.includes('hasabat')) {
+                return 'Hasabatlar bölüminde Prezident we Kabinet Ministrleri üçin hasabat döredip we iberip bilersiňiz.';
             }
-            return 'Täze sorag üçin minnetdar. Men size näme barada maglumat bermegimi isleýärsiňiz? (Marketpleýs, Bank, Poçta, Messenjer, Resmiýetler, TM Coin, Analitika)';
+            return 'Täze sorag üçin minnetdar. Men size näme barada maglumat bermegimi isleýärsiňiz? (Marketpleýs, Bank, Poçta, Messenjer, Resmiýetler, TM Coin, Analitika, Hasabatlar)';
         }
 
         chatSend.addEventListener('click', function() {
@@ -676,12 +727,11 @@
         });
 
         // ============================================================
-        // АНАЛИТИКА
+        // АНАЛИТИКА (без изменений)
         // ============================================================
         let currentPeriod = 'day';
 
         function generateAnalyticsData(period) {
-            // Имитация данных
             const labels = [];
             const values = [];
             const days = period === 'day' ? 7 : period === 'week' ? 4 : period === 'month' ? 30 : period === 'quarter' ? 12 : 12;
@@ -720,16 +770,13 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { labels: { color: '#bdd0df' } }
-                    },
+                    plugins: { legend: { labels: { color: '#bdd0df' } } },
                     scales: {
                         x: { ticks: { color: '#9fb5c8' } },
                         y: { ticks: { color: '#9fb5c8' } }
                     }
                 }
             });
-            // Статистика
             const total = data.values.reduce((a, b) => a + b, 0);
             document.getElementById('statTotal').textContent = total;
             document.getElementById('statUsers').textContent = Math.floor(total * 0.3 + 200);
@@ -737,9 +784,9 @@
             document.getElementById('statRevenue').textContent = (Math.floor(total * 0.8 + 1000)) + ' TMT';
         }
 
-        document.querySelectorAll('.report-period button').forEach(btn => {
+        document.querySelectorAll('#reportPeriod button').forEach(btn => {
             btn.addEventListener('click', function() {
-                document.querySelectorAll('.report-period button').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('#reportPeriod button').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 currentPeriod = this.dataset.period;
                 initAnalytics();
@@ -747,47 +794,54 @@
         });
 
         // ============================================================
-        // ПРОГНОЗЫ
+        // ПРОГНОЗЫ (расширенные на 6 месяцев и год)
         // ============================================================
-        function generateForecasts() {
+        function generateForecastData(period) {
             const forecasts = [];
             const basePrice = 120;
-            for (let i = 0; i < 7; i++) {
+            let count = 0;
+            let step = 1;
+            let labelFormat = 'short';
+            if (period === '7d') { count = 7; step = 1; labelFormat = 'short'; }
+            else if (period === '6m') { count = 6; step = 30; labelFormat = 'month'; }
+            else if (period === '1y') { count = 12; step = 30; labelFormat = 'month'; }
+            for (let i = 0; i < count; i++) {
                 const date = new Date();
-                date.setDate(date.getDate() + i);
+                if (period === '7d') date.setDate(date.getDate() + i);
+                else if (period === '6m') date.setMonth(date.getMonth() + i);
+                else if (period === '1y') date.setMonth(date.getMonth() + i);
                 const change = (Math.random() - 0.4) * 15;
-                const price = Math.max(50, basePrice + change + i * 1.2);
+                const price = Math.max(50, basePrice + change + i * 0.8);
                 const confidence = (0.65 + Math.random() * 0.3).toFixed(2);
-                forecasts.push({
-                    date: date.toLocaleDateString('tm-TM', { weekday: 'short', day: 'numeric', month: 'short' }),
-                    price: price.toFixed(2),
-                    confidence: confidence
-                });
+                let label;
+                if (period === '7d') label = date.toLocaleDateString('tm-TM', { weekday: 'short', day: 'numeric', month: 'short' });
+                else label = date.toLocaleDateString('tm-TM', { month: 'short', year: 'numeric' });
+                forecasts.push({ label, price: price.toFixed(2), confidence });
             }
             return forecasts;
         }
 
-        function initForecasts() {
-            const forecasts = generateForecasts();
+        function renderForecasts(period) {
+            currentForecastPeriod = period;
+            const data = generateForecastData(period);
             const list = document.getElementById('forecastList');
-            list.innerHTML = forecasts.map(f => `
+            list.innerHTML = data.map(f => `
                 <div class="forecast-item">
-                    <span class="date">${f.date}</span>
+                    <span class="date">${f.label}</span>
                     <span class="price">${f.price} TMT</span>
                     <span class="confidence">Ynam: ${(f.confidence * 100).toFixed(0)}%</span>
                 </div>
             `).join('');
 
-            // График прогнозов
             const ctx = document.getElementById('forecastChart').getContext('2d');
             if (forecastChart) forecastChart.destroy();
             forecastChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: forecasts.map(f => f.date),
+                    labels: data.map(f => f.label),
                     datasets: [{
                         label: 'Çaklama baha',
-                        data: forecasts.map(f => parseFloat(f.price)),
+                        data: data.map(f => parseFloat(f.price)),
                         borderColor: '#00ffa3',
                         backgroundColor: 'rgba(0,255,170,0.1)',
                         fill: true,
@@ -798,9 +852,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { labels: { color: '#bdd0df' } }
-                    },
+                    plugins: { legend: { labels: { color: '#bdd0df' } } },
                     scales: {
                         x: { ticks: { color: '#9fb5c8' } },
                         y: { ticks: { color: '#9fb5c8' } }
@@ -809,8 +861,68 @@
             });
         }
 
+        document.querySelectorAll('#forecastPeriod button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#forecastPeriod button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                renderForecasts(this.dataset.period);
+            });
+        });
+
         // ============================================================
-        // ПРОВЕРКА ДОКУМЕНТОВ
+        // ОТЧЁТЫ (Президент / Кабмин)
+        // ============================================================
+        function renderReports() {
+            const list = document.getElementById('reportsList');
+            if (!reports.length) {
+                list.innerHTML = `<li style="color:#9fb5c8; padding:20px 0; text-align:center;">${translations[currentLang].no_reports}</li>`;
+                return;
+            }
+            const statusMap = {
+                sent: translations[currentLang].status_sent || 'Iberilen',
+                approved: translations[currentLang].status_approved || 'Tassyklandy',
+                rejected: translations[currentLang].status_rejected || 'Ret edildi'
+            };
+            list.innerHTML = reports.map(r => `
+                <li>
+                    <div>
+                        <strong>${r.title}</strong><br />
+                        <span style="font-size:13px; color:#9fb5c8;">${r.recipient} • ${r.period}</span>
+                    </div>
+                    <span class="report-status status-${r.status}">${statusMap[r.status] || r.status}</span>
+                </li>
+            `).join('');
+        }
+
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const recipient = document.getElementById('reportRecipient').value;
+            const title = document.getElementById('reportTitle').value.trim();
+            const period = document.getElementById('reportPeriod').value;
+            const content = document.getElementById('reportContent').value.trim();
+
+            if (!title || !content) {
+                showMessage(translations[currentLang].report_error, 'error');
+                return;
+            }
+
+            const newReport = {
+                id: 'r' + Date.now(),
+                recipient: recipient === 'president' ? 'Türkmenistanyň Prezidenti' : 'Türkmenistanyň Kabinet Ministrleri',
+                title,
+                period: period === 'month' ? 'Aý' : period === 'quarter' ? 'Kvartal' : 'Ýyl',
+                content,
+                status: 'sent',
+                date: new Date()
+            };
+            reports.unshift(newReport);
+            renderReports();
+            this.reset();
+            showMessage(translations[currentLang].report_sent, 'success');
+        });
+
+        // ============================================================
+        // ПРОВЕРКА ДОКУМЕНТОВ (имитация)
         // ============================================================
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
@@ -819,13 +931,8 @@
         const resultDiv = document.getElementById('verificationResult');
 
         uploadArea.addEventListener('click', () => fileInput.click());
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.style.borderColor = '#00d4ff';
-        });
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.style.borderColor = 'rgba(255,255,255,.2)';
-        });
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.style.borderColor = '#00d4ff'; });
+        uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor = 'rgba(255,255,255,.2)'; });
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.style.borderColor = 'rgba(255,255,255,.2)';
@@ -834,7 +941,6 @@
                 handleFileSelect(e.dataTransfer.files[0]);
             }
         });
-
         fileInput.addEventListener('change', function() {
             if (this.files.length) handleFileSelect(this.files[0]);
         });
@@ -848,26 +954,24 @@
 
         verifyBtn.addEventListener('click', function() {
             if (!selectedFile) {
-                resultDiv.textContent = translations[currentLang].no_file;
-                resultDiv.className = 'verification-result invalid';
+                resultDiv.textContent = translations[currentLang].upload_hint;
+                resultDiv.className = 'verification-result';
                 resultDiv.style.display = 'block';
                 return;
             }
-            // Имитация проверки
             resultDiv.textContent = '⏳ Barlanýar...';
-            resultDiv.className = 'verification-result';
             resultDiv.style.display = 'block';
-
             setTimeout(() => {
                 const isValid = Math.random() > 0.3;
                 if (isValid) {
-                    resultDiv.textContent = '✅ ' + translations[currentLang].valid;
-                    resultDiv.className = 'verification-result valid';
+                    resultDiv.textContent = '✅ ' + (translations[currentLang].verify_success || 'Resmiýet tassyklandy!');
+                    resultDiv.className = 'verification-result';
+                    resultDiv.style.color = '#00ffa3';
                 } else {
-                    resultDiv.textContent = '❌ ' + translations[currentLang].invalid;
-                    resultDiv.className = 'verification-result invalid';
+                    resultDiv.textContent = '❌ ' + (translations[currentLang].verify_fail || 'Resmiýet nädogry!');
+                    resultDiv.className = 'verification-result';
+                    resultDiv.style.color = '#ff6b6b';
                 }
-                resultDiv.style.display = 'block';
             }, 1500);
         });
 
@@ -883,10 +987,10 @@
         // ============================================================
         document.getElementById('refreshAiBtn').addEventListener('click', function() {
             if (currentTab === 'analytics') initAnalytics();
-            if (currentTab === 'forecasts') initForecasts();
+            if (currentTab === 'forecasts') renderForecasts(currentForecastPeriod);
             if (currentTab === 'assistant') {
                 chatMessages.innerHTML = '';
-                addMessage(translations[currentLang].assistant_hello, 'bot');
+                addMessage(translations[currentLang].assistant_desc || 'Salam! Men Sfera platformasynyň kömekçisi. Size nähili kömek edip bilerin?', 'bot');
             }
             if (currentTab === 'documents') {
                 selectedFile = null;
@@ -894,7 +998,19 @@
                 uploadArea.querySelector('p').textContent = translations[currentLang].upload_hint;
                 resultDiv.style.display = 'none';
             }
+            if (currentTab === 'reports') {
+                renderReports();
+            }
         });
+
+        // ============================================================
+        // СООБЩЕНИЯ
+        // ============================================================
+        const messageEl = document.getElementById('message');
+        function showMessage(text, type = 'success') {
+            // Используем глобальное сообщение (можно добавить)
+            alert(text); // временно показываем alert, но лучше добавить div
+        }
 
         // ============================================================
         // ЧАСТИЦЫ
@@ -917,8 +1033,9 @@
         // ============================================================
         setLanguage(currentLang);
         initAnalytics();
-        initForecasts();
-        console.log('AI page loaded');
+        renderForecasts('7d');
+        renderReports();
+        console.log('AI module with extended forecasts and reports loaded');
     </script>
 </body>
 </html>
