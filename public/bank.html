@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="/css/style.css" />
 
     <style>
+        /* ============================================================
+           БАНКОВСКИЙ СТИЛЬ (общий дизайн платформы)
+           ============================================================ */
         .bank-page {
             padding: 120px 7% 60px;
             min-height: 100vh;
@@ -57,22 +60,31 @@
         }
         .btn-outline {
             background: transparent;
-            border: 1px solid rgba(255,255,255,.25);
+            border: 1px solid rgba(255,255,255,.2);
             color: white;
         }
         .btn-outline:hover {
-            background: rgba(255,255,255,.1);
+            background: rgba(255,255,255,.05);
             border-color: #00d4ff;
         }
+        .btn-success {
+            background: linear-gradient(135deg, #00ffa3, #00b894);
+            color: #08131d;
+        }
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0,255,170,.3);
+        }
         .btn-danger {
-            background: rgba(255,0,0,.15);
-            border: 1px solid rgba(255,0,0,.3);
+            background: rgba(200,0,0,.15);
+            border: 1px solid rgba(200,0,0,.3);
             color: #ff6b6b;
         }
         .btn-danger:hover {
-            background: rgba(255,0,0,.25);
+            background: rgba(200,0,0,.25);
         }
 
+        /* Балансовая карта */
         .balance-card {
             background: rgba(255,255,255,.06);
             border: 1px solid rgba(255,255,255,.12);
@@ -101,36 +113,140 @@
             color: #bdd0df;
             margin-left: 8px;
         }
+        .balance-card .account-number {
+            font-size: 14px;
+            color: #9fb5c8;
+        }
 
-        .bank-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
+        /* Вкладки */
+        .bank-tabs {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+            padding-bottom: 4px;
         }
-        .bank-card {
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(255,255,255,.12);
-            backdrop-filter: blur(25px);
-            border-radius: 24px;
-            padding: 30px;
+        .bank-tabs button {
+            background: transparent;
+            border: none;
+            color: #9fb5c8;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: .3s;
+            border-bottom: 3px solid transparent;
         }
-        .bank-card h2 {
-            font-size: 22px;
-            margin-bottom: 20px;
+        .bank-tabs button.active {
+            color: #00d4ff;
+            border-bottom-color: #00d4ff;
+        }
+        .bank-tabs button:hover {
             color: white;
         }
-        .bank-card .form-group {
+
+        .tab-content {
+            display: none;
+            animation: fadeUp .4s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Карточки счёта */
+        .accounts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+        .account-card {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 18px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            transition: .3s;
+        }
+        .account-card:hover {
+            border-color: #00d4ff;
+            transform: translateY(-4px);
+        }
+        .account-card .acct-type {
+            font-size: 14px;
+            color: #00d4ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .account-card .acct-balance {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 12px 0 4px;
+        }
+        .account-card .acct-number {
+            font-size: 13px;
+            color: #9fb5c8;
+        }
+
+        /* Карты */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .card-item {
+            background: linear-gradient(135deg, rgba(0,212,255,.1), rgba(31,107,255,.05));
+            border-radius: 18px;
+            padding: 24px;
+            border: 1px solid rgba(0,212,255,.15);
+            box-shadow: 0 8px 25px rgba(0,0,0,.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+        .card-item .card-type {
+            font-size: 12px;
+            color: #00d4ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .card-item .card-number {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin: 12px 0 8px;
+        }
+        .card-item .card-expiry {
+            font-size: 14px;
+            color: #9fb5c8;
+        }
+        .card-item .card-logo {
+            font-size: 30px;
+            text-align: right;
+            margin-top: 8px;
+        }
+
+        /* Форма перевода */
+        .transfer-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .transfer-form .form-group {
             margin-bottom: 16px;
         }
-        .bank-card .form-group label {
+        .transfer-form .form-group label {
             display: block;
             font-size: 14px;
             font-weight: 500;
             color: #dbe9ff;
             margin-bottom: 6px;
         }
-        .bank-card .form-group input,
-        .bank-card .form-group textarea {
+        .transfer-form .form-group input,
+        .transfer-form .form-group select,
+        .transfer-form .form-group textarea {
             width: 100%;
             padding: 12px 16px;
             border-radius: 12px;
@@ -141,32 +257,34 @@
             transition: .3s;
             outline: none;
         }
-        .bank-card .form-group input:focus,
-        .bank-card .form-group textarea:focus {
+        .transfer-form .form-group input:focus,
+        .transfer-form .form-group select:focus,
+        .transfer-form .form-group textarea:focus {
             border-color: #00d4ff;
             box-shadow: 0 0 20px rgba(0,212,255,.1);
         }
-        .bank-card .form-group textarea {
+        .transfer-form .form-group textarea {
             resize: vertical;
             min-height: 60px;
         }
-        .bank-card .form-actions {
+        .transfer-form .form-actions {
             display: flex;
             gap: 12px;
             justify-content: flex-end;
             margin-top: 10px;
         }
 
+        /* История */
         .transactions-list {
             list-style: none;
             padding: 0;
             margin: 0;
-            max-height: 350px;
+            max-height: 400px;
             overflow-y: auto;
         }
         .transactions-list li {
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,.06);
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255,255,255,.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -175,55 +293,28 @@
         .transactions-list li:last-child {
             border-bottom: none;
         }
-        .transactions-list .tx-type {
+        .tx-type {
             display: inline-block;
-            padding: 2px 10px;
+            padding: 2px 12px;
             border-radius: 12px;
             font-size: 11px;
             font-weight: 600;
             margin-right: 8px;
         }
-        .tx-type.credit {
-            background: rgba(0,255,170,.15);
-            color: #00ffa3;
-        }
-        .tx-type.debit {
-            background: rgba(255,0,0,.15);
-            color: #ff6b6b;
-        }
-        .tx-type.transfer {
-            background: rgba(0,212,255,.15);
-            color: #00d4ff;
-        }
-        .tx-amount {
-            font-weight: 600;
-        }
-        .tx-amount.positive {
-            color: #00ffa3;
-        }
-        .tx-amount.negative {
-            color: #ff6b6b;
-        }
-        .tx-date {
-            color: #9fb5c8;
-            font-size: 12px;
-        }
-        .tx-description {
-            color: #bdd0df;
-            font-size: 13px;
-            flex-grow: 1;
-            margin: 0 12px;
-        }
+        .tx-type.credit { background: rgba(0,255,170,.15); color: #00ffa3; }
+        .tx-type.debit { background: rgba(255,0,0,.15); color: #ff6b6b; }
+        .tx-type.transfer { background: rgba(0,212,255,.15); color: #00d4ff; }
+        .tx-amount.positive { color: #00ffa3; }
+        .tx-amount.negative { color: #ff6b6b; }
+        .tx-date { color: #9fb5c8; font-size: 12px; }
+        .tx-description { flex: 1; margin: 0 12px; color: #bdd0df; }
 
         .empty-state {
             text-align: center;
             padding: 40px 20px;
             color: #bdd0df;
         }
-        .empty-state .icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
+        .empty-state .icon { font-size: 40px; margin-bottom: 10px; }
 
         .message {
             padding: 12px 16px;
@@ -232,25 +323,23 @@
             font-size: 14px;
             display: none;
         }
-        .message.error {
-            display: block;
-            background: rgba(255,0,0,.15);
-            border: 1px solid rgba(255,0,0,.3);
-            color: #ff6b6b;
-        }
-        .message.success {
-            display: block;
-            background: rgba(0,255,170,.1);
-            border: 1px solid rgba(0,255,170,.3);
-            color: #00ffa3;
+        .message.error { display: block; background: rgba(255,0,0,.1); border: 1px solid rgba(255,0,0,.2); color: #ff6b6b; }
+        .message.success { display: block; background: rgba(0,255,170,.1); border: 1px solid rgba(0,255,170,.2); color: #00ffa3; }
+
+        /* Уведомления (дополнительно) */
+        .notification-badge {
+            background: #00d4ff;
+            color: #08131d;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 8px;
         }
 
-        @media (max-width: 992px) {
-            .bank-grid { grid-template-columns: 1fr; }
-        }
         @media (max-width: 768px) {
-            .balance-card { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .balance-card .balance-amount { font-size: 36px; }
+            .balance-card .balance-amount { font-size: 32px; }
+            .bank-tabs button { padding: 10px 14px; font-size: 13px; }
         }
     </style>
 </head>
@@ -289,9 +378,9 @@
 
             <div class="header-right" style="display:flex; align-items:center; gap:12px;">
                 <span class="user-info" id="userDisplay">👤 <strong id="username">User</strong></span>
-                <a href="dashboard.html" class="btn btn-outline" style="padding:8px 16px; font-size:13px;">← Dashboard</a>
+                <a href="dashboard.html" class="btn btn-outline" data-i18n="back" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Yza</a>
                 <button class="lang" id="langBtn">TM</button>
-                <button class="logout-btn" id="logoutBtn" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
+                <button class="logout-btn" id="logoutBtn" data-i18n="logout" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
             </div>
         </div>
     </header>
@@ -301,70 +390,94 @@
             <div class="bank-header">
                 <h1>🏦 TM Bank</h1>
                 <div class="actions">
-                    <button class="btn btn-outline" id="refreshBtn">⟳ Täzele</button>
+                    <button class="btn btn-outline" id="refreshBtn" data-i18n="refresh">⟳ Täzele</button>
                 </div>
             </div>
 
-            <div class="balance-card" id="balanceCard">
+            <!-- Балансовая карта -->
+            <div class="balance-card">
                 <div>
-                    <div class="balance-label">Balans</div>
+                    <div class="balance-label">Jemi balans</div>
                     <div>
-                        <span class="balance-amount" id="balanceAmount">0.00</span>
+                        <span class="balance-amount" id="totalBalance">0.00</span>
                         <span class="balance-currency">TMT</span>
                     </div>
+                    <div class="account-number">Hasap: <span id="mainAccount">1234 5678 9012 3456</span></div>
                 </div>
-                <div style="font-size:14px; color:#bdd0df;">
-                    <span id="accountCurrency">TMT</span>
+                <div style="text-align:right;">
+                    <div style="font-size:14px; color:#bdd0df;">★ Premium hyzmat</div>
+                    <div style="font-size:12px; color:#9fb5c8;">Işjeň: <span id="activeSince">2024</span></div>
                 </div>
             </div>
 
             <div id="message" class="message"></div>
 
-            <div class="bank-grid">
-                <!-- Левая колонка: форма перевода -->
-                <div class="bank-card">
-                    <h2>Pul geçiriş</h2>
+            <!-- Вкладки -->
+            <div class="bank-tabs">
+                <button class="active" data-tab="accounts" data-i18n="tab_accounts">Hasap</button>
+                <button data-tab="cards" data-i18n="tab_cards">Kartlar</button>
+                <button data-tab="transfer" data-i18n="tab_transfer">Geçiriş</button>
+                <button data-tab="history" data-i18n="tab_history">Taryh</button>
+                <button data-tab="notifications" data-i18n="tab_notifications">Bildirişler</button>
+            </div>
+
+            <!-- Содержимое вкладок -->
+            <div class="tab-content active" id="tab-accounts">
+                <div class="accounts-grid" id="accountsGrid"></div>
+            </div>
+
+            <div class="tab-content" id="tab-cards">
+                <div class="cards-grid" id="cardsGrid"></div>
+            </div>
+
+            <div class="tab-content" id="tab-transfer">
+                <div class="transfer-form">
                     <form id="transferForm">
                         <div class="form-group">
-                            <label for="recipient">Alýan ulanyjy (email ýa-da username)</label>
-                            <input type="text" id="recipient" name="recipient" placeholder="alýan@example.com" required />
+                            <label for="fromAccount" data-i18n="from_account">Nireden</label>
+                            <select id="fromAccount" required></select>
                         </div>
                         <div class="form-group">
-                            <label for="amount">Mukdar (TMT)</label>
-                            <input type="number" id="amount" name="amount" step="0.01" min="0.01" required placeholder="100.00" />
+                            <label for="toAccount" data-i18n="to_account">Nirä (hasap belgisi ýa-da ulanyjy)</label>
+                            <input type="text" id="toAccount" placeholder="Mysal: 1234 5678 9012 3456 ýa-da ulanyjy ady" required />
                         </div>
                         <div class="form-group">
-                            <label for="description">Düşündiriş (islege görä)</label>
-                            <textarea id="description" name="description" placeholder="Geçiriş sebäbi..."></textarea>
+                            <label for="transferAmount" data-i18n="amount">Mukdar (TMT)</label>
+                            <input type="number" id="transferAmount" step="0.01" min="0.01" required placeholder="100.00" />
+                        </div>
+                        <div class="form-group">
+                            <label for="transferDesc" data-i18n="description">Düşündiriş</label>
+                            <textarea id="transferDesc" placeholder="Geçiriş sebäbi..."></textarea>
                         </div>
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary" id="transferBtn">Geçir</button>
+                            <button type="submit" class="btn btn-primary" id="transferBtn" data-i18n="send_transfer">Geçir</button>
                         </div>
                     </form>
                 </div>
+            </div>
 
-                <!-- Правая колонка: история транзакций -->
-                <div class="bank-card">
-                    <h2>Iň soňky amallar</h2>
-                    <div id="transactionsContainer">
-                        <div class="empty-state" id="loadingTx">
-                            <div class="icon">⏳</div>
-                            <p>Ýüklenýär...</p>
-                        </div>
-                        <ul class="transactions-list" id="transactionsList" style="display:none;"></ul>
-                        <div class="empty-state" id="emptyTx" style="display:none;">
-                            <div class="icon">📭</div>
-                            <p>Hiç hili amal ýok</p>
-                        </div>
-                    </div>
+            <div class="tab-content" id="tab-history">
+                <ul class="transactions-list" id="transactionsList"></ul>
+                <div class="empty-state" id="emptyTx" style="display:none;">
+                    <div class="icon">📭</div>
+                    <p data-i18n="no_transactions">Hiç hili amal ýok</p>
                 </div>
             </div>
+
+            <div class="tab-content" id="tab-notifications">
+                <div id="notificationsList"></div>
+                <div class="empty-state" id="emptyNotif" style="display:none;">
+                    <div class="icon">🔔</div>
+                    <p data-i18n="no_notifications">Täze bildiriş ýok</p>
+                </div>
+            </div>
+
         </div>
     </section>
 
     <script>
         // ============================================================
-        // НАСТРОЙКА API
+        // НАСТРОЙКА API и переводы
         // ============================================================
         const API_BASE_URL = 'https://sfera-1.onrender.com';
         const token = localStorage.getItem('token');
@@ -373,64 +486,120 @@
             window.location.href = 'login.html';
         }
 
-        // ============================================================
-        // ПЕРЕВОДЫ
-        // ============================================================
         const translations = {
             tm: {
                 logout: "Çykmak",
+                back: "← Yza",
                 refresh: "Täzele",
-                transfer: "Geçir",
-                balance: "Balans",
-                currency: "TMT",
-                loading: "Ýüklenýär...",
+                tab_accounts: "Hasap",
+                tab_cards: "Kartlar",
+                tab_transfer: "Geçiriş",
+                tab_history: "Taryh",
+                tab_notifications: "Bildirişler",
+                from_account: "Nireden",
+                to_account: "Nirä",
+                amount: "Mukdar (TMT)",
+                description: "Düşündiriş",
+                send_transfer: "Geçir",
                 no_transactions: "Hiç hili amal ýok",
-                success_transfer: "Pul üstünlikli geçirildi!",
-                error_transfer: "Geçiriş baş tutmady. Täzeden synanyşyň.",
-                error_insufficient: "Balans ýeterlik däl.",
-                error_recipient: "Alýan ulanyjy tapylmady.",
-                error_amount: "Mukdar ýalňyş."
+                no_notifications: "Täze bildiriş ýok",
+                account_type_current: "Ähliýerli",
+                account_type_savings: "Tygyşly",
+                account_type_currency: "Walýuta",
+                card_type_debit: "Debet karta",
+                card_type_credit: "Kredit karta",
+                transfer_success: "Geçiriş üstünlikli tamamlandy!",
+                transfer_error: "Geçiriş baş tutmady.",
+                insufficient: "Balans ýeterlik däl.",
+                no_account: "Hasap tapylmady.",
+                invalid_amount: "Mukdar ýalňyş."
             },
             ru: {
                 logout: "Выйти",
+                back: "← Назад",
                 refresh: "Обновить",
-                transfer: "Перевести",
-                balance: "Баланс",
-                currency: "TMT",
-                loading: "Загрузка...",
+                tab_accounts: "Счета",
+                tab_cards: "Карты",
+                tab_transfer: "Перевод",
+                tab_history: "История",
+                tab_notifications: "Уведомления",
+                from_account: "Откуда",
+                to_account: "Куда",
+                amount: "Сумма (TMT)",
+                description: "Описание",
+                send_transfer: "Перевести",
                 no_transactions: "Нет транзакций",
-                success_transfer: "Перевод выполнен успешно!",
-                error_transfer: "Ошибка перевода. Попробуйте снова.",
-                error_insufficient: "Недостаточно средств.",
-                error_recipient: "Получатель не найден.",
-                error_amount: "Некорректная сумма."
+                no_notifications: "Нет уведомлений",
+                account_type_current: "Текущий",
+                account_type_savings: "Сберегательный",
+                account_type_currency: "Валютный",
+                card_type_debit: "Дебетовая карта",
+                card_type_credit: "Кредитная карта",
+                transfer_success: "Перевод успешно выполнен!",
+                transfer_error: "Ошибка перевода.",
+                insufficient: "Недостаточно средств.",
+                no_account: "Счёт не найден.",
+                invalid_amount: "Некорректная сумма."
             },
             en: {
                 logout: "Logout",
+                back: "← Back",
                 refresh: "Refresh",
-                transfer: "Transfer",
-                balance: "Balance",
-                currency: "TMT",
-                loading: "Loading...",
+                tab_accounts: "Accounts",
+                tab_cards: "Cards",
+                tab_transfer: "Transfer",
+                tab_history: "History",
+                tab_notifications: "Notifications",
+                from_account: "From",
+                to_account: "To",
+                amount: "Amount (TMT)",
+                description: "Description",
+                send_transfer: "Transfer",
                 no_transactions: "No transactions",
-                success_transfer: "Transfer successful!",
-                error_transfer: "Transfer failed. Please try again.",
-                error_insufficient: "Insufficient balance.",
-                error_recipient: "Recipient not found.",
-                error_amount: "Invalid amount."
+                no_notifications: "No notifications",
+                account_type_current: "Current",
+                account_type_savings: "Savings",
+                account_type_currency: "Currency",
+                card_type_debit: "Debit card",
+                card_type_credit: "Credit card",
+                transfer_success: "Transfer successful!",
+                transfer_error: "Transfer failed.",
+                insufficient: "Insufficient balance.",
+                no_account: "Account not found.",
+                invalid_amount: "Invalid amount."
             }
         };
 
         let currentLang = localStorage.getItem('lang') || 'tm';
+        let accounts = [];
+        let cards = [];
+        let transactions = [];
+        let notifications = [];
+        let currentTab = 'accounts';
 
         function setLanguage(lang) {
             if (!translations[lang]) return;
             currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
             document.getElementById('langBtn').textContent = lang.toUpperCase();
             document.getElementById('logoutBtn').textContent = translations[lang].logout;
-            document.getElementById('refreshBtn').textContent = '⟳ ' + translations[lang].refresh;
-            document.getElementById('transferBtn').textContent = translations[lang].transfer;
             localStorage.setItem('lang', lang);
+            updateUI();
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.bank-tabs button').forEach(btn => {
+                const key = btn.dataset.i18n;
+                if (translations[currentLang][key]) btn.textContent = translations[currentLang][key];
+            });
+            renderAccounts();
+            renderCards();
+            renderHistory();
+            renderNotifications();
+            populateFromAccounts();
         }
 
         document.getElementById('langBtn').addEventListener('click', function() {
@@ -441,7 +610,7 @@
         });
 
         // ============================================================
-        // ЗАГРУЗКА ПОЛЬЗОВАТЕЛЯ
+        // ПОЛЬЗОВАТЕЛЬ И ВЫХОД
         // ============================================================
         const userData = JSON.parse(localStorage.getItem('user') || '{"username":"Guest"}');
         document.getElementById('username').textContent = userData.username || 'User';
@@ -453,178 +622,263 @@
         });
 
         // ============================================================
-        // ФУНКЦИИ ПОКАЗА СООБЩЕНИЙ
+        // ИНИЦИАЛИЗАЦИЯ ДАННЫХ
+        // ============================================================
+        function initData() {
+            accounts = [
+                { id: 'acc1', type: 'current', name: 'Ähliýerli hasap', balance: 12500.75, currency: 'TMT', number: '1234 5678 9012 3456' },
+                { id: 'acc2', type: 'savings', name: 'Tygyşly hasap', balance: 8500.00, currency: 'TMT', number: '2345 6789 0123 4567' },
+                { id: 'acc3', type: 'currency', name: 'Walýuta hasap (USD)', balance: 500.50, currency: 'USD', number: '3456 7890 1234 5678' }
+            ];
+            cards = [
+                { id: 'card1', type: 'debit', name: 'Debet karta', number: '4567 8901 2345 6789', expiry: '12/28', logo: '💳' },
+                { id: 'card2', type: 'credit', name: 'Kredit karta', number: '5678 9012 3456 7890', expiry: '06/27', logo: '💳' }
+            ];
+            transactions = [
+                { id: 'tx1', from: 'acc1', to: 'acc2', amount: 200, type: 'transfer', description: 'Tygyşly hasaba geçiriş', date: new Date(Date.now() - 3600000 * 2) },
+                { id: 'tx2', from: 'acc1', to: 'external', amount: 150, type: 'debit', description: 'Öý işi üçin töleg', date: new Date(Date.now() - 3600000 * 5) },
+                { id: 'tx3', from: 'external', to: 'acc1', amount: 300, type: 'credit', description: 'Aýlyk girdeji', date: new Date(Date.now() - 3600000 * 24) },
+                { id: 'tx4', from: 'acc2', to: 'acc1', amount: 500, type: 'transfer', description: 'Esasy hasaba geçiriş', date: new Date(Date.now() - 3600000 * 48) }
+            ];
+            notifications = [
+                { id: 'n1', text: 'Täze kart çykaryldy: Visa Gold', date: new Date(Date.now() - 3600000 * 3), read: false },
+                { id: 'n2', text: 'Geçiriş tamamlandy: +300 TMT', date: new Date(Date.now() - 3600000 * 20), read: false },
+                { id: 'n3', text: 'Ýylda bir gezek hyzmat tölegi 50 TMT', date: new Date(Date.now() - 3600000 * 72), read: true }
+            ];
+            updateTotalBalance();
+            document.getElementById('activeSince').textContent = '2024';
+        }
+
+        function updateTotalBalance() {
+            const total = accounts.reduce((sum, acc) => sum + acc.balance, 0);
+            document.getElementById('totalBalance').textContent = total.toFixed(2);
+            document.getElementById('mainAccount').textContent = accounts.length ? accounts[0].number : '';
+        }
+
+        // ============================================================
+        // ОТОБРАЖЕНИЕ СЧЕТОВ
+        // ============================================================
+        function renderAccounts() {
+            const container = document.getElementById('accountsGrid');
+            if (!accounts.length) {
+                container.innerHTML = '<div class="empty-state"><div class="icon">🏦</div><p>Hiç hili hasap ýok</p></div>';
+                return;
+            }
+            const lang = currentLang;
+            container.innerHTML = accounts.map(acc => `
+                <div class="account-card">
+                    <div class="acct-type">${translations[lang][`account_type_${acc.type}`] || acc.type}</div>
+                    <div class="acct-balance">${acc.balance.toFixed(2)} ${acc.currency}</div>
+                    <div class="acct-number">${acc.number}</div>
+                </div>
+            `).join('');
+        }
+
+        // ============================================================
+        // ОТОБРАЖЕНИЕ КАРТ
+        // ============================================================
+        function renderCards() {
+            const container = document.getElementById('cardsGrid');
+            if (!cards.length) {
+                container.innerHTML = '<div class="empty-state"><div class="icon">💳</div><p>Kartlar ýok</p></div>';
+                return;
+            }
+            const lang = currentLang;
+            container.innerHTML = cards.map(card => `
+                <div class="card-item">
+                    <div class="card-type">${translations[lang][`card_type_${card.type}`] || card.type}</div>
+                    <div class="card-number">${card.number}</div>
+                    <div class="card-expiry">Işleýän çenli: ${card.expiry}</div>
+                    <div class="card-logo">${card.logo}</div>
+                </div>
+            `).join('');
+        }
+
+        // ============================================================
+        // ОТОБРАЖЕНИЕ ИСТОРИИ
+        // ============================================================
+        function renderHistory() {
+            const list = document.getElementById('transactionsList');
+            const empty = document.getElementById('emptyTx');
+            if (!transactions.length) {
+                list.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+            const sorted = [...transactions].sort((a, b) => b.date - a.date);
+            list.innerHTML = sorted.map(tx => {
+                const isCredit = tx.type === 'credit';
+                const sign = isCredit ? '+' : '-';
+                const amountClass = isCredit ? 'positive' : 'negative';
+                const typeClass = tx.type === 'credit' ? 'credit' : tx.type === 'debit' ? 'debit' : 'transfer';
+                const typeLabel = tx.type.charAt(0).toUpperCase() + tx.type.slice(1);
+                return `
+                    <li>
+                        <span>
+                            <span class="tx-type ${typeClass}">${typeLabel}</span>
+                            <span class="tx-description">${tx.description || ''}</span>
+                        </span>
+                        <span>
+                            <span class="tx-amount ${amountClass}">${sign} ${Math.abs(tx.amount).toFixed(2)} TMT</span>
+                            <span class="tx-date">${new Date(tx.date).toLocaleDateString()}</span>
+                        </span>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        // ============================================================
+        // ОТОБРАЖЕНИЕ УВЕДОМЛЕНИЙ
+        // ============================================================
+        function renderNotifications() {
+            const container = document.getElementById('notificationsList');
+            const empty = document.getElementById('emptyNotif');
+            if (!notifications.length) {
+                container.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+            container.innerHTML = notifications.map(n => `
+                <div style="padding:12px 16px; border-bottom:1px solid rgba(255,255,255,.05); display:flex; justify-content:space-between; align-items:center; ${!n.read ? 'background:rgba(0,212,255,.05);' : ''}">
+                    <span>${n.text}</span>
+                    <span style="color:#9fb5c8; font-size:12px;">${new Date(n.date).toLocaleString()}</span>
+                </div>
+            `).join('');
+        }
+
+        // ============================================================
+        // ЗАПОЛНЕНИЕ ВЫПАДАЮЩЕГО СПИСКА СЧЕТОВ
+        // ============================================================
+        function populateFromAccounts() {
+            const select = document.getElementById('fromAccount');
+            select.innerHTML = accounts.map(acc => `
+                <option value="${acc.id}">${acc.name} (${acc.balance.toFixed(2)} ${acc.currency})</option>
+            `).join('');
+        }
+
+        // ============================================================
+        // ОБРАБОТКА ПЕРЕВОДА
+        // ============================================================
+        const transferForm = document.getElementById('transferForm');
+        const transferBtn = document.getElementById('transferBtn');
+
+        transferForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const fromId = document.getElementById('fromAccount').value;
+            const toAccount = document.getElementById('toAccount').value.trim();
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            const desc = document.getElementById('transferDesc').value.trim();
+
+            if (!fromId || !toAccount || !amount || amount <= 0) {
+                showMessage(translations[currentLang].invalid_amount, 'error');
+                return;
+            }
+
+            const fromAcc = accounts.find(a => a.id === fromId);
+            if (!fromAcc) {
+                showMessage(translations[currentLang].no_account, 'error');
+                return;
+            }
+            if (fromAcc.balance < amount) {
+                showMessage(translations[currentLang].insufficient, 'error');
+                return;
+            }
+
+            // Поиск получателя по номеру счета или по имени (упрощённо)
+            let toAcc = accounts.find(a => a.number === toAccount || a.name.toLowerCase().includes(toAccount.toLowerCase()));
+            if (toAcc) {
+                // Внутренний перевод
+                fromAcc.balance -= amount;
+                toAcc.balance += amount;
+                transactions.push({
+                    id: 'tx' + Date.now(),
+                    from: fromId,
+                    to: toAcc.id,
+                    amount: amount,
+                    type: 'transfer',
+                    description: desc || 'Içki geçiriş',
+                    date: new Date()
+                });
+                notifications.push({
+                    id: 'n' + Date.now(),
+                    text: `Geçiriş: ${amount} TMT ${toAcc.name} hasabyna`,
+                    date: new Date(),
+                    read: false
+                });
+                showMessage(translations[currentLang].transfer_success, 'success');
+            } else {
+                // Внешний перевод (списываем, но не зачисляем)
+                fromAcc.balance -= amount;
+                transactions.push({
+                    id: 'tx' + Date.now(),
+                    from: fromId,
+                    to: 'external',
+                    amount: amount,
+                    type: 'debit',
+                    description: desc || 'Daşarky geçiriş',
+                    date: new Date()
+                });
+                notifications.push({
+                    id: 'n' + Date.now(),
+                    text: `Daşarky geçiriş: -${amount} TMT`,
+                    date: new Date(),
+                    read: false
+                });
+                showMessage(translations[currentLang].transfer_success, 'success');
+            }
+
+            updateTotalBalance();
+            renderAccounts();
+            renderHistory();
+            renderNotifications();
+            populateFromAccounts();
+            transferForm.reset();
+            populateFromAccounts();
+        });
+
+        // ============================================================
+        // ВКЛАДКИ
+        // ============================================================
+        document.querySelectorAll('.bank-tabs button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.bank-tabs button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const tab = this.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+                document.getElementById('tab-' + tab).classList.add('active');
+                currentTab = tab;
+            });
+        });
+
+        // ============================================================
+        // ОБНОВЛЕНИЕ
+        // ============================================================
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            renderAccounts();
+            renderCards();
+            renderHistory();
+            renderNotifications();
+            populateFromAccounts();
+            updateTotalBalance();
+            showMessage('Täzelendi!', 'success');
+        });
+
+        // ============================================================
+        // ПОКАЗ СООБЩЕНИЙ
         // ============================================================
         const messageEl = document.getElementById('message');
-
-        function showMessage(text, type = 'error') {
+        function showMessage(text, type = 'success') {
             messageEl.textContent = text;
             messageEl.className = 'message ' + type;
             messageEl.style.display = 'block';
             clearTimeout(window.messageTimeout);
             window.messageTimeout = setTimeout(() => {
                 messageEl.style.display = 'none';
-            }, 5000);
+            }, 4000);
         }
-
-        // ============================================================
-        // ЗАГРУЗКА БАЛАНСА
-        // ============================================================
-        async function loadBalance() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/bank/balance`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (!response.ok) {
-                    if (response.status === 401) {
-                        localStorage.removeItem('token');
-                        window.location.href = 'login.html';
-                    }
-                    throw new Error('Failed to load balance');
-                }
-                const data = await response.json();
-                document.getElementById('balanceAmount').textContent = data.balance.toFixed(2);
-                document.getElementById('accountCurrency').textContent = data.currency || 'TMT';
-            } catch (error) {
-                console.error('Balance error:', error);
-                showMessage('Balans ýüklenmedi', 'error');
-            }
-        }
-
-        // ============================================================
-        // ЗАГРУЗКА ТРАНЗАКЦИЙ
-        // ============================================================
-        async function loadTransactions() {
-            const listEl = document.getElementById('transactionsList');
-            const loadingEl = document.getElementById('loadingTx');
-            const emptyEl = document.getElementById('emptyTx');
-
-            try {
-                loadingEl.style.display = 'block';
-                listEl.style.display = 'none';
-                emptyEl.style.display = 'none';
-
-                const response = await fetch(`${API_BASE_URL}/api/bank/transactions`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (!response.ok) throw new Error('Failed to load transactions');
-                const transactions = await response.json();
-
-                loadingEl.style.display = 'none';
-
-                if (!transactions || transactions.length === 0) {
-                    emptyEl.style.display = 'block';
-                    return;
-                }
-
-                // Сортируем по дате (сначала новые)
-                transactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-                listEl.innerHTML = transactions.map(tx => {
-                    // Определяем тип: credit, debit, transfer
-                    let type = tx.type || 'transfer';
-                    let typeClass = type === 'credit' ? 'positive' : 'negative';
-                    let sign = type === 'credit' ? '+' : '-';
-                    let displayAmount = `${sign} ${Math.abs(tx.amount).toFixed(2)} TMT`;
-                    let typeLabel = type === 'credit' ? 'Kredit' : (type === 'debit' ? 'Debit' : 'Geçiriş');
-
-                    return `
-                        <li>
-                            <span>
-                                <span class="tx-type ${type}">${typeLabel}</span>
-                                <span class="tx-description">${tx.description || ''}</span>
-                            </span>
-                            <span>
-                                <span class="tx-amount ${typeClass}">${displayAmount}</span>
-                                <span class="tx-date">${new Date(tx.createdAt).toLocaleDateString()}</span>
-                            </span>
-                        </li>
-                    `;
-                }).join('');
-                listEl.style.display = 'block';
-            } catch (error) {
-                console.error('Transactions error:', error);
-                loadingEl.style.display = 'none';
-                emptyEl.style.display = 'block';
-                emptyEl.querySelector('p').textContent = 'Amallar ýüklenmedi';
-            }
-        }
-
-        // ============================================================
-        // ПЕРЕВОД СРЕДСТВ
-        // ============================================================
-        const transferForm = document.getElementById('transferForm');
-        const transferBtn = document.getElementById('transferBtn');
-
-        transferForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const recipient = document.getElementById('recipient').value.trim();
-            const amount = parseFloat(document.getElementById('amount').value);
-            const description = document.getElementById('description').value.trim();
-
-            if (!recipient) {
-                showMessage(translations[currentLang].error_recipient, 'error');
-                return;
-            }
-            if (!amount || amount <= 0) {
-                showMessage(translations[currentLang].error_amount, 'error');
-                return;
-            }
-
-            transferBtn.disabled = true;
-            transferBtn.textContent = '...';
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/bank/transfer`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        toUserId: recipient, // ожидаем email или username
-                        amount,
-                        description
-                    })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    showMessage(translations[currentLang].success_transfer, 'success');
-                    transferForm.reset();
-                    // Обновляем баланс и транзакции
-                    await Promise.all([loadBalance(), loadTransactions()]);
-                } else {
-                    let errMsg = translations[currentLang].error_transfer;
-                    if (data.message) {
-                        if (data.message.includes('insufficient')) errMsg = translations[currentLang].error_insufficient;
-                        else if (data.message.includes('not found')) errMsg = translations[currentLang].error_recipient;
-                        else errMsg = data.message;
-                    }
-                    showMessage(errMsg, 'error');
-                }
-            } catch (error) {
-                console.error('Transfer error:', error);
-                showMessage(translations[currentLang].error_transfer, 'error');
-            } finally {
-                transferBtn.disabled = false;
-                transferBtn.textContent = translations[currentLang].transfer;
-            }
-        });
-
-        // ============================================================
-        // ОБНОВЛЕНИЕ
-        // ============================================================
-        document.getElementById('refreshBtn').addEventListener('click', async () => {
-            await Promise.all([loadBalance(), loadTransactions()]);
-            showMessage('Täzelendi!', 'success');
-        });
 
         // ============================================================
         // ЧАСТИЦЫ
@@ -645,10 +899,14 @@
         // ============================================================
         // ИНИЦИАЛИЗАЦИЯ
         // ============================================================
+        initData();
         setLanguage(currentLang);
-        loadBalance();
-        loadTransactions();
-        console.log('Bank page loaded');
+        renderAccounts();
+        renderCards();
+        renderHistory();
+        renderNotifications();
+        populateFromAccounts();
+        console.log('Bank page (full digital bank structure) loaded');
     </script>
 </body>
 </html>
