@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="tm">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>СФЕРА — TM Bank</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <style>
+        .bank-page {
+            padding: 120px 7% 60px;
+            min-height: 100vh;
+        }
+        .bank-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .bank-header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bank-header .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #008cff);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,212,255,.25);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0,212,255,.4);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,.25);
+            color: white;
+        }
+        .btn-outline:hover {
+            background: rgba(255,255,255,.1);
+            border-color: #00d4ff;
+        }
+        .btn-danger {
+            background: rgba(255,0,0,.15);
+            border: 1px solid rgba(255,0,0,.3);
+            color: #ff6b6b;
+        }
+        .btn-danger:hover {
+            background: rgba(255,0,0,.25);
+        }
+
+        .balance-card {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.12);
+            backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 30px 35px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .balance-card .balance-label {
+            font-size: 16px;
+            color: #bdd0df;
+        }
+        .balance-card .balance-amount {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #00ffa3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .balance-card .balance-currency {
+            font-size: 22px;
+            color: #bdd0df;
+            margin-left: 8px;
+        }
+
+        .bank-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .bank-card {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.12);
+            backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 30px;
+        }
+        .bank-card h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        .bank-card .form-group {
+            margin-bottom: 16px;
+        }
+        .bank-card .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #dbe9ff;
+            margin-bottom: 6px;
+        }
+        .bank-card .form-group input,
+        .bank-card .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.15);
+            background: rgba(255,255,255,.05);
+            color: white;
+            font-size: 15px;
+            transition: .3s;
+            outline: none;
+        }
+        .bank-card .form-group input:focus,
+        .bank-card .form-group textarea:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0,212,255,.1);
+        }
+        .bank-card .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        .bank-card .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .transactions-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        .transactions-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+        .transactions-list li:last-child {
+            border-bottom: none;
+        }
+        .transactions-list .tx-type {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        .tx-type.credit {
+            background: rgba(0,255,170,.15);
+            color: #00ffa3;
+        }
+        .tx-type.debit {
+            background: rgba(255,0,0,.15);
+            color: #ff6b6b;
+        }
+        .tx-type.transfer {
+            background: rgba(0,212,255,.15);
+            color: #00d4ff;
+        }
+        .tx-amount {
+            font-weight: 600;
+        }
+        .tx-amount.positive {
+            color: #00ffa3;
+        }
+        .tx-amount.negative {
+            color: #ff6b6b;
+        }
+        .tx-date {
+            color: #9fb5c8;
+            font-size: 12px;
+        }
+        .tx-description {
+            color: #bdd0df;
+            font-size: 13px;
+            flex-grow: 1;
+            margin: 0 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #bdd0df;
+        }
+        .empty-state .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            display: none;
+        }
+        .message.error {
+            display: block;
+            background: rgba(255,0,0,.15);
+            border: 1px solid rgba(255,0,0,.3);
+            color: #ff6b6b;
+        }
+        .message.success {
+            display: block;
+            background: rgba(0,255,170,.1);
+            border: 1px solid rgba(0,255,170,.3);
+            color: #00ffa3;
+        }
+
+        @media (max-width: 992px) {
+            .bank-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .balance-card { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .balance-card .balance-amount { font-size: 36px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles"></div>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3" />
+                                <stop offset="50%" stop-color="#00d4ff" />
+                                <stop offset="100%" stop-color="#1f6bff" />
+                            </linearGradient>
+                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="4" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
+                        <g filter="url(#logoGlow)">
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>SFERA</h2>
+                    <p>Milli Sanly Platforma</p>
+                </div>
+            </a>
+
+            <div class="header-right" style="display:flex; align-items:center; gap:12px;">
+                <span class="user-info" id="userDisplay">👤 <strong id="username">User</strong></span>
+                <a href="dashboard.html" class="btn btn-outline" style="padding:8px 16px; font-size:13px;">← Dashboard</a>
+                <button class="lang" id="langBtn">TM</button>
+                <button class="logout-btn" id="logoutBtn" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="bank-page">
+        <div class="container">
+            <div class="bank-header">
+                <h1>🏦 TM Bank</h1>
+                <div class="actions">
+                    <button class="btn btn-outline" id="refreshBtn">⟳ Täzele</button>
+                </div>
+            </div>
+
+            <div class="balance-card" id="balanceCard">
+                <div>
+                    <div class="balance-label">Balans</div>
+                    <div>
+                        <span class="balance-amount" id="balanceAmount">0.00</span>
+                        <span class="balance-currency">TMT</span>
+                    </div>
+                </div>
+                <div style="font-size:14px; color:#bdd0df;">
+                    <span id="accountCurrency">TMT</span>
+                </div>
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <div class="bank-grid">
+                <!-- Левая колонка: форма перевода -->
+                <div class="bank-card">
+                    <h2>Pul geçiriş</h2>
+                    <form id="transferForm">
+                        <div class="form-group">
+                            <label for="recipient">Alýan ulanyjy (email ýa-da username)</label>
+                            <input type="text" id="recipient" name="recipient" placeholder="alýan@example.com" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Mukdar (TMT)</label>
+                            <input type="number" id="amount" name="amount" step="0.01" min="0.01" required placeholder="100.00" />
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Düşündiriş (islege görä)</label>
+                            <textarea id="description" name="description" placeholder="Geçiriş sebäbi..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="transferBtn">Geçir</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Правая колонка: история транзакций -->
+                <div class="bank-card">
+                    <h2>Iň soňky amallar</h2>
+                    <div id="transactionsContainer">
+                        <div class="empty-state" id="loadingTx">
+                            <div class="icon">⏳</div>
+                            <p>Ýüklenýär...</p>
+                        </div>
+                        <ul class="transactions-list" id="transactionsList" style="display:none;"></ul>
+                        <div class="empty-state" id="emptyTx" style="display:none;">
+                            <div class="icon">📭</div>
+                            <p>Hiç hili amal ýok</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ============================================================
+        // НАСТРОЙКА API
+        // ============================================================
+        const API_BASE_URL = 'https://sfera-1.onrender.com';
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        // ============================================================
+        // ПЕРЕВОДЫ
+        // ============================================================
+        const translations = {
+            tm: {
+                logout: "Çykmak",
+                refresh: "Täzele",
+                transfer: "Geçir",
+                balance: "Balans",
+                currency: "TMT",
+                loading: "Ýüklenýär...",
+                no_transactions: "Hiç hili amal ýok",
+                success_transfer: "Pul üstünlikli geçirildi!",
+                error_transfer: "Geçiriş baş tutmady. Täzeden synanyşyň.",
+                error_insufficient: "Balans ýeterlik däl.",
+                error_recipient: "Alýan ulanyjy tapylmady.",
+                error_amount: "Mukdar ýalňyş."
+            },
+            ru: {
+                logout: "Выйти",
+                refresh: "Обновить",
+                transfer: "Перевести",
+                balance: "Баланс",
+                currency: "TMT",
+                loading: "Загрузка...",
+                no_transactions: "Нет транзакций",
+                success_transfer: "Перевод выполнен успешно!",
+                error_transfer: "Ошибка перевода. Попробуйте снова.",
+                error_insufficient: "Недостаточно средств.",
+                error_recipient: "Получатель не найден.",
+                error_amount: "Некорректная сумма."
+            },
+            en: {
+                logout: "Logout",
+                refresh: "Refresh",
+                transfer: "Transfer",
+                balance: "Balance",
+                currency: "TMT",
+                loading: "Loading...",
+                no_transactions: "No transactions",
+                success_transfer: "Transfer successful!",
+                error_transfer: "Transfer failed. Please try again.",
+                error_insufficient: "Insufficient balance.",
+                error_recipient: "Recipient not found.",
+                error_amount: "Invalid amount."
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'tm';
+
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+            currentLang = lang;
+            document.getElementById('langBtn').textContent = lang.toUpperCase();
+            document.getElementById('logoutBtn').textContent = translations[lang].logout;
+            document.getElementById('refreshBtn').textContent = '⟳ ' + translations[lang].refresh;
+            document.getElementById('transferBtn').textContent = translations[lang].transfer;
+            localStorage.setItem('lang', lang);
+        }
+
+        document.getElementById('langBtn').addEventListener('click', function() {
+            const cycle = ['tm', 'ru', 'en'];
+            let idx = cycle.indexOf(currentLang);
+            idx = (idx + 1) % cycle.length;
+            setLanguage(cycle[idx]);
+        });
+
+        // ============================================================
+        // ЗАГРУЗКА ПОЛЬЗОВАТЕЛЯ
+        // ============================================================
+        const userData = JSON.parse(localStorage.getItem('user') || '{"username":"Guest"}');
+        document.getElementById('username').textContent = userData.username || 'User';
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // ============================================================
+        // ФУНКЦИИ ПОКАЗА СООБЩЕНИЙ
+        // ============================================================
+        const messageEl = document.getElementById('message');
+
+        function showMessage(text, type = 'error') {
+            messageEl.textContent = text;
+            messageEl.className = 'message ' + type;
+            messageEl.style.display = 'block';
+            clearTimeout(window.messageTimeout);
+            window.messageTimeout = setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // ============================================================
+        // ЗАГРУЗКА БАЛАНСА
+        // ============================================================
+        async function loadBalance() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/bank/balance`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        localStorage.removeItem('token');
+                        window.location.href = 'login.html';
+                    }
+                    throw new Error('Failed to load balance');
+                }
+                const data = await response.json();
+                document.getElementById('balanceAmount').textContent = data.balance.toFixed(2);
+                document.getElementById('accountCurrency').textContent = data.currency || 'TMT';
+            } catch (error) {
+                console.error('Balance error:', error);
+                showMessage('Balans ýüklenmedi', 'error');
+            }
+        }
+
+        // ============================================================
+        // ЗАГРУЗКА ТРАНЗАКЦИЙ
+        // ============================================================
+        async function loadTransactions() {
+            const listEl = document.getElementById('transactionsList');
+            const loadingEl = document.getElementById('loadingTx');
+            const emptyEl = document.getElementById('emptyTx');
+
+            try {
+                loadingEl.style.display = 'block';
+                listEl.style.display = 'none';
+                emptyEl.style.display = 'none';
+
+                const response = await fetch(`${API_BASE_URL}/api/bank/transactions`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) throw new Error('Failed to load transactions');
+                const transactions = await response.json();
+
+                loadingEl.style.display = 'none';
+
+                if (!transactions || transactions.length === 0) {
+                    emptyEl.style.display = 'block';
+                    return;
+                }
+
+                // Сортируем по дате (сначала новые)
+                transactions.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                listEl.innerHTML = transactions.map(tx => {
+                    // Определяем тип: credit, debit, transfer
+                    let type = tx.type || 'transfer';
+                    let typeClass = type === 'credit' ? 'positive' : 'negative';
+                    let sign = type === 'credit' ? '+' : '-';
+                    let displayAmount = `${sign} ${Math.abs(tx.amount).toFixed(2)} TMT`;
+                    let typeLabel = type === 'credit' ? 'Kredit' : (type === 'debit' ? 'Debit' : 'Geçiriş');
+
+                    return `
+                        <li>
+                            <span>
+                                <span class="tx-type ${type}">${typeLabel}</span>
+                                <span class="tx-description">${tx.description || ''}</span>
+                            </span>
+                            <span>
+                                <span class="tx-amount ${typeClass}">${displayAmount}</span>
+                                <span class="tx-date">${new Date(tx.createdAt).toLocaleDateString()}</span>
+                            </span>
+                        </li>
+                    `;
+                }).join('');
+                listEl.style.display = 'block';
+            } catch (error) {
+                console.error('Transactions error:', error);
+                loadingEl.style.display = 'none';
+                emptyEl.style.display = 'block';
+                emptyEl.querySelector('p').textContent = 'Amallar ýüklenmedi';
+            }
+        }
+
+        // ============================================================
+        // ПЕРЕВОД СРЕДСТВ
+        // ============================================================
+        const transferForm = document.getElementById('transferForm');
+        const transferBtn = document.getElementById('transferBtn');
+
+        transferForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const recipient = document.getElementById('recipient').value.trim();
+            const amount = parseFloat(document.getElementById('amount').value);
+            const description = document.getElementById('description').value.trim();
+
+            if (!recipient) {
+                showMessage(translations[currentLang].error_recipient, 'error');
+                return;
+            }
+            if (!amount || amount <= 0) {
+                showMessage(translations[currentLang].error_amount, 'error');
+                return;
+            }
+
+            transferBtn.disabled = true;
+            transferBtn.textContent = '...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/bank/transfer`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        toUserId: recipient, // ожидаем email или username
+                        amount,
+                        description
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage(translations[currentLang].success_transfer, 'success');
+                    transferForm.reset();
+                    // Обновляем баланс и транзакции
+                    await Promise.all([loadBalance(), loadTransactions()]);
+                } else {
+                    let errMsg = translations[currentLang].error_transfer;
+                    if (data.message) {
+                        if (data.message.includes('insufficient')) errMsg = translations[currentLang].error_insufficient;
+                        else if (data.message.includes('not found')) errMsg = translations[currentLang].error_recipient;
+                        else errMsg = data.message;
+                    }
+                    showMessage(errMsg, 'error');
+                }
+            } catch (error) {
+                console.error('Transfer error:', error);
+                showMessage(translations[currentLang].error_transfer, 'error');
+            } finally {
+                transferBtn.disabled = false;
+                transferBtn.textContent = translations[currentLang].transfer;
+            }
+        });
+
+        // ============================================================
+        // ОБНОВЛЕНИЕ
+        // ============================================================
+        document.getElementById('refreshBtn').addEventListener('click', async () => {
+            await Promise.all([loadBalance(), loadTransactions()]);
+            showMessage('Täzelendi!', 'success');
+        });
+
+        // ============================================================
+        // ЧАСТИЦЫ
+        // ============================================================
+        const particles = document.getElementById('particles');
+        if (particles && particles.children.length === 0) {
+            for (let i = 0; i < 60; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDuration = (6 + Math.random() * 12) + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                particles.appendChild(p);
+            }
+        }
+
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+        setLanguage(currentLang);
+        loadBalance();
+        loadTransactions();
+        console.log('Bank page loaded');
+    </script>
+</body>
+</html>
