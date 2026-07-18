@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="tm">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>СФЕРА — TM Coin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <style>
+        .coin-page {
+            padding: 120px 7% 60px;
+            min-height: 100vh;
+        }
+        .coin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .coin-header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .coin-header .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #008cff);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,212,255,.25);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0,212,255,.4);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,.2);
+            color: white;
+        }
+        .btn-outline:hover {
+            background: rgba(255,255,255,.05);
+            border-color: #00d4ff;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #00ffa3, #00b894);
+            color: #08131d;
+        }
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0,255,170,.3);
+        }
+
+        /* Баланс */
+        .balance-card {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.12);
+            backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 30px 35px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .balance-card .balance-label {
+            font-size: 16px;
+            color: #bdd0df;
+        }
+        .balance-card .balance-amount {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #00ffa3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .balance-card .balance-currency {
+            font-size: 22px;
+            color: #bdd0df;
+            margin-left: 8px;
+        }
+        .balance-card .wallet-address {
+            font-size: 14px;
+            color: #9fb5c8;
+            word-break: break-all;
+        }
+
+        .coin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .coin-item {
+            background: rgba(255,255,255,.04);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,.06);
+        }
+        .coin-item .symbol {
+            font-size: 14px;
+            color: #00d4ff;
+            text-transform: uppercase;
+        }
+        .coin-item .balance {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .coin-item .value {
+            font-size: 13px;
+            color: #9fb5c8;
+        }
+
+        .coin-tabs {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+            padding-bottom: 4px;
+        }
+        .coin-tabs button {
+            background: transparent;
+            border: none;
+            color: #9fb5c8;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: .3s;
+            border-bottom: 3px solid transparent;
+        }
+        .coin-tabs button.active {
+            color: #00d4ff;
+            border-bottom-color: #00d4ff;
+        }
+        .coin-tabs button:hover {
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeUp .4s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .transfer-form {
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        .transfer-form .form-group {
+            margin-bottom: 16px;
+        }
+        .transfer-form .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #dbe9ff;
+            margin-bottom: 6px;
+        }
+        .transfer-form .form-group input,
+        .transfer-form .form-group select,
+        .transfer-form .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.15);
+            background: rgba(255,255,255,.05);
+            color: white;
+            font-size: 15px;
+            transition: .3s;
+            outline: none;
+        }
+        .transfer-form .form-group input:focus,
+        .transfer-form .form-group select:focus,
+        .transfer-form .form-group textarea:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0,212,255,.1);
+        }
+        .transfer-form .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        .transfer-form .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            display: none;
+        }
+        .message.error {
+            display: block;
+            background: rgba(255,0,0,.1);
+            border: 1px solid rgba(255,0,0,.2);
+            color: #ff6b6b;
+        }
+        .message.success {
+            display: block;
+            background: rgba(0,255,170,.1);
+            border: 1px solid rgba(0,255,170,.2);
+            color: #00ffa3;
+        }
+
+        .transactions-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .transactions-list li {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+        .transactions-list .tx-type {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        .tx-type.received { background: rgba(0,255,170,.15); color: #00ffa3; }
+        .tx-type.sent { background: rgba(255,0,0,.15); color: #ff6b6b; }
+        .tx-type.swap { background: rgba(0,212,255,.15); color: #00d4ff; }
+        .tx-amount.positive { color: #00ffa3; }
+        .tx-amount.negative { color: #ff6b6b; }
+        .tx-date { color: #9fb5c8; font-size: 12px; }
+        .tx-description { flex: 1; margin: 0 12px; color: #bdd0df; }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #bdd0df;
+        }
+        .empty-state .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .price-ticker {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            background: rgba(255,255,255,.04);
+            border-radius: 16px;
+            padding: 16px 24px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,.06);
+        }
+        .price-ticker .pair {
+            font-size: 15px;
+        }
+        .price-ticker .value {
+            font-weight: 700;
+            color: #00d4ff;
+        }
+        .price-ticker .change {
+            font-size: 14px;
+        }
+        .price-ticker .change.up { color: #00ffa3; }
+        .price-ticker .change.down { color: #ff6b6b; }
+
+        @media (max-width: 768px) {
+            .balance-card .balance-amount { font-size: 32px; }
+            .coin-tabs button { padding: 10px 14px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles"></div>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3" />
+                                <stop offset="50%" stop-color="#00d4ff" />
+                                <stop offset="100%" stop-color="#1f6bff" />
+                            </linearGradient>
+                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="4" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
+                        <g filter="url(#logoGlow)">
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>SFERA</h2>
+                    <p>Milli Sanly Platforma</p>
+                </div>
+            </a>
+
+            <div class="header-right" style="display:flex; align-items:center; gap:12px;">
+                <span class="user-info" id="userDisplay">👤 <strong id="username">User</strong></span>
+                <a href="dashboard.html" class="btn btn-outline" data-i18n="back" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Yza</a>
+                <button class="lang" id="langBtn">TM</button>
+                <button class="logout-btn" id="logoutBtn" data-i18n="logout" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="coin-page">
+        <div class="container">
+            <div class="coin-header">
+                <h1>₮ TM Coin</h1>
+                <div class="actions">
+                    <button class="btn btn-outline" id="refreshBtn" data-i18n="refresh">⟳ Täzele</button>
+                </div>
+            </div>
+
+            <!-- Тикер цен -->
+            <div class="price-ticker" id="priceTicker">
+                <div class="pair">TM Coin / TMT <span class="value" id="tmcPrice">125.75</span> <span class="change up" id="priceChange">+2.3%</span></div>
+                <div class="pair">BTC / USD <span class="value" id="btcPrice">67250</span> <span class="change up">+0.8%</span></div>
+                <div class="pair">ETH / USD <span class="value" id="ethPrice">3450</span> <span class="change down">-0.5%</span></div>
+            </div>
+
+            <!-- Баланс -->
+            <div class="balance-card">
+                <div>
+                    <div class="balance-label" data-i18n="total_balance">Jemi balans</div>
+                    <div>
+                        <span class="balance-amount" id="totalBalance">0.00</span>
+                        <span class="balance-currency">TM Coin</span>
+                    </div>
+                    <div class="wallet-address" id="walletAddress">0x3f5b...7e9a</div>
+                </div>
+                <div style="text-align:right;">
+                    <button class="btn btn-outline" id="copyAddressBtn" data-i18n="copy_address">Kopiýa</button>
+                </div>
+            </div>
+
+            <!-- Мультивалютный кошелёк -->
+            <div class="coin-grid" id="coinGrid"></div>
+
+            <div id="message" class="message"></div>
+
+            <!-- Вкладки -->
+            <div class="coin-tabs">
+                <button class="active" data-tab="send" data-i18n="tab_send">Iber</button>
+                <button data-tab="receive" data-i18n="tab_receive">Al</button>
+                <button data-tab="swap" data-i18n="tab_swap">Çalyş</button>
+                <button data-tab="history" data-i18n="tab_history">Taryh</button>
+            </div>
+
+            <!-- Вкладка: отправка -->
+            <div class="tab-content active" id="tab-send">
+                <div class="transfer-form">
+                    <form id="sendForm">
+                        <div class="form-group">
+                            <label for="sendCoin" data-i18n="coin">Kripto</label>
+                            <select id="sendCoin">
+                                <option value="TM Coin">TM Coin</option>
+                                <option value="BTC">Bitcoin (BTC)</option>
+                                <option value="ETH">Ethereum (ETH)</option>
+                                <option value="USDT">Tether (USDT)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="sendAddress" data-i18n="address">Adres</label>
+                            <input type="text" id="sendAddress" placeholder="0x... ýa-da bc1..." required />
+                        </div>
+                        <div class="form-group">
+                            <label for="sendAmount" data-i18n="amount">Mukdar</label>
+                            <input type="number" id="sendAmount" step="0.0001" min="0.0001" required placeholder="1.00" />
+                        </div>
+                        <div class="form-group">
+                            <label for="sendDesc" data-i18n="description">Düşündiriş (islege görä)</label>
+                            <textarea id="sendDesc" placeholder="Geçiriş sebäbi..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" id="sendBtn" data-i18n="send">Iber</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Вкладка: получение -->
+            <div class="tab-content" id="tab-receive">
+                <div class="transfer-form">
+                    <div class="form-group">
+                        <label for="receiveCoin" data-i18n="coin">Kripto</label>
+                        <select id="receiveCoin">
+                            <option value="TM Coin">TM Coin</option>
+                            <option value="BTC">Bitcoin (BTC)</option>
+                            <option value="ETH">Ethereum (ETH)</option>
+                            <option value="USDT">Tether (USDT)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="your_address">Siziň adresiňiz</label>
+                        <div style="background:rgba(255,255,255,.05); padding:12px 16px; border-radius:12px; word-break:break-all; color:#bdd0df;" id="receiveAddressDisplay">0x3f5b...7e9a</div>
+                    </div>
+                    <button class="btn btn-outline" id="copyReceiveBtn" data-i18n="copy_address">Kopiýa</button>
+                </div>
+            </div>
+
+            <!-- Вкладка: обмен -->
+            <div class="tab-content" id="tab-swap">
+                <div class="transfer-form">
+                    <form id="swapForm">
+                        <div class="form-group">
+                            <label for="swapFrom" data-i18n="from_coin">Nireden</label>
+                            <select id="swapFrom">
+                                <option value="TM Coin">TM Coin</option>
+                                <option value="BTC">Bitcoin (BTC)</option>
+                                <option value="ETH">Ethereum (ETH)</option>
+                                <option value="USDT">Tether (USDT)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="swapTo" data-i18n="to_coin">Nirä</label>
+                            <select id="swapTo">
+                                <option value="BTC">Bitcoin (BTC)</option>
+                                <option value="ETH">Ethereum (ETH)</option>
+                                <option value="USDT">Tether (USDT)</option>
+                                <option value="TM Coin">TM Coin</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="swapAmount" data-i18n="amount">Mukdar</label>
+                            <input type="number" id="swapAmount" step="0.0001" min="0.0001" required placeholder="1.00" />
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-success" id="swapBtn" data-i18n="swap">Çalyş</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Вкладка: история -->
+            <div class="tab-content" id="tab-history">
+                <ul class="transactions-list" id="transactionsList"></ul>
+                <div class="empty-state" id="emptyTx" style="display:none;">
+                    <div class="icon">📭</div>
+                    <p data-i18n="no_transactions">Hiç hili amal ýok</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        // ============================================================
+        // НАСТРОЙКА API и переводы
+        // ============================================================
+        const API_BASE_URL = 'https://sfera-1.onrender.com';
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        const translations = {
+            tm: {
+                logout: "Çykmak",
+                back: "← Yza",
+                refresh: "Täzele",
+                tab_send: "Iber",
+                tab_receive: "Al",
+                tab_swap: "Çalyş",
+                tab_history: "Taryh",
+                coin: "Kripto",
+                address: "Adres",
+                amount: "Mukdar",
+                description: "Düşündiriş",
+                send: "Iber",
+                swap: "Çalyş",
+                from_coin: "Nireden",
+                to_coin: "Nirä",
+                your_address: "Siziň adresiňiz",
+                copy_address: "Kopiýa",
+                total_balance: "Jemi balans",
+                no_transactions: "Hiç hili amal ýok",
+                transfer_success: "Geçiriş üstünlikli tamamlandy!",
+                transfer_error: "Geçiriş baş tutmady.",
+                insufficient: "Balans ýeterlik däl.",
+                invalid_address: "Adres ýalňyş.",
+                invalid_amount: "Mukdar ýalňyş."
+            },
+            ru: {
+                logout: "Выйти",
+                back: "← Назад",
+                refresh: "Обновить",
+                tab_send: "Отправить",
+                tab_receive: "Получить",
+                tab_swap: "Обменять",
+                tab_history: "История",
+                coin: "Крипто",
+                address: "Адрес",
+                amount: "Сумма",
+                description: "Описание",
+                send: "Отправить",
+                swap: "Обменять",
+                from_coin: "Откуда",
+                to_coin: "Куда",
+                your_address: "Ваш адрес",
+                copy_address: "Копировать",
+                total_balance: "Общий баланс",
+                no_transactions: "Нет транзакций",
+                transfer_success: "Перевод выполнен успешно!",
+                transfer_error: "Ошибка перевода.",
+                insufficient: "Недостаточно средств.",
+                invalid_address: "Неверный адрес.",
+                invalid_amount: "Некорректная сумма."
+            },
+            en: {
+                logout: "Logout",
+                back: "← Back",
+                refresh: "Refresh",
+                tab_send: "Send",
+                tab_receive: "Receive",
+                tab_swap: "Swap",
+                tab_history: "History",
+                coin: "Coin",
+                address: "Address",
+                amount: "Amount",
+                description: "Description",
+                send: "Send",
+                swap: "Swap",
+                from_coin: "From",
+                to_coin: "To",
+                your_address: "Your address",
+                copy_address: "Copy",
+                total_balance: "Total balance",
+                no_transactions: "No transactions",
+                transfer_success: "Transfer successful!",
+                transfer_error: "Transfer failed.",
+                insufficient: "Insufficient balance.",
+                invalid_address: "Invalid address.",
+                invalid_amount: "Invalid amount."
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'tm';
+        let coins = [];
+        let transactions = [];
+        let walletAddress = '0x3f5b7e9a1c4d2f8b6e3a';
+
+        const userData = JSON.parse(localStorage.getItem('user') || '{"username":"Guest"}');
+        document.getElementById('username').textContent = userData.username || 'User';
+
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
+                        el.placeholder = translations[lang][key];
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
+                }
+            });
+            document.getElementById('langBtn').textContent = lang.toUpperCase();
+            document.getElementById('logoutBtn').textContent = translations[lang].logout;
+            localStorage.setItem('lang', lang);
+            updateUI();
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.coin-tabs button').forEach(btn => {
+                const key = btn.dataset.i18n;
+                if (translations[currentLang][key]) btn.textContent = translations[currentLang][key];
+            });
+            renderCoins();
+            renderTransactions();
+        }
+
+        document.getElementById('langBtn').addEventListener('click', function() {
+            const cycle = ['tm', 'ru', 'en'];
+            let idx = cycle.indexOf(currentLang);
+            idx = (idx + 1) % cycle.length;
+            setLanguage(cycle[idx]);
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ ДАННЫХ
+        // ============================================================
+        function initData() {
+            coins = [
+                { symbol: 'TM Coin', balance: 1250.75, usdValue: 157000 },
+                { symbol: 'BTC', balance: 0.045, usdValue: 3026.25 },
+                { symbol: 'ETH', balance: 1.2, usdValue: 4140 },
+                { symbol: 'USDT', balance: 5000, usdValue: 5000 }
+            ];
+            transactions = [
+                { id: 'tx1', type: 'sent', coin: 'TM Coin', amount: 50, to: '0x1a2b...', status: 'completed', date: new Date(Date.now() - 3600000 * 2), description: 'Satyjyna töleg' },
+                { id: 'tx2', type: 'received', coin: 'BTC', amount: 0.01, from: 'bc1q...', status: 'confirmed', date: new Date(Date.now() - 3600000 * 5), description: 'Aýlyk girdeji' },
+                { id: 'tx3', type: 'swap', coin: 'ETH', amount: 0.5, to: 'USDT', status: 'completed', date: new Date(Date.now() - 3600000 * 24), description: 'Çalyşma' }
+            ];
+            updateTotalBalance();
+            document.getElementById('walletAddress').textContent = walletAddress;
+            document.getElementById('receiveAddressDisplay').textContent = walletAddress;
+        }
+
+        function updateTotalBalance() {
+            const total = coins.reduce((sum, c) => sum + c.balance, 0);
+            document.getElementById('totalBalance').textContent = total.toFixed(4);
+        }
+
+        // ============================================================
+        // ОТОБРАЖЕНИЕ КОШЕЛЬКА
+        // ============================================================
+        function renderCoins() {
+            const container = document.getElementById('coinGrid');
+            container.innerHTML = coins.map(c => `
+                <div class="coin-item">
+                    <div class="symbol">${c.symbol}</div>
+                    <div class="balance">${c.balance.toFixed(4)}</div>
+                    <div class="value">≈ $${c.usdValue.toFixed(2)}</div>
+                </div>
+            `).join('');
+        }
+
+        // ============================================================
+        // ОТОБРАЖЕНИЕ ИСТОРИИ
+        // ============================================================
+        function renderTransactions() {
+            const list = document.getElementById('transactionsList');
+            const empty = document.getElementById('emptyTx');
+            if (!transactions.length) {
+                list.innerHTML = '';
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+            const sorted = [...transactions].sort((a, b) => b.date - a.date);
+            list.innerHTML = sorted.map(tx => {
+                const isReceived = tx.type === 'received';
+                const sign = isReceived ? '+' : '-';
+                const amountClass = isReceived ? 'positive' : 'negative';
+                const typeClass = tx.type === 'received' ? 'received' : tx.type === 'sent' ? 'sent' : 'swap';
+                const typeLabel = tx.type.charAt(0).toUpperCase() + tx.type.slice(1);
+                return `
+                    <li>
+                        <span>
+                            <span class="tx-type ${typeClass}">${typeLabel}</span>
+                            <span class="tx-description">${tx.description || ''}</span>
+                        </span>
+                        <span>
+                            <span class="tx-amount ${amountClass}">${sign} ${Math.abs(tx.amount).toFixed(4)} ${tx.coin}</span>
+                            <span class="tx-date">${new Date(tx.date).toLocaleDateString()}</span>
+                        </span>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        // ============================================================
+        // ОТПРАВКА
+        // ============================================================
+        document.getElementById('sendForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const coin = document.getElementById('sendCoin').value;
+            const address = document.getElementById('sendAddress').value.trim();
+            const amount = parseFloat(document.getElementById('sendAmount').value);
+            const desc = document.getElementById('sendDesc').value.trim();
+
+            if (!address || !amount || amount <= 0) {
+                showMessage(translations[currentLang].invalid_amount, 'error');
+                return;
+            }
+            const c = coins.find(c => c.symbol === coin);
+            if (!c || c.balance < amount) {
+                showMessage(translations[currentLang].insufficient, 'error');
+                return;
+            }
+            c.balance -= amount;
+            transactions.push({
+                id: 'tx' + Date.now(),
+                type: 'sent',
+                coin: coin,
+                amount: amount,
+                to: address,
+                status: 'pending',
+                date: new Date(),
+                description: desc || 'Geçiriş'
+            });
+            updateTotalBalance();
+            renderCoins();
+            renderTransactions();
+            showMessage(translations[currentLang].transfer_success, 'success');
+            this.reset();
+        });
+
+        // ============================================================
+        // ОБМЕН (SWAP)
+        // ============================================================
+        document.getElementById('swapForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const fromCoin = document.getElementById('swapFrom').value;
+            const toCoin = document.getElementById('swapTo').value;
+            const amount = parseFloat(document.getElementById('swapAmount').value);
+
+            if (!amount || amount <= 0) {
+                showMessage(translations[currentLang].invalid_amount, 'error');
+                return;
+            }
+            const from = coins.find(c => c.symbol === fromCoin);
+            const to = coins.find(c => c.symbol === toCoin);
+            if (!from || !to || from.balance < amount) {
+                showMessage(translations[currentLang].insufficient, 'error');
+                return;
+            }
+            // Имитация курса обмена: 1 TM Coin = 0.00002 BTC и т.д.
+            let rate = 1;
+            if (fromCoin === 'TM Coin' && toCoin === 'BTC') rate = 0.00002;
+            else if (fromCoin === 'BTC' && toCoin === 'TM Coin') rate = 50000;
+            else if (fromCoin === 'TM Coin' && toCoin === 'ETH') rate = 0.0003;
+            else if (fromCoin === 'ETH' && toCoin === 'TM Coin') rate = 3333;
+            else if (fromCoin === 'TM Coin' && toCoin === 'USDT') rate = 0.8;
+            else if (fromCoin === 'USDT' && toCoin === 'TM Coin') rate = 1.25;
+            else if (fromCoin === 'BTC' && toCoin === 'ETH') rate = 18;
+            else if (fromCoin === 'ETH' && toCoin === 'BTC') rate = 0.055;
+            else if (fromCoin === 'BTC' && toCoin === 'USDT') rate = 67000;
+            else if (fromCoin === 'USDT' && toCoin === 'BTC') rate = 0.000015;
+            else if (fromCoin === 'ETH' && toCoin === 'USDT') rate = 3450;
+            else if (fromCoin === 'USDT' && toCoin === 'ETH') rate = 0.00029;
+
+            const received = amount * rate;
+            from.balance -= amount;
+            to.balance += received;
+            transactions.push({
+                id: 'tx' + Date.now(),
+                type: 'swap',
+                coin: fromCoin,
+                amount: amount,
+                to: toCoin,
+                status: 'completed',
+                date: new Date(),
+                description: `${fromCoin} → ${toCoin}`
+            });
+            updateTotalBalance();
+            renderCoins();
+            renderTransactions();
+            showMessage('Çalyşma tamamlandy!', 'success');
+            this.reset();
+        });
+
+        // ============================================================
+        // КОПИРОВАНИЕ АДРЕСОВ
+        // ============================================================
+        document.getElementById('copyAddressBtn').addEventListener('click', function() {
+            navigator.clipboard.writeText(walletAddress).then(() => {
+                showMessage('Adres kopiýalandy!', 'success');
+            });
+        });
+        document.getElementById('copyReceiveBtn').addEventListener('click', function() {
+            navigator.clipboard.writeText(walletAddress).then(() => {
+                showMessage('Adres kopiýalandy!', 'success');
+            });
+        });
+
+        // ============================================================
+        // ВКЛАДКИ
+        // ============================================================
+        document.querySelectorAll('.coin-tabs button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.coin-tabs button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const tab = this.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+                document.getElementById('tab-' + tab).classList.add('active');
+            });
+        });
+
+        // ============================================================
+        // ОБНОВЛЕНИЕ
+        // ============================================================
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            renderCoins();
+            renderTransactions();
+            updateTotalBalance();
+            showMessage('Täzelendi!', 'success');
+        });
+
+        // ============================================================
+        // СООБЩЕНИЯ
+        // ============================================================
+        const messageEl = document.getElementById('message');
+        function showMessage(text, type = 'success') {
+            messageEl.textContent = text;
+            messageEl.className = 'message ' + type;
+            messageEl.style.display = 'block';
+            clearTimeout(window.messageTimeout);
+            window.messageTimeout = setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 4000);
+        }
+
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+        const particles = document.getElementById('particles');
+        if (particles && particles.children.length === 0) {
+            for (let i = 0; i < 60; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDuration = (6 + Math.random() * 12) + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                particles.appendChild(p);
+            }
+        }
+
+        initData();
+        setLanguage(currentLang);
+        renderCoins();
+        renderTransactions();
+        console.log('TM Coin wallet loaded');
+    </script>
+</body>
+</html>
