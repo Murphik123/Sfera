@@ -66,7 +66,8 @@
             margin-bottom: 6px;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 14px 18px;
             border-radius: 12px;
@@ -78,7 +79,8 @@
             outline: none;
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             border-color: #00d4ff;
             box-shadow: 0 0 20px rgba(0,212,255,.2);
             background: rgba(255,255,255,.08);
@@ -86,6 +88,19 @@
 
         .form-group input::placeholder {
             color: rgba(255,255,255,.3);
+        }
+
+        .form-group select option {
+            background: #0b2035;
+            color: white;
+        }
+
+        .admin-key-group {
+            display: none;
+        }
+
+        .admin-key-group.visible {
+            display: block;
         }
 
         .register-btn {
@@ -271,8 +286,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="phone" data-i18n="register_phone_label">Telefon (opsionally)</label>
-                    <input type="tel" id="phone" name="phone" placeholder="+993 63 645817" />
+                    <label for="role" data-i18n="register_role_label">Rol</label>
+                    <select id="role" name="role">
+                        <option value="user" data-i18n="role_user">Ulanyjy</option>
+                        <option value="admin" data-i18n="role_admin">Administrator</option>
+                    </select>
+                </div>
+
+                <div class="form-group admin-key-group" id="adminKeyGroup">
+                    <label for="adminKey" data-i18n="admin_key_label">Administrator açary</label>
+                    <input type="password" id="adminKey" placeholder="admin123" />
                 </div>
 
                 <button type="submit" class="register-btn" id="registerBtn" data-i18n="register_button">Hasap döret</button>
@@ -296,7 +319,10 @@
                 register_username_label: "Ulanyjy ady",
                 register_email_label: "Email",
                 register_password_label: "Parol",
-                register_phone_label: "Telefon (islege görä)",
+                register_role_label: "Rol",
+                role_user: "Ulanyjy",
+                role_admin: "Administrator",
+                admin_key_label: "Administrator açary",
                 register_button: "Hasap döret",
                 register_have_account: "Eger hasabyňyz bar bolsa?",
                 register_login_link: "Giriş et",
@@ -305,7 +331,8 @@
                 register_error_email: "Nädogry email",
                 register_error_password: "Parol azyndan 6 simwol",
                 register_success: "Hasap döredildi! Giriş sahypasyna geçýärsiňiz...",
-                register_failed: "Hasap döredilmedi. Täzeden synanyşyň."
+                register_failed: "Hasap döredilmedi. Täzeden synanyşyň.",
+                admin_key_invalid: "Administrator açary ýalňyş. Barlaň."
             },
             ru: {
                 register_title: "Регистрация",
@@ -313,7 +340,10 @@
                 register_username_label: "Имя пользователя",
                 register_email_label: "Email",
                 register_password_label: "Пароль",
-                register_phone_label: "Телефон (опционально)",
+                register_role_label: "Роль",
+                role_user: "Пользователь",
+                role_admin: "Администратор",
+                admin_key_label: "Ключ администратора",
                 register_button: "Зарегистрироваться",
                 register_have_account: "Уже есть аккаунт?",
                 register_login_link: "Войти",
@@ -322,7 +352,8 @@
                 register_error_email: "Неверный email",
                 register_error_password: "Пароль минимум 6 символов",
                 register_success: "Регистрация успешна! Перенаправление на вход...",
-                register_failed: "Регистрация не удалась. Попробуйте снова."
+                register_failed: "Регистрация не удалась. Попробуйте снова.",
+                admin_key_invalid: "Неверный ключ администратора. Проверьте."
             },
             en: {
                 register_title: "Create account",
@@ -330,7 +361,10 @@
                 register_username_label: "Username",
                 register_email_label: "Email",
                 register_password_label: "Password",
-                register_phone_label: "Phone (optional)",
+                register_role_label: "Role",
+                role_user: "User",
+                role_admin: "Administrator",
+                admin_key_label: "Admin key",
                 register_button: "Sign up",
                 register_have_account: "Already have an account?",
                 register_login_link: "Login",
@@ -339,7 +373,8 @@
                 register_error_email: "Invalid email",
                 register_error_password: "Password at least 6 characters",
                 register_success: "Registration successful! Redirecting to login...",
-                register_failed: "Registration failed. Please try again."
+                register_failed: "Registration failed. Please try again.",
+                admin_key_invalid: "Invalid admin key. Check it."
             }
         };
 
@@ -366,6 +401,18 @@
         });
 
         // ============================================================
+        // ПОКАЗ/СКРЫТИЕ ПОЛЯ ДЛЯ КЛЮЧА АДМИНИСТРАТОРА
+        // ============================================================
+        document.getElementById('role').addEventListener('change', function() {
+            const keyGroup = document.getElementById('adminKeyGroup');
+            if (this.value === 'admin') {
+                keyGroup.classList.add('visible');
+            } else {
+                keyGroup.classList.remove('visible');
+            }
+        });
+
+        // ============================================================
         // ПОКАЗ/СКРЫТИЕ ПАРОЛЯ
         // ============================================================
         document.getElementById('togglePassword').addEventListener('click', function() {
@@ -382,14 +429,19 @@
         const messageEl = document.getElementById('message');
         const registerBtn = document.getElementById('registerBtn');
 
+        // Предопределённый ключ администратора
+        const ADMIN_SECRET_KEY = 'admin123';
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const username = document.getElementById('username').value.trim();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
-            const phone = document.getElementById('phone').value.trim();
+            const role = document.getElementById('role').value;
+            const adminKey = document.getElementById('adminKey').value.trim();
 
+            // Валидация
             if (!username) {
                 showMessage(translations[currentLang].register_error_username, 'error');
                 return;
@@ -403,36 +455,48 @@
                 return;
             }
 
+            // Если выбрана роль администратора – проверяем ключ
+            if (role === 'admin') {
+                if (adminKey !== ADMIN_SECRET_KEY) {
+                    showMessage(translations[currentLang].admin_key_invalid, 'error');
+                    return;
+                }
+            }
+
             registerBtn.disabled = true;
             registerBtn.textContent = translations[currentLang].register_loading;
 
-            try {
-                const response = await fetch('https://sfera-1.onrender.com/api/auth/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, email, password })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    showMessage(translations[currentLang].register_success, 'success');
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 1500);
-                } else {
-                    showMessage(data.message || translations[currentLang].register_failed, 'error');
-                    registerBtn.disabled = false;
-                    registerBtn.textContent = translations[currentLang].register_button;
-                }
-            } catch (error) {
-                console.error('Registration error:', error);
-                showMessage(translations[currentLang].register_failed, 'error');
+            // Сохраняем пользователя в localStorage (имитация базы данных)
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            // Проверяем, не занят ли email
+            if (users.some(u => u.email === email)) {
+                showMessage('Bu email eýýäm bellige alyndy.', 'error');
                 registerBtn.disabled = false;
                 registerBtn.textContent = translations[currentLang].register_button;
+                return;
             }
+
+            // Создаём нового пользователя
+            const newUser = {
+                id: 'u' + Date.now(),
+                username,
+                email,
+                password, // в реальном проекте нужно хешировать!
+                role: role,
+                createdAt: new Date().toISOString()
+            };
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // Если это администратор – сохраняем отдельный флаг
+            if (role === 'admin') {
+                localStorage.setItem('adminRegistered', 'true');
+            }
+
+            showMessage(translations[currentLang].register_success, 'success');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
         });
 
         function showMessage(text, type) {
@@ -465,7 +529,7 @@
         // ИНИЦИАЛИЗАЦИЯ
         // ============================================================
         setLanguage(currentLang);
-        console.log('Register page loaded');
+        console.log('Register page with admin role loaded');
     </script>
 </body>
 </html>
