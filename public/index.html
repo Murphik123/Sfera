@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="tm">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>СФЕРА — Türkmenistanyň Ýeke Sanly Platformasy</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Подключаем внешний CSS -->
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+    <div id="particles"></div>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3" />
+                                <stop offset="50%" stop-color="#00d4ff" />
+                                <stop offset="100%" stop-color="#1f6bff" />
+                            </linearGradient>
+                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="4" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
+                        <g filter="url(#logoGlow)">
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2 data-i18n="logo_title">SFERA</h2>
+                    <p data-i18n="logo_subtitle">Milli Sanly Platforma</p>
+                </div>
+            </a>
+
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#" data-i18n="nav_home">Baş sahypa</a></li>
+                    <li class="dropdown" id="dropdownMarketplace">
+                        <a href="#" data-i18n="nav_marketplace">Marketpleýs</a>
+                        <ul class="submenu">
+                            <li><a href="#" data-i18n="nav_exchange">Birža</a></li>
+                            <li><a href="#" data-i18n="nav_trading_platform">Söwda meýdançasy</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" data-i18n="nav_tm_pay">TM Pay</a></li>
+                    <li><a href="#" data-i18n="nav_tm_coin">TM Coin</a></li>
+                    <li><a href="#" data-i18n="nav_bank">Bank</a></li>
+                    <li><a href="#" data-i18n="nav_ai">AI</a></li>
+                    <li><a href="#" data-i18n="nav_docs">Resmiýetler</a></li>
+                    <li><a href="#" data-i18n="nav_contacts">Kontaktlar</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-buttons">
+                <button class="lang" id="langBtn">TM</button>
+                <a href="login.html" class="login" data-i18n="login_btn">Girmek</a>
+                <button class="hamburger" id="hamburger" aria-label="Menýu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-grid"></div>
+        <canvas id="heroCanvas"></canvas>
+        <div class="hero-glow glow-left"></div>
+        <div class="hero-glow glow-right"></div>
+
+        <div class="map-wrapper">
+            <svg class="tm-map" viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#00d4ff" />
+                        <stop offset="100%" stop-color="#00ff99" />
+                    </linearGradient>
+                </defs>
+                <path d="M92 270 L150 210 L280 170 L420 120 L580 140 L710 160 L790 210 L760 290 L640 340 L540 370 L360 360 L220 330 L120 300 Z" fill="rgba(0,212,255,.08)" stroke="url(#mapGradient)" stroke-width="3" class="map-outline" />
+            </svg>
+        </div>
+
+        <div class="hero-content">
+            <span class="hero-tag" data-i18n="hero_tag">SFERA — SANLY PLATFORMA</span>
+            <h1 data-i18n="hero_title">Türkmenistanyň Ýeke Sanly<br />Platformasy</h1>
+            <p class="hero-subtitle" data-i18n="hero_subtitle">Söwda • AI • Töleg • Bank • Resmiýet</p>
+            <p class="hero-text" data-i18n="hero_text">
+                Elektron söwda, intellektual analitika, maliýe hyzmatlary, resmiýet aýlymyny we sanly döwlet hyzmatlaryny birleşdirýän
+                häzirki zaman döwlet sanly ekosistemasy.
+            </p>
+            <div class="hero-buttons">
+                <a href="dashboard.html" class="primary-btn" data-i18n="hero_btn_start">Başlamak</a>
+                <a href="#" class="glass-btn" data-i18n="hero_btn_demo">Demo</a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="core">
+                <div class="core-ring ring-1"></div>
+                <div class="core-ring ring-2"></div>
+                <div class="core-ring ring-3"></div>
+                <div class="core-center">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 80px; height: 80px; animation: spinRing 15s linear infinite; overflow: visible;">
+                        <defs>
+                            <linearGradient id="heroCoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3" />
+                                <stop offset="50%" stop-color="#00d4ff" />
+                                <stop offset="100%" stop-color="#1f6bff" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#heroCoreGrad)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="1 6" />
+                        <circle cx="48" cy="48" r="5.5" fill="#ffffff" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="modules">
+        <h2 data-i18n="modules_title">Platformanyň Esasy Modullary</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="icon">🛒</div>
+                <h3 data-i18n="module_exchange_title">Birža</h3>
+                <p data-i18n="module_exchange_desc">Elektron söwda meýdançasy</p>
+            </div>
+            <div class="card">
+                <div class="icon">💳</div>
+                <h3 data-i18n="module_tmpay_title">TM Pay</h3>
+                <p data-i18n="module_tmpay_desc">Milli töleg ulgamy</p>
+            </div>
+            <div class="card">
+                <div class="icon">₮</div>
+                <h3 data-i18n="module_tmcoin_title">TM Coin</h3>
+                <p data-i18n="module_tmcoin_desc">Sanly döwlet walýutasy</p>
+            </div>
+            <div class="card">
+                <div class="icon">🏦</div>
+                <h3 data-i18n="module_bank_title">TM Bank</h3>
+                <p data-i18n="module_bank_desc">Sanly bank hyzmatlary</p>
+            </div>
+            <div class="card">
+                <div class="icon">🤖</div>
+                <h3 data-i18n="module_ai_title">AI analitika</h3>
+                <p data-i18n="module_ai_desc">TM Coin prokgnozlary, trendler</p>
+            </div>
+            <div class="card">
+                <div class="icon">📄</div>
+                <h3 data-i18n="module_docs_title">Resmiýetler</h3>
+                <p data-i18n="module_docs_desc">Awtomatik tassyklama</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="statistics">
+        <div class="stat">
+            <h1 id="online">0</h1>
+            <p data-i18n="stat_online">Onlaýn</p>
+        </div>
+        <div class="stat">
+            <h1 id="users">0</h1>
+            <p data-i18n="stat_users">Ulanyjylar</p>
+        </div>
+        <div class="stat">
+            <h1 id="orders">0</h1>
+            <p data-i18n="stat_orders">Söwdalar</p>
+        </div>
+        <div class="stat">
+            <h1 id="docs">0</h1>
+            <p data-i18n="stat_docs">Resmiýetler</p>
+        </div>
+        <div class="stat">
+            <h1 id="coin">0</h1>
+            <p data-i18n="stat_coin">TM Coin</p>
+        </div>
+    </section>
+
+    <section class="news">
+        <h2 data-i18n="news_title">Iň soňky habarlar</h2>
+        <div class="news-grid">
+            <div class="news-card">
+                <h3 data-i18n="news1_title">Platformanyň işe girizilmegi</h3>
+                <p data-i18n="news1_text">Täze nesil sanly ekosistema.</p>
+            </div>
+            <div class="news-card">
+                <h3 data-i18n="news2_title">AI moduly</h3>
+                <p data-i18n="news2_text">Resmiýetleri awtomatik barlamak.</p>
+            </div>
+            <div class="news-card">
+                <h3 data-i18n="news3_title">TM Pay</h3>
+                <p data-i18n="news3_text">Milli çalt töleg ulgamy.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <h2 data-i18n="footer_title">SFERA</h2>
+        <p data-i18n="footer_copyright">© 2026 — Milli sanly platforma</p>
+    </footer>
+
+    <!-- Подключаем внешний JS -->
+    <script src="/js/main.js"></script>
+</body>
+</html>
