@@ -13,7 +13,7 @@
 
     <style>
         /* ============================================================
-           МЕССЕНДЖЕР (обновлённый)
+           МЕССЕНДЖЕР (обновлённый, с dropdown-меню вкладок)
            ============================================================ */
         .messenger-page {
             padding: 120px 0 60px;
@@ -52,28 +52,66 @@
             font-size: 18px;
             font-weight: 700;
         }
-        .sidebar-header .tabs {
-            display: flex;
-            gap: 8px;
+        /* Dropdown вместо трёх кнопок */
+        .sidebar-header .dropdown-tabs {
+            position: relative;
+            display: inline-block;
         }
-        .sidebar-header .tabs button {
-            background: transparent;
-            border: none;
-            color: #9fb5c8;
-            padding: 6px 14px;
+        .sidebar-header .dropdown-tabs .dropbtn {
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.15);
+            color: white;
+            padding: 6px 16px;
             border-radius: 20px;
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
-            transition: .3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
-        .sidebar-header .tabs button.active {
-            background: rgba(0,212,255,.15);
-            color: #00d4ff;
+        .sidebar-header .dropdown-tabs .dropbtn:hover {
+            background: rgba(255,255,255,.15);
         }
-        .sidebar-header .tabs button:hover {
+        .sidebar-header .dropdown-tabs .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: rgba(13,28,41,.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 12px;
+            min-width: 140px;
+            box-shadow: 0 15px 40px rgba(0,0,0,.4);
+            z-index: 100;
+            padding: 6px 0;
+            margin-top: 6px;
+        }
+        .sidebar-header .dropdown-tabs .dropdown-content button {
+            background: transparent;
+            border: none;
+            color: #bdd0df;
+            padding: 10px 20px;
+            width: 100%;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: .2s;
+        }
+        .sidebar-header .dropdown-tabs .dropdown-content button:hover {
             background: rgba(255,255,255,.05);
+            color: white;
         }
+        .sidebar-header .dropdown-tabs .dropdown-content button.active {
+            color: #00d4ff;
+            background: rgba(0,212,255,.05);
+        }
+        .sidebar-header .dropdown-tabs.show .dropdown-content {
+            display: block;
+        }
+
         .sidebar-search {
             padding: 12px 20px;
         }
@@ -457,10 +495,14 @@
                 <div class="messenger-sidebar" id="sidebar">
                     <div class="sidebar-header">
                         <h2 data-i18n="messenger_title">Söhbet</h2>
-                        <div class="tabs">
-                            <button class="active" data-tab="chats" data-i18n="tab_chats">Çatlar</button>
-                            <button data-tab="news" data-i18n="tab_news">Habarlar</button>
-                            <button data-tab="assistant" data-i18n="tab_assistant">Kömekçi</button>
+                        <!-- Dropdown вместо трёх кнопок -->
+                        <div class="dropdown-tabs" id="tabsDropdown">
+                            <button class="dropbtn" id="dropbtn">📋 <span id="currentTabLabel">Çatlar</span> ▾</button>
+                            <div class="dropdown-content" id="dropdownContent">
+                                <button class="active" data-tab="chats" data-i18n="tab_chats">Çatlar</button>
+                                <button data-tab="news" data-i18n="tab_news">Habarlar</button>
+                                <button data-tab="assistant" data-i18n="tab_assistant">Kömekçi</button>
+                            </div>
                         </div>
                     </div>
                     <div class="sidebar-search">
@@ -641,18 +683,21 @@
         }
 
         function updateUI() {
-            // Обновить текст вкладок
-            document.querySelectorAll('.sidebar-header .tabs button').forEach(btn => {
+            // Обновляем текст в выпадающем меню
+            document.querySelectorAll('#dropdownContent button').forEach(btn => {
                 const key = btn.dataset.i18n;
                 if (translations[currentLang][key]) btn.textContent = translations[currentLang][key];
             });
+            // Обновляем label текущей вкладки
+            const tabKey = 'tab_' + currentTab;
+            document.getElementById('currentTabLabel').textContent = translations[currentLang][tabKey] || currentTab;
             // Обновить приветствие помощника
             const firstMsg = document.querySelector('.chat-messages .msg.bot');
-            if (firstMsg && firstMsg.textContent.includes('Salam') || firstMsg.textContent.includes('Привет') || firstMsg.textContent.includes('Hi')) {
+            if (firstMsg && (firstMsg.textContent.includes('Salam') || firstMsg.textContent.includes('Привет') || firstMsg.textContent.includes('Hi'))) {
                 firstMsg.textContent = translations[currentLang].assistant_hello;
             }
             // Переключить вкладки
-            switchTab(currentTab);
+            switchTab(currentTab, false);
         }
 
         document.getElementById('langBtn').addEventListener('click', function() {
@@ -669,28 +714,39 @@
         });
 
         // ============================================================
+        // DROPDOWN МЕНЮ
+        // ============================================================
+        document.getElementById('dropbtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('tabsDropdown').classList.toggle('show');
+        });
+        document.addEventListener('click', function() {
+            document.getElementById('tabsDropdown').classList.remove('show');
+        });
+
+        // ============================================================
         // ВКЛАДКИ
         // ============================================================
-        function switchTab(tab) {
+        function switchTab(tab, updateLabel = true) {
             currentTab = tab;
             const dialogsList = document.getElementById('dialogsList');
             const newsFeed = document.getElementById('newsFeed');
             const searchInput = document.getElementById('searchInput');
+            // Скрываем всё
+            dialogsList.style.display = 'none';
+            newsFeed.style.display = 'none';
+
             if (tab === 'chats') {
                 dialogsList.style.display = 'block';
-                newsFeed.style.display = 'none';
                 searchInput.placeholder = translations[currentLang].search_placeholder;
                 loadDialogs();
             } else if (tab === 'news') {
-                dialogsList.style.display = 'none';
                 newsFeed.style.display = 'block';
                 searchInput.placeholder = 'Habarlar gözleg...';
                 renderNews();
             } else if (tab === 'assistant') {
                 dialogsList.style.display = 'block';
-                newsFeed.style.display = 'none';
                 searchInput.placeholder = translations[currentLang].search_placeholder;
-                // Открыть чат с помощником
                 const assistantId = 'assistant';
                 const assistantName = translations[currentLang].assistant_name;
                 let existing = dialogs.find(d => d.id === assistantId);
@@ -706,14 +762,22 @@
                 renderDialogs(dialogs);
                 openChat(assistantId, assistantName, 'assistant');
             }
-            // Обновить активную вкладку
-            document.querySelectorAll('.sidebar-header .tabs button').forEach(btn => {
+
+            // Обновить активную кнопку в меню
+            document.querySelectorAll('#dropdownContent button').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.tab === tab);
             });
+
+            if (updateLabel) {
+                const tabKey = 'tab_' + tab;
+                document.getElementById('currentTabLabel').textContent = translations[currentLang][tabKey] || tab;
+            }
         }
 
-        document.querySelectorAll('.sidebar-header .tabs button').forEach(btn => {
-            btn.addEventListener('click', function() {
+        document.querySelectorAll('#dropdownContent button').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.getElementById('tabsDropdown').classList.remove('show');
                 switchTab(this.dataset.tab);
             });
         });
@@ -728,7 +792,6 @@
                 renderDialogs(dialogs);
                 return;
             }
-            // Создаём демо-диалоги
             const fakeDialogs = [
                 { id: '1', name: 'Aýdar', lastMessage: 'Salam!', time: new Date(), unread: 2 },
                 { id: '2', name: 'Meret', lastMessage: 'Nähili?', time: new Date(Date.now() - 3600000), unread: 0 },
@@ -789,7 +852,6 @@
         // ============================================================
         function loadMessages(dialogId) {
             const container = document.getElementById('chatMessages');
-            // Имитация сообщений
             const fakeMessages = [
                 { from: 'user', text: 'Salam!', time: new Date(Date.now() - 60000) },
                 { from: dialogId === '1' ? 'Aýdar' : 'other', text: 'Salam, nähili?', time: new Date(Date.now() - 30000) },
@@ -840,7 +902,6 @@
             renderMessages(messages);
             input.value = '';
 
-            // Имитация ответа
             setTimeout(() => {
                 const reply = {
                     from: currentDialogId === 'assistant' ? 'Kömekçi' : 'Aýdar',
@@ -853,7 +914,7 @@
         }
 
         // ============================================================
-        // АУДИО / ВИДЕО ВЫЗОВЫ (заглушки)
+        // АУДИО / ВИДЕО ВЫЗОВЫ
         // ============================================================
         document.getElementById('audioCallBtn').addEventListener('click', function() {
             alert('📞 ' + translations[currentLang].audio_call + ' (simulýasiýa)');
@@ -884,10 +945,6 @@
         }
 
         // ============================================================
-        // КНОПКА НАЗАД (уже есть через data-i18n)
-        // ============================================================
-
-        // ============================================================
         // ЧАСТИЦЫ
         // ============================================================
         const particles = document.getElementById('particles');
@@ -907,8 +964,8 @@
         // ИНИЦИАЛИЗАЦИЯ
         // ============================================================
         setLanguage(currentLang);
-        switchTab('chats');
-        console.log('Messenger with news and calls loaded');
+        switchTab('chats', true);
+        console.log('Messenger with dropdown tabs loaded');
     </script>
 </body>
 </html>
