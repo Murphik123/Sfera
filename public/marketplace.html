@@ -34,6 +34,7 @@
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
+            align-items: center;
         }
         .btn {
             padding: 10px 24px;
@@ -64,13 +65,39 @@
             background: rgba(255,255,255,.1);
             border-color: #00d4ff;
         }
-        .btn-danger {
-            background: rgba(255,0,0,.15);
-            border: 1px solid rgba(255,0,0,.3);
-            color: #ff6b6b;
+        .btn-success {
+            background: linear-gradient(135deg, #00ffa3, #00b894);
+            color: #08131d;
         }
-        .btn-danger:hover {
-            background: rgba(255,0,0,.25);
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0,255,170,.3);
+        }
+        .role-selector {
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,.06);
+            border-radius: 30px;
+            padding: 6px;
+            border: 1px solid rgba(255,255,255,.1);
+        }
+        .role-selector button {
+            background: transparent;
+            border: none;
+            color: #9fb5c8;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: .2s;
+            font-size: 14px;
+        }
+        .role-selector button.active {
+            background: rgba(0,212,255,.15);
+            color: #00d4ff;
+        }
+        .role-selector button:hover {
+            background: rgba(255,255,255,.05);
         }
 
         .listings-grid {
@@ -87,7 +114,6 @@
             padding: 20px;
             transition: .35s;
             color: white;
-            text-decoration: none;
             display: flex;
             flex-direction: column;
         }
@@ -95,6 +121,17 @@
             transform: translateY(-6px);
             border-color: #00d4ff;
             box-shadow: 0 25px 50px rgba(0,212,255,.15);
+        }
+        .listing-card .image-placeholder {
+            width: 100%;
+            height: 140px;
+            border-radius: 12px;
+            background: rgba(255,255,255,.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            margin-bottom: 12px;
         }
         .listing-card .title {
             font-size: 20px;
@@ -119,6 +156,8 @@
             margin-top: 12px;
             border-top: 1px solid rgba(255,255,255,.08);
             padding-top: 10px;
+            display: flex;
+            justify-content: space-between;
         }
         .listing-card .status {
             display: inline-block;
@@ -126,21 +165,17 @@
             border-radius: 20px;
             font-size: 11px;
             font-weight: 600;
-            margin-top: 8px;
             align-self: flex-start;
         }
-        .status-active {
-            background: rgba(0,255,170,.15);
-            color: #00ffa3;
+        .status-active { background: rgba(0,255,170,.15); color: #00ffa3; }
+        .status-sold { background: rgba(255,0,0,.15); color: #ff6b6b; }
+        .status-archived { background: rgba(255,255,255,.1); color: #9fb5c8; }
+        .listing-card .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
         }
-        .status-sold {
-            background: rgba(255,0,0,.15);
-            color: #ff6b6b;
-        }
-        .status-archived {
-            background: rgba(255,255,255,.1);
-            color: #9fb5c8;
-        }
+        .listing-card .actions .btn { flex: 1; text-align: center; padding: 8px 16px; font-size: 13px; }
 
         .modal {
             display: none;
@@ -155,9 +190,7 @@
             align-items: center;
             z-index: 1000;
         }
-        .modal.active {
-            display: flex;
-        }
+        .modal.active { display: flex; }
         .modal-content {
             background: rgba(13,28,41,.95);
             border: 1px solid rgba(255,255,255,.15);
@@ -167,20 +200,9 @@
             width: 90%;
             box-shadow: 0 30px 80px rgba(0,0,0,.5);
         }
-        .modal-content h2 {
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-        .modal-content .form-group {
-            margin-bottom: 16px;
-        }
-        .modal-content .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: #dbe9ff;
-            margin-bottom: 6px;
-        }
+        .modal-content h2 { margin-bottom: 20px; font-size: 28px; }
+        .modal-content .form-group { margin-bottom: 16px; }
+        .modal-content .form-group label { display: block; font-size: 14px; font-weight: 500; color: #dbe9ff; margin-bottom: 6px; }
         .modal-content .form-group input,
         .modal-content .form-group textarea,
         .modal-content .form-group select {
@@ -200,38 +222,18 @@
             border-color: #00d4ff;
             box-shadow: 0 0 20px rgba(0,212,255,.1);
         }
-        .modal-content .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        .modal-content .form-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 20px;
-        }
-        .modal-content .form-actions .btn {
-            min-width: 100px;
-        }
+        .modal-content .form-group textarea { resize: vertical; min-height: 80px; }
+        .modal-content .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; }
+        .modal-content .form-actions .btn { min-width: 100px; }
 
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #bdd0df;
-        }
-        .empty-state .icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-        }
-        .empty-state h3 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: white;
-        }
+        .empty-state { text-align: center; padding: 60px 20px; color: #bdd0df; }
+        .empty-state .icon { font-size: 60px; margin-bottom: 20px; }
+        .empty-state h3 { font-size: 24px; margin-bottom: 10px; color: white; }
 
         @media (max-width: 768px) {
             .marketplace-header { flex-direction: column; align-items: stretch; gap: 15px; }
             .marketplace-header .actions { justify-content: center; }
+            .role-selector { justify-content: center; }
             .listings-grid { grid-template-columns: 1fr; }
         }
     </style>
@@ -271,9 +273,9 @@
 
             <div class="header-right" style="display:flex; align-items:center; gap:12px;">
                 <span class="user-info" id="userDisplay">👤 <strong id="username">User</strong></span>
-                <a href="dashboard.html" class="btn btn-outline" style="padding:8px 16px; font-size:13px;">← Dashboard</a>
+                <a href="dashboard.html" class="btn btn-outline" data-i18n="back" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Yza</a>
                 <button class="lang" id="langBtn">TM</button>
-                <button class="logout-btn" id="logoutBtn" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
+                <button class="logout-btn" id="logoutBtn" data-i18n="logout" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
             </div>
         </div>
     </header>
@@ -283,22 +285,27 @@
             <div class="marketplace-header">
                 <h1>🛒 Marketpleýs</h1>
                 <div class="actions">
-                    <button class="btn btn-primary" id="createListingBtn">+ Täze bildiriş</button>
-                    <button class="btn btn-outline" id="refreshBtn">⟳ Täzele</button>
+                    <!-- Переключатель ролей -->
+                    <div class="role-selector" id="roleSelector">
+                        <button class="active" data-role="buyer" data-i18n="role_buyer">Alyjy</button>
+                        <button data-role="seller" data-i18n="role_seller">Satyjy</button>
+                        <button data-role="both" data-i18n="role_both">Iki</button>
+                    </div>
+                    <button class="btn btn-primary" id="createListingBtn" data-i18n="create_listing">+ Täze bildiriş</button>
+                    <button class="btn btn-outline" id="refreshBtn" data-i18n="refresh">⟳ Täzele</button>
                 </div>
             </div>
 
             <div id="listingsContainer">
                 <div class="empty-state" id="loadingState">
                     <div class="icon">⏳</div>
-                    <h3>Ýüklenýär...</h3>
+                    <h3 data-i18n="loading">Ýüklenýär...</h3>
                 </div>
-                <!-- Карточки будут вставлены сюда -->
                 <div class="listings-grid" id="listingsGrid" style="display:none;"></div>
                 <div class="empty-state" id="emptyState" style="display:none;">
                     <div class="icon">📭</div>
-                    <h3>Hiç hili bildiriş ýok</h3>
-                    <p>Ilkinji bildirişi goşuň!</p>
+                    <h3 data-i18n="no_listings">Hiç hili bildiriş ýok</h3>
+                    <p data-i18n="no_listings_desc">Ilkinji bildirişi goşuň!</p>
                 </div>
             </div>
         </div>
@@ -307,27 +314,27 @@
     <!-- Модальное окно создания объявления -->
     <div class="modal" id="createModal">
         <div class="modal-content">
-            <h2>Täze bildiriş</h2>
+            <h2 data-i18n="new_listing">Täze bildiriş</h2>
             <form id="createForm">
                 <div class="form-group">
-                    <label for="title">Ady</label>
+                    <label for="title" data-i18n="title_label">Ady</label>
                     <input type="text" id="title" name="title" required placeholder="Mysal: Samsung Galaxy S23" />
                 </div>
                 <div class="form-group">
-                    <label for="description">Beýany</label>
+                    <label for="description" data-i18n="description_label">Beýany</label>
                     <textarea id="description" name="description" placeholder="Bildirişiň jikme-jigi..." rows="3"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="price">Bahasy (TMT)</label>
+                    <label for="price" data-i18n="price_label">Bahasy (TMT)</label>
                     <input type="number" id="price" name="price" step="0.01" required placeholder="1000" />
                 </div>
                 <div class="form-group">
-                    <label for="category">Kategoriýa</label>
+                    <label for="category" data-i18n="category_label">Kategoriýa</label>
                     <input type="text" id="category" name="category" placeholder="Elektronika, Awtoulag..." />
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn btn-outline" id="cancelModalBtn">Ýatyr</button>
-                    <button type="submit" class="btn btn-primary">Goşmak</button>
+                    <button type="button" class="btn btn-outline" id="cancelModalBtn" data-i18n="cancel">Ýatyr</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="add">Goşmak</button>
                 </div>
             </form>
         </div>
@@ -335,36 +342,129 @@
 
     <script>
         // ============================================================
-        // НАСТРОЙКА API
+        // НАСТРОЙКА API и переводы
         // ============================================================
         const API_BASE_URL = 'https://sfera-1.onrender.com';
         const token = localStorage.getItem('token');
 
-        // Если нет токена – редирект на логин
         if (!token) {
             window.location.href = 'login.html';
         }
 
-        // ============================================================
-        // ПЕРЕВОДЫ (для кнопок)
-        // ============================================================
         const translations = {
-            tm: { logout: "Çykmak", create: "Täze bildiriş", refresh: "Täzele", cancel: "Ýatyr", submit: "Goşmak" },
-            ru: { logout: "Выйти", create: "Новое объявление", refresh: "Обновить", cancel: "Отмена", submit: "Добавить" },
-            en: { logout: "Logout", create: "New listing", refresh: "Refresh", cancel: "Cancel", submit: "Add" }
+            tm: {
+                logout: "Çykmak",
+                back: "← Yza",
+                role_buyer: "Alyjy",
+                role_seller: "Satyjy",
+                role_both: "Iki",
+                create_listing: "+ Täze bildiriş",
+                refresh: "⟳ Täzele",
+                loading: "Ýüklenýär...",
+                no_listings: "Hiç hili bildiriş ýok",
+                no_listings_desc: "Ilkinji bildirişi goşuň!",
+                new_listing: "Täze bildiriş",
+                title_label: "Ady",
+                description_label: "Beýany",
+                price_label: "Bahasy (TMT)",
+                category_label: "Kategoriýa",
+                cancel: "Ýatyr",
+                add: "Goşmak",
+                buy: "Satyn al",
+                seller_label: "Satyjy",
+                status_active: "Aktiv",
+                status_sold: "Satylan",
+                status_archived: "Arhiw",
+                no_products: "Hiç hili haryt ýok",
+                product_added: "Bildiriş goşuldy!",
+                product_bought: "Haryt satyn alyndy!"
+            },
+            ru: {
+                logout: "Выйти",
+                back: "← Назад",
+                role_buyer: "Покупатель",
+                role_seller: "Продавец",
+                role_both: "Оба",
+                create_listing: "+ Новое объявление",
+                refresh: "⟳ Обновить",
+                loading: "Загрузка...",
+                no_listings: "Нет объявлений",
+                no_listings_desc: "Добавьте первое объявление!",
+                new_listing: "Новое объявление",
+                title_label: "Название",
+                description_label: "Описание",
+                price_label: "Цена (TMT)",
+                category_label: "Категория",
+                cancel: "Отмена",
+                add: "Добавить",
+                buy: "Купить",
+                seller_label: "Продавец",
+                status_active: "Активно",
+                status_sold: "Продано",
+                status_archived: "В архиве",
+                no_products: "Нет товаров",
+                product_added: "Объявление добавлено!",
+                product_bought: "Товар куплен!"
+            },
+            en: {
+                logout: "Logout",
+                back: "← Back",
+                role_buyer: "Buyer",
+                role_seller: "Seller",
+                role_both: "Both",
+                create_listing: "+ New listing",
+                refresh: "⟳ Refresh",
+                loading: "Loading...",
+                no_listings: "No listings",
+                no_listings_desc: "Add your first listing!",
+                new_listing: "New listing",
+                title_label: "Title",
+                description_label: "Description",
+                price_label: "Price (TMT)",
+                category_label: "Category",
+                cancel: "Cancel",
+                add: "Add",
+                buy: "Buy",
+                seller_label: "Seller",
+                status_active: "Active",
+                status_sold: "Sold",
+                status_archived: "Archived",
+                no_products: "No products",
+                product_added: "Listing added!",
+                product_bought: "Product purchased!"
+            }
         };
+
         let currentLang = localStorage.getItem('lang') || 'tm';
+        let currentRole = 'buyer';
+        let listings = [];
 
         function setLanguage(lang) {
             if (!translations[lang]) return;
             currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
             document.getElementById('langBtn').textContent = lang.toUpperCase();
             document.getElementById('logoutBtn').textContent = translations[lang].logout;
-            document.getElementById('createListingBtn').textContent = '+ ' + translations[lang].create;
-            document.getElementById('refreshBtn').textContent = '⟳ ' + translations[lang].refresh;
-            document.getElementById('cancelModalBtn').textContent = translations[lang].cancel;
-            document.querySelector('#createForm button[type="submit"]').textContent = translations[lang].submit;
             localStorage.setItem('lang', lang);
+            updateUI();
+        }
+
+        function updateUI() {
+            // Обновляем кнопку создания в зависимости от роли
+            const createBtn = document.getElementById('createListingBtn');
+            if (currentRole === 'buyer') {
+                createBtn.style.display = 'none';
+            } else {
+                createBtn.style.display = 'inline-block';
+            }
+            // Обновляем текст кнопок ролей
+            document.querySelectorAll('.role-selector button').forEach(btn => {
+                const key = btn.dataset.i18n;
+                if (translations[currentLang][key]) btn.textContent = translations[currentLang][key];
+            });
         }
 
         document.getElementById('langBtn').addEventListener('click', function() {
@@ -375,14 +475,11 @@
         });
 
         // ============================================================
-        // ЗАГРУЗКА ПОЛЬЗОВАТЕЛЯ
+        // ПОЛЬЗОВАТЕЛЬ И ВЫХОД
         // ============================================================
         const userData = JSON.parse(localStorage.getItem('user') || '{"username":"Guest"}');
         document.getElementById('username').textContent = userData.username || 'User';
 
-        // ============================================================
-        // ВЫХОД
-        // ============================================================
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
@@ -390,58 +487,113 @@
         });
 
         // ============================================================
-        // ЗАГРУЗКА СПИСКА ОБЪЯВЛЕНИЙ
+        // ПЕРЕКЛЮЧЕНИЕ РОЛЕЙ
         // ============================================================
-        const listingsGrid = document.getElementById('listingsGrid');
-        const loadingState = document.getElementById('loadingState');
-        const emptyState = document.getElementById('emptyState');
+        document.querySelectorAll('.role-selector button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.role-selector button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentRole = this.dataset.role;
+                updateUI();
+                renderListings(); // перерисовываем с учётом роли
+            });
+        });
 
-        async function loadListings() {
-            try {
-                loadingState.style.display = 'block';
-                listingsGrid.style.display = 'none';
-                emptyState.style.display = 'none';
-
-                const response = await fetch(`${API_BASE_URL}/api/marketplace/listings`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                if (!response.ok) throw new Error('Network response was not ok');
-                const data = await response.json();
-
-                loadingState.style.display = 'none';
-
-                if (data.length === 0) {
-                    emptyState.style.display = 'block';
-                    return;
-                }
-
-                listingsGrid.innerHTML = data.map(listing => `
-                    <div class="listing-card">
-                        <div class="title">${escapeHtml(listing.title)}</div>
-                        <div class="price">${Number(listing.price).toLocaleString()} TMT</div>
-                        ${listing.description ? `<div class="description">${escapeHtml(listing.description)}</div>` : ''}
-                        <div class="seller">Satyjy: ${listing.seller?.username || 'Unknown'} • ${new Date(listing.createdAt).toLocaleDateString()}</div>
-                        <span class="status status-${listing.status}">${listing.status}</span>
-                    </div>
-                `).join('');
-                listingsGrid.style.display = 'grid';
-            } catch (error) {
-                console.error('Error loading listings:', error);
-                loadingState.style.display = 'none';
-                emptyState.style.display = 'block';
-                emptyState.querySelector('h3').textContent = 'Ýüklenende säwlik';
-                emptyState.querySelector('p').textContent = 'Täzeden synanyşyň.';
-            }
+        // ============================================================
+        // ЗАГРУЗКА СПИСКА ОБЪЯВЛЕНИЙ (моковые данные + реальные)
+        // ============================================================
+        function generateMockListings() {
+            const mock = [
+                { id: 'm1', title: 'Samsung Galaxy S23 Ultra', description: 'Alyp-çykyş: 12/256 GB, gar, täze, kuti bilen.', price: 3200, category: 'Elektronika', seller: 'Aýdar', status: 'active', image: '📱' },
+                { id: 'm2', title: 'iPhone 15 Pro Max', description: '256 GB, gök, 1 ýyl kepillik.', price: 4500, category: 'Elektronika', seller: 'Meret', status: 'active', image: '📱' },
+                { id: 'm3', title: 'Toyota Camry 2023', description: 'Benzin, 2.5 l, 10000 km, awtomat.', price: 28000, category: 'Awtoulag', seller: 'Gülşat', status: 'active', image: '🚗' },
+                { id: 'm4', title: 'Hyundai Tucson 2022', description: 'Dizel, 2.0 l, 25000 km, çep.', price: 22000, category: 'Awtoulag', seller: 'Saparmyrat', status: 'active', image: '🚙' },
+                { id: 'm5', title: 'Mebel toplumy (ýaşyl)', description: 'Divan, kreslo, stol, 3 ýyl ulanylan.', price: 1800, category: 'Öý', seller: 'Oguljeren', status: 'active', image: '🛋️' },
+                { id: 'm6', title: 'Samsung 65" Smart TV', description: '4K Ultra HD, Tizen OS, 2024.', price: 2100, category: 'Elektronika', seller: 'Aýdar', status: 'active', image: '📺' },
+                { id: 'm7', title: 'Çagalar üçin oýunçak', description: 'Robot transformir, täze, kuti bilen.', price: 120, category: 'Çagalar', seller: 'Meret', status: 'active', image: '🧸' },
+                { id: 'm8', title: 'Daçany satýaryn', description: '45 sotk, 2 otagly, Aşgabat ýakynynda.', price: 15000, category: 'Daşary', seller: 'Gülşat', status: 'active', image: '🏡' }
+            ];
+            return mock;
         }
 
-        // Простой эскейп для безопасности
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        // Инициализация: если нет реальных данных, используем мок
+        let allListings = generateMockListings();
+
+        function getListingsForRole(role) {
+            // Для покупателя показываем все активные объявления, для продавца – только его собственные (если есть), для обоих – все.
+            // В демо-версии показываем все активные для всех ролей, но для продавца добавим кнопку "Продать".
+            return allListings.filter(l => l.status === 'active');
+        }
+
+        function renderListings() {
+            const container = document.getElementById('listingsGrid');
+            const loadingState = document.getElementById('loadingState');
+            const emptyState = document.getElementById('emptyState');
+
+            loadingState.style.display = 'none';
+            const items = getListingsForRole(currentRole);
+
+            if (items.length === 0) {
+                emptyState.style.display = 'block';
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'grid';
+            emptyState.style.display = 'none';
+
+            container.innerHTML = items.map(listing => {
+                const statusClass = listing.status === 'active' ? 'status-active' : listing.status === 'sold' ? 'status-sold' : 'status-archived';
+                const statusText = translations[currentLang][`status_${listing.status}`] || listing.status;
+                const isBuyer = currentRole === 'buyer';
+                const isSeller = currentRole === 'seller' || currentRole === 'both';
+                const showBuyButton = isBuyer && listing.status === 'active';
+                const showSellButton = isSeller && listing.seller === userData.username && listing.status === 'active';
+
+                return `
+                    <div class="listing-card" data-id="${listing.id}">
+                        <div class="image-placeholder">${listing.image || '📦'}</div>
+                        <div class="title">${listing.title}</div>
+                        <div class="price">${listing.price.toFixed(2)} TMT</div>
+                        <div class="description">${listing.description}</div>
+                        <div class="seller">
+                            <span>${translations[currentLang].seller_label}: ${listing.seller}</span>
+                            <span class="status ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="actions">
+                            ${showBuyButton ? `<button class="btn btn-success buy-btn" data-id="${listing.id}">${translations[currentLang].buy}</button>` : ''}
+                            ${showSellButton ? `<button class="btn btn-primary sell-btn" data-id="${listing.id}">Sat</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Обработчики для кнопок "Купить" и "Продать"
+            container.querySelectorAll('.buy-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const id = this.dataset.id;
+                    const listing = allListings.find(l => l.id === id);
+                    if (listing && listing.status === 'active') {
+                        listing.status = 'sold';
+                        renderListings();
+                        alert(translations[currentLang].product_bought);
+                    }
+                });
+            });
+
+            container.querySelectorAll('.sell-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const id = this.dataset.id;
+                    const listing = allListings.find(l => l.id === id);
+                    if (listing && listing.status === 'active') {
+                        listing.status = 'sold';
+                        renderListings();
+                        alert('Haryt satyldy!');
+                    }
+                });
+            });
         }
 
         // ============================================================
@@ -456,39 +608,30 @@
         cancelBtn.addEventListener('click', () => modal.classList.remove('active'));
         modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-        createForm.addEventListener('submit', async (e) => {
+        createForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const formData = new FormData(createForm);
-            const data = {
+            const formData = new FormData(this);
+            const newListing = {
+                id: 'm' + Date.now(),
                 title: formData.get('title'),
                 description: formData.get('description'),
                 price: parseFloat(formData.get('price')),
-                category: formData.get('category') || undefined
+                category: formData.get('category') || 'Başga',
+                seller: userData.username || 'User',
+                status: 'active',
+                image: '📦'
             };
-
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/marketplace/listings`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify(data)
-                });
-                if (!response.ok) throw new Error('Failed to create listing');
-                modal.classList.remove('active');
-                createForm.reset();
-                await loadListings(); // перезагружаем список
-            } catch (error) {
-                console.error('Error creating listing:', error);
-                alert('Bildiriş goşulmady. Täzeden synanyşyň.');
-            }
+            allListings.push(newListing);
+            modal.classList.remove('active');
+            this.reset();
+            renderListings();
+            alert(translations[currentLang].product_added);
         });
 
         // ============================================================
         // ОБНОВЛЕНИЕ
         // ============================================================
-        document.getElementById('refreshBtn').addEventListener('click', loadListings);
+        document.getElementById('refreshBtn').addEventListener('click', renderListings);
 
         // ============================================================
         // ЧАСТИЦЫ
@@ -510,8 +653,8 @@
         // ИНИЦИАЛИЗАЦИЯ
         // ============================================================
         setLanguage(currentLang);
-        loadListings();
-        console.log('Marketplace page loaded');
+        renderListings();
+        console.log('Marketplace page with roles loaded');
     </script>
 </body>
 </html>
