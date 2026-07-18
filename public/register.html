@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>СФЕРА — Giriş</title>
+    <title>СФЕРА — Hasap döretmek</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="/css/style.css" />
 
     <style>
-        .login-page {
+        .register-page {
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -20,13 +20,13 @@
             padding: 120px 20px 60px;
             background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
         }
-        .login-box {
+        .register-box {
             background: rgba(255,255,255,.06);
             backdrop-filter: blur(25px);
             border: 1px solid rgba(255,255,255,.12);
             border-radius: 24px;
             padding: 50px 40px;
-            max-width: 420px;
+            max-width: 440px;
             width: 100%;
             box-shadow: 0 25px 60px rgba(0,0,0,.35);
             animation: fadeUp 0.8s ease;
@@ -35,7 +35,7 @@
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .login-box h2 {
+        .register-box h2 {
             text-align: center;
             font-size: 32px;
             margin-bottom: 8px;
@@ -43,14 +43,14 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .login-box .subtitle {
+        .register-box .subtitle {
             text-align: center;
             color: #9fb5c8;
             font-size: 14px;
             margin-bottom: 30px;
         }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
         .form-group label {
             display: block;
@@ -59,7 +59,8 @@
             color: #dbe9ff;
             margin-bottom: 6px;
         }
-        .form-group input {
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 14px 18px;
             border-radius: 12px;
@@ -70,7 +71,8 @@
             transition: .3s;
             outline: none;
         }
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             border-color: #00d4ff;
             box-shadow: 0 0 20px rgba(0,212,255,.2);
             background: rgba(255,255,255,.08);
@@ -78,7 +80,17 @@
         .form-group input::placeholder {
             color: rgba(255,255,255,.3);
         }
-        .login-btn {
+        .form-group select option {
+            background: #0b2035;
+            color: white;
+        }
+        .admin-key-group {
+            display: none;
+        }
+        .admin-key-group.visible {
+            display: block;
+        }
+        .register-btn {
             width: 100%;
             padding: 16px;
             border: none;
@@ -92,28 +104,28 @@
             box-shadow: 0 15px 35px rgba(0,212,255,.3);
             margin-top: 10px;
         }
-        .login-btn:hover {
+        .register-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 25px 50px rgba(0,212,255,.5);
         }
-        .login-btn:disabled {
+        .register-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
-        .register-link {
+        .login-link {
             text-align: center;
             margin-top: 25px;
             color: #9fb5c8;
             font-size: 14px;
         }
-        .register-link a {
+        .login-link a {
             color: #00d4ff;
             text-decoration: none;
             font-weight: 500;
             transition: .2s;
         }
-        .register-link a:hover {
+        .login-link a:hover {
             text-decoration: underline;
         }
         .message {
@@ -166,7 +178,7 @@
             color: white;
         }
         @media (max-width: 480px) {
-            .login-box { padding: 30px 20px; }
+            .register-box { padding: 30px 20px; }
         }
     </style>
 </head>
@@ -209,8 +221,8 @@
         </div>
     </header>
 
-    <section class="login-page">
-        <div class="login-box">
+    <section class="register-page">
+        <div class="register-box">
             <div class="logo-icon-small">
                 <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -226,27 +238,52 @@
                 </svg>
             </div>
 
-            <h2 data-i18n="login_title">Giriş</h2>
-            <p class="subtitle" data-i18n="login_subtitle">Platforma girmek üçin hasabyňyzy ulanyň</p>
+            <h2 data-i18n="register_title">Hasap döretmek</h2>
+            <p class="subtitle" data-i18n="register_subtitle">Platformada hasap açyň we başlaň</p>
 
             <div id="message" class="message"></div>
 
-            <form id="loginForm" novalidate>
+            <form id="registerForm" novalidate>
+                <!-- Поле "Ulanyjy ady" -->
                 <div class="form-group">
-                    <label for="email" data-i18n="login_email_label">Email</label>
+                    <label for="username" data-i18n="register_username_label">Ulanyjy ady</label>
+                    <input type="text" id="username" name="username" placeholder="mysal_adam" required />
+                </div>
+
+                <!-- Поле "Email" -->
+                <div class="form-group">
+                    <label for="email" data-i18n="register_email_label">Email</label>
                     <input type="email" id="email" name="email" placeholder="email@example.com" required />
                 </div>
+
+                <!-- Поле "Parol" -->
                 <div class="form-group password-toggle">
-                    <label for="password" data-i18n="login_password_label">Parol</label>
-                    <input type="password" id="password" name="password" placeholder="••••••••" required />
+                    <label for="password" data-i18n="register_password_label">Parol</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required minlength="6" />
                     <button type="button" class="toggle-eye" id="togglePassword" aria-label="Show password">👁️</button>
                 </div>
-                <button type="submit" class="login-btn" id="loginBtn" data-i18n="login_button">Girmek</button>
+
+                <!-- Поле "Rol" -->
+                <div class="form-group">
+                    <label for="role" data-i18n="register_role_label">Rol</label>
+                    <select id="role" name="role">
+                        <option value="user" data-i18n="role_user">Ulanyjy</option>
+                        <option value="admin" data-i18n="role_admin">Administrator</option>
+                    </select>
+                </div>
+
+                <!-- Поле "Administrator açary" (скрыто по умолчанию) -->
+                <div class="form-group admin-key-group" id="adminKeyGroup">
+                    <label for="adminKey" data-i18n="admin_key_label">Administrator açary</label>
+                    <input type="password" id="adminKey" placeholder="admin123" />
+                </div>
+
+                <button type="submit" class="register-btn" id="registerBtn" data-i18n="register_button">Hasap döret</button>
             </form>
 
-            <div class="register-link">
-                <span data-i18n="login_no_account">Hasabyňyz ýokmy?</span>
-                <a href="register.html" data-i18n="login_register_link">Hasap dörediň</a>
+            <div class="login-link">
+                <span data-i18n="register_have_account">Eger hasabyňyz bar bolsa?</span>
+                <a href="login.html" data-i18n="register_login_link">Giriş et</a>
             </div>
         </div>
     </section>
@@ -257,40 +294,67 @@
         // ============================================================
         const translations = {
             tm: {
-                login_title: "Giriş",
-                login_subtitle: "Platforma girmek üçin hasabyňyzy ulanyň",
-                login_email_label: "Email",
-                login_password_label: "Parol",
-                login_button: "Girmek",
-                login_no_account: "Hasabyňyz ýokmy?",
-                login_register_link: "Hasap dörediň",
-                login_error: "Nädogry email ýa-da parol",
-                login_success: "Giriş başaryldy!",
-                login_loading: "Girilýär..."
+                register_title: "Hasap döretmek",
+                register_subtitle: "Platformada hasap açyň we başlaň",
+                register_username_label: "Ulanyjy ady",
+                register_email_label: "Email",
+                register_password_label: "Parol",
+                register_role_label: "Rol",
+                role_user: "Ulanyjy",
+                role_admin: "Administrator",
+                admin_key_label: "Administrator açary",
+                register_button: "Hasap döret",
+                register_have_account: "Eger hasabyňyz bar bolsa?",
+                register_login_link: "Giriş et",
+                register_loading: "Hasap döredilýär...",
+                register_error_username: "Ulanyjy ady hökmany",
+                register_error_email: "Nädogry email",
+                register_error_password: "Parol azyndan 6 simwol",
+                register_success: "Hasap döredildi! Giriş sahypasyna geçýärsiňiz...",
+                register_failed: "Hasap döredilmedi. Täzeden synanyşyň.",
+                admin_key_invalid: "Administrator açary ýalňyş. Barlaň."
             },
             ru: {
-                login_title: "Вход",
-                login_subtitle: "Используйте свою учётную запись для входа",
-                login_email_label: "Email",
-                login_password_label: "Пароль",
-                login_button: "Войти",
-                login_no_account: "Нет аккаунта?",
-                login_register_link: "Зарегистрироваться",
-                login_error: "Неверный email или пароль",
-                login_success: "Вход выполнен!",
-                login_loading: "Вход..."
+                register_title: "Регистрация",
+                register_subtitle: "Создайте аккаунт на платформе",
+                register_username_label: "Имя пользователя",
+                register_email_label: "Email",
+                register_password_label: "Пароль",
+                register_role_label: "Роль",
+                role_user: "Пользователь",
+                role_admin: "Администратор",
+                admin_key_label: "Ключ администратора",
+                register_button: "Зарегистрироваться",
+                register_have_account: "Уже есть аккаунт?",
+                register_login_link: "Войти",
+                register_loading: "Регистрация...",
+                register_error_username: "Имя пользователя обязательно",
+                register_error_email: "Неверный email",
+                register_error_password: "Пароль минимум 6 символов",
+                register_success: "Регистрация успешна! Перенаправление на вход...",
+                register_failed: "Регистрация не удалась. Попробуйте снова.",
+                admin_key_invalid: "Неверный ключ администратора. Проверьте."
             },
             en: {
-                login_title: "Login",
-                login_subtitle: "Use your account to access the platform",
-                login_email_label: "Email",
-                login_password_label: "Password",
-                login_button: "Login",
-                login_no_account: "Don't have an account?",
-                login_register_link: "Sign up",
-                login_error: "Invalid email or password",
-                login_success: "Login successful!",
-                login_loading: "Logging in..."
+                register_title: "Create account",
+                register_subtitle: "Sign up to get started",
+                register_username_label: "Username",
+                register_email_label: "Email",
+                register_password_label: "Password",
+                register_role_label: "Role",
+                role_user: "User",
+                role_admin: "Administrator",
+                admin_key_label: "Admin key",
+                register_button: "Sign up",
+                register_have_account: "Already have an account?",
+                register_login_link: "Login",
+                register_loading: "Registering...",
+                register_error_username: "Username is required",
+                register_error_email: "Invalid email",
+                register_error_password: "Password at least 6 characters",
+                register_success: "Registration successful! Redirecting to login...",
+                register_failed: "Registration failed. Please try again.",
+                admin_key_invalid: "Invalid admin key. Check it."
             }
         };
 
@@ -317,6 +381,18 @@
         });
 
         // ============================================================
+        // ПОКАЗ/СКРЫТИЕ ПОЛЯ ДЛЯ КЛЮЧА АДМИНИСТРАТОРА
+        // ============================================================
+        document.getElementById('role').addEventListener('change', function() {
+            const keyGroup = document.getElementById('adminKeyGroup');
+            if (this.value === 'admin') {
+                keyGroup.classList.add('visible');
+            } else {
+                keyGroup.classList.remove('visible');
+            }
+        });
+
+        // ============================================================
         // ПОКАЗ/СКРЫТИЕ ПАРОЛЯ
         // ============================================================
         document.getElementById('togglePassword').addEventListener('click', function() {
@@ -329,60 +405,69 @@
         // ============================================================
         // ОБРАБОТКА ФОРМЫ
         // ============================================================
-        const form = document.getElementById('loginForm');
+        const form = document.getElementById('registerForm');
         const messageEl = document.getElementById('message');
-        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+
+        const ADMIN_SECRET_KEY = 'admin123';
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
+            const username = document.getElementById('username').value.trim();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
+            const role = document.getElementById('role').value;
+            const adminKey = document.getElementById('adminKey').value.trim();
 
-            if (!email || !password) {
-                showMessage(translations[currentLang].login_error, 'error');
+            if (!username) {
+                showMessage(translations[currentLang].register_error_username, 'error');
+                return;
+            }
+            if (!email || !email.includes('@')) {
+                showMessage(translations[currentLang].register_error_email, 'error');
+                return;
+            }
+            if (password.length < 6) {
+                showMessage(translations[currentLang].register_error_password, 'error');
                 return;
             }
 
-            loginBtn.disabled = true;
-            loginBtn.textContent = translations[currentLang].login_loading;
+            if (role === 'admin' && adminKey !== ADMIN_SECRET_KEY) {
+                showMessage(translations[currentLang].admin_key_invalid, 'error');
+                return;
+            }
 
-            // Получаем список пользователей из localStorage
+            registerBtn.disabled = true;
+            registerBtn.textContent = translations[currentLang].register_loading;
+
             const users = JSON.parse(localStorage.getItem('users') || '[]');
-            // Находим пользователя по email
-            const user = users.find(u => u.email === email);
-
-            if (!user) {
-                showMessage(translations[currentLang].login_error, 'error');
-                loginBtn.disabled = false;
-                loginBtn.textContent = translations[currentLang].login_button;
+            if (users.some(u => u.email === email)) {
+                showMessage('Bu email eýýäm bellige alyndy.', 'error');
+                registerBtn.disabled = false;
+                registerBtn.textContent = translations[currentLang].register_button;
                 return;
             }
 
-            // Проверяем пароль (в демо-версии пароль хранится в открытом виде)
-            if (user.password !== password) {
-                showMessage(translations[currentLang].login_error, 'error');
-                loginBtn.disabled = false;
-                loginBtn.textContent = translations[currentLang].login_button;
-                return;
-            }
-
-            // Успешный вход
-            showMessage(translations[currentLang].login_success, 'success');
-            // Сохраняем информацию о пользователе (без пароля)
-            const userData = {
-                id: user.id,
-                username: user.username,
-                email: user.email,
-                role: user.role || 'user'
+            const newUser = {
+                id: 'u' + Date.now(),
+                username,
+                email,
+                password,
+                role,
+                createdAt: new Date().toISOString()
             };
-            localStorage.setItem('user', JSON.stringify(userData));
-            localStorage.setItem('token', 'demo-token-' + Date.now());
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
 
-            // Перенаправляем через секунду
+            if (role === 'admin') {
+                localStorage.setItem('adminRegistered', 'true');
+            }
+
+            showMessage(translations[currentLang].register_success, 'success');
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1000);
+                window.location.href = 'login.html';
+            }, 1500);
         });
 
         function showMessage(text, type) {
@@ -392,7 +477,7 @@
             clearTimeout(window.messageTimeout);
             window.messageTimeout = setTimeout(() => {
                 messageEl.style.display = 'none';
-            }, 5000);
+            }, 6000);
         }
 
         // ============================================================
@@ -415,7 +500,7 @@
         // ИНИЦИАЛИЗАЦИЯ
         // ============================================================
         setLanguage(currentLang);
-        console.log('Login page with local storage check loaded');
+        console.log('Register page with admin role loaded');
     </script>
 </body>
 </html>
