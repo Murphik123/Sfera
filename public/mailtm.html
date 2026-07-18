@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="tm">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>СФЕРА — Messenger</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <style>
+        /* Основные стили мессенджера */
+        .messenger-page {
+            padding: 120px 0 60px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .messenger-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 180px);
+            min-height: 500px;
+            border-radius: 24px;
+            overflow: hidden;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.08);
+            backdrop-filter: blur(12px);
+        }
+        /* Левая панель (список диалогов) */
+        .messenger-sidebar {
+            width: 320px;
+            min-width: 280px;
+            background: rgba(0,0,0,.2);
+            border-right: 1px solid rgba(255,255,255,.08);
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sidebar-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .sidebar-header .tabs {
+            display: flex;
+            gap: 8px;
+        }
+        .sidebar-header .tabs button {
+            background: transparent;
+            border: none;
+            color: #9fb5c8;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: .3s;
+        }
+        .sidebar-header .tabs button.active {
+            background: rgba(0,212,255,.15);
+            color: #00d4ff;
+        }
+        .sidebar-header .tabs button:hover {
+            background: rgba(255,255,255,.05);
+        }
+        .sidebar-search {
+            padding: 12px 20px;
+        }
+        .sidebar-search input {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.1);
+            background: rgba(255,255,255,.05);
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: .3s;
+        }
+        .sidebar-search input:focus {
+            border-color: #00d4ff;
+        }
+        .sidebar-search input::placeholder {
+            color: #9fb5c8;
+        }
+        .dialogs-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        .dialog-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: .2s;
+            border-left: 3px solid transparent;
+            gap: 12px;
+        }
+        .dialog-item:hover {
+            background: rgba(255,255,255,.05);
+        }
+        .dialog-item.active {
+            background: rgba(0,212,255,.08);
+            border-left-color: #00d4ff;
+        }
+        .dialog-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0,212,255,.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: #00d4ff;
+            flex-shrink: 0;
+        }
+        .dialog-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .dialog-info .name {
+            font-weight: 600;
+            font-size: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .dialog-info .last-msg {
+            font-size: 13px;
+            color: #9fb5c8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .dialog-time {
+            font-size: 11px;
+            color: #6b7f94;
+            flex-shrink: 0;
+        }
+        .unread-badge {
+            background: #00d4ff;
+            color: #08131d;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            min-width: 20px;
+            text-align: center;
+        }
+        /* Правая панель (чат) */
+        .messenger-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0,0,0,.1);
+        }
+        .chat-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(0,0,0,.15);
+            min-height: 70px;
+        }
+        .chat-header .back-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .chat-header .chat-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0,212,255,.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #00d4ff;
+        }
+        .chat-header .chat-name {
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .chat-header .chat-status {
+            font-size: 13px;
+            color: #9fb5c8;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .message {
+            max-width: 75%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            font-size: 15px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            position: relative;
+        }
+        .message.sent {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #00d4ff, #008cff);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+        .message.received {
+            align-self: flex-start;
+            background: rgba(255,255,255,.08);
+            color: white;
+            border-bottom-left-radius: 6px;
+        }
+        .message .msg-time {
+            font-size: 11px;
+            color: rgba(255,255,255,.5);
+            margin-top: 4px;
+            text-align: right;
+        }
+        .message.received .msg-time {
+            color: #9fb5c8;
+        }
+        .message .msg-username {
+            font-size: 12px;
+            font-weight: 600;
+            color: #00d4ff;
+            margin-bottom: 4px;
+        }
+        .chat-input-area {
+            padding: 16px 24px;
+            border-top: 1px solid rgba(255,255,255,.08);
+            display: flex;
+            gap: 12px;
+            background: rgba(0,0,0,.1);
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,.1);
+            background: rgba(255,255,255,.05);
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: .3s;
+        }
+        .chat-input-area input:focus {
+            border-color: #00d4ff;
+        }
+        .chat-input-area input::placeholder {
+            color: #9fb5c8;
+        }
+        .chat-input-area button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #00d4ff, #008cff);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+        }
+        .chat-input-area button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0,212,255,.3);
+        }
+        .chat-input-area button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .empty-chat {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #9fb5c8;
+            text-align: center;
+            padding: 40px;
+        }
+        .empty-chat .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        .empty-chat h3 {
+            font-size: 22px;
+            color: white;
+            margin-bottom: 8px;
+        }
+        /* Адаптив */
+        @media (max-width: 992px) {
+            .messenger-sidebar { width: 260px; min-width: 220px; }
+        }
+        @media (max-width: 768px) {
+            .messenger-container { flex-direction: column; height: auto; min-height: 600px; }
+            .messenger-sidebar {
+                width: 100%;
+                min-width: unset;
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,.08);
+                max-height: 300px;
+            }
+            .chat-header .back-btn { display: block; }
+            .message { max-width: 90%; }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles"></div>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3" />
+                                <stop offset="50%" stop-color="#00d4ff" />
+                                <stop offset="100%" stop-color="#1f6bff" />
+                            </linearGradient>
+                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="4" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
+                        <g filter="url(#logoGlow)">
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>SFERA</h2>
+                    <p>Milli Sanly Platforma</p>
+                </div>
+            </a>
+
+            <div class="header-right" style="display:flex; align-items:center; gap:12px;">
+                <span class="user-info" id="userDisplay">👤 <strong id="username">User</strong></span>
+                <a href="dashboard.html" class="btn btn-outline" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Dashboard</a>
+                <button class="lang" id="langBtn">TM</button>
+                <button class="logout-btn" id="logoutBtn" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="messenger-page">
+        <div class="container" style="flex:1; display:flex; flex-direction:column;">
+            <div class="messenger-container" id="messengerContainer">
+                <!-- Боковая панель -->
+                <div class="messenger-sidebar" id="sidebar">
+                    <div class="sidebar-header">
+                        <h2 data-i18n="messenger_title">Söhbet</h2>
+                        <div class="tabs">
+                            <button class="active" data-tab="chats" data-i18n="tab_chats">Çatlar</button>
+                            <button data-tab="assistant" data-i18n="tab_assistant">Kömekçi</button>
+                        </div>
+                    </div>
+                    <div class="sidebar-search">
+                        <input type="text" id="searchInput" placeholder="Gözleg..." data-i18n="search_placeholder" />
+                    </div>
+                    <div class="dialogs-list" id="dialogsList">
+                        <!-- Диалоги будут загружены динамически -->
+                        <div class="empty-state" id="loadingDialogs" style="padding:30px 20px; text-align:center; color:#9fb5c8;">
+                            <div class="icon">⏳</div>
+                            <p data-i18n="loading">Ýüklenýär...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Окно чата -->
+                <div class="messenger-chat" id="chatWindow">
+                    <div class="chat-header" id="chatHeader">
+                        <button class="back-btn" id="backBtn">←</button>
+                        <div class="chat-avatar" id="chatAvatar">👤</div>
+                        <div>
+                            <div class="chat-name" id="chatName">Söhbet</div>
+                            <div class="chat-status" id="chatStatus">onlaýn</div>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="empty-chat">
+                            <div class="icon">💬</div>
+                            <h3 data-i18n="select_chat">Söhbeti saýlaň</h3>
+                            <p data-i18n="select_chat_desc">Çatdaşlaryňyzdan birini saýlaň ýa-da täze söhbet başlaň.</p>
+                        </div>
+                    </div>
+                    <div class="chat-input-area" id="chatInputArea">
+                        <input type="text" id="messageInput" placeholder="Habaryňyzy ýazyň..." data-i18n="type_message" />
+                        <button id="sendBtn" data-i18n="send">Iber</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ============================================================
+        // НАСТРОЙКА API
+        // ============================================================
+        const API_BASE_URL = 'https://sfera-1.onrender.com';
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        // ============================================================
+        // ПЕРЕВОДЫ
+        // ============================================================
+        const translations = {
+            tm: {
+                logout: "Çykmak",
+                messenger_title: "Söhbet",
+                tab_chats: "Çatlar",
+                tab_assistant: "Kömekçi",
+                search_placeholder: "Gözleg...",
+                loading: "Ýüklenýär...",
+                select_chat: "Söhbeti saýlaň",
+                select_chat_desc: "Çatdaşlaryňyzdan birini saýlaň ýa-da täze söhbet başlaň.",
+                type_message: "Habaryňyzy ýazyň...",
+                send: "Iber",
+                online: "onlaýn",
+                offline: "offlaýn",
+                assistant_name: "Kömekçi",
+                assistant_status: "onlaýn",
+                assistant_hello: "Salam! Men Sfera platformasynyň kömekçisi. Size nähili kömek edip bilerin?"
+            },
+            ru: {
+                logout: "Выйти",
+                messenger_title: "Мессенджер",
+                tab_chats: "Чаты",
+                tab_assistant: "Помощник",
+                search_placeholder: "Поиск...",
+                loading: "Загрузка...",
+                select_chat: "Выберите чат",
+                select_chat_desc: "Выберите собеседника или начните новый чат.",
+                type_message: "Введите сообщение...",
+                send: "Отправить",
+                online: "онлайн",
+                offline: "офлайн",
+                assistant_name: "Помощник",
+                assistant_status: "онлайн",
+                assistant_hello: "Привет! Я помощник платформы Sfera. Чем могу помочь?"
+            },
+            en: {
+                logout: "Logout",
+                messenger_title: "Messenger",
+                tab_chats: "Chats",
+                tab_assistant: "Assistant",
+                search_placeholder: "Search...",
+                loading: "Loading...",
+                select_chat: "Select a chat",
+                select_chat_desc: "Select a contact or start a new chat.",
+                type_message: "Type your message...",
+                send: "Send",
+                online: "online",
+                offline: "offline",
+                assistant_name: "Assistant",
+                assistant_status: "online",
+                assistant_hello: "Hi! I'm the Sfera platform assistant. How can I help you?"
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'tm';
+
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            document.getElementById('langBtn').textContent = lang.toUpperCase();
+            document.getElementById('logoutBtn').textContent = translations[lang].logout;
+            localStorage.setItem('lang', lang);
+            // Обновить динамические элементы
+            updateUI();
+        }
+
+        document.getElementById('langBtn').addEventListener('click', function() {
+            const cycle = ['tm', 'ru', 'en'];
+            let idx = cycle.indexOf(currentLang);
+            idx = (idx + 1) % cycle.length;
+            setLanguage(cycle[idx]);
+        });
+
+        // ============================================================
+        // ДАННЫЕ
+        // ============================================================
+        let currentDialogId = null;
+        let currentChatType = 'chats'; // 'chats' или 'assistant'
+        let dialogs = [];
+        let messages = [];
+        const userData = JSON.parse(localStorage.getItem('user') || '{"username":"Guest", "id":"0"}');
+        document.getElementById('username').textContent = userData.username || 'User';
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // ============================================================
+        // ЗАГРУЗКА ДИАЛОГОВ
+        // ============================================================
+        async function loadDialogs() {
+            const listEl = document.getElementById('dialogsList');
+            const loadingEl = document.getElementById('loadingDialogs');
+            try {
+                loadingEl.style.display = 'block';
+                // Для демонстрации – имитация данных
+                // В реальности запрос к /api/chat/conversations
+                // Пока создаём фейковые диалоги
+                const fakeDialogs = [
+                    { id: '1', name: 'Aýdar', lastMessage: 'Salam!', time: new Date(), unread: 2 },
+                    { id: '2', name: 'Meret', lastMessage: 'Nähili?', time: new Date(Date.now() - 3600000), unread: 0 },
+                    { id: '3', name: 'Gülşat', lastMessage: 'Gepleşeliň!', time: new Date(Date.now() - 7200000), unread: 5 },
+                ];
+                dialogs = fakeDialogs;
+                loadingEl.style.display = 'none';
+                renderDialogs(dialogs);
+            } catch (error) {
+                console.error('Error loading dialogs:', error);
+                loadingEl.style.display = 'none';
+                listEl.innerHTML = `<div class="empty-state" style="padding:30px 20px; text-align:center; color:#ff6b6b;">❌ Ýüklenmedik</div>`;
+            }
+        }
+
+        function renderDialogs(dialogs) {
+            const listEl = document.getElementById('dialogsList');
+            if (!dialogs || dialogs.length === 0) {
+                listEl.innerHTML = `<div class="empty-state" style="padding:30px 20px; text-align:center; color:#9fb5c8;">📭 Hiç hili söhbet ýok</div>`;
+                return;
+            }
+            listEl.innerHTML = dialogs.map(d => `
+                <div class="dialog-item ${currentDialogId === d.id ? 'active' : ''}" data-id="${d.id}" data-name="${d.name}">
+                    <div class="dialog-avatar">${d.name.charAt(0).toUpperCase()}</div>
+                    <div class="dialog-info">
+                        <div class="name">${d.name}</div>
+                        <div class="last-msg">${d.lastMessage || ''}</div>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+                        <span class="dialog-time">${d.time ? new Date(d.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
+                        ${d.unread > 0 ? `<span class="unread-badge">${d.unread}</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            // Клики по диалогам
+            listEl.querySelectorAll('.dialog-item').forEach(el => {
+                el.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const name = this.dataset.name;
+                    openChat(id, name, 'chats');
+                });
+            });
+        }
+
+        // ============================================================
+        // ОТКРЫТИЕ ЧАТА
+        // ============================================================
+        function openChat(id, name, type = 'chats') {
+            currentDialogId = id;
+            currentChatType = type;
+            document.querySelectorAll('.dialog-item').forEach(el => el.classList.remove('active'));
+            const dialogEl = document.querySelector(`.dialog-item[data-id="${id}"]`);
+            if (dialogEl) dialogEl.classList.add('active');
+
+            document.getElementById('chatName').textContent = name;
+            document.getElementById('chatAvatar').textContent = name.charAt(0).toUpperCase();
+            document.getElementById('chatStatus').textContent = translations[currentLang].online;
+
+            // Загружаем сообщения (имитация)
+            loadMessages(id);
+        }
+
+        // ============================================================
+        // ЗАГРУЗКА СООБЩЕНИЙ
+        // ============================================================
+        async function loadMessages(dialogId) {
+            const messagesContainer = document.getElementById('chatMessages');
+            try {
+                // В реальности запрос к /api/chat/messages/:userId
+                // Имитация
+                const fakeMessages = [
+                    { from: 'user', text: 'Salam!', time: new Date(Date.now() - 60000) },
+                    { from: dialogId === '1' ? 'Aýdar' : 'other', text: 'Salam, nähili?', time: new Date(Date.now() - 30000) },
+                    { from: 'user', text: 'Gowy, sen?', time: new Date(Date.now() - 10000) },
+                ];
+                messages = fakeMessages;
+                renderMessages(messages);
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                messagesContainer.innerHTML = `<div class="empty-chat"><div class="icon">❌</div><p>Habarlar ýüklenmedi</p></div>`;
+            }
+        }
+
+        function renderMessages(messages) {
+            const container = document.getElementById('chatMessages');
+            if (!messages || messages.length === 0) {
+                container.innerHTML = `<div class="empty-chat"><div class="icon">💬</div><h3>Hiç hili habar ýok</h3></div>`;
+                return;
+            }
+            container.innerHTML = messages.map(msg => {
+                const isSent = msg.from === 'user';
+                const senderName = isSent ? '' : `<div class="msg-username">${msg.from}</div>`;
+                return `
+                    <div class="message ${isSent ? 'sent' : 'received'}">
+                        ${senderName}
+                        ${msg.text}
+                        <div class="msg-time">${new Date(msg.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+                    </div>
+                `;
+            }).join('');
+            // Прокрутка вниз
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // ============================================================
+        // ОТПРАВКА СООБЩЕНИЯ
+        // ============================================================
+        document.getElementById('sendBtn').addEventListener('click', sendMessage);
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            if (!text || !currentDialogId) return;
+
+            // Временно добавляем сообщение в UI
+            const msg = { from: 'user', text, time: new Date() };
+            messages.push(msg);
+            renderMessages(messages);
+            input.value = '';
+
+            // Отправка на сервер (заглушка)
+            try {
+                // const response = await fetch(`${API_BASE_URL}/api/chat/messages`, { ... });
+                // Пока просто имитируем ответ через 1 сек
+                setTimeout(() => {
+                    const reply = {
+                        from: currentChatType === 'assistant' ? 'Kömekçi' : 'Aýdar',
+                        text: currentChatType === 'assistant' ? 'Men siziň soragyňyza jogap berýärin.' : 'Gowy, men size kömek ederin.',
+                        time: new Date()
+                    };
+                    messages.push(reply);
+                    renderMessages(messages);
+                }, 800);
+            } catch (error) {
+                console.error('Send error:', error);
+            }
+        }
+
+        // ============================================================
+        // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (Чаты / Помощник)
+        // ============================================================
+        document.querySelectorAll('.sidebar-header .tabs button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tab = this.dataset.tab;
+                document.querySelectorAll('.sidebar-header .tabs button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                if (tab === 'assistant') {
+                    // Открыть чат с помощником (бота)
+                    const assistantId = 'assistant';
+                    const assistantName = translations[currentLang].assistant_name;
+                    // Добавляем помощника в список диалогов, если его нет
+                    let existing = dialogs.find(d => d.id === assistantId);
+                    if (!existing) {
+                        dialogs.unshift({
+                            id: assistantId,
+                            name: assistantName,
+                            lastMessage: translations[currentLang].assistant_hello,
+                            time: new Date(),
+                            unread: 1
+                        });
+                        renderDialogs(dialogs);
+                    }
+                    openChat(assistantId, assistantName, 'assistant');
+                } else {
+                    // Показать обычные чаты
+                    // Если мы в чате с помощником, переключаем на первый диалог
+                    if (currentDialogId === 'assistant') {
+                        const firstDialog = dialogs.find(d => d.id !== 'assistant');
+                        if (firstDialog) {
+                            openChat(firstDialog.id, firstDialog.name, 'chats');
+                        } else {
+                            // Если нет других диалогов, показываем пустое состояние
+                            document.getElementById('chatName').textContent = 'Söhbet';
+                            document.getElementById('chatMessages').innerHTML = `
+                                <div class="empty-chat"><div class="icon">💬</div><h3>${translations[currentLang].select_chat}</h3></div>
+                            `;
+                            currentDialogId = null;
+                        }
+                    }
+                }
+            });
+        });
+
+        // ============================================================
+        // ОБНОВЛЕНИЕ UI ПРИ СМЕНЕ ЯЗЫКА
+        // ============================================================
+        function updateUI() {
+            // Если открыт помощник, обновляем его имя
+            if (currentDialogId === 'assistant') {
+                document.getElementById('chatName').textContent = translations[currentLang].assistant_name;
+                document.getElementById('chatStatus').textContent = translations[currentLang].assistant_status;
+            }
+            // Обновляем сообщение приветствия у помощника, если он есть в диалогах
+            const assistant = dialogs.find(d => d.id === 'assistant');
+            if (assistant) {
+                assistant.lastMessage = translations[currentLang].assistant_hello;
+                renderDialogs(dialogs);
+            }
+        }
+
+        // ============================================================
+        // ЧАСТИЦЫ
+        // ============================================================
+        const particles = document.getElementById('particles');
+        if (particles && particles.children.length === 0) {
+            for (let i = 0; i < 60; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDuration = (6 + Math.random() * 12) + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                particles.appendChild(p);
+            }
+        }
+
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+        setLanguage(currentLang);
+        loadDialogs();
+        console.log('Messenger page loaded');
+    </script>
+</body>
+</html>
