@@ -58,11 +58,11 @@
         }
         .btn-outline {
             background: transparent;
-            border: 1px solid rgba(255,255,255,.25);
+            border: 1px solid rgba(255,255,255,.2);
             color: white;
         }
         .btn-outline:hover {
-            background: rgba(255,255,255,.1);
+            background: rgba(255,255,255,.05);
             border-color: #00d4ff;
         }
         .btn-success {
@@ -73,168 +73,237 @@
             transform: translateY(-3px);
             box-shadow: 0 20px 40px rgba(0,255,170,.3);
         }
-        .role-selector {
-            display: flex;
-            gap: 8px;
-            background: rgba(255,255,255,.06);
-            border-radius: 30px;
-            padding: 6px;
-            border: 1px solid rgba(255,255,255,.1);
+        .btn-danger {
+            background: rgba(200,0,0,.15);
+            border: 1px solid rgba(200,0,0,.3);
+            color: #ff6b6b;
         }
-        .role-selector button {
+        .btn-danger:hover {
+            background: rgba(200,0,0,.25);
+        }
+
+        /* Вкладки */
+        .mp-tabs {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+            padding-bottom: 4px;
+        }
+        .mp-tabs button {
             background: transparent;
             border: none;
             color: #9fb5c8;
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-weight: 500;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 15px;
             cursor: pointer;
-            transition: .2s;
-            font-size: 14px;
+            transition: .3s;
+            border-bottom: 3px solid transparent;
         }
-        .role-selector button.active {
-            background: rgba(0,212,255,.15);
+        .mp-tabs button.active {
             color: #00d4ff;
+            border-bottom-color: #00d4ff;
         }
-        .role-selector button:hover {
-            background: rgba(255,255,255,.05);
+        .mp-tabs button:hover {
+            color: white;
         }
 
-        .listings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
+        .tab-content {
+            display: none;
+            animation: fadeUp .4s ease;
         }
-        .listing-card {
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Секции каталога */
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 30px 0 16px;
+            color: white;
+            border-left: 4px solid #00d4ff;
+            padding-left: 12px;
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        .product-card {
             background: rgba(255,255,255,.06);
             border: 1px solid rgba(255,255,255,.12);
-            backdrop-filter: blur(25px);
             border-radius: 18px;
-            padding: 20px;
-            transition: .35s;
-            color: white;
+            padding: 16px;
+            backdrop-filter: blur(10px);
+            transition: .3s;
             display: flex;
             flex-direction: column;
         }
-        .listing-card:hover {
-            transform: translateY(-6px);
+        .product-card:hover {
             border-color: #00d4ff;
-            box-shadow: 0 25px 50px rgba(0,212,255,.15);
+            transform: translateY(-4px);
         }
-        .listing-card .image-placeholder {
-            width: 100%;
-            height: 140px;
-            border-radius: 12px;
-            background: rgba(255,255,255,.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 50px;
-            margin-bottom: 12px;
-        }
-        .listing-card .title {
-            font-size: 20px;
-            font-weight: 700;
+        .product-card .image {
+            font-size: 48px;
+            text-align: center;
             margin-bottom: 8px;
         }
-        .listing-card .price {
-            font-size: 22px;
+        .product-card .name {
             font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .product-card .price {
+            font-size: 18px;
+            font-weight: 700;
             color: #00d4ff;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
-        .listing-card .description {
-            color: #bdd0df;
-            font-size: 14px;
-            line-height: 1.5;
-            flex-grow: 1;
-        }
-        .listing-card .seller {
+        .product-card .seller {
             font-size: 12px;
             color: #9fb5c8;
-            margin-top: 12px;
-            border-top: 1px solid rgba(255,255,255,.08);
-            padding-top: 10px;
+            margin-bottom: 10px;
+        }
+        .product-card .btn {
+            width: 100%;
+            text-align: center;
+            font-size: 13px;
+            padding: 8px;
+        }
+
+        /* Корзина */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+        }
+        .cart-item .info {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+        .cart-item .info .name {
+            font-weight: 500;
+        }
+        .cart-item .info .price {
+            color: #00d4ff;
+        }
+        .cart-item .qty {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .cart-item .qty button {
+            background: rgba(255,255,255,.08);
+            border: none;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .cart-item .qty button:hover {
+            background: rgba(0,212,255,.2);
+        }
+        .cart-total {
+            margin-top: 20px;
+            text-align: right;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+        }
+        .cart-total span {
+            color: #00d4ff;
+        }
+
+        /* Личный кабинет */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .profile-card {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 18px;
+            padding: 24px;
+        }
+        .profile-card h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: white;
+        }
+        .profile-card .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,.04);
+        }
+        .profile-card .row .label {
+            color: #9fb5c8;
+        }
+        .profile-card .row .value {
+            color: white;
+            font-weight: 500;
+        }
+        .order-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,.04);
             display: flex;
             justify-content: space-between;
         }
-        .listing-card .status {
-            display: inline-block;
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 11px;
+        .order-item .date {
+            color: #9fb5c8;
+            font-size: 13px;
+        }
+        .order-item .total {
             font-weight: 600;
-            align-self: flex-start;
+            color: #00d4ff;
         }
-        .status-active { background: rgba(0,255,170,.15); color: #00ffa3; }
-        .status-sold { background: rgba(255,0,0,.15); color: #ff6b6b; }
-        .status-archived { background: rgba(255,255,255,.1); color: #9fb5c8; }
-        .listing-card .actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-        }
-        .listing-card .actions .btn { flex: 1; text-align: center; padding: 8px 16px; font-size: 13px; }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,.6);
-            backdrop-filter: blur(8px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #bdd0df;
         }
-        .modal.active { display: flex; }
-        .modal-content {
-            background: rgba(13,28,41,.95);
-            border: 1px solid rgba(255,255,255,.15);
-            border-radius: 24px;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 30px 80px rgba(0,0,0,.5);
+        .empty-state .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
         }
-        .modal-content h2 { margin-bottom: 20px; font-size: 28px; }
-        .modal-content .form-group { margin-bottom: 16px; }
-        .modal-content .form-group label { display: block; font-size: 14px; font-weight: 500; color: #dbe9ff; margin-bottom: 6px; }
-        .modal-content .form-group input,
-        .modal-content .form-group textarea,
-        .modal-content .form-group select {
-            width: 100%;
+
+        .message {
             padding: 12px 16px;
             border-radius: 12px;
-            border: 1px solid rgba(255,255,255,.15);
-            background: rgba(255,255,255,.05);
-            color: white;
-            font-size: 15px;
-            transition: .3s;
-            outline: none;
+            margin-bottom: 16px;
+            font-size: 14px;
+            display: none;
         }
-        .modal-content .form-group input:focus,
-        .modal-content .form-group textarea:focus,
-        .modal-content .form-group select:focus {
-            border-color: #00d4ff;
-            box-shadow: 0 0 20px rgba(0,212,255,.1);
+        .message.error {
+            display: block;
+            background: rgba(255,0,0,.1);
+            border: 1px solid rgba(255,0,0,.2);
+            color: #ff6b6b;
         }
-        .modal-content .form-group textarea { resize: vertical; min-height: 80px; }
-        .modal-content .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; }
-        .modal-content .form-actions .btn { min-width: 100px; }
-
-        .empty-state { text-align: center; padding: 60px 20px; color: #bdd0df; }
-        .empty-state .icon { font-size: 60px; margin-bottom: 20px; }
-        .empty-state h3 { font-size: 24px; margin-bottom: 10px; color: white; }
+        .message.success {
+            display: block;
+            background: rgba(0,255,170,.1);
+            border: 1px solid rgba(0,255,170,.2);
+            color: #00ffa3;
+        }
 
         @media (max-width: 768px) {
-            .marketplace-header { flex-direction: column; align-items: stretch; gap: 15px; }
-            .marketplace-header .actions { justify-content: center; }
-            .role-selector { justify-content: center; }
-            .listings-grid { grid-template-columns: 1fr; }
+            .profile-grid { grid-template-columns: 1fr; }
+            .mp-tabs button { padding: 10px 14px; font-size: 13px; }
         }
     </style>
 </head>
@@ -285,60 +354,65 @@
             <div class="marketplace-header">
                 <h1>🛒 Marketpleýs</h1>
                 <div class="actions">
-                    <!-- Переключатель ролей -->
-                    <div class="role-selector" id="roleSelector">
-                        <button class="active" data-role="buyer" data-i18n="role_buyer">Alyjy</button>
-                        <button data-role="seller" data-i18n="role_seller">Satyjy</button>
-                        <button data-role="both" data-i18n="role_both">Iki</button>
-                    </div>
-                    <button class="btn btn-primary" id="createListingBtn" data-i18n="create_listing">+ Täze bildiriş</button>
                     <button class="btn btn-outline" id="refreshBtn" data-i18n="refresh">⟳ Täzele</button>
                 </div>
             </div>
 
-            <div id="listingsContainer">
-                <div class="empty-state" id="loadingState">
-                    <div class="icon">⏳</div>
-                    <h3 data-i18n="loading">Ýüklenýär...</h3>
-                </div>
-                <div class="listings-grid" id="listingsGrid" style="display:none;"></div>
-                <div class="empty-state" id="emptyState" style="display:none;">
-                    <div class="icon">📭</div>
-                    <h3 data-i18n="no_listings">Hiç hili bildiriş ýok</h3>
-                    <p data-i18n="no_listings_desc">Ilkinji bildirişi goşuň!</p>
+            <div id="message" class="message"></div>
+
+            <!-- Вкладки -->
+            <div class="mp-tabs">
+                <button class="active" data-tab="catalog" data-i18n="tab_catalog">Katalog</button>
+                <button data-tab="cart" data-i18n="tab_cart">Sebet (<span id="cartCount">0</span>)</button>
+                <button data-tab="profile" data-i18n="tab_profile">Şahsy kabinet</button>
+            </div>
+
+            <!-- Вкладка: Каталог -->
+            <div class="tab-content active" id="tab-catalog">
+                <div id="catalogContent">
+                    <!-- Секции будут заполнены динамически -->
                 </div>
             </div>
+
+            <!-- Вкладка: Корзина -->
+            <div class="tab-content" id="tab-cart">
+                <div id="cartContent">
+                    <div class="empty-state" id="emptyCart">
+                        <div class="icon">🛒</div>
+                        <p data-i18n="empty_cart">Sebet boş</p>
+                    </div>
+                    <div id="cartItems" style="display:none;"></div>
+                    <div id="cartTotal" style="display:none;" class="cart-total">
+                        <p>Jemi: <span id="totalAmount">0.00</span> TMT</p>
+                        <button class="btn btn-success" id="checkoutBtn" data-i18n="checkout">Sargyt et</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Вкладка: Личный кабинет -->
+            <div class="tab-content" id="tab-profile">
+                <div class="profile-grid">
+                    <div class="profile-card">
+                        <h3 data-i18n="profile_info">Profil maglumatlary</h3>
+                        <div class="row"><span class="label" data-i18n="username_label">Ulanyjy ady</span><span class="value" id="profileUsername">User</span></div>
+                        <div class="row"><span class="label" data-i18n="email_label">Email</span><span class="value" id="profileEmail">user@example.com</span></div>
+                        <div class="row"><span class="label" data-i18n="phone_label">Telefon</span><span class="value" id="profilePhone">+993 63 000000</span></div>
+                        <div class="row"><span class="label" data-i18n="member_since">Agza bolan</span><span class="value" id="profileSince">2024</span></div>
+                        <button class="btn btn-outline" style="margin-top:16px; width:100%;" data-i18n="edit_profile">Profil üýtget</button>
+                    </div>
+                    <div class="profile-card">
+                        <h3 data-i18n="order_history">Sargyt taryhy</h3>
+                        <div id="orderHistory">
+                            <div class="empty-state" style="padding:20px 0;">
+                                <p data-i18n="no_orders">Sargyt ýok</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </section>
-
-    <!-- Модальное окно создания объявления -->
-    <div class="modal" id="createModal">
-        <div class="modal-content">
-            <h2 data-i18n="new_listing">Täze bildiriş</h2>
-            <form id="createForm">
-                <div class="form-group">
-                    <label for="title" data-i18n="title_label">Ady</label>
-                    <input type="text" id="title" name="title" required placeholder="Mysal: Samsung Galaxy S23" />
-                </div>
-                <div class="form-group">
-                    <label for="description" data-i18n="description_label">Beýany</label>
-                    <textarea id="description" name="description" placeholder="Bildirişiň jikme-jigi..." rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="price" data-i18n="price_label">Bahasy (TMT)</label>
-                    <input type="number" id="price" name="price" step="0.01" required placeholder="1000" />
-                </div>
-                <div class="form-group">
-                    <label for="category" data-i18n="category_label">Kategoriýa</label>
-                    <input type="text" id="category" name="category" placeholder="Elektronika, Awtoulag..." />
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-outline" id="cancelModalBtn" data-i18n="cancel">Ýatyr</button>
-                    <button type="submit" class="btn btn-primary" data-i18n="add">Goşmak</button>
-                </div>
-            </form>
-        </div>
-    </div>
 
     <script>
         // ============================================================
@@ -355,116 +429,142 @@
             tm: {
                 logout: "Çykmak",
                 back: "← Yza",
-                role_buyer: "Alyjy",
-                role_seller: "Satyjy",
-                role_both: "Iki",
-                create_listing: "+ Täze bildiriş",
-                refresh: "⟳ Täzele",
-                loading: "Ýüklenýär...",
-                no_listings: "Hiç hili bildiriş ýok",
-                no_listings_desc: "Ilkinji bildirişi goşuň!",
-                new_listing: "Täze bildiriş",
-                title_label: "Ady",
-                description_label: "Beýany",
-                price_label: "Bahasy (TMT)",
-                category_label: "Kategoriýa",
-                cancel: "Ýatyr",
-                add: "Goşmak",
-                buy: "Satyn al",
-                seller_label: "Satyjy",
-                status_active: "Aktiv",
-                status_sold: "Satylan",
-                status_archived: "Arhiw",
-                no_products: "Hiç hili haryt ýok",
-                product_added: "Bildiriş goşuldy!",
-                product_bought: "Haryt satyn alyndy!"
+                refresh: "Täzele",
+                tab_catalog: "Katalog",
+                tab_cart: "Sebet",
+                tab_profile: "Şahsy kabinet",
+                empty_cart: "Sebet boş",
+                checkout: "Sargyt et",
+                profile_info: "Profil maglumatlary",
+                username_label: "Ulanyjy ady",
+                email_label: "Email",
+                phone_label: "Telefon",
+                member_since: "Agza bolan",
+                edit_profile: "Profil üýtget",
+                order_history: "Sargyt taryhy",
+                no_orders: "Sargyt ýok",
+                add_to_cart: "Sebede goş",
+                remove: "Aýyr",
+                product_added: "Haryt sebedä goşuldy!",
+                product_removed: "Haryt sebedä aýryldy!",
+                order_placed: "Sargyt üstünlikli ýerleşdirildi!",
+                section_food: "Iýmit önümleri",
+                section_consumer: "Önümçilik harytlary",
+                section_electronics: "Elektronika",
+                section_agriculture: "Oba hojalyk harytlary"
             },
             ru: {
                 logout: "Выйти",
                 back: "← Назад",
-                role_buyer: "Покупатель",
-                role_seller: "Продавец",
-                role_both: "Оба",
-                create_listing: "+ Новое объявление",
-                refresh: "⟳ Обновить",
-                loading: "Загрузка...",
-                no_listings: "Нет объявлений",
-                no_listings_desc: "Добавьте первое объявление!",
-                new_listing: "Новое объявление",
-                title_label: "Название",
-                description_label: "Описание",
-                price_label: "Цена (TMT)",
-                category_label: "Категория",
-                cancel: "Отмена",
-                add: "Добавить",
-                buy: "Купить",
-                seller_label: "Продавец",
-                status_active: "Активно",
-                status_sold: "Продано",
-                status_archived: "В архиве",
-                no_products: "Нет товаров",
-                product_added: "Объявление добавлено!",
-                product_bought: "Товар куплен!"
+                refresh: "Обновить",
+                tab_catalog: "Каталог",
+                tab_cart: "Корзина",
+                tab_profile: "Личный кабинет",
+                empty_cart: "Корзина пуста",
+                checkout: "Оформить заказ",
+                profile_info: "Информация профиля",
+                username_label: "Имя пользователя",
+                email_label: "Email",
+                phone_label: "Телефон",
+                member_since: "Участник с",
+                edit_profile: "Редактировать профиль",
+                order_history: "История заказов",
+                no_orders: "Заказов нет",
+                add_to_cart: "В корзину",
+                remove: "Убрать",
+                product_added: "Товар добавлен в корзину!",
+                product_removed: "Товар убран из корзины!",
+                order_placed: "Заказ успешно оформлен!",
+                section_food: "Продукты питания",
+                section_consumer: "Промтовары",
+                section_electronics: "Электроника",
+                section_agriculture: "Сельхоз товары"
             },
             en: {
                 logout: "Logout",
                 back: "← Back",
-                role_buyer: "Buyer",
-                role_seller: "Seller",
-                role_both: "Both",
-                create_listing: "+ New listing",
-                refresh: "⟳ Refresh",
-                loading: "Loading...",
-                no_listings: "No listings",
-                no_listings_desc: "Add your first listing!",
-                new_listing: "New listing",
-                title_label: "Title",
-                description_label: "Description",
-                price_label: "Price (TMT)",
-                category_label: "Category",
-                cancel: "Cancel",
-                add: "Add",
-                buy: "Buy",
-                seller_label: "Seller",
-                status_active: "Active",
-                status_sold: "Sold",
-                status_archived: "Archived",
-                no_products: "No products",
-                product_added: "Listing added!",
-                product_bought: "Product purchased!"
+                refresh: "Refresh",
+                tab_catalog: "Catalog",
+                tab_cart: "Cart",
+                tab_profile: "Profile",
+                empty_cart: "Cart is empty",
+                checkout: "Checkout",
+                profile_info: "Profile info",
+                username_label: "Username",
+                email_label: "Email",
+                phone_label: "Phone",
+                member_since: "Member since",
+                edit_profile: "Edit profile",
+                order_history: "Order history",
+                no_orders: "No orders",
+                add_to_cart: "Add to cart",
+                remove: "Remove",
+                product_added: "Product added to cart!",
+                product_removed: "Product removed from cart!",
+                order_placed: "Order placed successfully!",
+                section_food: "Food products",
+                section_consumer: "Consumer goods",
+                section_electronics: "Electronics",
+                section_agriculture: "Agricultural products"
             }
         };
 
         let currentLang = localStorage.getItem('lang') || 'tm';
-        let currentRole = 'buyer';
-        let listings = [];
+        let cart = [];
+        let orders = [];
+        const userData = JSON.parse(localStorage.getItem('user') || '{"username":"Guest","email":"guest@example.com"}');
+        document.getElementById('username').textContent = userData.username || 'User';
 
+        // Товары по секциям
+        const products = {
+            food: [
+                { id: 'f1', name: 'Un (5 kg)', price: 45, image: '🌾', seller: 'Aýdar' },
+                { id: 'f2', name: 'Ýag (1 l)', price: 25, image: '🫒', seller: 'Meret' },
+                { id: 'f3', name: 'Süýt (1 l)', price: 12, image: '🥛', seller: 'Gülşat' },
+                { id: 'f4', name: 'Et (1 kg)', price: 60, image: '🥩', seller: 'Saparmyrat' },
+            ],
+            consumer: [
+                { id: 'c1', name: 'Çeňňek (şaý-seý)', price: 80, image: '🛋️', seller: 'Oguljeren' },
+                { id: 'c2', name: 'Gap-gaç toplumy', price: 120, image: '🍽️', seller: 'Aýdar' },
+                { id: 'c3', name: 'Köýnek (erkek)', price: 50, image: '👔', seller: 'Meret' },
+                { id: 'c4', name: 'Çanta (zenan)', price: 70, image: '👜', seller: 'Gülşat' },
+            ],
+            electronics: [
+                { id: 'e1', name: 'Telefon', price: 250, image: '📱', seller: 'Saparmyrat' },
+                { id: 'e2', name: 'Noutbuk', price: 600, image: '💻', seller: 'Aýdar' },
+                { id: 'e3', name: 'TV (32")', price: 350, image: '📺', seller: 'Meret' },
+                { id: 'e4', name: 'Ses ulgamy', price: 180, image: '🎵', seller: 'Gülşat' },
+            ],
+            agriculture: [
+                { id: 'a1', name: 'Bugdaý (100 kg)', price: 120, image: '🌾', seller: 'Saparmyrat' },
+                { id: 'a2', name: 'Sogan (50 kg)', price: 30, image: '🧅', seller: 'Oguljeren' },
+                { id: 'a3', name: 'Kartofel (50 kg)', price: 40, image: '🥔', seller: 'Aýdar' },
+                { id: 'a4', name: 'Çörekçilik uny', price: 55, image: '🍞', seller: 'Meret' },
+            ]
+        };
+
+        // ============================================================
+        // ФУНКЦИИ
+        // ============================================================
         function setLanguage(lang) {
             if (!translations[lang]) return;
             currentLang = lang;
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) el.textContent = translations[lang][key];
+                if (translations[lang][key]) {
+                    if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
+                        el.placeholder = translations[lang][key];
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
+                }
             });
             document.getElementById('langBtn').textContent = lang.toUpperCase();
             document.getElementById('logoutBtn').textContent = translations[lang].logout;
             localStorage.setItem('lang', lang);
-            updateUI();
-        }
-
-        function updateUI() {
-            // Обновляем кнопку создания в зависимости от роли
-            const createBtn = document.getElementById('createListingBtn');
-            if (currentRole === 'buyer') {
-                createBtn.style.display = 'none';
-            } else {
-                createBtn.style.display = 'inline-block';
-            }
-            // Обновляем текст кнопок ролей
-            document.querySelectorAll('.role-selector button').forEach(btn => {
-                const key = btn.dataset.i18n;
-                if (translations[currentLang][key]) btn.textContent = translations[currentLang][key];
-            });
+            renderCatalog();
+            renderCart();
+            renderProfile();
         }
 
         document.getElementById('langBtn').addEventListener('click', function() {
@@ -474,12 +574,6 @@
             setLanguage(cycle[idx]);
         });
 
-        // ============================================================
-        // ПОЛЬЗОВАТЕЛЬ И ВЫХОД
-        // ============================================================
-        const userData = JSON.parse(localStorage.getItem('user') || '{"username":"Guest"}');
-        document.getElementById('username').textContent = userData.username || 'User';
-
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
@@ -487,151 +581,227 @@
         });
 
         // ============================================================
-        // ПЕРЕКЛЮЧЕНИЕ РОЛЕЙ
+        // КАТАЛОГ
         // ============================================================
-        document.querySelectorAll('.role-selector button').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.role-selector button').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                currentRole = this.dataset.role;
-                updateUI();
-                renderListings(); // перерисовываем с учётом роли
-            });
-        });
-
-        // ============================================================
-        // ЗАГРУЗКА СПИСКА ОБЪЯВЛЕНИЙ (моковые данные + реальные)
-        // ============================================================
-        function generateMockListings() {
-            const mock = [
-                { id: 'm1', title: 'Samsung Galaxy S23 Ultra', description: 'Alyp-çykyş: 12/256 GB, gar, täze, kuti bilen.', price: 3200, category: 'Elektronika', seller: 'Aýdar', status: 'active', image: '📱' },
-                { id: 'm2', title: 'iPhone 15 Pro Max', description: '256 GB, gök, 1 ýyl kepillik.', price: 4500, category: 'Elektronika', seller: 'Meret', status: 'active', image: '📱' },
-                { id: 'm3', title: 'Toyota Camry 2023', description: 'Benzin, 2.5 l, 10000 km, awtomat.', price: 28000, category: 'Awtoulag', seller: 'Gülşat', status: 'active', image: '🚗' },
-                { id: 'm4', title: 'Hyundai Tucson 2022', description: 'Dizel, 2.0 l, 25000 km, çep.', price: 22000, category: 'Awtoulag', seller: 'Saparmyrat', status: 'active', image: '🚙' },
-                { id: 'm5', title: 'Mebel toplumy (ýaşyl)', description: 'Divan, kreslo, stol, 3 ýyl ulanylan.', price: 1800, category: 'Öý', seller: 'Oguljeren', status: 'active', image: '🛋️' },
-                { id: 'm6', title: 'Samsung 65" Smart TV', description: '4K Ultra HD, Tizen OS, 2024.', price: 2100, category: 'Elektronika', seller: 'Aýdar', status: 'active', image: '📺' },
-                { id: 'm7', title: 'Çagalar üçin oýunçak', description: 'Robot transformir, täze, kuti bilen.', price: 120, category: 'Çagalar', seller: 'Meret', status: 'active', image: '🧸' },
-                { id: 'm8', title: 'Daçany satýaryn', description: '45 sotk, 2 otagly, Aşgabat ýakynynda.', price: 15000, category: 'Daşary', seller: 'Gülşat', status: 'active', image: '🏡' }
+        function renderCatalog() {
+            const container = document.getElementById('catalogContent');
+            const lang = currentLang;
+            const sections = [
+                { id: 'food', key: 'section_food', icon: '🍎' },
+                { id: 'consumer', key: 'section_consumer', icon: '🧺' },
+                { id: 'electronics', key: 'section_electronics', icon: '💡' },
+                { id: 'agriculture', key: 'section_agriculture', icon: '🌱' }
             ];
-            return mock;
+            let html = '';
+            sections.forEach(sec => {
+                const items = products[sec.id] || [];
+                if (!items.length) return;
+                html += `<div class="section-title">${translations[lang][sec.key] || sec.id} ${sec.icon}</div>`;
+                html += `<div class="products-grid">`;
+                items.forEach(p => {
+                    html += `
+                        <div class="product-card">
+                            <div class="image">${p.image}</div>
+                            <div class="name">${p.name}</div>
+                            <div class="price">${p.price.toFixed(2)} TMT</div>
+                            <div class="seller">${translations[lang].seller_label || 'Satyjy'}: ${p.seller}</div>
+                            <button class="btn btn-primary add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}" data-image="${p.image}" data-seller="${p.seller}">${translations[lang].add_to_cart}</button>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            });
+            container.innerHTML = html || `<div class="empty-state"><div class="icon">📭</div><p>Hiç hili haryt ýok</p></div>`;
+
+            // Обработчики кнопок "В корзину"
+            container.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    const name = this.dataset.name;
+                    const price = parseFloat(this.dataset.price);
+                    const image = this.dataset.image;
+                    const seller = this.dataset.seller;
+                    addToCart({ id, name, price, image, seller });
+                });
+            });
         }
 
-        // Инициализация: если нет реальных данных, используем мок
-        let allListings = generateMockListings();
-
-        function getListingsForRole(role) {
-            // Для покупателя показываем все активные объявления, для продавца – только его собственные (если есть), для обоих – все.
-            // В демо-версии показываем все активные для всех ролей, но для продавца добавим кнопку "Продать".
-            return allListings.filter(l => l.status === 'active');
+        // ============================================================
+        // КОРЗИНА
+        // ============================================================
+        function addToCart(product) {
+            const existing = cart.find(item => item.id === product.id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+            renderCart();
+            showMessage(translations[currentLang].product_added, 'success');
         }
 
-        function renderListings() {
-            const container = document.getElementById('listingsGrid');
-            const loadingState = document.getElementById('loadingState');
-            const emptyState = document.getElementById('emptyState');
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            renderCart();
+            showMessage(translations[currentLang].product_removed, 'success');
+        }
 
-            loadingState.style.display = 'none';
-            const items = getListingsForRole(currentRole);
-
-            if (items.length === 0) {
-                emptyState.style.display = 'block';
-                container.style.display = 'none';
+        function changeQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) {
+                removeFromCart(id);
                 return;
             }
+            renderCart();
+        }
 
-            container.style.display = 'grid';
-            emptyState.style.display = 'none';
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            const empty = document.getElementById('emptyCart');
+            const totalDiv = document.getElementById('cartTotal');
+            const totalSpan = document.getElementById('totalAmount');
+            const countSpan = document.getElementById('cartCount');
 
-            container.innerHTML = items.map(listing => {
-                const statusClass = listing.status === 'active' ? 'status-active' : listing.status === 'sold' ? 'status-sold' : 'status-archived';
-                const statusText = translations[currentLang][`status_${listing.status}`] || listing.status;
-                const isBuyer = currentRole === 'buyer';
-                const isSeller = currentRole === 'seller' || currentRole === 'both';
-                const showBuyButton = isBuyer && listing.status === 'active';
-                const showSellButton = isSeller && listing.seller === userData.username && listing.status === 'active';
+            countSpan.textContent = cart.reduce((sum, i) => sum + i.qty, 0);
 
-                return `
-                    <div class="listing-card" data-id="${listing.id}">
-                        <div class="image-placeholder">${listing.image || '📦'}</div>
-                        <div class="title">${listing.title}</div>
-                        <div class="price">${listing.price.toFixed(2)} TMT</div>
-                        <div class="description">${listing.description}</div>
-                        <div class="seller">
-                            <span>${translations[currentLang].seller_label}: ${listing.seller}</span>
-                            <span class="status ${statusClass}">${statusText}</span>
+            if (!cart.length) {
+                empty.style.display = 'block';
+                container.style.display = 'none';
+                totalDiv.style.display = 'none';
+                return;
+            }
+            empty.style.display = 'none';
+            container.style.display = 'block';
+            totalDiv.style.display = 'block';
+
+            const lang = currentLang;
+            let html = '';
+            let total = 0;
+            cart.forEach(item => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                html += `
+                    <div class="cart-item">
+                        <div class="info">
+                            <span style="font-size:28px;">${item.image}</span>
+                            <span class="name">${item.name}</span>
+                            <span class="price">${item.price.toFixed(2)} TMT</span>
                         </div>
-                        <div class="actions">
-                            ${showBuyButton ? `<button class="btn btn-success buy-btn" data-id="${listing.id}">${translations[currentLang].buy}</button>` : ''}
-                            ${showSellButton ? `<button class="btn btn-primary sell-btn" data-id="${listing.id}">Sat</button>` : ''}
+                        <div class="qty">
+                            <button class="qty-btn" data-id="${item.id}" data-delta="-1">−</button>
+                            <span>${item.qty}</span>
+                            <button class="qty-btn" data-id="${item.id}" data-delta="1">+</button>
+                            <button class="btn btn-danger" style="padding:4px 12px; font-size:12px;" data-id="${item.id}">${translations[lang].remove}</button>
                         </div>
                     </div>
                 `;
-            }).join('');
+            });
+            container.innerHTML = html;
+            totalSpan.textContent = total.toFixed(2);
 
-            // Обработчики для кнопок "Купить" и "Продать"
-            container.querySelectorAll('.buy-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
+            // Обработчики для кнопок
+            container.querySelectorAll('.qty-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
                     const id = this.dataset.id;
-                    const listing = allListings.find(l => l.id === id);
-                    if (listing && listing.status === 'active') {
-                        listing.status = 'sold';
-                        renderListings();
-                        alert(translations[currentLang].product_bought);
-                    }
+                    const delta = parseInt(this.dataset.delta);
+                    changeQty(id, delta);
                 });
             });
-
-            container.querySelectorAll('.sell-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const id = this.dataset.id;
-                    const listing = allListings.find(l => l.id === id);
-                    if (listing && listing.status === 'active') {
-                        listing.status = 'sold';
-                        renderListings();
-                        alert('Haryt satyldy!');
-                    }
+            container.querySelectorAll('.btn-danger').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    removeFromCart(this.dataset.id);
                 });
             });
         }
 
-        // ============================================================
-        // СОЗДАНИЕ ОБЪЯВЛЕНИЯ
-        // ============================================================
-        const modal = document.getElementById('createModal');
-        const createBtn = document.getElementById('createListingBtn');
-        const cancelBtn = document.getElementById('cancelModalBtn');
-        const createForm = document.getElementById('createForm');
-
-        createBtn.addEventListener('click', () => modal.classList.add('active'));
-        cancelBtn.addEventListener('click', () => modal.classList.remove('active'));
-        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
-
-        createForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            const newListing = {
-                id: 'm' + Date.now(),
-                title: formData.get('title'),
-                description: formData.get('description'),
-                price: parseFloat(formData.get('price')),
-                category: formData.get('category') || 'Başga',
-                seller: userData.username || 'User',
-                status: 'active',
-                image: '📦'
+        // Оформление заказа
+        document.getElementById('checkoutBtn').addEventListener('click', function() {
+            if (!cart.length) {
+                showMessage(translations[currentLang].empty_cart, 'error');
+                return;
+            }
+            const order = {
+                id: 'ord' + Date.now(),
+                items: [...cart],
+                total: cart.reduce((sum, i) => sum + i.price * i.qty, 0),
+                date: new Date().toISOString()
             };
-            allListings.push(newListing);
-            modal.classList.remove('active');
-            this.reset();
-            renderListings();
-            alert(translations[currentLang].product_added);
+            orders.push(order);
+            cart = [];
+            renderCart();
+            renderProfile();
+            showMessage(translations[currentLang].order_placed, 'success');
+        });
+
+        // ============================================================
+        // ЛИЧНЫЙ КАБИНЕТ
+        // ============================================================
+        function renderProfile() {
+            document.getElementById('profileUsername').textContent = userData.username || 'User';
+            document.getElementById('profileEmail').textContent = userData.email || 'user@example.com';
+            document.getElementById('profilePhone').textContent = '+993 63 000000';
+            document.getElementById('profileSince').textContent = '2024';
+
+            const historyDiv = document.getElementById('orderHistory');
+            if (!orders.length) {
+                historyDiv.innerHTML = `<div class="empty-state" style="padding:20px 0;"><p data-i18n="no_orders">Sargyt ýok</p></div>`;
+                return;
+            }
+            let html = '';
+            orders.forEach(o => {
+                html += `
+                    <div class="order-item">
+                        <div>
+                            <div><strong>Sargyt #${o.id.slice(-6)}</strong></div>
+                            <div class="date">${new Date(o.date).toLocaleDateString()}</div>
+                        </div>
+                        <div class="total">${o.total.toFixed(2)} TMT</div>
+                    </div>
+                `;
+            });
+            historyDiv.innerHTML = html;
+        }
+
+        // ============================================================
+        // ВКЛАДКИ
+        // ============================================================
+        document.querySelectorAll('.mp-tabs button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.mp-tabs button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const tab = this.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+                document.getElementById('tab-' + tab).classList.add('active');
+                if (tab === 'profile') renderProfile();
+                if (tab === 'cart') renderCart();
+            });
         });
 
         // ============================================================
         // ОБНОВЛЕНИЕ
         // ============================================================
-        document.getElementById('refreshBtn').addEventListener('click', renderListings);
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            renderCatalog();
+            renderCart();
+            renderProfile();
+            showMessage('Täzelendi!', 'success');
+        });
+
+        // ============================================================
+        // СООБЩЕНИЯ
+        // ============================================================
+        const messageEl = document.getElementById('message');
+        function showMessage(text, type = 'success') {
+            messageEl.textContent = text;
+            messageEl.className = 'message ' + type;
+            messageEl.style.display = 'block';
+            clearTimeout(window.messageTimeout);
+            window.messageTimeout = setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 3000);
+        }
 
         // ============================================================
         // ЧАСТИЦЫ
@@ -653,8 +823,10 @@
         // ИНИЦИАЛИЗАЦИЯ
         // ============================================================
         setLanguage(currentLang);
-        renderListings();
-        console.log('Marketplace page with roles loaded');
+        renderCatalog();
+        renderCart();
+        renderProfile();
+        console.log('Marketplace with cabinet and cart loaded');
     </script>
 </body>
 </html>
