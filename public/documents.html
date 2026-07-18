@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="tm">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>СФЕРА — Resmiýetler</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <style>
+        .doc-page {
+            padding: 120px 7% 60px;
+            min-height: 100vh;
+        }
+        .doc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .doc-header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .doc-header .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #008cff);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,212,255,.25);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0,212,255,.4);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,.2);
+            color: white;
+        }
+        .btn-outline:hover {
+            background: rgba(255,255,255,.05);
+            border-color: #00d4ff;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #00ffa3, #00b894);
+            color: #08131d;
+        }
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0,255,170,.3);
+        }
+
+        /* Вкладки */
+        .doc-tabs {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+            padding-bottom: 4px;
+        }
+        .doc-tabs button {
+            background: transparent;
+            border: none;
+            color: #9fb5c8;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: .3s;
+            border-bottom: 3px solid transparent;
+        }
+        .doc-tabs button.active {
+            color: #00d4ff;
+            border-bottom-color: #00d4ff;
+        }
+        .doc-tabs button:hover {
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeUp .4s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Карточки документов в хранилище */
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 16px;
+        }
+        .doc-item {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 16px;
+            padding: 18px;
+            backdrop-filter: blur(10px);
+            transition: .3s;
+        }
+        .doc-item:hover {
+            border-color: #00d4ff;
+            transform: translateY(-4px);
+        }
+        .doc-item .doc-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .doc-item .doc-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .doc-item .doc-type {
+            font-size: 13px;
+            color: #bdd0df;
+        }
+        .doc-item .doc-status {
+            display: inline-block;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .status-verified { background: rgba(0,255,170,.15); color: #00ffa3; }
+        .status-pending { background: rgba(255,193,7,.15); color: #ffc107; }
+        .status-invalid { background: rgba(255,0,0,.15); color: #ff6b6b; }
+        .status-manual { background: rgba(0,212,255,.15); color: #00d4ff; }
+
+        /* Зона загрузки */
+        .upload-area {
+            border: 2px dashed rgba(255,255,255,.2);
+            border-radius: 18px;
+            padding: 40px;
+            text-align: center;
+            color: #bdd0df;
+            transition: .3s;
+            cursor: pointer;
+            margin: 16px 0;
+        }
+        .upload-area:hover {
+            border-color: #00d4ff;
+            background: rgba(0,212,255,.05);
+        }
+        .upload-area input {
+            display: none;
+        }
+        .upload-area .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        /* Результат проверки */
+        .verification-result {
+            margin-top: 20px;
+            padding: 16px 20px;
+            border-radius: 16px;
+            display: none;
+            background: rgba(255,255,255,.04);
+            border: 1px solid rgba(255,255,255,.08);
+        }
+        .verification-result.active {
+            display: block;
+        }
+        .verification-result .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+        }
+        .verification-result .row:last-child {
+            border-bottom: none;
+        }
+        .verification-result .label {
+            color: #9fb5c8;
+        }
+        .verification-result .value {
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Формы подписания */
+        .sign-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .sign-form .form-group {
+            margin-bottom: 16px;
+        }
+        .sign-form .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #dbe9ff;
+            margin-bottom: 6px;
+        }
+        .sign-form .form-group input,
+        .sign-form .form-group select,
+        .sign-form .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.15);
+            background: rgba(255,255,255,.05);
+            color: white;
+            font-size: 15px;
+            transition: .3s;
+            outline: none;
+        }
+        .sign-form .form-group input:focus,
+        .sign-form .form-group select:focus,
+        .sign-form .form-group textarea:focus {
+            border-color: #00d4ff;
+        }
+        .sign-form .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #bdd0df;
+        }
+        .empty-state .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            display: none;
+        }
+        .message.error {
+            display: block;
+            background: rgba(255,0,0,.1);
+            border: 1px solid rgba(255,0,0,.2);
+            color: #ff6b6b;
+        }
+        .message.success {
+            display: block;
+            background: rgba(0,255,170,.1);
+            border: 1px solid rgba(0,255,170,.2);
+            color: #00ffa3;
+        }
+
+        @media (max-width: 768px) {
+            .doc-tabs button { padding: 10px 14px; font-size: 13px; }
+            .docs-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles"></div>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3" />
+                                <stop offset="50%" stop-color="#00d4ff" />
+                                <stop offset="100%" stop-color="#1f6bff" />
+                            </linearGradient>
+                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="4" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
+                        <g filter="url(#logoGlow)">
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>SFERA</h2>
+                    <p>Milli Sanly Platforma</p>
+                </div>
+            </a>
+
+            <div class="header-right" style="display:flex; align-items:center; gap:12px;">
+                <span class="user-info" id="userDisplay">👤 <strong id="username">User</strong></span>
+                <a href="dashboard.html" class="btn btn-outline" data-i18n="back" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Yza</a>
+                <button class="lang" id="langBtn">TM</button>
+                <button class="logout-btn" id="logoutBtn" data-i18n="logout" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="doc-page">
+        <div class="container">
+            <div class="doc-header">
+                <h1>📄 Resmiýetler</h1>
+                <div class="actions">
+                    <button class="btn btn-outline" id="refreshBtn" data-i18n="refresh">⟳ Täzele</button>
+                </div>
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <!-- Вкладки -->
+            <div class="doc-tabs">
+                <button class="active" data-tab="storage" data-i18n="tab_storage">Ammar</button>
+                <button data-tab="verify" data-i18n="tab_verify">Barlag</button>
+                <button data-tab="sign" data-i18n="tab_sign">Gol çekmek</button>
+                <button data-tab="reports" data-i18n="tab_reports">Hasabat</button>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- ВКЛАДКА ХРАНИЛИЩЕ -->
+            <div class="tab-content active" id="tab-storage">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:16px;">
+                    <input type="text" id="docSearch" placeholder="Gözleg..." style="flex:1; min-width:200px; padding:10px 16px; border-radius:12px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.05); color:white; font-size:15px; outline:none;" />
+                    <button class="btn btn-primary" id="uploadDocBtn" data-i18n="upload_doc">+ Ýüklemek</button>
+                </div>
+                <div class="docs-grid" id="docsGrid">
+                    <!-- Документы будут динамически загружены -->
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- ВКЛАДКА ПРОВЕРКА -->
+            <div class="tab-content" id="tab-verify">
+                <div class="upload-area" id="verifyUploadArea">
+                    <div class="icon">📤</div>
+                    <p data-i18n="upload_hint">Faýly bu ýere süýşüriň ýa-da basyň (PDF, JPG, PNG, DOC)</p>
+                    <input type="file" id="verifyFileInput" accept=".pdf,.jpg,.png,.jpeg,.doc,.docx" />
+                </div>
+                <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;">
+                    <button class="btn btn-primary" id="verifyBtn" data-i18n="start_verify">Barlamak</button>
+                    <button class="btn btn-outline" id="clearVerifyBtn" data-i18n="clear">Arassala</button>
+                </div>
+                <div class="verification-result" id="verificationResult">
+                    <h4 data-i18n="verify_result">Barlag netijesi</h4>
+                    <div class="row"><span class="label" data-i18n="doc_name">Resmiýet ady</span><span class="value" id="vDocName">-</span></div>
+                    <div class="row"><span class="label" data-i18n="doc_type">Görnüşi</span><span class="value" id="vDocType">-</span></div>
+                    <div class="row"><span class="label" data-i18n="doc_status">Status</span><span class="value" id="vDocStatus">-</span></div>
+                    <div class="row"><span class="label" data-i18n="doc_issue_date">Beriş senesi</span><span class="value" id="vDocIssue">-</span></div>
+                    <div class="row"><span class="label" data-i18n="doc_expiry_date">Güýji gutarýar</span><span class="value" id="vDocExpiry">-</span></div>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- ВКЛАДКА ПОДПИСАНИЕ -->
+            <div class="tab-content" id="tab-sign">
+                <div class="sign-form">
+                    <form id="signForm">
+                        <div class="form-group">
+                            <label for="signDoc" data-i18n="select_doc">Resmiýet saýla</label>
+                            <select id="signDoc" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="signType" data-i18n="sign_type">Gol çekmegiň görnüşi</label>
+                            <select id="signType">
+                                <option value="simple" data-i18n="simple_sign">Ýönekeý</option>
+                                <option value="e-signature" data-i18n="esign_sign">Elektron sanly gol</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="signComment" data-i18n="comment">Düşündiriş</label>
+                            <textarea id="signComment" placeholder="..."></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-success" id="signBtn" data-i18n="sign_doc">Gol çek</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- ============================================ -->
+            <!-- ВКЛАДКА ОТЧЁТЫ -->
+            <div class="tab-content" id="tab-reports">
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap:16px; margin-bottom:20px;">
+                    <div class="stat-item" style="background:rgba(255,255,255,.04); border-radius:16px; padding:16px; text-align:center;">
+                        <div class="number" style="font-size:32px; font-weight:700; color:#00d4ff;" id="totalDocs">0</div>
+                        <div class="label" style="color:#9fb5c8;" data-i18n="total_docs">Jemi dokumentler</div>
+                    </div>
+                    <div class="stat-item" style="background:rgba(255,255,255,.04); border-radius:16px; padding:16px; text-align:center;">
+                        <div class="number" style="font-size:32px; font-weight:700; color:#00ffa3;" id="verifiedDocs">0</div>
+                        <div class="label" style="color:#9fb5c8;" data-i18n="verified_docs">Tassyklandy</div>
+                    </div>
+                    <div class="stat-item" style="background:rgba(255,255,255,.04); border-radius:16px; padding:16px; text-align:center;">
+                        <div class="number" style="font-size:32px; font-weight:700; color:#ffc107;" id="pendingDocs">0</div>
+                        <div class="label" style="color:#9fb5c8;" data-i18n="pending_docs">Garaşýan</div>
+                    </div>
+                </div>
+                <div style="background:rgba(255,255,255,.04); border-radius:16px; padding:20px;">
+                    <h4 data-i18n="recent_activity">Iň soňky işjeňlik</h4>
+                    <ul id="recentActivity" style="list-style:none; padding:0; margin:0;"></ul>
+                </div>
+                <div style="margin-top:20px;">
+                    <button class="btn btn-outline" id="exportReportBtn" data-i18n="export_report">📊 Hasabat göçürip al (PDF)</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        // ============================================================
+        // НАСТРОЙКА API и переводы
+        // ============================================================
+        const API_BASE_URL = 'https://sfera-1.onrender.com';
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+
+        const translations = {
+            tm: {
+                logout: "Çykmak",
+                back: "← Yza",
+                refresh: "Täzele",
+                tab_storage: "Ammar",
+                tab_verify: "Barlag",
+                tab_sign: "Gol çekmek",
+                tab_reports: "Hasabat",
+                upload_doc: "+ Ýüklemek",
+                upload_hint: "Faýly bu ýere süýşüriň ýa-da basyň (PDF, JPG, PNG, DOC)",
+                start_verify: "Barlamak",
+                clear: "Arassala",
+                verify_result: "Barlag netijesi",
+                doc_name: "Resmiýet ady",
+                doc_type: "Görnüşi",
+                doc_status: "Status",
+                doc_issue_date: "Beriş senesi",
+                doc_expiry_date: "Güýji gutarýar",
+                select_doc: "Resmiýet saýla",
+                sign_type: "Gol çekmegiň görnüşi",
+                simple_sign: "Ýönekeý",
+                esign_sign: "Elektron sanly gol",
+                comment: "Düşündiriş",
+                sign_doc: "Gol çek",
+                total_docs: "Jemi dokumentler",
+                verified_docs: "Tassyklandy",
+                pending_docs: "Garaşýan",
+                recent_activity: "Iň soňky işjeňlik",
+                export_report: "📊 Hasabat göçürip al (PDF)",
+                status_verified: "Tassyklandy",
+                status_pending: "Garaşýan",
+                status_invalid: "Nädogry",
+                status_manual: "El bilen barlag"
+            },
+            ru: {
+                logout: "Выйти",
+                back: "← Назад",
+                refresh: "Обновить",
+                tab_storage: "Хранилище",
+                tab_verify: "Проверка",
+                tab_sign: "Подписание",
+                tab_reports: "Отчёты",
+                upload_doc: "+ Загрузить",
+                upload_hint: "Перетащите файл или нажмите для выбора (PDF, JPG, PNG, DOC)",
+                start_verify: "Проверить",
+                clear: "Очистить",
+                verify_result: "Результат проверки",
+                doc_name: "Название документа",
+                doc_type: "Тип",
+                doc_status: "Статус",
+                doc_issue_date: "Дата выдачи",
+                doc_expiry_date: "Срок действия",
+                select_doc: "Выберите документ",
+                sign_type: "Тип подписи",
+                simple_sign: "Простая",
+                esign_sign: "Электронная подпись",
+                comment: "Комментарий",
+                sign_doc: "Подписать",
+                total_docs: "Всего документов",
+                verified_docs: "Подтверждено",
+                pending_docs: "На проверке",
+                recent_activity: "Последняя активность",
+                export_report: "📊 Экспортировать отчёт (PDF)",
+                status_verified: "Подтверждён",
+                status_pending: "На проверке",
+                status_invalid: "Недействителен",
+                status_manual: "Требуется ручная проверка"
+            },
+            en: {
+                logout: "Logout",
+                back: "← Back",
+                refresh: "Refresh",
+                tab_storage: "Storage",
+                tab_verify: "Verify",
+                tab_sign: "Sign",
+                tab_reports: "Reports",
+                upload_doc: "+ Upload",
+                upload_hint: "Drag & drop or click to select file (PDF, JPG, PNG, DOC)",
+                start_verify: "Verify",
+                clear: "Clear",
+                verify_result: "Verification result",
+                doc_name: "Document name",
+                doc_type: "Type",
+                doc_status: "Status",
+                doc_issue_date: "Issue date",
+                doc_expiry_date: "Expiry date",
+                select_doc: "Select document",
+                sign_type: "Signature type",
+                simple_sign: "Simple",
+                esign_sign: "Electronic signature",
+                comment: "Comment",
+                sign_doc: "Sign",
+                total_docs: "Total documents",
+                verified_docs: "Verified",
+                pending_docs: "Pending",
+                recent_activity: "Recent activity",
+                export_report: "📊 Export report (PDF)",
+                status_verified: "Verified",
+                status_pending: "Pending",
+                status_invalid: "Invalid",
+                status_manual: "Manual check required"
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'tm';
+        let documents = [];
+        let recentActivity = [];
+        const userData = JSON.parse(localStorage.getItem('user') || '{"username":"Guest"}');
+        document.getElementById('username').textContent = userData.username || 'User';
+
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
+                        el.placeholder = translations[lang][key];
+                    } else if (el.tagName === 'SELECT' && el.getAttribute('placeholder')) {
+                        // для select placeholder не работает, пропускаем
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
+                }
+            });
+            document.getElementById('langBtn').textContent = lang.toUpperCase();
+            document.getElementById('logoutBtn').textContent = translations[lang].logout;
+            localStorage.setItem('lang', lang);
+            updateUI();
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.doc-tabs button').forEach(btn => {
+                const key = btn.dataset.i18n;
+                if (translations[currentLang][key]) btn.textContent = translations[currentLang][key];
+            });
+            // Обновить select подписания
+            populateSignSelect();
+            renderDocuments();
+            updateStats();
+            renderActivity();
+        }
+
+        document.getElementById('langBtn').addEventListener('click', function() {
+            const cycle = ['tm', 'ru', 'en'];
+            let idx = cycle.indexOf(currentLang);
+            idx = (idx + 1) % cycle.length;
+            setLanguage(cycle[idx]);
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ ДАННЫХ (демо)
+        // ============================================================
+        function initData() {
+            documents = [
+                { id: 'd1', name: 'Pasport', type: 'Şahsyýet', status: 'verified', issueDate: '2020-05-12', expiryDate: '2030-05-12', icon: '🪪' },
+                { id: 'd2', name: 'Sürüjilik şahadatnamasy', type: 'Sürüjilik', status: 'pending', issueDate: '2021-03-01', expiryDate: '2026-03-01', icon: '🚗' },
+                { id: 'd3', name: 'Diplom', type: 'Bilim', status: 'manual', issueDate: '2019-06-20', expiryDate: '—', icon: '🎓' },
+                { id: 'd4', name: 'Welaýat şahadatnamasy', type: 'Başga', status: 'invalid', issueDate: '2022-01-15', expiryDate: '2027-01-15', icon: '📄' }
+            ];
+            recentActivity = [
+                { text: 'Pasport tassyklandy', date: new Date(Date.now() - 3600000 * 2) },
+                { text: 'Sürüjilik şahadatnamasy iberildi', date: new Date(Date.now() - 3600000 * 5) },
+                { text: 'Diplom el bilen barlaga iberildi', date: new Date(Date.now() - 3600000 * 24) },
+            ];
+            renderDocuments();
+            updateStats();
+            renderActivity();
+            populateSignSelect();
+        }
+
+        // ============================================================
+        // ОТОБРАЖЕНИЕ ДОКУМЕНТОВ (ХРАНИЛИЩЕ)
+        // ============================================================
+        function renderDocuments(filter = '') {
+            const container = document.getElementById('docsGrid');
+            const filtered = filter ? documents.filter(d => d.name.toLowerCase().includes(filter.toLowerCase())) : documents;
+            if (!filtered.length) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p data-i18n="no_docs">Dokument ýok</p></div>`;
+                return;
+            }
+            const lang = currentLang;
+            const statusMap = {
+                verified: translations[lang].status_verified || 'Tassyklandy',
+                pending: translations[lang].status_pending || 'Garaşýan',
+                invalid: translations[lang].status_invalid || 'Nädogry',
+                manual: translations[lang].status_manual || 'El bilen barlag'
+            };
+            container.innerHTML = filtered.map(d => `
+                <div class="doc-item">
+                    <div class="doc-icon">${d.icon || '📄'}</div>
+                    <div class="doc-name">${d.name}</div>
+                    <div class="doc-type">${d.type}</div>
+                    <span class="doc-status status-${d.status}">${statusMap[d.status] || d.status}</span>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('docSearch').addEventListener('input', function() {
+            renderDocuments(this.value);
+        });
+
+        // ============================================================
+        // СТАТИСТИКА
+        // ============================================================
+        function updateStats() {
+            document.getElementById('totalDocs').textContent = documents.length;
+            document.getElementById('verifiedDocs').textContent = documents.filter(d => d.status === 'verified').length;
+            document.getElementById('pendingDocs').textContent = documents.filter(d => d.status === 'pending' || d.status === 'manual').length;
+        }
+
+        // ============================================================
+        // АКТИВНОСТЬ
+        // ============================================================
+        function renderActivity() {
+            const container = document.getElementById('recentActivity');
+            if (!recentActivity.length) {
+                container.innerHTML = '<div class="empty-state"><p>Hiç hili işjeňlik ýok</p></div>';
+                return;
+            }
+            container.innerHTML = recentActivity.map(a => `
+                <li style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,.04); display:flex; justify-content:space-between;">
+                    <span>${a.text}</span>
+                    <span style="color:#9fb5c8; font-size:12px;">${new Date(a.date).toLocaleString()}</span>
+                </li>
+            `).join('');
+        }
+
+        // ============================================================
+        // ЗАГРУЗКА ДОКУМЕНТА ДЛЯ ПРОВЕРКИ
+        // ============================================================
+        const verifyUploadArea = document.getElementById('verifyUploadArea');
+        const verifyFileInput = document.getElementById('verifyFileInput');
+        let selectedVerifyFile = null;
+
+        verifyUploadArea.addEventListener('click', () => verifyFileInput.click());
+        verifyUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            verifyUploadArea.style.borderColor = '#00d4ff';
+        });
+        verifyUploadArea.addEventListener('dragleave', () => {
+            verifyUploadArea.style.borderColor = 'rgba(255,255,255,.2)';
+        });
+        verifyUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            verifyUploadArea.style.borderColor = 'rgba(255,255,255,.2)';
+            if (e.dataTransfer.files.length) {
+                verifyFileInput.files = e.dataTransfer.files;
+                handleVerifyFile(e.dataTransfer.files[0]);
+            }
+        });
+        verifyFileInput.addEventListener('change', function() {
+            if (this.files.length) handleVerifyFile(this.files[0]);
+        });
+
+        function handleVerifyFile(file) {
+            selectedVerifyFile = file;
+            verifyUploadArea.querySelector('p').textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+            document.getElementById('verificationResult').classList.remove('active');
+        }
+
+        document.getElementById('clearVerifyBtn').addEventListener('click', function() {
+            selectedVerifyFile = null;
+            verifyFileInput.value = '';
+            verifyUploadArea.querySelector('p').textContent = translations[currentLang].upload_hint;
+            document.getElementById('verificationResult').classList.remove('active');
+        });
+
+        // ============================================================
+        // ЗАПУСК ПРОВЕРКИ (имитация)
+        // ============================================================
+        document.getElementById('verifyBtn').addEventListener('click', function() {
+            if (!selectedVerifyFile) {
+                showMessage(translations[currentLang].upload_hint, 'error');
+                return;
+            }
+            const resultDiv = document.getElementById('verificationResult');
+            resultDiv.classList.add('active');
+            // Имитация случайного статуса
+            const statuses = ['verified', 'pending', 'invalid', 'manual'];
+            const status = statuses[Math.floor(Math.random() * statuses.length)];
+            const statusMap = {
+                verified: translations[currentLang].status_verified,
+                pending: translations[currentLang].status_pending,
+                invalid: translations[currentLang].status_invalid,
+                manual: translations[currentLang].status_manual
+            };
+            const issue = new Date(Date.now() - Math.random() * 365 * 24 * 3600000 * 5).toISOString().slice(0,10);
+            const expiry = new Date(Date.now() + Math.random() * 365 * 24 * 3600000 * 5).toISOString().slice(0,10);
+            document.getElementById('vDocName').textContent = selectedVerifyFile.name;
+            document.getElementById('vDocType').textContent = selectedVerifyFile.type || 'PDF';
+            document.getElementById('vDocStatus').textContent = statusMap[status] || status;
+            document.getElementById('vDocIssue').textContent = issue;
+            document.getElementById('vDocExpiry').textContent = status === 'invalid' ? '—' : expiry;
+
+            // Добавляем в хранилище, если верифицирован
+            if (status === 'verified') {
+                documents.push({
+                    id: 'd' + Date.now(),
+                    name: selectedVerifyFile.name,
+                    type: selectedVerifyFile.type || 'PDF',
+                    status: 'verified',
+                    issueDate: issue,
+                    expiryDate: expiry,
+                    icon: '✅'
+                });
+                recentActivity.unshift({ text: `${selectedVerifyFile.name} tassyklandy`, date: new Date() });
+            } else {
+                recentActivity.unshift({ text: `${selectedVerifyFile.name} barlagdan geçdi (${statusMap[status]})`, date: new Date() });
+                if (status === 'pending' || status === 'manual') {
+                    documents.push({
+                        id: 'd' + Date.now(),
+                        name: selectedVerifyFile.name,
+                        type: selectedVerifyFile.type || 'PDF',
+                        status: status,
+                        issueDate: issue,
+                        expiryDate: expiry,
+                        icon: '⏳'
+                    });
+                }
+            }
+            renderDocuments(document.getElementById('docSearch').value);
+            updateStats();
+            renderActivity();
+            populateSignSelect();
+            showMessage('Barlag tamamlandy!', 'success');
+        });
+
+        // ============================================================
+        // ПОДПИСАНИЕ ДОКУМЕНТОВ
+        // ============================================================
+        function populateSignSelect() {
+            const select = document.getElementById('signDoc');
+            const verifiedDocs = documents.filter(d => d.status === 'verified');
+            select.innerHTML = verifiedDocs.length ? verifiedDocs.map(d => `<option value="${d.id}">${d.name}</option>`).join('') :
+                '<option value="">' + (translations[currentLang].no_docs || 'Dokument ýok') + '</option>';
+        }
+
+        document.getElementById('signForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const docId = document.getElementById('signDoc').value;
+            const signType = document.getElementById('signType').value;
+            const comment = document.getElementById('signComment').value.trim();
+            if (!docId) {
+                showMessage(translations[currentLang].select_doc, 'error');
+                return;
+            }
+            const doc = documents.find(d => d.id === docId);
+            if (!doc) return;
+            recentActivity.unshift({
+                text: `${doc.name} gol çekildi (${signType === 'simple' ? 'ýönekeý' : 'sanly'})`,
+                date: new Date()
+            });
+            renderActivity();
+            showMessage('Resmiýet gol çekildi!', 'success');
+            this.reset();
+            populateSignSelect();
+        });
+
+        // ============================================================
+        // ЭКСПОРТ ОТЧЁТА (заглушка)
+        // ============================================================
+        document.getElementById('exportReportBtn').addEventListener('click', function() {
+            alert('📊 Hasabat göçürilýär... (PDF) — imitasiýa');
+        });
+
+        // ============================================================
+        // ЗАГРУЗКА ДОКУМЕНТА В ХРАНИЛИЩЕ
+        // ============================================================
+        document.getElementById('uploadDocBtn').addEventListener('click', function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.pdf,.jpg,.png,.jpeg,.doc,.docx';
+            input.onchange = function() {
+                if (this.files.length) {
+                    const file = this.files[0];
+                    documents.push({
+                        id: 'd' + Date.now(),
+                        name: file.name,
+                        type: file.type || 'PDF',
+                        status: 'pending',
+                        issueDate: new Date().toISOString().slice(0,10),
+                        expiryDate: '—',
+                        icon: '📄'
+                    });
+                    recentActivity.unshift({ text: `${file.name} ýüklendi`, date: new Date() });
+                    renderDocuments(document.getElementById('docSearch').value);
+                    updateStats();
+                    renderActivity();
+                    populateSignSelect();
+                    showMessage('Resmiýet ýüklendi!', 'success');
+                }
+            };
+            input.click();
+        });
+
+        // ============================================================
+        // ОБНОВЛЕНИЕ
+        // ============================================================
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            renderDocuments(document.getElementById('docSearch').value);
+            updateStats();
+            renderActivity();
+            populateSignSelect();
+            showMessage('Täzelendi!', 'success');
+        });
+
+        // ============================================================
+        // СООБЩЕНИЯ
+        // ============================================================
+        const messageEl = document.getElementById('message');
+        function showMessage(text, type = 'success') {
+            messageEl.textContent = text;
+            messageEl.className = 'message ' + type;
+            messageEl.style.display = 'block';
+            clearTimeout(window.messageTimeout);
+            window.messageTimeout = setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 4000);
+        }
+
+        // ============================================================
+        // ЧАСТИЦЫ
+        // ============================================================
+        const particles = document.getElementById('particles');
+        if (particles && particles.children.length === 0) {
+            for (let i = 0; i < 60; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDuration = (6 + Math.random() * 12) + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                particles.appendChild(p);
+            }
+        }
+
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+        initData();
+        setLanguage(currentLang);
+        console.log('Documents module loaded');
+    </script>
+</body>
+</html>
