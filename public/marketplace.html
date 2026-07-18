@@ -4,406 +4,105 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>СФЕРА — Marketpleýs</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
     <link rel="stylesheet" href="/css/style.css" />
-
     <style>
-        .marketplace {
-            padding: 120px 7% 60px;
-            min-height: 100vh;
-        }
-        .marketplace-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
-        .marketplace-header h1 {
-            font-size: 36px;
-            font-weight: 800;
-            background: linear-gradient(to right, #fff, #b4d7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .marketplace-header .actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-        .btn {
-            padding: 10px 24px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: .3s;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #00d4ff, #008cff);
-            color: white;
-            box-shadow: 0 10px 30px rgba(0,212,255,.25);
-        }
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 40px rgba(0,212,255,.4);
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,.2);
-            color: white;
-        }
-        .btn-outline:hover {
-            background: rgba(255,255,255,.05);
-            border-color: #00d4ff;
-        }
-        .btn-success {
-            background: linear-gradient(135deg, #00ffa3, #00b894);
-            color: #08131d;
-        }
-        .btn-success:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 40px rgba(0,255,170,.3);
-        }
-        .btn-danger {
-            background: rgba(200,0,0,.15);
-            border: 1px solid rgba(200,0,0,.3);
-            color: #ff6b6b;
-        }
-        .btn-danger:hover {
-            background: rgba(200,0,0,.25);
-        }
+        .marketplace { padding: 120px 7% 60px; min-height: 100vh; }
+        .marketplace-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 30px; }
+        .marketplace-header h1 { font-size: 36px; font-weight: 800; background: linear-gradient(to right, #fff, #b4d7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .marketplace-header .actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .btn { padding: 10px 24px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: .3s; text-decoration: none; display: inline-block; font-size: 14px; }
+        .btn-primary { background: linear-gradient(135deg, #00d4ff, #008cff); color: white; box-shadow: 0 10px 30px rgba(0,212,255,.25); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(0,212,255,.4); }
+        .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,.2); color: white; }
+        .btn-outline:hover { background: rgba(255,255,255,.05); border-color: #00d4ff; }
+        .btn-success { background: linear-gradient(135deg, #00ffa3, #00b894); color: #08131d; }
+        .btn-success:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(0,255,170,.3); }
+        .btn-danger { background: rgba(200,0,0,.15); border: 1px solid rgba(200,0,0,.3); color: #ff6b6b; }
+        .btn-danger:hover { background: rgba(200,0,0,.25); }
 
-        /* Вкладки */
-        .mp-tabs {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-            border-bottom: 1px solid rgba(255,255,255,.05);
-            padding-bottom: 4px;
-        }
-        .mp-tabs button {
-            background: transparent;
-            border: none;
-            color: #9fb5c8;
-            padding: 12px 24px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            transition: .3s;
-            border-bottom: 3px solid transparent;
-        }
-        .mp-tabs button.active {
-            color: #00d4ff;
-            border-bottom-color: #00d4ff;
-        }
-        .mp-tabs button:hover {
-            color: white;
-        }
+        .mp-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,.05); padding-bottom: 4px; }
+        .mp-tabs button { background: transparent; border: none; color: #9fb5c8; padding: 12px 24px; font-weight: 600; font-size: 15px; cursor: pointer; transition: .3s; border-bottom: 3px solid transparent; }
+        .mp-tabs button.active { color: #00d4ff; border-bottom-color: #00d4ff; }
+        .mp-tabs button:hover { color: white; }
 
-        .tab-content {
-            display: none;
-            animation: fadeUp .4s ease;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .tab-content { display: none; animation: fadeUp .4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        .section-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin: 30px 0 16px;
-            color: white;
-            border-left: 4px solid #00d4ff;
-            padding-left: 12px;
-        }
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-        .product-card {
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(255,255,255,.12);
-            border-radius: 18px;
-            padding: 16px;
-            backdrop-filter: blur(10px);
-            transition: .3s;
-            display: flex;
-            flex-direction: column;
-        }
-        .product-card:hover {
-            border-color: #00d4ff;
-            transform: translateY(-4px);
-        }
-        .product-card .image {
-            font-size: 48px;
-            text-align: center;
-            margin-bottom: 8px;
-        }
-        .product-card .name {
-            font-weight: 600;
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-        .product-card .price {
-            font-size: 18px;
-            font-weight: 700;
-            color: #00d4ff;
-            margin-bottom: 8px;
-        }
-        .product-card .seller {
-            font-size: 12px;
-            color: #9fb5c8;
-            margin-bottom: 10px;
-        }
-        .product-card .btn {
-            width: 100%;
-            text-align: center;
-            font-size: 13px;
-            padding: 8px;
-        }
+        .section-title { font-size: 22px; font-weight: 700; margin: 30px 0 16px; color: white; border-left: 4px solid #00d4ff; padding-left: 12px; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .product-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 18px; padding: 16px; backdrop-filter: blur(10px); transition: .3s; display: flex; flex-direction: column; }
+        .product-card:hover { border-color: #00d4ff; transform: translateY(-4px); }
+        .product-card .image img { width: 100%; height: 140px; object-fit: contain; border-radius: 12px; background: rgba(255,255,255,.05); margin-bottom: 8px; }
+        .product-card .image .no-img { font-size: 48px; text-align: center; padding: 30px 0; color: #9fb5c8; }
+        .product-card .name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+        .product-card .price { font-size: 18px; font-weight: 700; color: #00d4ff; margin-bottom: 8px; }
+        .product-card .seller { font-size: 12px; color: #9fb5c8; margin-bottom: 10px; }
+        .product-card .btn { width: 100%; text-align: center; font-size: 13px; padding: 8px; }
 
-        /* Корзина и админка */
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,.05);
-        }
-        .cart-item .info {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-        .cart-item .info .name {
-            font-weight: 500;
-        }
-        .cart-item .info .price {
-            color: #00d4ff;
-        }
-        .cart-item .qty {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-        .cart-item .qty button {
-            background: rgba(255,255,255,.08);
-            border: none;
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .cart-item .qty button:hover {
-            background: rgba(0,212,255,.2);
-        }
-        .cart-total {
-            margin-top: 20px;
-            text-align: right;
-            font-size: 20px;
-            font-weight: 700;
-            color: white;
-        }
-        .cart-total span {
-            color: #00d4ff;
-        }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+        .cart-item .info { display: flex; gap: 16px; align-items: center; }
+        .cart-item .info .name { font-weight: 500; }
+        .cart-item .info .price { color: #00d4ff; }
+        .cart-item .qty { display: flex; gap: 8px; align-items: center; }
+        .cart-item .qty button { background: rgba(255,255,255,.08); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 16px; }
+        .cart-item .qty button:hover { background: rgba(0,212,255,.2); }
+        .cart-total { margin-top: 20px; text-align: right; font-size: 20px; font-weight: 700; color: white; }
+        .cart-total span { color: #00d4ff; }
 
-        /* Личный кабинет */
-        .profile-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-        .profile-card {
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(255,255,255,.12);
-            border-radius: 18px;
-            padding: 24px;
-        }
-        .profile-card h3 {
-            font-size: 18px;
-            margin-bottom: 16px;
-            color: white;
-        }
-        .profile-card .row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,.04);
-        }
-        .profile-card .row .label {
-            color: #9fb5c8;
-        }
-        .profile-card .row .value {
-            color: white;
-            font-weight: 500;
-        }
-        .order-item {
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,.04);
-            display: flex;
-            justify-content: space-between;
-        }
-        .order-item .date {
-            color: #9fb5c8;
-            font-size: 13px;
-        }
-        .order-item .total {
-            font-weight: 600;
-            color: #00d4ff;
-        }
+        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .profile-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 18px; padding: 24px; }
+        .profile-card h3 { font-size: 18px; margin-bottom: 16px; color: white; }
+        .profile-card .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+        .profile-card .row .label { color: #9fb5c8; }
+        .profile-card .row .value { color: white; font-weight: 500; }
+        .order-item { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.04); display: flex; justify-content: space-between; }
+        .order-item .date { color: #9fb5c8; font-size: 13px; }
+        .order-item .total { font-weight: 600; color: #00d4ff; }
 
-        /* Админ-панель */
-        .admin-panel {
-            margin-top: 20px;
-        }
-        .admin-form {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .admin-form .form-group {
-            margin-bottom: 16px;
-        }
-        .admin-form .form-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: #dbe9ff;
-            margin-bottom: 6px;
-        }
-        .admin-form .form-group input,
-        .admin-form .form-group select,
-        .admin-form .form-group textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,.15);
-            background: rgba(255,255,255,.05);
-            color: white;
-            font-size: 15px;
-            transition: .3s;
-            outline: none;
-        }
-        .admin-form .form-group input:focus,
-        .admin-form .form-group select:focus,
-        .admin-form .form-group textarea:focus {
-            border-color: #00d4ff;
-        }
-        .admin-form .form-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 10px;
-        }
+        .admin-panel { margin-top: 20px; }
+        .admin-form { max-width: 600px; margin: 0 auto; }
+        .admin-form .form-group { margin-bottom: 16px; }
+        .admin-form .form-group label { display: block; font-size: 14px; font-weight: 500; color: #dbe9ff; margin-bottom: 6px; }
+        .admin-form .form-group input, .admin-form .form-group select, .admin-form .form-group textarea { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.05); color: white; font-size: 15px; transition: .3s; outline: none; }
+        .admin-form .form-group input:focus, .admin-form .form-group select:focus { border-color: #00d4ff; }
+        .admin-form .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px; }
 
-        .admin-products-list {
-            margin-top: 30px;
-        }
-        .admin-products-list .product-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,.04);
-        }
-        .admin-products-list .product-item .info {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-        .admin-products-list .product-item .info .name {
-            font-weight: 500;
-        }
-        .admin-products-list .product-item .info .price {
-            color: #00d4ff;
-        }
+        .admin-products-list { margin-top: 30px; }
+        .admin-products-list .product-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+        .admin-products-list .product-item .info { display: flex; gap: 12px; align-items: center; }
+        .admin-products-list .product-item .info .name { font-weight: 500; }
+        .admin-products-list .product-item .info .price { color: #00d4ff; }
+        .admin-products-list .product-item .info img { width: 40px; height: 40px; object-fit: contain; border-radius: 8px; background: rgba(255,255,255,.05); }
 
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #bdd0df;
-        }
-        .empty-state .icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
+        .empty-state { text-align: center; padding: 40px 20px; color: #bdd0df; }
+        .empty-state .icon { font-size: 40px; margin-bottom: 10px; }
 
-        .message {
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            font-size: 14px;
-            display: none;
-        }
-        .message.error {
-            display: block;
-            background: rgba(255,0,0,.1);
-            border: 1px solid rgba(255,0,0,.2);
-            color: #ff6b6b;
-        }
-        .message.success {
-            display: block;
-            background: rgba(0,255,170,.1);
-            border: 1px solid rgba(0,255,170,.2);
-            color: #00ffa3;
-        }
+        .message { padding: 12px 16px; border-radius: 12px; margin-bottom: 16px; font-size: 14px; display: none; }
+        .message.error { display: block; background: rgba(255,0,0,.1); border: 1px solid rgba(255,0,0,.2); color: #ff6b6b; }
+        .message.success { display: block; background: rgba(0,255,170,.1); border: 1px solid rgba(0,255,170,.2); color: #00ffa3; }
 
-        @media (max-width: 768px) {
-            .profile-grid { grid-template-columns: 1fr; }
-            .mp-tabs button { padding: 10px 14px; font-size: 13px; }
-        }
+        @media (max-width: 768px) { .profile-grid { grid-template-columns: 1fr; } .mp-tabs button { padding: 10px 14px; font-size: 13px; } }
     </style>
 </head>
 <body>
     <div id="particles"></div>
-
     <header>
         <div class="container">
             <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00ffa3" />
-                                <stop offset="50%" stop-color="#00d4ff" />
-                                <stop offset="100%" stop-color="#1f6bff" />
-                            </linearGradient>
-                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="4" result="blur" />
-                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                            </filter>
-                        </defs>
-                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
-                        <g filter="url(#logoGlow)">
-                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
-                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
-                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
-                        </g>
-                    </svg>
+                <div class="logo-icon"><svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#1f6bff"/></linearGradient>
+                    <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4" result="blur"/><feComposite in="SourceGraphic" in2="blur" operator="over"/></filter></defs>
+                    <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)"/>
+                    <g filter="url(#logoGlow)"><circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
+                    <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
+                    <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)"/></g></svg>
                 </div>
-                <div class="logo-text">
-                    <h2>SFERA</h2>
-                    <p>Milli Sanly Platforma</p>
-                </div>
+                <div class="logo-text"><h2>SFERA</h2><p>Milli Sanly Platforma</p></div>
             </a>
-
             <div class="header-right" style="display:flex; align-items:center; gap:12px;">
                 <span class="user-info" id="userDisplay">👤 <strong id="username">User</strong></span>
                 <a href="dashboard.html" class="btn btn-outline" data-i18n="back" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Yza</a>
@@ -424,27 +123,22 @@
 
             <div id="message" class="message"></div>
 
-            <!-- Вкладки -->
             <div class="mp-tabs">
                 <button class="active" data-tab="catalog" data-i18n="tab_catalog">Katalog</button>
                 <button data-tab="cart" data-i18n="tab_cart">Sebet (<span id="cartCount">0</span>)</button>
                 <button data-tab="profile" data-i18n="tab_profile">Şahsy kabinet</button>
-                <!-- Вкладка управления для админа -->
                 <button id="adminTab" data-tab="admin" style="display:none;" data-i18n="tab_admin">Admin</button>
             </div>
 
-            <!-- Вкладка: Каталог -->
+            <!-- Каталог -->
             <div class="tab-content active" id="tab-catalog">
                 <div id="catalogContent"></div>
             </div>
 
-            <!-- Вкладка: Корзина -->
+            <!-- Корзина -->
             <div class="tab-content" id="tab-cart">
                 <div id="cartContent">
-                    <div class="empty-state" id="emptyCart">
-                        <div class="icon">🛒</div>
-                        <p data-i18n="empty_cart">Sebet boş</p>
-                    </div>
+                    <div class="empty-state" id="emptyCart"><div class="icon">🛒</div><p data-i18n="empty_cart">Sebet boş</p></div>
                     <div id="cartItems" style="display:none;"></div>
                     <div id="cartTotal" style="display:none;" class="cart-total">
                         <p>Jemi: <span id="totalAmount">0.00</span> TMT</p>
@@ -453,7 +147,7 @@
                 </div>
             </div>
 
-            <!-- Вкладка: Личный кабинет -->
+            <!-- Личный кабинет -->
             <div class="tab-content" id="tab-profile">
                 <div class="profile-grid">
                     <div class="profile-card">
@@ -472,7 +166,7 @@
                 </div>
             </div>
 
-            <!-- Вкладка: Управление (только для админа) -->
+            <!-- Админ-панель -->
             <div class="tab-content" id="tab-admin">
                 <div class="admin-panel">
                     <h3 style="font-size:22px; margin-bottom:20px;">Administrator panel – Haryt dolandyryş</h3>
@@ -496,8 +190,8 @@
                                 <input type="number" id="adminPrice" step="0.01" min="0.01" required placeholder="100" />
                             </div>
                             <div class="form-group">
-                                <label for="adminImage" data-i18n="product_image">Emoji (islege görä)</label>
-                                <input type="text" id="adminImage" placeholder="📱" value="📦" />
+                                <label for="adminImageUrl" data-i18n="image_url">Surat URL (islege görä)</label>
+                                <input type="url" id="adminImageUrl" placeholder="https://example.com/image.jpg" />
                             </div>
                             <div class="form-group">
                                 <label for="adminSeller" data-i18n="seller_name">Satyjy</label>
@@ -514,182 +208,94 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
 
     <script>
         // ============================================================
-        // НАСТРОЙКА API и переводы
+        // НАСТРОЙКА
         // ============================================================
         const API_BASE_URL = 'https://sfera-1.onrender.com';
         const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'login.html';
 
-        if (!token) {
-            window.location.href = 'login.html';
-        }
-
-        // Загружаем информацию о пользователе из localStorage (сохраняется при логине)
+        // Получаем текущего пользователя
         const currentUser = JSON.parse(localStorage.getItem('user') || '{"username":"Guest","email":"guest@example.com","role":"user"}');
         const isAdmin = currentUser.role === 'admin';
+        console.log('Текущий пользователь:', currentUser);
 
+        // ============================================================
+        // ПЕРЕВОДЫ
+        // ============================================================
         const translations = {
             tm: {
-                logout: "Çykmak",
-                back: "← Yza",
-                refresh: "Täzele",
-                tab_catalog: "Katalog",
-                tab_cart: "Sebet",
-                tab_profile: "Şahsy kabinet",
-                tab_admin: "Admin",
-                empty_cart: "Sebet boş",
-                checkout: "Sargyt et",
-                profile_info: "Profil maglumatlary",
-                username_label: "Ulanyjy ady",
-                email_label: "Email",
-                phone_label: "Telefon",
-                role_label: "Rol",
-                member_since: "Agza bolan",
-                edit_profile: "Profil üýtget",
-                order_history: "Sargyt taryhy",
-                no_orders: "Sargyt ýok",
-                add_to_cart: "Sebede goş",
-                remove: "Aýyr",
-                product_added: "Haryt sebedä goşuldy!",
-                product_removed: "Haryt sebedä aýryldy!",
+                logout: "Çykmak", back: "← Yza", refresh: "Täzele", tab_catalog: "Katalog", tab_cart: "Sebet",
+                tab_profile: "Şahsy kabinet", tab_admin: "Admin", empty_cart: "Sebet boş", checkout: "Sargyt et",
+                profile_info: "Profil maglumatlary", username_label: "Ulanyjy ady", email_label: "Email",
+                phone_label: "Telefon", role_label: "Rol", member_since: "Agza bolan", edit_profile: "Profil üýtget",
+                order_history: "Sargyt taryhy", no_orders: "Sargyt ýok", add_to_cart: "Sebede goş",
+                remove: "Aýyr", product_added: "Haryt sebedä goşuldy!", product_removed: "Haryt sebedä aýryldy!",
                 order_placed: "Sargyt üstünlikli ýerleşdirildi!",
-                section: "Bölüm",
-                section_food: "Iýmit önümleri",
-                section_consumer: "Önümçilik harytlary",
-                section_electronics: "Elektronika",
-                section_agriculture: "Oba hojalyk harytlary",
-                product_name: "Harydyň ady",
-                product_price: "Bahasy (TMT)",
-                product_image: "Emoji (islege görä)",
-                seller_name: "Satyjy",
-                add_product: "Haryt goş",
-                admin_only: "Bu bölüm diňe administratorlar üçin.",
-                product_added_admin: "Haryt üstünlikli goşuldy!",
-                product_deleted: "Haryt pozuldy!"
+                section: "Bölüm", section_food: "Iýmit önümleri", section_consumer: "Önümçilik harytlary",
+                section_electronics: "Elektronika", section_agriculture: "Oba hojalyk harytlary",
+                product_name: "Harydyň ady", product_price: "Bahasy (TMT)", image_url: "Surat URL (islege görä)",
+                seller_name: "Satyjy", add_product: "Haryt goş", product_added_admin: "Haryt üstünlikli goşuldy!",
+                product_deleted: "Haryt pozuldy!", admin_only: "Bu bölüm diňe administratorlar üçin."
             },
             ru: {
-                logout: "Выйти",
-                back: "← Назад",
-                refresh: "Обновить",
-                tab_catalog: "Каталог",
-                tab_cart: "Корзина",
-                tab_profile: "Личный кабинет",
-                tab_admin: "Админ",
-                empty_cart: "Корзина пуста",
-                checkout: "Оформить заказ",
-                profile_info: "Информация профиля",
-                username_label: "Имя пользователя",
-                email_label: "Email",
-                phone_label: "Телефон",
-                role_label: "Роль",
-                member_since: "Участник с",
-                edit_profile: "Редактировать профиль",
-                order_history: "История заказов",
-                no_orders: "Заказов нет",
-                add_to_cart: "В корзину",
-                remove: "Убрать",
-                product_added: "Товар добавлен в корзину!",
-                product_removed: "Товар убран из корзины!",
+                logout: "Выйти", back: "← Назад", refresh: "Обновить", tab_catalog: "Каталог", tab_cart: "Корзина",
+                tab_profile: "Личный кабинет", tab_admin: "Админ", empty_cart: "Корзина пуста", checkout: "Оформить заказ",
+                profile_info: "Информация профиля", username_label: "Имя пользователя", email_label: "Email",
+                phone_label: "Телефон", role_label: "Роль", member_since: "Участник с", edit_profile: "Редактировать профиль",
+                order_history: "История заказов", no_orders: "Заказов нет", add_to_cart: "В корзину",
+                remove: "Убрать", product_added: "Товар добавлен в корзину!", product_removed: "Товар убран из корзины!",
                 order_placed: "Заказ успешно оформлен!",
-                section: "Раздел",
-                section_food: "Продукты питания",
-                section_consumer: "Промтовары",
-                section_electronics: "Электроника",
-                section_agriculture: "Сельхоз товары",
-                product_name: "Название товара",
-                product_price: "Цена (TMT)",
-                product_image: "Эмодзи (опционально)",
-                seller_name: "Продавец",
-                add_product: "Добавить товар",
-                admin_only: "Этот раздел доступен только администраторам.",
-                product_added_admin: "Товар успешно добавлен!",
-                product_deleted: "Товар удален!"
+                section: "Раздел", section_food: "Продукты питания", section_consumer: "Промтовары",
+                section_electronics: "Электроника", section_agriculture: "Сельхоз товары",
+                product_name: "Название товара", product_price: "Цена (TMT)", image_url: "URL картинки (опционально)",
+                seller_name: "Продавец", add_product: "Добавить товар", product_added_admin: "Товар успешно добавлен!",
+                product_deleted: "Товар удален!", admin_only: "Этот раздел доступен только администраторам."
             },
             en: {
-                logout: "Logout",
-                back: "← Back",
-                refresh: "Refresh",
-                tab_catalog: "Catalog",
-                tab_cart: "Cart",
-                tab_profile: "Profile",
-                tab_admin: "Admin",
-                empty_cart: "Cart is empty",
-                checkout: "Checkout",
-                profile_info: "Profile info",
-                username_label: "Username",
-                email_label: "Email",
-                phone_label: "Phone",
-                role_label: "Role",
-                member_since: "Member since",
-                edit_profile: "Edit profile",
-                order_history: "Order history",
-                no_orders: "No orders",
-                add_to_cart: "Add to cart",
-                remove: "Remove",
-                product_added: "Product added to cart!",
-                product_removed: "Product removed from cart!",
+                logout: "Logout", back: "← Back", refresh: "Refresh", tab_catalog: "Catalog", tab_cart: "Cart",
+                tab_profile: "Profile", tab_admin: "Admin", empty_cart: "Cart is empty", checkout: "Checkout",
+                profile_info: "Profile info", username_label: "Username", email_label: "Email",
+                phone_label: "Phone", role_label: "Role", member_since: "Member since", edit_profile: "Edit profile",
+                order_history: "Order history", no_orders: "No orders", add_to_cart: "Add to cart",
+                remove: "Remove", product_added: "Product added to cart!", product_removed: "Product removed from cart!",
                 order_placed: "Order placed successfully!",
-                section: "Section",
-                section_food: "Food products",
-                section_consumer: "Consumer goods",
-                section_electronics: "Electronics",
-                section_agriculture: "Agricultural products",
-                product_name: "Product name",
-                product_price: "Price (TMT)",
-                product_image: "Emoji (optional)",
-                seller_name: "Seller",
-                add_product: "Add product",
-                admin_only: "This section is for admins only.",
-                product_added_admin: "Product added successfully!",
-                product_deleted: "Product deleted!"
+                section: "Section", section_food: "Food products", section_consumer: "Consumer goods",
+                section_electronics: "Electronics", section_agriculture: "Agricultural products",
+                product_name: "Product name", product_price: "Price (TMT)", image_url: "Image URL (optional)",
+                seller_name: "Seller", add_product: "Add product", product_added_admin: "Product added successfully!",
+                product_deleted: "Product deleted!", admin_only: "This section is for admins only."
             }
         };
 
         let currentLang = localStorage.getItem('lang') || 'tm';
-        let cart = [];
-        let orders = [];
+        let cart = JSON.parse(localStorage.getItem('marketplace_cart') || '[]');
+        let orders = JSON.parse(localStorage.getItem('marketplace_orders') || '[]');
 
-        // Загрузка товаров из localStorage (для сохранения между сессиями)
+        // Загрузка товаров
         let products = JSON.parse(localStorage.getItem('marketplace_products'));
         if (!products) {
-            // Начальные данные
             products = {
                 food: [
-                    { id: 'f1', name: 'Un (5 kg)', price: 45, image: '🌾', seller: 'Aýdar' },
-                    { id: 'f2', name: 'Ýag (1 l)', price: 25, image: '🫒', seller: 'Meret' },
-                    { id: 'f3', name: 'Süýt (1 l)', price: 12, image: '🥛', seller: 'Gülşat' },
-                    { id: 'f4', name: 'Et (1 kg)', price: 60, image: '🥩', seller: 'Saparmyrat' },
+                    { id: 'f1', name: 'Un (5 kg)', price: 45, image: 'https://via.placeholder.com/200/ffffff/000000?text=Un', seller: 'Aýdar' },
+                    { id: 'f2', name: 'Ýag (1 l)', price: 25, image: 'https://via.placeholder.com/200/ffffff/000000?text=Yag', seller: 'Meret' },
                 ],
                 consumer: [
-                    { id: 'c1', name: 'Çeňňek (şaý-seý)', price: 80, image: '🛋️', seller: 'Oguljeren' },
-                    { id: 'c2', name: 'Gap-gaç toplumy', price: 120, image: '🍽️', seller: 'Aýdar' },
-                    { id: 'c3', name: 'Köýnek (erkek)', price: 50, image: '👔', seller: 'Meret' },
-                    { id: 'c4', name: 'Çanta (zenan)', price: 70, image: '👜', seller: 'Gülşat' },
+                    { id: 'c1', name: 'Çeňňek (şaý-seý)', price: 80, image: 'https://via.placeholder.com/200/ffffff/000000?text=Cennik', seller: 'Oguljeren' },
                 ],
                 electronics: [
-                    { id: 'e1', name: 'Telefon', price: 250, image: '📱', seller: 'Saparmyrat' },
-                    { id: 'e2', name: 'Noutbuk', price: 600, image: '💻', seller: 'Aýdar' },
-                    { id: 'e3', name: 'TV (32")', price: 350, image: '📺', seller: 'Meret' },
-                    { id: 'e4', name: 'Ses ulgamy', price: 180, image: '🎵', seller: 'Gülşat' },
+                    { id: 'e1', name: 'Telefon', price: 250, image: 'https://via.placeholder.com/200/ffffff/000000?text=Phone', seller: 'Saparmyrat' },
                 ],
                 agriculture: [
-                    { id: 'a1', name: 'Bugdaý (100 kg)', price: 120, image: '🌾', seller: 'Saparmyrat' },
-                    { id: 'a2', name: 'Sogan (50 kg)', price: 30, image: '🧅', seller: 'Oguljeren' },
-                    { id: 'a3', name: 'Kartofel (50 kg)', price: 40, image: '🥔', seller: 'Aýdar' },
-                    { id: 'a4', name: 'Çörekçilik uny', price: 55, image: '🍞', seller: 'Meret' },
+                    { id: 'a1', name: 'Bugdaý (100 kg)', price: 120, image: 'https://via.placeholder.com/200/ffffff/000000?text=Wheat', seller: 'Saparmyrat' },
                 ]
             };
             localStorage.setItem('marketplace_products', JSON.stringify(products));
         }
-
-        // Загрузка корзины и заказов
-        cart = JSON.parse(localStorage.getItem('marketplace_cart') || '[]');
-        orders = JSON.parse(localStorage.getItem('marketplace_orders') || '[]');
 
         // ============================================================
         // ФУНКЦИИ
@@ -702,8 +308,6 @@
                 if (translations[lang][key]) {
                     if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
                         el.placeholder = translations[lang][key];
-                    } else if (el.tagName === 'SELECT' && el.getAttribute('placeholder')) {
-                        // skip
                     } else {
                         el.textContent = translations[lang][key];
                     }
@@ -750,13 +354,14 @@
                 html += `<div class="section-title">${translations[lang][sec.key] || sec.id} ${sec.icon}</div>`;
                 html += `<div class="products-grid">`;
                 items.forEach(p => {
+                    const imgHtml = p.image ? `<img src="${p.image}" alt="${p.name}" />` : `<div class="no-img">📦</div>`;
                     html += `
                         <div class="product-card">
-                            <div class="image">${p.image || '📦'}</div>
+                            <div class="image">${imgHtml}</div>
                             <div class="name">${p.name}</div>
                             <div class="price">${p.price.toFixed(2)} TMT</div>
                             <div class="seller">Satyjy: ${p.seller}</div>
-                            <button class="btn btn-primary add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}" data-image="${p.image || '📦'}" data-seller="${p.seller}">${translations[lang].add_to_cart}</button>
+                            <button class="btn btn-primary add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}" data-image="${p.image || ''}" data-seller="${p.seller}">${translations[lang].add_to_cart}</button>
                             ${isAdmin ? `<button class="btn btn-danger delete-product" data-id="${p.id}" style="margin-top:6px;">Poz</button>` : ''}
                         </div>
                     `;
@@ -765,25 +370,20 @@
             });
             container.innerHTML = html || `<div class="empty-state"><div class="icon">📭</div><p>Hiç hili haryt ýok</p></div>`;
 
-            // Обработчики кнопок "В корзину"
             container.querySelectorAll('.add-to-cart').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    const name = this.dataset.name;
-                    const price = parseFloat(this.dataset.price);
-                    const image = this.dataset.image;
-                    const seller = this.dataset.seller;
-                    addToCart({ id, name, price, image, seller });
+                    addToCart({
+                        id: this.dataset.id,
+                        name: this.dataset.name,
+                        price: parseFloat(this.dataset.price),
+                        image: this.dataset.image,
+                        seller: this.dataset.seller
+                    });
                 });
             });
-
-            // Обработчики удаления для админа
             if (isAdmin) {
                 container.querySelectorAll('.delete-product').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const id = this.dataset.id;
-                        deleteProduct(id);
-                    });
+                    btn.addEventListener('click', function() { deleteProduct(this.dataset.id); });
                 });
             }
         }
@@ -793,11 +393,8 @@
         // ============================================================
         function addToCart(product) {
             const existing = cart.find(item => item.id === product.id);
-            if (existing) {
-                existing.qty += 1;
-            } else {
-                cart.push({ ...product, qty: 1 });
-            }
+            if (existing) existing.qty += 1;
+            else cart.push({ ...product, qty: 1 });
             localStorage.setItem('marketplace_cart', JSON.stringify(cart));
             renderCart();
             showMessage(translations[currentLang].product_added, 'success');
@@ -814,10 +411,7 @@
             const item = cart.find(i => i.id === id);
             if (!item) return;
             item.qty += delta;
-            if (item.qty <= 0) {
-                removeFromCart(id);
-                return;
-            }
+            if (item.qty <= 0) { removeFromCart(id); return; }
             localStorage.setItem('marketplace_cart', JSON.stringify(cart));
             renderCart();
         }
@@ -828,9 +422,7 @@
             const totalDiv = document.getElementById('cartTotal');
             const totalSpan = document.getElementById('totalAmount');
             const countSpan = document.getElementById('cartCount');
-
             countSpan.textContent = cart.reduce((sum, i) => sum + i.qty, 0);
-
             if (!cart.length) {
                 empty.style.display = 'block';
                 container.style.display = 'none';
@@ -840,17 +432,14 @@
             empty.style.display = 'none';
             container.style.display = 'block';
             totalDiv.style.display = 'block';
-
-            const lang = currentLang;
-            let html = '';
-            let total = 0;
+            let html = '', total = 0;
             cart.forEach(item => {
                 const subtotal = item.price * item.qty;
                 total += subtotal;
                 html += `
                     <div class="cart-item">
                         <div class="info">
-                            <span style="font-size:28px;">${item.image || '📦'}</span>
+                            ${item.image ? `<img src="${item.image}" style="width:40px; height:40px; object-fit:contain; border-radius:8px; background:rgba(255,255,255,.05);" />` : `<span style="font-size:28px;">📦</span>`}
                             <span class="name">${item.name}</span>
                             <span class="price">${item.price.toFixed(2)} TMT</span>
                         </div>
@@ -858,41 +447,26 @@
                             <button class="qty-btn" data-id="${item.id}" data-delta="-1">−</button>
                             <span>${item.qty}</span>
                             <button class="qty-btn" data-id="${item.id}" data-delta="1">+</button>
-                            <button class="btn btn-danger" style="padding:4px 12px; font-size:12px;" data-id="${item.id}">${translations[lang].remove}</button>
+                            <button class="btn btn-danger" style="padding:4px 12px; font-size:12px;" data-id="${item.id}">${translations[currentLang].remove}</button>
                         </div>
                     </div>
                 `;
             });
             container.innerHTML = html;
             totalSpan.textContent = total.toFixed(2);
-
-            // Обработчики для кнопок
             container.querySelectorAll('.qty-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    const delta = parseInt(this.dataset.delta);
-                    changeQty(id, delta);
+                    changeQty(this.dataset.id, parseInt(this.dataset.delta));
                 });
             });
             container.querySelectorAll('.btn-danger').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    removeFromCart(this.dataset.id);
-                });
+                btn.addEventListener('click', function() { removeFromCart(this.dataset.id); });
             });
         }
 
-        // Оформление заказа
         document.getElementById('checkoutBtn').addEventListener('click', function() {
-            if (!cart.length) {
-                showMessage(translations[currentLang].empty_cart, 'error');
-                return;
-            }
-            const order = {
-                id: 'ord' + Date.now(),
-                items: [...cart],
-                total: cart.reduce((sum, i) => sum + i.price * i.qty, 0),
-                date: new Date().toISOString()
-            };
+            if (!cart.length) { showMessage(translations[currentLang].empty_cart, 'error'); return; }
+            const order = { id: 'ord' + Date.now(), items: [...cart], total: cart.reduce((s, i) => s + i.price * i.qty, 0), date: new Date().toISOString() };
             orders.push(order);
             localStorage.setItem('marketplace_orders', JSON.stringify(orders));
             cart = [];
@@ -903,7 +477,7 @@
         });
 
         // ============================================================
-        // ЛИЧНЫЙ КАБИНЕТ
+        // ПРОФИЛЬ
         // ============================================================
         function renderProfile() {
             document.getElementById('profileUsername').textContent = currentUser.username || 'User';
@@ -911,29 +485,21 @@
             document.getElementById('profilePhone').textContent = '+993 63 000000';
             document.getElementById('profileRole').textContent = currentUser.role || 'user';
             document.getElementById('profileSince').textContent = '2024';
-
             const historyDiv = document.getElementById('orderHistory');
             if (!orders.length) {
                 historyDiv.innerHTML = `<div class="empty-state" style="padding:20px 0;"><p data-i18n="no_orders">Sargyt ýok</p></div>`;
                 return;
             }
-            let html = '';
-            orders.forEach(o => {
-                html += `
-                    <div class="order-item">
-                        <div>
-                            <div><strong>Sargyt #${o.id.slice(-6)}</strong></div>
-                            <div class="date">${new Date(o.date).toLocaleDateString()}</div>
-                        </div>
-                        <div class="total">${o.total.toFixed(2)} TMT</div>
-                    </div>
-                `;
-            });
-            historyDiv.innerHTML = html;
+            historyDiv.innerHTML = orders.map(o => `
+                <div class="order-item">
+                    <div><div><strong>Sargyt #${o.id.slice(-6)}</strong></div><div class="date">${new Date(o.date).toLocaleDateString()}</div></div>
+                    <div class="total">${o.total.toFixed(2)} TMT</div>
+                </div>
+            `).join('');
         }
 
         // ============================================================
-        // АДМИНИСТРИРОВАНИЕ (только для admin)
+        // АДМИН-ПАНЕЛЬ
         // ============================================================
         function renderAdminProducts() {
             const container = document.getElementById('adminProductsList');
@@ -944,23 +510,45 @@
                     html += `
                         <div class="product-item">
                             <div class="info">
-                                <span style="font-size:24px;">${p.image || '📦'}</span>
+                                ${p.image ? `<img src="${p.image}" />` : `<span style="font-size:24px;">📦</span>`}
                                 <span class="name">${p.name}</span>
                                 <span class="price">${p.price.toFixed(2)} TMT</span>
                                 <span style="color:#9fb5c8; font-size:12px;">(${section})</span>
                             </div>
-                            <button class="btn btn-danger delete-admin-product" data-id="${p.id}" style="padding:4px 12px; font-size:12px;">Poz</button>
+                            <div>
+                                <button class="btn btn-outline edit-product" data-id="${p.id}" style="padding:4px 12px; font-size:12px; margin-right:6px;">✏️</button>
+                                <button class="btn btn-danger delete-admin-product" data-id="${p.id}" style="padding:4px 12px; font-size:12px;">Poz</button>
+                            </div>
                         </div>
                     `;
                 });
             }
             container.innerHTML = html || `<div class="empty-state"><div class="icon">📭</div><p>Hiç hili haryt ýok</p></div>`;
 
-            // Обработчики удаления
             container.querySelectorAll('.delete-admin-product').forEach(btn => {
+                btn.addEventListener('click', function() { deleteProduct(this.dataset.id); });
+            });
+            container.querySelectorAll('.edit-product').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const id = this.dataset.id;
-                    deleteProduct(id);
+                    const product = Object.values(products).flat().find(p => p.id === id);
+                    if (product) {
+                        document.getElementById('adminName').value = product.name;
+                        document.getElementById('adminPrice').value = product.price;
+                        document.getElementById('adminImageUrl').value = product.image || '';
+                        document.getElementById('adminSeller').value = product.seller;
+                        // Находим секцию
+                        for (const [sec, items] of Object.entries(products)) {
+                            if (items.find(p => p.id === id)) {
+                                document.getElementById('adminSection').value = sec;
+                                break;
+                            }
+                        }
+                        // Меняем кнопку на "Обновить"
+                        const submitBtn = document.querySelector('#adminProductForm button[type="submit"]');
+                        submitBtn.textContent = 'Обновить';
+                        submitBtn.dataset.editId = id;
+                    }
                 });
             });
         }
@@ -983,29 +571,61 @@
             }
         }
 
-        // Добавление товара админом
+        // Добавление / редактирование товара
         document.getElementById('adminProductForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            if (!isAdmin) {
-                showMessage(translations[currentLang].admin_only, 'error');
-                return;
-            }
+            if (!isAdmin) { showMessage(translations[currentLang].admin_only, 'error'); return; }
+
             const section = document.getElementById('adminSection').value;
             const name = document.getElementById('adminName').value.trim();
             const price = parseFloat(document.getElementById('adminPrice').value);
-            const image = document.getElementById('adminImage').value.trim() || '📦';
+            const image = document.getElementById('adminImageUrl').value.trim();
             const seller = document.getElementById('adminSeller').value.trim();
+            const editId = this.querySelector('button[type="submit"]').dataset.editId;
 
             if (!name || !price || !seller) {
                 showMessage('Doldurmaly ýerler boş galdy!', 'error');
                 return;
             }
 
+            if (editId) {
+                // Редактирование
+                let found = false;
+                for (const sec of ['food', 'consumer', 'electronics', 'agriculture']) {
+                    const item = products[sec].find(p => p.id === editId);
+                    if (item) {
+                        item.name = name;
+                        item.price = price;
+                        item.image = image || '';
+                        item.seller = seller;
+                        // Если секция изменилась, перемещаем товар
+                        if (sec !== section) {
+                            products[sec] = products[sec].filter(p => p.id !== editId);
+                            products[section].push(item);
+                        }
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+                    localStorage.setItem('marketplace_products', JSON.stringify(products));
+                    renderCatalog();
+                    renderAdminProducts();
+                    showMessage('Haryt üstünlikli täzelendi!', 'success');
+                    this.reset();
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    submitBtn.textContent = translations[currentLang].add_product;
+                    delete submitBtn.dataset.editId;
+                }
+                return;
+            }
+
+            // Добавление нового товара
             const newProduct = {
                 id: 'p' + Date.now() + Math.random().toString(36).substr(2, 4),
                 name,
                 price,
-                image,
+                image: image || '',
                 seller
             };
             products[section].push(newProduct);
@@ -1032,9 +652,6 @@
             });
         });
 
-        // ============================================================
-        // ПОКАЗ ВКЛАДКИ ADMIN ДЛЯ АДМИНА
-        // ============================================================
         if (isAdmin) {
             document.getElementById('adminTab').style.display = 'inline-block';
         }
@@ -1088,7 +705,7 @@
         renderCart();
         renderProfile();
         if (isAdmin) renderAdminProducts();
-        console.log('Marketplace with admin panel loaded. Is admin:', isAdmin);
+        console.log('Marketplace with admin panel and image URLs loaded. Is admin:', isAdmin);
     </script>
 </body>
 </html>
