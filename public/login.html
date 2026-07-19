@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="tm">
 <head>
@@ -9,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/css/style.css" />
     <style>
+        /* ... все стили такие же, как в предыдущей версии ... */
         .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 120px 20px 60px; background: linear-gradient(135deg, #06111d, #0b2035, #102b45); }
         .login-box { background: rgba(255,255,255,.06); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,.12); border-radius: 24px; padding: 50px 40px; max-width: 420px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,.35); animation: fadeUp 0.8s ease; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -155,16 +157,22 @@
                 return;
             }
 
-            // Сохраняем пользователя с правильной ролью
+            // СОХРАНЯЕМ ТОКЕН И ПОЛЬЗОВАТЕЛЯ
+            localStorage.setItem('token', 'demo-token-' + Date.now());
             localStorage.setItem('user', JSON.stringify({
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                role: user.role // <-- здесь уже 'admin' или 'user'
+                role: user.role
             }));
 
+            console.log('✅ Токен сохранён:', localStorage.getItem('token'));
+            console.log('✅ Пользователь сохранён:', localStorage.getItem('user'));
+
             showMessage(translations[currentLang].login_success, 'success');
-            setTimeout(() => window.location.href = 'dashboard.html', 1000);
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
         });
 
         function showMessage(text, type) {
@@ -175,6 +183,7 @@
             window.messageTimeout = setTimeout(() => { messageEl.style.display = 'none'; }, 5000);
         }
 
+        // Частицы
         const particles = document.getElementById('particles');
         if (particles && particles.children.length === 0) {
             for (let i = 0; i < 60; i++) {
