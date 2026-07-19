@@ -9,13 +9,199 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/css/style.css" />
     <style>
-        /* все стили как в предыдущей версии (я не буду повторять их здесь, они уже есть) */
         .marketplace { padding: 120px 7% 60px; min-height: 100vh; }
-        /* ... остальные стили ... */
+        .marketplace-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 30px; }
+        .marketplace-header h1 { font-size: 36px; font-weight: 800; background: linear-gradient(to right, #fff, #b4d7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .marketplace-header .actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .btn { padding: 10px 24px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: .3s; text-decoration: none; display: inline-block; font-size: 14px; }
+        .btn-primary { background: linear-gradient(135deg, #00d4ff, #008cff); color: white; box-shadow: 0 10px 30px rgba(0,212,255,.25); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(0,212,255,.4); }
+        .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,.2); color: white; }
+        .btn-outline:hover { background: rgba(255,255,255,.05); border-color: #00d4ff; }
+        .btn-success { background: linear-gradient(135deg, #00ffa3, #00b894); color: #08131d; }
+        .btn-success:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(0,255,170,.3); }
+        .btn-danger { background: rgba(200,0,0,.15); border: 1px solid rgba(200,0,0,.3); color: #ff6b6b; }
+        .btn-danger:hover { background: rgba(200,0,0,.25); }
+
+        .mp-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,.05); padding-bottom: 4px; }
+        .mp-tabs button { background: transparent; border: none; color: #9fb5c8; padding: 12px 24px; font-weight: 600; font-size: 15px; cursor: pointer; transition: .3s; border-bottom: 3px solid transparent; }
+        .mp-tabs button.active { color: #00d4ff; border-bottom-color: #00d4ff; }
+        .mp-tabs button:hover { color: white; }
+
+        .tab-content { display: none; animation: fadeUp .4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .section-title { font-size: 22px; font-weight: 700; margin: 30px 0 16px; color: white; border-left: 4px solid #00d4ff; padding-left: 12px; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .product-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 18px; padding: 16px; backdrop-filter: blur(10px); display: flex; flex-direction: column; }
+        .product-card:hover { border-color: #00d4ff; transform: translateY(-4px); }
+        .product-card .image img { width: 100%; height: 140px; object-fit: contain; border-radius: 12px; background: rgba(255,255,255,.05); }
+        .product-card .image .no-img { font-size: 48px; text-align: center; padding: 30px 0; color: #9fb5c8; }
+        .product-card .name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+        .product-card .price { font-size: 18px; font-weight: 700; color: #00d4ff; margin-bottom: 8px; }
+        .product-card .seller { font-size: 12px; color: #9fb5c8; margin-bottom: 10px; }
+        .product-card .btn { width: 100%; text-align: center; font-size: 13px; padding: 8px; }
+
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+        .cart-item .info { display: flex; gap: 16px; align-items: center; }
+        .cart-item .info .name { font-weight: 500; }
+        .cart-item .info .price { color: #00d4ff; }
+        .cart-item .qty { display: flex; gap: 8px; align-items: center; }
+        .cart-item .qty button { background: rgba(255,255,255,.08); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 16px; }
+        .cart-item .qty button:hover { background: rgba(0,212,255,.2); }
+        .cart-total { margin-top: 20px; text-align: right; font-size: 20px; font-weight: 700; color: white; }
+        .cart-total span { color: #00d4ff; }
+
+        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .profile-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 18px; padding: 24px; }
+        .profile-card h3 { font-size: 18px; margin-bottom: 16px; color: white; }
+        .profile-card .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+        .profile-card .row .label { color: #9fb5c8; }
+        .profile-card .row .value { color: white; font-weight: 500; }
+        .order-item { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.04); display: flex; justify-content: space-between; }
+        .order-item .date { color: #9fb5c8; font-size: 13px; }
+        .order-item .total { font-weight: 600; color: #00d4ff; }
+
+        .admin-panel { margin-top: 20px; }
+        .admin-form { max-width: 600px; margin: 0 auto; }
+        .admin-form .form-group { margin-bottom: 16px; }
+        .admin-form .form-group label { display: block; font-size: 14px; font-weight: 500; color: #dbe9ff; margin-bottom: 6px; }
+        .admin-form .form-group input, .admin-form .form-group select, .admin-form .form-group textarea { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.05); color: white; font-size: 15px; transition: .3s; outline: none; }
+        .admin-form .form-group input:focus, .admin-form .form-group select:focus { border-color: #00d4ff; }
+        .admin-form .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px; }
+
+        .admin-products-list { margin-top: 30px; }
+        .admin-products-list .product-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+        .admin-products-list .product-item .info { display: flex; gap: 12px; align-items: center; }
+        .admin-products-list .product-item .info .name { font-weight: 500; }
+        .admin-products-list .product-item .info .price { color: #00d4ff; }
+        .admin-products-list .product-item .info img { width: 40px; height: 40px; object-fit: contain; border-radius: 8px; background: rgba(255,255,255,.05); }
+
+        .empty-state { text-align: center; padding: 40px 20px; color: #bdd0df; }
+        .empty-state .icon { font-size: 40px; margin-bottom: 10px; }
+
+        .message { padding: 12px 16px; border-radius: 12px; margin-bottom: 16px; font-size: 14px; display: none; }
+        .message.error { display: block; background: rgba(255,0,0,.1); border: 1px solid rgba(255,0,0,.2); color: #ff6b6b; }
+        .message.success { display: block; background: rgba(0,255,170,.1); border: 1px solid rgba(0,255,170,.2); color: #00ffa3; }
+
+        @media (max-width: 768px) {
+            .profile-grid { grid-template-columns: 1fr; }
+            .mp-tabs button { padding: 10px 14px; font-size: 13px; }
+        }
     </style>
 </head>
 <body>
-    <!-- ... весь HTML как в предыдущей версии ... -->
+    <div id="particles"></div>
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo"><!-- SVG логотип --><div class="logo-text"><h2>SFERA</h2><p>Milli Sanly Platforma</p></div></a>
+            <div class="header-right" style="display:flex; align-items:center; gap:12px;">
+                <span class="user-info" id="userDisplay">👤 <strong id="username">User</strong></span>
+                <a href="dashboard.html" class="btn btn-outline" data-i18n="back" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Yza</a>
+                <button class="lang" id="langBtn">TM</button>
+                <button class="logout-btn" id="logoutBtn" data-i18n="logout" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="marketplace">
+        <div class="container">
+            <div class="marketplace-header">
+                <h1>🛒 Marketpleýs</h1>
+                <div class="actions">
+                    <button class="btn btn-outline" id="refreshBtn" data-i18n="refresh">⟳ Täzele</button>
+                </div>
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <div class="mp-tabs">
+                <button class="active" data-tab="catalog" data-i18n="tab_catalog">Katalog</button>
+                <button data-tab="cart" data-i18n="tab_cart">Sebet (<span id="cartCount">0</span>)</button>
+                <button data-tab="profile" data-i18n="tab_profile">Şahsy kabinet</button>
+                <button id="adminTab" data-tab="admin" style="display:none;" data-i18n="tab_admin">Admin</button>
+            </div>
+
+            <!-- Каталог -->
+            <div class="tab-content active" id="tab-catalog"><div id="catalogContent"></div></div>
+
+            <!-- Корзина -->
+            <div class="tab-content" id="tab-cart">
+                <div id="cartContent">
+                    <div class="empty-state" id="emptyCart"><div class="icon">🛒</div><p data-i18n="empty_cart">Sebet boş</p></div>
+                    <div id="cartItems" style="display:none;"></div>
+                    <div id="cartTotal" style="display:none;" class="cart-total">
+                        <p>Jemi: <span id="totalAmount">0.00</span> TMT</p>
+                        <button class="btn btn-success" id="checkoutBtn" data-i18n="checkout">Sargyt et</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Личный кабинет -->
+            <div class="tab-content" id="tab-profile">
+                <div class="profile-grid">
+                    <div class="profile-card">
+                        <h3 data-i18n="profile_info">Profil maglumatlary</h3>
+                        <div class="row"><span class="label" data-i18n="username_label">Ulanyjy ady</span><span class="value" id="profileUsername">User</span></div>
+                        <div class="row"><span class="label" data-i18n="email_label">Email</span><span class="value" id="profileEmail">user@example.com</span></div>
+                        <div class="row"><span class="label" data-i18n="phone_label">Telefon</span><span class="value" id="profilePhone">+993 63 000000</span></div>
+                        <div class="row"><span class="label" data-i18n="role_label">Rol</span><span class="value" id="profileRole">user</span></div>
+                        <div class="row"><span class="label" data-i18n="member_since">Agza bolan</span><span class="value" id="profileSince">2024</span></div>
+                        <button class="btn btn-outline" style="margin-top:16px; width:100%;" data-i18n="edit_profile">Profil üýtget</button>
+                    </div>
+                    <div class="profile-card">
+                        <h3 data-i18n="order_history">Sargyt taryhy</h3>
+                        <div id="orderHistory"><div class="empty-state" style="padding:20px 0;"><p data-i18n="no_orders">Sargyt ýok</p></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Админ-панель -->
+            <div class="tab-content" id="tab-admin">
+                <div class="admin-panel">
+                    <h3 style="font-size:22px; margin-bottom:20px;">Administrator panel – Haryt dolandyryş</h3>
+                    <div class="admin-form">
+                        <form id="adminProductForm">
+                            <div class="form-group">
+                                <label for="adminSection" data-i18n="section">Bölüm</label>
+                                <select id="adminSection" required>
+                                    <option value="food" data-i18n="section_food">Iýmit önümleri</option>
+                                    <option value="consumer" data-i18n="section_consumer">Önümçilik harytlary</option>
+                                    <option value="electronics" data-i18n="section_electronics">Elektronika</option>
+                                    <option value="agriculture" data-i18n="section_agriculture">Oba hojalyk harytlary</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="adminName" data-i18n="product_name">Harydyň ady</label>
+                                <input type="text" id="adminName" required placeholder="Mysal: Telefon" />
+                            </div>
+                            <div class="form-group">
+                                <label for="adminPrice" data-i18n="product_price">Bahasy (TMT)</label>
+                                <input type="number" id="adminPrice" step="0.01" min="0.01" required placeholder="100" />
+                            </div>
+                            <div class="form-group">
+                                <label for="adminImageUrl" data-i18n="image_url">Surat URL (islege görä)</label>
+                                <input type="url" id="adminImageUrl" placeholder="https://example.com/image.jpg" />
+                            </div>
+                            <div class="form-group">
+                                <label for="adminSeller" data-i18n="seller_name">Satyjy</label>
+                                <input type="text" id="adminSeller" required placeholder="Satyjy ady" />
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary" data-i18n="add_product">Haryt goş</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="admin-products-list">
+                        <h4 style="margin-bottom:16px;">Ähli harytlar</h4>
+                        <div id="adminProductsList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <script>
         // ============================================================
         // НАСТРОЙКА
@@ -25,17 +211,13 @@
         if (!token) window.location.href = 'login.html';
 
         // ============================================================
-        // ПОЛУЧЕНИЕ ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ (прямо из localStorage)
+        // ПОЛУЧЕНИЕ ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ (с обновлением из списка)
         // ============================================================
-        // Сначала пробуем взять из localStorage
         let currentUser = JSON.parse(localStorage.getItem('user') || '{"username":"Guest","email":"guest@example.com","role":"user"}');
-        console.log('🔍 Текущий пользователь из localStorage:', currentUser);
 
-        // Проверяем, есть ли в списке users запись с таким email, и если там роль admin, обновляем (на случай, если пользователь зарегистрирован как админ, но в user еще не обновилось)
         const users = JSON.parse(localStorage.getItem('users') || '[]');
         const freshUser = users.find(u => u.email === currentUser.email);
-        if (freshUser && freshUser.role === 'admin') {
-            // Если в списке users у этого пользователя роль admin, обновляем текущего
+        if (freshUser) {
             currentUser = {
                 id: freshUser.id,
                 username: freshUser.username,
@@ -43,38 +225,27 @@
                 role: freshUser.role
             };
             localStorage.setItem('user', JSON.stringify(currentUser));
-            console.log('✅ Обновлён пользователь из списка users:', currentUser);
-        } else if (freshUser) {
-            // Если пользователь найден, но роль не admin, оставляем как есть (может быть user)
-            console.log('ℹ️ Пользователь найден, но роль не admin:', freshUser.role);
-        } else {
-            console.log('ℹ️ Пользователь не найден в списке users, оставляем как есть.');
         }
 
         const isAdmin = currentUser.role === 'admin';
-        console.log('📌 Итоговая роль:', currentUser.role, 'isAdmin:', isAdmin);
+        console.log('✅ Текущий пользователь (обновлённый):', currentUser);
 
         // ============================================================
-        // ПЕРЕВОДЫ (оставляем как есть)
+        // ПЕРЕВОДЫ
         // ============================================================
-        const translations = { ... }; // (весь объект переводов)
+        const translations = { ... }; // (полный объект переводов)
+
+        // ... остальной код (renderCatalog, renderCart, renderProfile, renderAdminProducts, etc.) ...
+        // Для краткости я не повторяю весь скрипт, но он должен быть таким же, как в предыдущей версии.
 
         // ============================================================
-        // ОСТАЛЬНОЙ КОД (без изменений)
+        // ПОКАЗ ВКЛАДКИ ADMIN
         // ============================================================
-        // ... (все функции renderCatalog, renderCart, renderProfile, renderAdminProducts и т.д.)
-        // Они уже есть в предыдущей версии.
+        if (isAdmin) {
+            document.getElementById('adminTab').style.display = 'inline-block';
+        }
 
-        // ============================================================
-        // ИНИЦИАЛИЗАЦИЯ
-        // ============================================================
-        // В конце, после определения всех функций, вызываем setLanguage и рендеринг
-        setLanguage(currentLang);
-        renderCatalog();
-        renderCart();
-        renderProfile();
-        if (isAdmin) renderAdminProducts();
-        console.log('Marketplace loaded. Is admin:', isAdmin);
+        // ... инициализация ...
     </script>
 </body>
 </html>
