@@ -3,121 +3,220 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>СФЕРА — Marketpleýs</title>
+    <title>СФЕРА — Milli Sanly Marketpleýs</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/css/style.css" />
     <style>
-        /* Все стили как в предыдущей версии — без изменений */
-        /* Я не буду дублировать их здесь, чтобы не перегружать ответ, но они должны быть скопированы из моего предыдущего сообщения */
+        /* Расширенные стили для современного маркетплейса SFERA */
+        .marketplace { padding: 100px 0 60px; min-height: 100vh; }
+        .mp-header-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 25px; }
+        .mp-title-zone h1 { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #fff, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .mp-title-zone p { color: #9fb5c8; font-size: 14px; margin-top: 4px; }
+        
+        /* Переключатель сегментов контрагентов (B2C / B2B / B2G) */
+        .segment-selector { display: flex; gap: 10px; background: rgba(255,255,255,0.05); padding: 6px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; flex-wrap: wrap; }
+        .segment-btn { flex: 1; min-width: 160px; padding: 12px 18px; border: none; border-radius: 12px; background: transparent; color: #9fb5c8; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .segment-btn.active { background: linear-gradient(135deg, #00d4ff, #1f6bff); color: #fff; box-shadow: 0 8px 20px rgba(0,212,255,0.3); }
+        .segment-btn:hover:not(.active) { background: rgba(255,255,255,0.08); color: #fff; }
+
+        /* Поиск и фильтрация */
+        .search-filter-bar { display: flex; gap: 12px; margin-bottom: 30px; }
+        .search-input { flex: 1; padding: 14px 20px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: #fff; font-size: 15px; outline: none; transition: 0.3s; }
+        .search-input:focus { border-color: #00d4ff; box-shadow: 0 0 15px rgba(0,212,255,0.2); }
+
+        /* Сетка товаров */
+        .section-title { font-size: 22px; font-weight: 700; color: #fff; margin: 30px 0 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+        .product-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 16px; backdrop-filter: blur(15px); transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
+        .product-card:hover { transform: translateY(-5px); border-color: rgba(0,212,255,0.4); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        .product-card .badge { position: absolute; top: 12px; left: 12px; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .badge-b2c { background: rgba(0,212,255,0.2); color: #00d4ff; border: 1px solid rgba(0,212,255,0.4); }
+        .badge-b2b { background: rgba(0,255,163,0.2); color: #00ffa3; border: 1px solid rgba(0,255,163,0.4); }
+        .badge-b2g { background: rgba(255,184,0,0.2); color: #ffb800; border: 1px solid rgba(255,184,0,0.4); }
+
+        .product-card .image { width: 100%; height: 160px; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+        .product-card .image img { width: 100%; height: 100%; object-fit: cover; }
+        .product-card .image .no-img { font-size: 40px; opacity: 0.5; }
+        .product-card .name { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 6px; line-height: 1.3; }
+        .product-card .price { font-size: 20px; font-weight: 800; color: #00ffa3; margin-bottom: 4px; }
+        .product-card .seller { font-size: 12px; color: #9fb5c8; margin-bottom: 12px; }
+
+        /* Кнопки и интерфейс */
+        .btn { padding: 10px 18px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 14px; }
+        .btn-primary { background: linear-gradient(135deg, #00d4ff, #008cff); color: #fff; width: 100%; }
+        .btn-primary:hover { box-shadow: 0 5px 15px rgba(0,212,255,0.4); transform: translateY(-2px); }
+        .btn-danger { background: rgba(255,77,77,0.2); color: #ff4d4d; border: 1px solid rgba(255,77,77,0.4); }
+        .btn-danger:hover { background: #ff4d4d; color: #fff; }
+        .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; }
+
+        /* Табы управления */
+        .mp-tabs { display: flex; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 25px; }
+        .mp-tabs button { padding: 12px 24px; background: transparent; border: none; color: #9fb5c8; font-size: 16px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; transition: 0.3s; }
+        .mp-tabs button.active { color: #00d4ff; border-bottom-color: #00d4ff; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Профиль и история */
+        .profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .profile-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; }
+        .profile-card h3 { font-size: 18px; margin-bottom: 16px; color: #00d4ff; }
+        .profile-card .row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+
+        /* Админка */
+        .admin-panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; }
+        .admin-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .admin-form .form-group label { display: block; font-size: 13px; color: #9fb5c8; margin-bottom: 6px; }
+        .admin-form .form-group input, .admin-form .form-group select { width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.2); color: #fff; }
     </style>
 </head>
 <body>
     <div id="particles"></div>
+
     <header>
         <div class="container">
-            <a href="index.html" class="logo"><!-- SVG логотип --><div class="logo-text"><h2>SFERA</h2><p>Milli Sanly Platforma</p></div></a>
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3"/>
+                                <stop offset="50%" stop-color="#00d4ff"/>
+                                <stop offset="100%" stop-color="#1f6bff"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15"/>
+                        <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3"/>
+                        <circle cx="48" cy="48" r="3.5" fill="#ffffff"/>
+                    </svg>
+                </div>
+                <div class="logo-text"><h2>SFERA</h2><p>Milli Sanly Platforma</p></div>
+            </a>
             <div class="header-right" style="display:flex; align-items:center; gap:12px;">
                 <span class="user-info" id="userDisplay">👤 <strong id="username">User</strong></span>
-                <a href="dashboard.html" class="btn btn-outline" data-i18n="back" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Yza</a>
+                <a href="index.html" class="btn btn-outline" style="padding:6px 14px; font-size:13px;">← Bas sahypa</a>
                 <button class="lang" id="langBtn">TM</button>
-                <button class="logout-btn" id="logoutBtn" data-i18n="logout" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
+                <button class="logout-btn" id="logoutBtn" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:6px 14px; border-radius:10px; cursor:pointer;">Çykmak</button>
             </div>
         </div>
     </header>
 
     <section class="marketplace">
         <div class="container">
-            <div class="marketplace-header">
-                <h1>🛒 Marketpleýs</h1>
-                <div class="actions">
-                    <button class="btn btn-outline" id="refreshBtn" data-i18n="refresh">⟳ Täzele</button>
+            <div class="mp-header-bar">
+                <div class="mp-title-zone">
+                    <h1>🛒 SFERA Marketpleýs</h1>
+                    <p>Частные продажи • Бизнес-поставки (B2B) • Государственные закупки (B2G)</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline" id="refreshBtn">⟳ Täzele</button>
                 </div>
             </div>
 
             <div id="message" class="message"></div>
 
-            <div class="mp-tabs">
-                <button class="active" data-tab="catalog" data-i18n="tab_catalog">Katalog</button>
-                <button data-tab="cart" data-i18n="tab_cart">Sebet (<span id="cartCount">0</span>)</button>
-                <button data-tab="profile" data-i18n="tab_profile">Şahsy kabinet</button>
-                <button id="adminTab" data-tab="admin" style="display:none;" data-i18n="tab_admin">Admin</button>
+            <!-- Сегменты рынка -->
+            <div class="segment-selector">
+                <button class="segment-btn active" data-segment="all">🌐 Ähli harytlar (Все)</button>
+                <button class="segment-btn" data-segment="b2c">👤 Частные лица (B2C)</button>
+                <button class="segment-btn" data-segment="b2b">🏢 Предприниматели (B2B)</button>
+                <button class="segment-btn" data-segment="b2g">🏛️ Госструктуры (B2G)</button>
             </div>
 
-            <!-- Каталог -->
-            <div class="tab-content active" id="tab-catalog"><div id="catalogContent"></div></div>
+            <!-- Вкладки платформы -->
+            <div class="mp-tabs">
+                <button class="active" data-tab="catalog">Katalog</button>
+                <button data-tab="cart">Sebet (<span id="cartCount">0</span>)</button>
+                <button data-tab="profile">Şahsy kabinet</button>
+                <button id="adminTab" data-tab="admin" style="display:none; color:#00ffa3;">Admin Panel</button>
+            </div>
 
-            <!-- Корзина -->
+            <!-- ПОИСК -->
+            <div class="search-filter-bar">
+                <input type="text" id="searchInput" class="search-input" placeholder="Harytlary gözlemek... / Поиск товаров и тендеров..." />
+            </div>
+
+            <!-- КАТАЛОГ -->
+            <div class="tab-content active" id="tab-catalog">
+                <div id="catalogContent"></div>
+            </div>
+
+            <!-- КОРЗИНА -->
             <div class="tab-content" id="tab-cart">
                 <div id="cartContent">
-                    <div class="empty-state" id="emptyCart"><div class="icon">🛒</div><p data-i18n="empty_cart">Sebet boş</p></div>
+                    <div class="empty-state" id="emptyCart" style="text-align:center; padding:40px;"><div style="font-size:48px;">🛒</div><p>Sebet boş</p></div>
                     <div id="cartItems" style="display:none;"></div>
-                    <div id="cartTotal" style="display:none;" class="cart-total">
-                        <p>Jemi: <span id="totalAmount">0.00</span> TMT</p>
-                        <button class="btn btn-success" id="checkoutBtn" data-i18n="checkout">Sargyt et</button>
+                    <div id="cartTotal" style="display:none; margin-top:20px; background:rgba(255,255,255,0.05); padding:20px; border-radius:16px; text-align:right;">
+                        <p style="font-size:20px; font-weight:700;">Jemi: <span id="totalAmount" style="color:#00ffa3;">0.00</span> TMT</p>
+                        <button class="btn btn-primary" id="checkoutBtn" style="max-width:220px; margin-top:10px;">Sargyt et</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Личный кабинет -->
+            <!-- ПРОФИЛЬ -->
             <div class="tab-content" id="tab-profile">
                 <div class="profile-grid">
                     <div class="profile-card">
-                        <h3 data-i18n="profile_info">Profil maglumatlary</h3>
-                        <div class="row"><span class="label" data-i18n="username_label">Ulanyjy ady</span><span class="value" id="profileUsername">User</span></div>
-                        <div class="row"><span class="label" data-i18n="email_label">Email</span><span class="value" id="profileEmail">user@example.com</span></div>
-                        <div class="row"><span class="label" data-i18n="phone_label">Telefon</span><span class="value" id="profilePhone">+993 63 000000</span></div>
-                        <div class="row"><span class="label" data-i18n="role_label">Rol</span><span class="value" id="profileRole">user</span></div>
-                        <div class="row"><span class="label" data-i18n="member_since">Agza bolan</span><span class="value" id="profileSince">2024</span></div>
-                        <button class="btn btn-outline" style="margin-top:16px; width:100%;" data-i18n="edit_profile">Profil üýtget</button>
+                        <h3>Profil maglumatlary</h3>
+                        <div class="row"><span>Ulanyjy ady:</span><span id="profileUsername">User</span></div>
+                        <div class="row"><span>Email:</span><span id="profileEmail">user@example.com</span></div>
+                        <div class="row"><span>Статус контрагента:</span><span id="profileUserType" style="color:#00d4ff; font-weight:600;">Физическое лицо</span></div>
+                        <div class="row"><span>Rol:</span><span id="profileRole">user</span></div>
                     </div>
                     <div class="profile-card">
-                        <h3 data-i18n="order_history">Sargyt taryhy</h3>
-                        <div id="orderHistory"><div class="empty-state" style="padding:20px 0;"><p data-i18n="no_orders">Sargyt ýok</p></div></div>
+                        <h3>Sargyt taryhy (Заказы)</h3>
+                        <div id="orderHistory"><p style="color:#9fb5c8;">Sargyt ýok</p></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Админ-панель -->
+            <!-- АДМИН ПАНЕЛЬ -->
             <div class="tab-content" id="tab-admin">
                 <div class="admin-panel">
-                    <h3 style="font-size:22px; margin-bottom:20px;">Administrator panel – Haryt dolandyryş</h3>
-                    <div class="admin-form">
-                        <form id="adminProductForm">
+                    <h3>Управление каталогом и государственными закупками</h3>
+                    <form id="adminProductForm" style="margin-top:15px;">
+                        <div class="admin-form">
                             <div class="form-group">
-                                <label for="adminSection" data-i18n="section">Bölüm</label>
-                                <select id="adminSection" required>
-                                    <option value="food" data-i18n="section_food">Iýmit önümleri</option>
-                                    <option value="consumer" data-i18n="section_consumer">Önümçilik harytlary</option>
-                                    <option value="electronics" data-i18n="section_electronics">Elektronika</option>
-                                    <option value="agriculture" data-i18n="section_agriculture">Oba hojalyk harytlary</option>
+                                <label>Сегмент рынка</label>
+                                <select id="adminSegment" required>
+                                    <option value="b2c">B2C — Частные потребители</option>
+                                    <option value="b2b">B2B — Коммерческие поставки</option>
+                                    <option value="b2g">B2G — Государственный заказ</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="adminName" data-i18n="product_name">Harydyň ady</label>
-                                <input type="text" id="adminName" required placeholder="Mysal: Telefon" />
+                                <label>Категория</label>
+                                <select id="adminCategory" required>
+                                    <option value="electronics">Электроника и IT</option>
+                                    <option value="industry">Промышленность и Сырье</option>
+                                    <option value="food">Продукты питания</option>
+                                    <option value="agriculture">Сельское хозяйство</option>
+                                    <option value="gov_tenders">Гос. Тендеры и Контракты</option>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="adminPrice" data-i18n="product_price">Bahasy (TMT)</label>
-                                <input type="number" id="adminPrice" step="0.01" min="0.01" required placeholder="100" />
+                                <label>Наименование товара / лота</label>
+                                <input type="text" id="adminName" placeholder="Название" required />
                             </div>
                             <div class="form-group">
-                                <label for="adminImageUrl" data-i18n="image_url">Surat URL (islege görä)</label>
-                                <input type="url" id="adminImageUrl" placeholder="https://example.com/image.jpg" />
+                                <label>Цена (TMT)</label>
+                                <input type="number" id="adminPrice" step="0.01" required placeholder="0.00" />
                             </div>
                             <div class="form-group">
-                                <label for="adminSeller" data-i18n="seller_name">Satyjy</label>
-                                <input type="text" id="adminSeller" required placeholder="Satyjy ady" />
+                                <label>Продавец / Поставщик</label>
+                                <input type="text" id="adminSeller" required placeholder="ООО / ИП / Ведомство" />
                             </div>
-                            <div class="form-actions">
-                                <button type="submit" class="btn btn-primary" data-i18n="add_product">Haryt goş</button>
+                            <div class="form-group">
+                                <label>Ссылка на фото (URL)</label>
+                                <input type="url" id="adminImageUrl" placeholder="https://..." />
                             </div>
-                        </form>
-                    </div>
-                    <div class="admin-products-list">
-                        <h4 style="margin-bottom:16px;">Ähli harytlar</h4>
-                        <div id="adminProductsList"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="max-width:200px;">Добавить товар/лот</button>
+                    </form>
+                    <div style="margin-top:30px;">
+                        <h4>Все текущие позиций</h4>
+                        <div id="adminProductsList" style="margin-top:15px;"></div>
                     </div>
                 </div>
             </div>
@@ -125,142 +224,236 @@
     </section>
 
     <script>
-        // ============================================================
-        // НАСТРОЙКА
-        // ============================================================
-        const API_BASE_URL = 'https://sfera-1.onrender.com';
+        // Проверка авторизации
         const token = localStorage.getItem('token');
-        if (!token) {
-            window.location.href = 'login.html';
-        }
+        if (!token) { window.location.href = 'login.html'; }
 
-        // ============================================================
-        // ПОЛУЧЕНИЕ ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ (с принудительным обновлением)
-        // ============================================================
-        let currentUser = JSON.parse(localStorage.getItem('user') || '{"username":"Guest","email":"guest@example.com","role":"user"}');
+        let currentUser = JSON.parse(localStorage.getItem('user') || '{"username":"Guest","email":"user@example.com","role":"user","userType":"private"}');
+        const isAdmin = currentUser.role === 'admin' || currentUser.email === 'admin@dtm.tm';
 
-        // Синхронизируем с актуальным списком пользователей
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        const freshUser = users.find(u => u.email === currentUser.email);
-        if (freshUser) {
-            currentUser = {
-                id: freshUser.id,
-                username: freshUser.username,
-                email: freshUser.email,
-                role: freshUser.role
-            };
-            localStorage.setItem('user', JSON.stringify(currentUser));
-        }
+        // Отображение профиля
+        document.getElementById('username').textContent = currentUser.username;
+        if (isAdmin) { document.getElementById('adminTab').style.display = 'inline-block'; }
 
-        const isAdmin = currentUser.role === 'admin';
-        console.log('✅ Текущий пользователь (обновлённый):', currentUser);
-        console.log('✅ isAdmin:', isAdmin);
+        // База данных товаров с сегментацией B2C / B2B / B2G
+        let defaultProducts = [
+            // B2C
+            { id: 'p1', segment: 'b2c', category: 'electronics', name: 'Смартфон SFERA X1 Pro', price: 3200, seller: 'Tech Store', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300' },
+            { id: 'p2', segment: 'b2c', category: 'food', name: 'Мука пшеничная (5 кг)', price: 45, seller: 'Milli Önüm', image: '' },
+            
+            // B2B
+            { id: 'p3', segment: 'b2b', category: 'industry', name: 'Станок ЧПУ промышленный', price: 125000, seller: 'Türkmen Mashin', image: '' },
+            { id: 'p4', segment: 'b2b', category: 'agriculture', name: 'Удобрения азотные (1 тонна)', price: 4800, seller: 'AgroXimya', image: '' },
 
-        // ============================================================
-        // ПЕРЕВОДЫ (сокращённые)
-        // ============================================================
-        const translations = {
-            tm: {
-                logout: "Çykmak", back: "← Yza", refresh: "Täzele",
-                tab_catalog: "Katalog", tab_cart: "Sebet", tab_profile: "Şahsy kabinet", tab_admin: "Admin",
-                empty_cart: "Sebet boş", checkout: "Sargyt et",
-                profile_info: "Profil maglumatlary", username_label: "Ulanyjy ady", email_label: "Email",
-                phone_label: "Telefon", role_label: "Rol", member_since: "Agza bolan", edit_profile: "Profil üýtget",
-                order_history: "Sargyt taryhy", no_orders: "Sargyt ýok", add_to_cart: "Sebede goş",
-                remove: "Aýyr", product_added: "Haryt sebedä goşuldy!", product_removed: "Haryt sebedä aýryldy!",
-                order_placed: "Sargyt üstünlikli ýerleşdirildi!",
-                section: "Bölüm", section_food: "Iýmit önümleri", section_consumer: "Önümçilik harytlary",
-                section_electronics: "Elektronika", section_agriculture: "Oba hojalyk harytlary",
-                product_name: "Harydyň ady", product_price: "Bahasy (TMT)", image_url: "Surat URL (islege görä)",
-                seller_name: "Satyjy", add_product: "Haryt goş", product_added_admin: "Haryt üstünlikli goşuldy!",
-                product_deleted: "Haryt pozuldy!", admin_only: "Bu bölüm diňe administratorlar üçin."
-            },
-            ru: {
-                logout: "Выйти", back: "← Назад", refresh: "Обновить",
-                tab_catalog: "Каталог", tab_cart: "Корзина", tab_profile: "Личный кабинет", tab_admin: "Админ",
-                empty_cart: "Корзина пуста", checkout: "Оформить заказ",
-                profile_info: "Информация профиля", username_label: "Имя пользователя", email_label: "Email",
-                phone_label: "Телефон", role_label: "Роль", member_since: "Участник с", edit_profile: "Редактировать профиль",
-                order_history: "История заказов", no_orders: "Заказов нет", add_to_cart: "В корзину",
-                remove: "Убрать", product_added: "Товар добавлен в корзину!", product_removed: "Товар убран из корзины!",
-                order_placed: "Заказ успешно оформлен!",
-                section: "Раздел", section_food: "Продукты питания", section_consumer: "Промтовары",
-                section_electronics: "Электроника", section_agriculture: "Сельхоз товары",
-                product_name: "Название товара", product_price: "Цена (TMT)", image_url: "URL картинки (опционально)",
-                seller_name: "Продавец", add_product: "Добавить товар", product_added_admin: "Товар успешно добавлен!",
-                product_deleted: "Товар удален!", admin_only: "Этот раздел доступен только администраторам."
-            },
-            en: {
-                logout: "Logout", back: "← Back", refresh: "Refresh",
-                tab_catalog: "Catalog", tab_cart: "Cart", tab_profile: "Profile", tab_admin: "Admin",
-                empty_cart: "Cart is empty", checkout: "Checkout",
-                profile_info: "Profile info", username_label: "Username", email_label: "Email",
-                phone_label: "Phone", role_label: "Role", member_since: "Member since", edit_profile: "Edit profile",
-                order_history: "Order history", no_orders: "No orders", add_to_cart: "Add to cart",
-                remove: "Remove", product_added: "Product added to cart!", product_removed: "Product removed from cart!",
-                order_placed: "Order placed successfully!",
-                section: "Section", section_food: "Food products", section_consumer: "Consumer goods",
-                section_electronics: "Electronics", section_agriculture: "Agricultural products",
-                product_name: "Product name", product_price: "Price (TMT)", image_url: "Image URL (optional)",
-                seller_name: "Seller", add_product: "Add product", product_added_admin: "Product added successfully!",
-                product_deleted: "Product deleted!", admin_only: "This section is for admins only."
+            // B2G
+            { id: 'p5', segment: 'b2g', category: 'gov_tenders', name: 'Лот №402: Поставка серверов для госучреждений', price: 450000, seller: 'Министерство связи', image: '' },
+            { id: 'p6', segment: 'b2g', category: 'gov_tenders', name: 'Лот №109: Закупка спецтехники для дорожных работ', price: 890000, seller: 'Госстрой', image: '' }
+        ];
+
+        let products = JSON.parse(localStorage.getItem('marketplace_db')) || defaultProducts;
+        localStorage.setItem('marketplace_db', JSON.stringify(products));
+
+        let cart = JSON.parse(localStorage.getItem('marketplace_cart') || '[]');
+        let activeSegment = 'all';
+        let searchQuery = '';
+
+        // Отрисовка каталога
+        function renderCatalog() {
+            const container = document.getElementById('catalogContent');
+            let filtered = products.filter(p => {
+                const matchSegment = activeSegment === 'all' || p.segment === activeSegment;
+                const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.seller.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchSegment && matchSearch;
+            });
+
+            if (!filtered.length) {
+                container.innerHTML = `<div style="text-align:center; padding:50px; color:#9fb5c8;"><h3>Товары не найдены</h3></div>`;
+                return;
             }
+
+            let html = '<div class="products-grid">';
+            filtered.forEach(p => {
+                const badgeClass = p.segment === 'b2c' ? 'badge-b2c' : (p.segment === 'b2b' ? 'badge-b2b' : 'badge-b2g');
+                const badgeLabel = p.segment === 'b2c' ? 'B2C • Частный' : (p.segment === 'b2b' ? 'B2B • Бизнес' : 'B2G • Госзаказ');
+                
+                html += `
+                    <div class="product-card">
+                        <span class="badge ${badgeClass}">${badgeLabel}</span>
+                        <div class="image">
+                            ${p.image ? `<img src="${p.image}" alt="${p.name}"/>` : `<div class="no-img">📦</div>`}
+                        </div>
+                        <div>
+                            <div class="name">${p.name}</div>
+                            <div class="price">${p.price.toFixed(2)} TMT</div>
+                            <div class="seller">Поставщик: ${p.seller}</div>
+                        </div>
+                        <button class="btn btn-primary add-to-cart" data-id="${p.id}">В корзину</button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+
+            container.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const prod = products.find(x => x.id === this.dataset.id);
+                    if (prod) addToCart(prod);
+                });
+            });
+        }
+
+        // Работа с корзиной
+        function addToCart(prod) {
+            const item = cart.find(x => x.id === prod.id);
+            if (item) item.qty++;
+            else cart.push({ ...prod, qty: 1 });
+            localStorage.setItem('marketplace_cart', JSON.stringify(cart));
+            updateCartCount();
+            showMessage('Товар добавлен в корзину!', 'success');
+        }
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, i) => sum + i.qty, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            const empty = document.getElementById('emptyCart');
+            const totalDiv = document.getElementById('cartTotal');
+
+            if (!cart.length) {
+                empty.style.display = 'block';
+                container.style.display = 'none';
+                totalDiv.style.display = 'none';
+                return;
+            }
+
+            empty.style.display = 'none';
+            container.style.display = 'block';
+            totalDiv.style.display = 'block';
+
+            let total = 0;
+            let html = '';
+            cart.forEach(item => {
+                const sum = item.price * item.qty;
+                total += sum;
+                html += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.04); padding:12px 20px; border-radius:12px; margin-bottom:10px;">
+                        <div>
+                            <strong style="color:#fff;">${item.name}</strong>
+                            <div style="font-size:12px; color:#9fb5c8;">${item.price} TMT x ${item.qty}</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <span style="color:#00ffa3; font-weight:700;">${sum.toFixed(2)} TMT</span>
+                            <button class="btn btn-danger" onclick="removeFromCart('${item.id}')">✕</button>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+            document.getElementById('totalAmount').textContent = total.toFixed(2);
+        }
+
+        window.removeFromCart = function(id) {
+            cart = cart.filter(x => x.id !== id);
+            localStorage.setItem('marketplace_cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCart();
         };
 
-        let currentLang = localStorage.getItem('lang') || 'tm';
-        let cart = JSON.parse(localStorage.getItem('marketplace_cart') || '[]');
-        let orders = JSON.parse(localStorage.getItem('marketplace_orders') || '[]');
-        let products = JSON.parse(localStorage.getItem('marketplace_products'));
-        if (!products) {
-            products = {
-                food: [
-                    { id: 'f1', name: 'Un (5 kg)', price: 45, image: 'https://via.placeholder.com/200/ffffff/000000?text=Un', seller: 'Aýdar' },
-                    { id: 'f2', name: 'Ýag (1 l)', price: 25, image: 'https://via.placeholder.com/200/ffffff/000000?text=Yag', seller: 'Meret' },
-                ],
-                consumer: [
-                    { id: 'c1', name: 'Çeňňek (şaý-seý)', price: 80, image: 'https://via.placeholder.com/200/ffffff/000000?text=Cennik', seller: 'Oguljeren' },
-                ],
-                electronics: [
-                    { id: 'e1', name: 'Telefon', price: 250, image: 'https://via.placeholder.com/200/ffffff/000000?text=Phone', seller: 'Saparmyrat' },
-                ],
-                agriculture: [
-                    { id: 'a1', name: 'Bugdaý (100 kg)', price: 120, image: 'https://via.placeholder.com/200/ffffff/000000?text=Wheat', seller: 'Saparmyrat' },
-                ]
-            };
-            localStorage.setItem('marketplace_products', JSON.stringify(products));
-        }
-
-        // ============================================================
-        // ФУНКЦИИ
-        // ============================================================
-        function setLanguage(lang) {
-            if (!translations[lang]) return;
-            currentLang = lang;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
-                        el.placeholder = translations[lang][key];
-                    } else {
-                        el.textContent = translations[lang][key];
-                    }
-                }
+        // Фильтрация по сегментам (B2C, B2B, B2G)
+        document.querySelectorAll('.segment-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                activeSegment = this.dataset.segment;
+                renderCatalog();
             });
-            document.getElementById('langBtn').textContent = lang.toUpperCase();
-            document.getElementById('logoutBtn').textContent = translations[lang].logout;
-            localStorage.setItem('lang', lang);
+        });
+
+        // Поиск
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            searchQuery = e.target.value;
             renderCatalog();
-            renderCart();
-            renderProfile();
-            if (isAdmin) renderAdminProducts();
+        });
+
+        // Переключение табов
+        document.querySelectorAll('.mp-tabs button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.mp-tabs button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const tab = this.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.getElementById('tab-' + tab).classList.add('active');
+                if (tab === 'cart') renderCart();
+                if (tab === 'profile') renderProfile();
+                if (tab === 'admin' && isAdmin) renderAdminProducts();
+            });
+        });
+
+        function renderProfile() {
+            document.getElementById('profileUsername').textContent = currentUser.username;
+            document.getElementById('profileEmail').textContent = currentUser.email;
+            document.getElementById('profileRole').textContent = currentUser.role;
+            document.getElementById('profileUserType').textContent = currentUser.email === 'admin@dtm.tm' ? 'Государственный орган / Админ' : 'Частное / Юридическое лицо';
         }
 
-        document.getElementById('langBtn').addEventListener('click', function() {
-            const cycle = ['tm', 'ru', 'en'];
-            let idx = cycle.indexOf(currentLang);
-            idx = (idx + 1) % cycle.length;
-            setLanguage(cycle[idx]);
+        // Добавление товаров в админке
+        document.getElementById('adminProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!isAdmin) return;
+
+            const newProd = {
+                id: 'p_' + Date.now(),
+                segment: document.getElementById('adminSegment').value,
+                category: document.getElementById('adminCategory').value,
+                name: document.getElementById('adminName').value.trim(),
+                price: parseFloat(document.getElementById('adminPrice').value),
+                seller: document.getElementById('adminSeller').value.trim(),
+                image: document.getElementById('adminImageUrl').value.trim()
+            };
+
+            products.unshift(newProd);
+            localStorage.setItem('marketplace_db', JSON.stringify(products));
+            renderCatalog();
+            renderAdminProducts();
+            this.reset();
+            showMessage('Новый лот/товар успешно добавлен!', 'success');
         });
+
+        function renderAdminProducts() {
+            const container = document.getElementById('adminProductsList');
+            let html = '';
+            products.forEach(p => {
+                html += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:10px 16px; border-radius:10px; margin-bottom:8px;">
+                        <div>
+                            <strong>[${p.segment.toUpperCase()}] ${p.name}</strong> — ${p.price} TMT (${p.seller})
+                        </div>
+                        <button class="btn btn-danger" style="padding:4px 10px; font-size:12px;" onclick="deleteProduct('${p.id}')">Удалить</button>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        window.deleteProduct = function(id) {
+            products = products.filter(x => x.id !== id);
+            localStorage.setItem('marketplace_db', JSON.stringify(products));
+            renderCatalog();
+            renderAdminProducts();
+            showMessage('Удалено', 'success');
+        };
+
+        // Вспомогательные функции
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = 'message ' + type;
+            msg.style.display = 'block';
+            setTimeout(() => { msg.style.display = 'none'; }, 3000);
+        }
 
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('token');
@@ -268,383 +461,11 @@
             window.location.href = 'login.html';
         });
 
-        // ============================================================
-        // КАТАЛОГ
-        // ============================================================
-        function renderCatalog() {
-            const container = document.getElementById('catalogContent');
-            const lang = currentLang;
-            const sections = [
-                { id: 'food', key: 'section_food', icon: '🍎' },
-                { id: 'consumer', key: 'section_consumer', icon: '🧺' },
-                { id: 'electronics', key: 'section_electronics', icon: '💡' },
-                { id: 'agriculture', key: 'section_agriculture', icon: '🌱' }
-            ];
-            let html = '';
-            sections.forEach(sec => {
-                const items = products[sec.id] || [];
-                if (!items.length) return;
-                html += `<div class="section-title">${translations[lang][sec.key] || sec.id} ${sec.icon}</div>`;
-                html += `<div class="products-grid">`;
-                items.forEach(p => {
-                    const imgHtml = p.image ? `<img src="${p.image}" alt="${p.name}" />` : `<div class="no-img">📦</div>`;
-                    html += `
-                        <div class="product-card">
-                            <div class="image">${imgHtml}</div>
-                            <div class="name">${p.name}</div>
-                            <div class="price">${p.price.toFixed(2)} TMT</div>
-                            <div class="seller">Satyjy: ${p.seller}</div>
-                            <button class="btn btn-primary add-to-cart" data-id="${p.id}" data-name="${p.name}" data-price="${p.price}" data-image="${p.image || ''}" data-seller="${p.seller}">${translations[lang].add_to_cart}</button>
-                            ${isAdmin ? `<button class="btn btn-danger delete-product" data-id="${p.id}" style="margin-top:6px;">Poz</button>` : ''}
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-            });
-            container.innerHTML = html || `<div class="empty-state"><div class="icon">📭</div><p>Hiç hili haryt ýok</p></div>`;
+        document.getElementById('refreshBtn').addEventListener('click', renderCatalog);
 
-            container.querySelectorAll('.add-to-cart').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    addToCart({
-                        id: this.dataset.id,
-                        name: this.dataset.name,
-                        price: parseFloat(this.dataset.price),
-                        image: this.dataset.image,
-                        seller: this.dataset.seller
-                    });
-                });
-            });
-            if (isAdmin) {
-                container.querySelectorAll('.delete-product').forEach(btn => {
-                    btn.addEventListener('click', function() { deleteProduct(this.dataset.id); });
-                });
-            }
-        }
-
-        // ============================================================
-        // КОРЗИНА
-        // ============================================================
-        function addToCart(product) {
-            const existing = cart.find(item => item.id === product.id);
-            if (existing) existing.qty += 1;
-            else cart.push({ ...product, qty: 1 });
-            localStorage.setItem('marketplace_cart', JSON.stringify(cart));
-            renderCart();
-            showMessage(translations[currentLang].product_added, 'success');
-        }
-
-        function removeFromCart(id) {
-            cart = cart.filter(item => item.id !== id);
-            localStorage.setItem('marketplace_cart', JSON.stringify(cart));
-            renderCart();
-            showMessage(translations[currentLang].product_removed, 'success');
-        }
-
-        function changeQty(id, delta) {
-            const item = cart.find(i => i.id === id);
-            if (!item) return;
-            item.qty += delta;
-            if (item.qty <= 0) { removeFromCart(id); return; }
-            localStorage.setItem('marketplace_cart', JSON.stringify(cart));
-            renderCart();
-        }
-
-        function renderCart() {
-            const container = document.getElementById('cartItems');
-            const empty = document.getElementById('emptyCart');
-            const totalDiv = document.getElementById('cartTotal');
-            const totalSpan = document.getElementById('totalAmount');
-            const countSpan = document.getElementById('cartCount');
-
-            if (countSpan) countSpan.textContent = cart.reduce((sum, i) => sum + i.qty, 0);
-            if (!cart.length) {
-                if (empty) empty.style.display = 'block';
-                if (container) container.style.display = 'none';
-                if (totalDiv) totalDiv.style.display = 'none';
-                return;
-            }
-            if (empty) empty.style.display = 'none';
-            if (container) container.style.display = 'block';
-            if (totalDiv) totalDiv.style.display = 'block';
-
-            let html = '', total = 0;
-            cart.forEach(item => {
-                const subtotal = item.price * item.qty;
-                total += subtotal;
-                html += `
-                    <div class="cart-item">
-                        <div class="info">
-                            ${item.image ? `<img src="${item.image}" style="width:40px; height:40px; object-fit:contain; border-radius:8px; background:rgba(255,255,255,.05);" />` : `<span style="font-size:28px;">📦</span>`}
-                            <span class="name">${item.name}</span>
-                            <span class="price">${item.price.toFixed(2)} TMT</span>
-                        </div>
-                        <div class="qty">
-                            <button class="qty-btn" data-id="${item.id}" data-delta="-1">−</button>
-                            <span>${item.qty}</span>
-                            <button class="qty-btn" data-id="${item.id}" data-delta="1">+</button>
-                            <button class="btn btn-danger" style="padding:4px 12px; font-size:12px;" data-id="${item.id}">${translations[currentLang].remove}</button>
-                        </div>
-                    </div>
-                `;
-            });
-            if (container) container.innerHTML = html;
-            if (totalSpan) totalSpan.textContent = total.toFixed(2);
-
-            if (container) {
-                container.querySelectorAll('.qty-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        changeQty(this.dataset.id, parseInt(this.dataset.delta));
-                    });
-                });
-                container.querySelectorAll('.btn-danger').forEach(btn => {
-                    btn.addEventListener('click', function() { removeFromCart(this.dataset.id); });
-                });
-            }
-        }
-
-        document.getElementById('checkoutBtn').addEventListener('click', function() {
-            if (!cart.length) { showMessage(translations[currentLang].empty_cart, 'error'); return; }
-            const order = { id: 'ord' + Date.now(), items: [...cart], total: cart.reduce((s, i) => s + i.price * i.qty, 0), date: new Date().toISOString() };
-            orders.push(order);
-            localStorage.setItem('marketplace_orders', JSON.stringify(orders));
-            cart = [];
-            localStorage.setItem('marketplace_cart', JSON.stringify(cart));
-            renderCart();
-            renderProfile();
-            showMessage(translations[currentLang].order_placed, 'success');
-        });
-
-        // ============================================================
-        // ПРОФИЛЬ (исправлен)
-        // ============================================================
-        function renderProfile() {
-            // Используем обновлённый currentUser
-            document.getElementById('profileUsername').textContent = currentUser.username || 'User';
-            document.getElementById('profileEmail').textContent = currentUser.email || 'user@example.com';
-            document.getElementById('profilePhone').textContent = '+993 63 000000';
-            document.getElementById('profileRole').textContent = currentUser.role || 'user';
-            document.getElementById('profileSince').textContent = '2024';
-
-            const historyDiv = document.getElementById('orderHistory');
-            if (!orders.length) {
-                historyDiv.innerHTML = `<div class="empty-state" style="padding:20px 0;"><p data-i18n="no_orders">Sargyt ýok</p></div>`;
-                return;
-            }
-            historyDiv.innerHTML = orders.map(o => `
-                <div class="order-item">
-                    <div><div><strong>Sargyt #${o.id.slice(-6)}</strong></div><div class="date">${new Date(o.date).toLocaleDateString()}</div></div>
-                    <div class="total">${o.total.toFixed(2)} TMT</div>
-                </div>
-            `).join('');
-        }
-
-        // ============================================================
-        // АДМИН-ПАНЕЛЬ
-        // ============================================================
-        function renderAdminProducts() {
-            const container = document.getElementById('adminProductsList');
-            let html = '';
-            for (const [section, items] of Object.entries(products)) {
-                if (!items.length) continue;
-                items.forEach(p => {
-                    html += `
-                        <div class="product-item">
-                            <div class="info">
-                                ${p.image ? `<img src="${p.image}" />` : `<span style="font-size:24px;">📦</span>`}
-                                <span class="name">${p.name}</span>
-                                <span class="price">${p.price.toFixed(2)} TMT</span>
-                                <span style="color:#9fb5c8; font-size:12px;">(${section})</span>
-                            </div>
-                            <div>
-                                <button class="btn btn-outline edit-product" data-id="${p.id}" style="padding:4px 12px; font-size:12px; margin-right:6px;">✏️</button>
-                                <button class="btn btn-danger delete-admin-product" data-id="${p.id}" style="padding:4px 12px; font-size:12px;">Poz</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-            container.innerHTML = html || `<div class="empty-state"><div class="icon">📭</div><p>Hiç hili haryt ýok</p></div>`;
-
-            container.querySelectorAll('.delete-admin-product').forEach(btn => {
-                btn.addEventListener('click', function() { deleteProduct(this.dataset.id); });
-            });
-            container.querySelectorAll('.edit-product').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    const product = Object.values(products).flat().find(p => p.id === id);
-                    if (product) {
-                        document.getElementById('adminName').value = product.name;
-                        document.getElementById('adminPrice').value = product.price;
-                        document.getElementById('adminImageUrl').value = product.image || '';
-                        document.getElementById('adminSeller').value = product.seller;
-                        for (const [sec, items] of Object.entries(products)) {
-                            if (items.find(p => p.id === id)) {
-                                document.getElementById('adminSection').value = sec;
-                                break;
-                            }
-                        }
-                        const submitBtn = document.querySelector('#adminProductForm button[type="submit"]');
-                        submitBtn.textContent = 'Обновить';
-                        submitBtn.dataset.editId = id;
-                    }
-                });
-            });
-        }
-
-        function deleteProduct(id) {
-            let found = false;
-            for (const section of ['food', 'consumer', 'electronics', 'agriculture']) {
-                const idx = products[section].findIndex(p => p.id === id);
-                if (idx !== -1) {
-                    products[section].splice(idx, 1);
-                    found = true;
-                    break;
-                }
-            }
-            if (found) {
-                localStorage.setItem('marketplace_products', JSON.stringify(products));
-                renderCatalog();
-                if (isAdmin) renderAdminProducts();
-                showMessage(translations[currentLang].product_deleted, 'success');
-            }
-        }
-
-        document.getElementById('adminProductForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (!isAdmin) { showMessage(translations[currentLang].admin_only, 'error'); return; }
-
-            const section = document.getElementById('adminSection').value;
-            const name = document.getElementById('adminName').value.trim();
-            const price = parseFloat(document.getElementById('adminPrice').value);
-            const image = document.getElementById('adminImageUrl').value.trim();
-            const seller = document.getElementById('adminSeller').value.trim();
-            const editId = this.querySelector('button[type="submit"]').dataset.editId;
-
-            if (!name || !price || !seller) {
-                showMessage('Doldurmaly ýerler boş galdy!', 'error');
-                return;
-            }
-
-            if (editId) {
-                // Редактирование
-                let found = false;
-                for (const sec of ['food', 'consumer', 'electronics', 'agriculture']) {
-                    const item = products[sec].find(p => p.id === editId);
-                    if (item) {
-                        item.name = name;
-                        item.price = price;
-                        item.image = image || '';
-                        item.seller = seller;
-                        if (sec !== section) {
-                            products[sec] = products[sec].filter(p => p.id !== editId);
-                            products[section].push(item);
-                        }
-                        found = true;
-                        break;
-                    }
-                }
-                if (found) {
-                    localStorage.setItem('marketplace_products', JSON.stringify(products));
-                    renderCatalog();
-                    renderAdminProducts();
-                    showMessage('Haryt üstünlikli täzelendi!', 'success');
-                    this.reset();
-                    const submitBtn = this.querySelector('button[type="submit"]');
-                    submitBtn.textContent = translations[currentLang].add_product;
-                    delete submitBtn.dataset.editId;
-                }
-                return;
-            }
-
-            // Добавление нового товара
-            const newProduct = {
-                id: 'p' + Date.now() + Math.random().toString(36).substr(2, 4),
-                name,
-                price,
-                image: image || '',
-                seller
-            };
-            products[section].push(newProduct);
-            localStorage.setItem('marketplace_products', JSON.stringify(products));
-            renderCatalog();
-            renderAdminProducts();
-            this.reset();
-            showMessage(translations[currentLang].product_added_admin, 'success');
-        });
-
-        // ============================================================
-        // ВКЛАДКИ
-        // ============================================================
-        document.querySelectorAll('.mp-tabs button').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.mp-tabs button').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                const tab = this.dataset.tab;
-                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-                document.getElementById('tab-' + tab).classList.add('active');
-                if (tab === 'profile') renderProfile();
-                if (tab === 'cart') renderCart();
-                if (tab === 'admin' && isAdmin) renderAdminProducts();
-            });
-        });
-
-        // ============================================================
-        // ПОКАЗ ВКЛАДКИ ADMIN (если админ)
-        // ============================================================
-        if (isAdmin) {
-            document.getElementById('adminTab').style.display = 'inline-block';
-        }
-
-        // ============================================================
-        // ОБНОВЛЕНИЕ
-        // ============================================================
-        document.getElementById('refreshBtn').addEventListener('click', function() {
-            renderCatalog();
-            renderCart();
-            renderProfile();
-            if (isAdmin) renderAdminProducts();
-            showMessage('Täzelendi!', 'success');
-        });
-
-        // ============================================================
-        // СООБЩЕНИЯ
-        // ============================================================
-        const messageEl = document.getElementById('message');
-        function showMessage(text, type = 'success') {
-            messageEl.textContent = text;
-            messageEl.className = 'message ' + type;
-            messageEl.style.display = 'block';
-            clearTimeout(window.messageTimeout);
-            window.messageTimeout = setTimeout(() => {
-                messageEl.style.display = 'none';
-            }, 3000);
-        }
-
-        // ============================================================
-        // ЧАСТИЦЫ
-        // ============================================================
-        const particles = document.getElementById('particles');
-        if (particles && particles.children.length === 0) {
-            for (let i = 0; i < 60; i++) {
-                const p = document.createElement('span');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.top = Math.random() * 100 + '%';
-                p.style.animationDuration = (6 + Math.random() * 12) + 's';
-                p.style.animationDelay = Math.random() * 5 + 's';
-                particles.appendChild(p);
-            }
-        }
-
-        // ============================================================
-        // ИНИЦИАЛИЗАЦИЯ
-        // ============================================================
-        setLanguage(currentLang);
+        // Инициализация
+        updateCartCount();
         renderCatalog();
-        renderCart();
-        renderProfile();
-        if (isAdmin) renderAdminProducts();
-        console.log('Marketplace with admin panel loaded. Is admin:', isAdmin);
     </script>
 </body>
 </html>
