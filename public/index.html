@@ -71,23 +71,30 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 24px 8%;
-            background: rgba(6, 9, 17, 0.4);
+            padding: 20px 8%;
+            background: rgba(6, 9, 17, 0.5);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .logo-wrap {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             text-decoration: none;
         }
 
-        .logo-svg {
+        .logo-img {
             width: 44px;
             height: 44px;
+            object-fit: contain;
             filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.6));
+            transition: transform 0.3s ease;
+        }
+
+        .logo-wrap:hover .logo-img {
+            transform: scale(1.05) rotate(5deg);
         }
 
         .logo-text h1 {
@@ -318,7 +325,7 @@
             position: relative;
             width: 90%;
             max-width: 820px;
-            background: rgba(10, 18, 32, 0.75);
+            background: rgba(10, 18, 32, 0.85);
             border: 1px solid rgba(0, 212, 255, 0.25);
             backdrop-filter: blur(30px) saturate(180%);
             -webkit-backdrop-filter: blur(30px) saturate(180%);
@@ -448,26 +455,15 @@
 </head>
 <body>
 
-    <!-- Анимированные фоны -->
+    <!-- Анимированный Canvas и Неоновый фон -->
     <canvas id="bgCanvas"></canvas>
     <div class="ambient-glow glow-1"></div>
     <div class="ambient-glow glow-2"></div>
 
-    <!-- Шапка -->
+    <!-- Шапка сайта с logo.png -->
     <header>
         <a href="index.html" class="logo-wrap">
-            <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#00ffa3"/>
-                        <stop offset="50%" stop-color="#00d4ff"/>
-                        <stop offset="100%" stop-color="#1f6bff"/>
-                    </linearGradient>
-                </defs>
-                <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15"/>
-                <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3"/>
-                <circle cx="48" cy="48" r="3.5" fill="#ffffff"/>
-            </svg>
+            <img src="logo.png" alt="SFERA Logo" class="logo-img" />
             <div class="logo-text">
                 <h1>SFERA</h1>
                 <p>Milli Platforma</p>
@@ -480,7 +476,7 @@
         </div>
     </header>
 
-    <!-- Основное содержимое -->
+    <!-- Основной Hero блок -->
     <main>
         <section class="hero-section">
             <div class="badge" data-i18n="hero_badge">✨ Täze Nesil Ekosistemasy</div>
@@ -495,7 +491,7 @@
             </div>
         </section>
 
-        <!-- Карточки с функциями -->
+        <!-- Блок карточек возможностей -->
         <section class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">🛍️</div>
@@ -515,7 +511,7 @@
         </section>
     </main>
 
-    <!-- Glassmorphism Video Modal -->
+    <!-- Glassmorphism Video Modal (Презентация) -->
     <div id="demoModal" class="demo-modal">
         <div class="demo-modal-overlay" id="demoOverlay"></div>
         <div class="demo-modal-card">
@@ -542,14 +538,14 @@
         </div>
     </div>
 
-    <!-- Футер -->
+    <!-- Подвал сайта -->
     <footer>
         <p>© 2026 SFERA Ecosystem. Ähli hukuklar goragly.</p>
     </footer>
 
-    <!-- Скрипты -->
+    <!-- Скрипты управления -->
     <script>
-        // Canvas анимированная паутина
+        // Анимация частиц Canvas
         const canvas = document.getElementById('bgCanvas');
         const ctx = canvas.getContext('2d');
         let width = canvas.width = window.innerWidth;
@@ -609,7 +605,7 @@
         }
         drawParticles();
 
-        // Переводы TM / RU / EN
+        // Полные переводы для 3 языков (TM / RU / EN)
         const translations = {
             tm: {
                 nav_login: "Giriş",
@@ -692,7 +688,7 @@
             setLanguage(cycle[idx]);
         });
 
-        // Управление Демо-модалкой
+        // Управление видео-модалкой "Демо"
         const demoModal = document.getElementById('demoModal');
         const demoVideo = document.getElementById('demoVideo');
         const demoBtn = document.getElementById('demoBtn');
@@ -710,12 +706,12 @@
             demoVideo.currentTime = 0;
         }
 
-        demoBtn.addEventListener('click', openDemoModal);
-        closeDemoBtn.addEventListener('click', closeDemoModal);
-        demoOverlay.addEventListener('click', closeDemoModal);
+        if (demoBtn) demoBtn.addEventListener('click', openDemoModal);
+        if (closeDemoBtn) closeDemoBtn.addEventListener('click', closeDemoModal);
+        if (demoOverlay) demoOverlay.addEventListener('click', closeDemoModal);
 
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && demoModal.classList.contains('active')) {
+            if (e.key === 'Escape' && demoModal && demoModal.classList.contains('active')) {
                 closeDemoModal();
             }
         });
@@ -731,7 +727,7 @@
             });
         });
 
-        // Инициализация языка при загрузке
+        // Инициализация при загрузке
         setLanguage(currentLang);
     </script>
 </body>
