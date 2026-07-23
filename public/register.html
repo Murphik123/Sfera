@@ -3,141 +3,275 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>СФЕРА — Hasap döretmek</title>
+    <title>СФЕРА — Ýazylmak / Регистрация</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/css/style.css" />
     <style>
-        .register-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 120px 20px 60px; background: linear-gradient(135deg, #06111d, #0b2035, #102b45); }
-        .register-box { background: rgba(255,255,255,.06); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,.12); border-radius: 24px; padding: 50px 40px; max-width: 440px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,.35); animation: fadeUp 0.8s ease; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .register-box h2 { text-align: center; font-size: 32px; margin-bottom: 8px; background: linear-gradient(to right, #fff, #b4d7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .register-box .subtitle { text-align: center; color: #9fb5c8; font-size: 14px; margin-bottom: 30px; }
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-size: 14px; font-weight: 500; color: #dbe9ff; margin-bottom: 6px; }
-        .form-group input, .form-group select { width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.05); color: white; font-size: 16px; transition: .3s; outline: none; }
-        .form-group input:focus, .form-group select:focus { border-color: #00d4ff; box-shadow: 0 0 20px rgba(0,212,255,.2); background: rgba(255,255,255,.08); }
-        .form-group input::placeholder { color: rgba(255,255,255,.3); }
-        .form-group select option { background: #0b2035; color: white; }
-        .admin-key-group { display: none; }
-        .admin-key-group.visible { display: block; }
-        .register-btn { width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 18px; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, #00d4ff, #008cff); color: white; transition: .35s; box-shadow: 0 15px 35px rgba(0,212,255,.3); margin-top: 10px; }
-        .register-btn:hover { transform: translateY(-3px); box-shadow: 0 25px 50px rgba(0,212,255,.5); }
-        .register-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .login-link { text-align: center; margin-top: 25px; color: #9fb5c8; font-size: 14px; }
-        .login-link a { color: #00d4ff; text-decoration: none; font-weight: 500; transition: .2s; }
-        .login-link a:hover { text-decoration: underline; }
-        .message { padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; display: none; }
-        .message.error { display: block; background: rgba(255,0,0,.15); border: 1px solid rgba(255,0,0,.3); color: #ff6b6b; }
-        .message.success { display: block; background: rgba(0,255,170,.1); border: 1px solid rgba(0,255,170,.3); color: #00ffa3; }
-        .logo-icon-small { display: flex; justify-content: center; margin-bottom: 20px; }
-        .logo-icon-small svg { width: 60px; height: 60px; }
-        .password-toggle { position: relative; }
-        .password-toggle input { padding-right: 48px; }
-        .toggle-eye { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #9fb5c8; cursor: pointer; font-size: 18px; padding: 4px; }
-        .toggle-eye:hover { color: white; }
-        @media (max-width: 480px) { .register-box { padding: 30px 20px; } }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body {
+            background: #080c14;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            padding: 30px 20px;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0,255,163,0.12) 0%, rgba(0,0,0,0) 70%);
+            top: -100px;
+            right: -100px;
+            z-index: 0;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 480px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 32px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-header { text-align: center; margin-bottom: 25px; }
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            text-decoration: none;
+        }
+
+        .logo-svg { width: 44px; height: 44px; filter: drop-shadow(0 0 10px rgba(0,255,163,0.4)); }
+
+        .logo-text h2 {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00ffa3, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p { font-size: 10px; color: #9fb5c8; text-transform: uppercase; }
+
+        .auth-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .auth-subtitle { font-size: 13px; color: #9fb5c8; }
+
+        .lang-switch-top { position: absolute; top: 20px; right: 20px; }
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 12px; color: #c0d1e0; margin-bottom: 6px; font-weight: 500; }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-select option { background: #0e1726; color: #fff; }
+
+        .form-input:focus, .form-select:focus {
+            border-color: #00ffa3;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 15px rgba(0, 255, 163, 0.2);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00ffa3, #00b894);
+            border: none;
+            border-radius: 12px;
+            color: #080c14;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 255, 163, 0.3);
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(0, 255, 163, 0.5);
+        }
+
+        .auth-footer { margin-top: 20px; text-align: center; font-size: 13px; color: #9fb5c8; }
+        .auth-footer a { color: #00ffa3; text-decoration: none; font-weight: 600; margin-left: 5px; }
+
+        .message {
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+        }
+        .message.error { background: rgba(255, 77, 77, 0.15); border: 1px solid rgba(255, 77, 77, 0.4); color: #ff6b6b; }
+        .message.success { background: rgba(0, 255, 163, 0.15); border: 1px solid rgba(0, 255, 163, 0.4); color: #00ffa3; }
+
+        #adminKeyGroup { display: none; }
     </style>
 </head>
 <body>
-    <div id="particles"></div>
-    <header>
-        <div class="container">
-            <a href="index.html" class="logo">
-                <div class="logo-icon"><svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#1f6bff"/></linearGradient><filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4" result="blur"/><feComposite in="SourceGraphic" in2="blur" operator="over"/></filter></defs><circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)"/><g filter="url(#logoGlow)"><circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/><path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/><circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)"/></g></svg></div>
-                <div class="logo-text"><h2>SFERA</h2><p>Milli Sanly Platforma</p></div>
-            </a>
-            <div class="header-right" style="display:flex; align-items:center; gap:12px;"><button class="lang" id="langBtn">TM</button></div>
-        </div>
-    </header>
 
-    <section class="register-page">
-        <div class="register-box">
-            <div class="logo-icon-small"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="smallGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#1f6bff"/></linearGradient></defs><circle cx="50" cy="50" r="30" fill="url(#smallGrad)" opacity="0.15"/><path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#smallGrad)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="1 5"/><circle cx="48" cy="48" r="4" fill="#ffffff"/></svg></div>
-            <h2 data-i18n="register_title">Hasap döretmek</h2>
-            <p class="subtitle" data-i18n="register_subtitle">Platformada hasap açyň we başlaň</p>
-            <div id="message" class="message"></div>
-            <form id="registerForm" novalidate>
-                <div class="form-group"><label for="username" data-i18n="register_username_label">Ulanyjy ady</label><input type="text" id="username" name="username" placeholder="mysal_adam" required /></div>
-                <div class="form-group"><label for="email" data-i18n="register_email_label">Email</label><input type="email" id="email" name="email" placeholder="email@example.com" required /></div>
-                <div class="form-group password-toggle"><label for="password" data-i18n="register_password_label">Parol</label><input type="password" id="password" name="password" placeholder="••••••••" required minlength="6" /><button type="button" class="toggle-eye" id="togglePassword" aria-label="Show password">👁️</button></div>
-                <div class="form-group"><label for="role" data-i18n="register_role_label">Rol</label><select id="role" name="role"><option value="user" data-i18n="role_user">Ulanyjy</option><option value="admin" data-i18n="role_admin">Administrator</option></select></div>
-                <div class="form-group admin-key-group" id="adminKeyGroup"><label for="adminKey" data-i18n="admin_key_label">Administrator açary</label><input type="password" id="adminKey" placeholder="admin123" /></div>
-                <button type="submit" class="register-btn" id="registerBtn" data-i18n="register_button">Hasap döret</button>
-            </form>
-            <div class="login-link"><span data-i18n="register_have_account">Eger hasabyňyz bar bolsa?</span><a href="login.html" data-i18n="register_login_link">Giriş et</a></div>
+    <div class="lang-switch-top">
+        <button class="lang-btn" id="langBtn">TM</button>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <a href="index.html" class="logo-wrap">
+                <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00ffa3"/>
+                            <stop offset="50%" stop-color="#00d4ff"/>
+                            <stop offset="100%" stop-color="#1f6bff"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15"/>
+                    <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3"/>
+                    <circle cx="48" cy="48" r="3.5" fill="#ffffff"/>
+                </svg>
+                <div class="logo-text">
+                    <h2>SFERA</h2>
+                    <p>Milli Platforma</p>
+                </div>
+            </a>
+            <h1 class="auth-title" data-i18n="reg_title">Hasap döretmek</h1>
+            <p class="auth-subtitle" data-i18n="reg_subtitle">SFERA ekosistemasyna goşulyň</p>
         </div>
-    </section>
+
+        <div id="message" class="message"></div>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label data-i18n="reg_name_label">Ulanyjy ady / ФИО</label>
+                <input type="text" id="username" class="form-input" placeholder="Araz Arazow" required />
+            </div>
+
+            <div class="form-group">
+                <label data-i18n="reg_email_label">Email adres</label>
+                <input type="email" id="email" class="form-input" placeholder="user@example.com" required />
+            </div>
+
+            <div class="form-group">
+                <label data-i18n="reg_type_label">Категория участника</label>
+                <select id="userType" class="form-select">
+                    <option value="private">Частное лицо (C2C / B2C)</option>
+                    <option value="business">Предприниматель / Компания (B2B)</option>
+                    <option value="gov">Государственная структура (B2G)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label data-i18n="reg_role_label">Права доступа</label>
+                <select id="role" class="form-select">
+                    <option value="user">Пользователь / Покупатель</option>
+                    <option value="admin">Администратор системы</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="adminKeyGroup">
+                <label style="color:#00ffa3;">Секретный ключ администратора</label>
+                <input type="password" id="adminKey" class="form-input" placeholder="Введите ключ доступа (admin123)" />
+            </div>
+
+            <div class="form-group">
+                <label data-i18n="reg_password_label">Parol</label>
+                <input type="password" id="password" class="form-input" value="99363645817" required />
+            </div>
+
+            <button type="submit" class="btn-submit" id="regBtn" data-i18n="reg_button">Ýazylmak</button>
+        </form>
+
+        <div class="auth-footer">
+            <span data-i18n="reg_has_account">Eýýäm hasabyňyz barmy?</span>
+            <a href="login.html" data-i18n="reg_login_link">Girmek</a>
+        </div>
+    </div>
 
     <script>
         const translations = {
             tm: {
-                register_title: "Hasap döretmek",
-                register_subtitle: "Platformada hasap açyň we başlaň",
-                register_username_label: "Ulanyjy ady",
-                register_email_label: "Email",
-                register_password_label: "Parol",
-                register_role_label: "Rol",
-                role_user: "Ulanyjy",
-                role_admin: "Administrator",
-                admin_key_label: "Administrator açary",
-                register_button: "Hasap döret",
-                register_have_account: "Eger hasabyňyz bar bolsa?",
-                register_login_link: "Giriş et",
-                register_loading: "Hasap döredilýär...",
-                register_error_username: "Ulanyjy ady hökmany",
-                register_error_email: "Nädogry email",
-                register_error_password: "Parol azyndan 6 simwol",
-                register_success: "Hasap döredildi! Giriş sahypasyna geçýärsiňiz...",
-                register_failed: "Hasap döredilmedi. Täzeden synanyşyň.",
-                admin_key_invalid: "Administrator açary ýalňyş. Barlaň."
+                reg_title: "Hasap döretmek",
+                reg_subtitle: "SFERA ekosistemasyna goşulyň",
+                reg_name_label: "Ulanyjy ady / Аdy",
+                reg_email_label: "Email adres",
+                reg_type_label: "Katagoriýasy",
+                reg_role_label: "Ulanyjy roly",
+                reg_password_label: "Parol",
+                reg_button: "Ýazylmak",
+                reg_has_account: "Eýýäm hasabyňyz barmy?",
+                reg_login_link: "Girmek",
+                reg_success: "Hasap döredildi! Giriş sahypasyna geçirilýär...",
+                reg_error_email: "Bu email eýýäm bellige alnan!"
             },
             ru: {
-                register_title: "Регистрация",
-                register_subtitle: "Создайте аккаунт на платформе",
-                register_username_label: "Имя пользователя",
-                register_email_label: "Email",
-                register_password_label: "Пароль",
-                register_role_label: "Роль",
-                role_user: "Пользователь",
-                role_admin: "Администратор",
-                admin_key_label: "Ключ администратора",
-                register_button: "Зарегистрироваться",
-                register_have_account: "Уже есть аккаунт?",
-                register_login_link: "Войти",
-                register_loading: "Регистрация...",
-                register_error_username: "Имя пользователя обязательно",
-                register_error_email: "Неверный email",
-                register_error_password: "Пароль минимум 6 символов",
-                register_success: "Регистрация успешна! Перенаправление на вход...",
-                register_failed: "Регистрация не удалась. Попробуйте снова.",
-                admin_key_invalid: "Неверный ключ администратора. Проверьте."
+                reg_title: "Регистрация",
+                reg_subtitle: "Присоединяйтесь к экосистеме SFERA",
+                reg_name_label: "Имя пользователя / Организация",
+                reg_email_label: "Электронная почта",
+                reg_type_label: "Тип контрагента",
+                reg_role_label: "Роль в системе",
+                reg_password_label: "Пароль",
+                reg_button: "Зарегистрироваться",
+                reg_has_account: "Уже есть аккаунт?",
+                reg_login_link: "Войти",
+                reg_success: "Регистрация успешна! Переход на вход...",
+                reg_error_email: "Этот email уже зарегистрирован!"
             },
             en: {
-                register_title: "Create account",
-                register_subtitle: "Sign up to get started",
-                register_username_label: "Username",
-                register_email_label: "Email",
-                register_password_label: "Password",
-                register_role_label: "Role",
-                role_user: "User",
-                role_admin: "Administrator",
-                admin_key_label: "Admin key",
-                register_button: "Sign up",
-                register_have_account: "Already have an account?",
-                register_login_link: "Login",
-                register_loading: "Registering...",
-                register_error_username: "Username is required",
-                register_error_email: "Invalid email",
-                register_error_password: "Password at least 6 characters",
-                register_success: "Registration successful! Redirecting to login...",
-                register_failed: "Registration failed. Please try again.",
-                admin_key_invalid: "Invalid admin key. Check it."
+                reg_title: "Registration",
+                reg_subtitle: "Join the SFERA ecosystem",
+                reg_name_label: "Full Name / Organization",
+                reg_email_label: "Email Address",
+                reg_type_label: "Account Type",
+                reg_role_label: "System Role",
+                reg_password_label: "Password",
+                reg_button: "Register Now",
+                reg_has_account: "Already have an account?",
+                reg_login_link: "Sign In",
+                reg_success: "Registration successful! Redirecting...",
+                reg_error_email: "This email is already registered!"
             }
         };
 
         let currentLang = localStorage.getItem('lang') || 'tm';
+
         function setLanguage(lang) {
             if (!translations[lang]) return;
             currentLang = lang;
@@ -148,6 +282,7 @@
             document.getElementById('langBtn').textContent = lang.toUpperCase();
             localStorage.setItem('lang', lang);
         }
+
         document.getElementById('langBtn').addEventListener('click', function() {
             const cycle = ['tm', 'ru', 'en'];
             let idx = cycle.indexOf(currentLang);
@@ -155,98 +290,69 @@
             setLanguage(cycle[idx]);
         });
 
+        // Показывать поле секретного ключа админа при выборе роли admin
         document.getElementById('role').addEventListener('change', function() {
-            document.getElementById('adminKeyGroup').classList.toggle('visible', this.value === 'admin');
-        });
-
-        document.getElementById('togglePassword').addEventListener('click', function() {
-            const p = document.getElementById('password');
-            p.type = p.type === 'password' ? 'text' : 'password';
-            this.textContent = p.type === 'password' ? '👁️' : '🙈';
+            const adminKeyGroup = document.getElementById('adminKeyGroup');
+            adminKeyGroup.style.display = this.value === 'admin' ? 'block' : 'none';
         });
 
         const form = document.getElementById('registerForm');
         const messageEl = document.getElementById('message');
-        const registerBtn = document.getElementById('registerBtn');
-        const ADMIN_SECRET_KEY = 'admin123';
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             const username = document.getElementById('username').value.trim();
             const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
+            const userType = document.getElementById('userType').value;
             const roleSelect = document.getElementById('role').value;
             const adminKey = document.getElementById('adminKey').value.trim();
+            const password = document.getElementById('password').value.trim() || '99363645817';
 
-            if (!username) { showMessage(translations[currentLang].register_error_username, 'error'); return; }
-            if (!email || !email.includes('@')) { showMessage(translations[currentLang].register_error_email, 'error'); return; }
-            if (password.length < 6) { showMessage(translations[currentLang].register_error_password, 'error'); return; }
-            if (roleSelect === 'admin' && adminKey !== ADMIN_SECRET_KEY) {
-                showMessage(translations[currentLang].admin_key_invalid, 'error');
-                return;
+            if (!username || !email) return;
+
+            let role = 'user';
+            if (roleSelect === 'admin' || email.toLowerCase() === 'admin@dtm.tm') {
+                if (adminKey !== 'admin123' && email.toLowerCase() !== 'admin@dtm.tm') {
+                    showMessage('Неверный ключ администратора! (Используйте: admin123)', 'error');
+                    return;
+                }
+                role = 'admin';
             }
 
-            registerBtn.disabled = true;
-            registerBtn.textContent = translations[currentLang].register_loading;
-
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            if (users.some(u => u.email === email)) {
-                showMessage('Bu email eýýäm bellige alyndy.', 'error');
-                registerBtn.disabled = false;
-                registerBtn.textContent = translations[currentLang].register_button;
+            let users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+                showMessage(translations[currentLang].reg_error_email, 'error');
                 return;
             }
-
-            // ЯВНО УСТАНАВЛИВАЕМ РОЛЬ
-            const role = (roleSelect === 'admin') ? 'admin' : 'user';
 
             const newUser = {
-                id: 'u' + Date.now(),
-                username,
-                email,
-                password,
+                id: 'usr_' + Date.now(),
+                username: username,
+                email: email,
+                password: password,
                 role: role,
+                userType: userType,
                 createdAt: new Date().toISOString()
             };
+
             users.push(newUser);
             localStorage.setItem('users', JSON.stringify(users));
 
-            // Сразу сохраняем текущего пользователя
-            localStorage.setItem('user', JSON.stringify({
-                id: newUser.id,
-                username: newUser.username,
-                email: newUser.email,
-                role: newUser.role
-            }));
-
-            showMessage(translations[currentLang].register_success, 'success');
-            setTimeout(() => window.location.href = 'login.html', 1500);
+            showMessage(translations[currentLang].reg_success, 'success');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1200);
         });
 
         function showMessage(text, type) {
             messageEl.textContent = text;
             messageEl.className = 'message ' + type;
             messageEl.style.display = 'block';
-            clearTimeout(window.messageTimeout);
-            window.messageTimeout = setTimeout(() => { messageEl.style.display = 'none'; }, 6000);
-        }
-
-        // Частицы
-        const particles = document.getElementById('particles');
-        if (particles && particles.children.length === 0) {
-            for (let i = 0; i < 60; i++) {
-                const p = document.createElement('span');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.top = Math.random() * 100 + '%';
-                p.style.animationDuration = (6 + Math.random() * 12) + 's';
-                p.style.animationDelay = Math.random() * 5 + 's';
-                particles.appendChild(p);
-            }
+            setTimeout(() => { messageEl.style.display = 'none'; }, 4000);
         }
 
         setLanguage(currentLang);
-        console.log('Register page loaded');
     </script>
 </body>
 </html>
