@@ -7,11 +7,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/css/style.css" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
         body {
-            background: #080c14;
+            background: #060911;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -22,138 +22,148 @@
             padding: 20px;
         }
 
-        /* Анимированный фоновый градиент */
-        body::before {
-            content: '';
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(0,212,255,0.15) 0%, rgba(0,0,0,0) 70%);
-            top: -100px;
-            left: -100px;
+        /* Интерактивный фон Canvas */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: 0;
-        }
-        body::after {
-            content: '';
-            position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(0,255,163,0.12) 0%, rgba(0,0,0,0) 70%);
-            bottom: -100px;
-            right: -100px;
-            z-index: 0;
+            pointer-events: none;
         }
 
+        /* Объемные пульсирующие неоновые сферы */
+        .ambient-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(130px);
+            z-index: 0;
+            pointer-events: none;
+            animation: pulseGlow 10s infinite alternate ease-in-out;
+        }
+
+        .glow-1 {
+            width: 500px;
+            height: 500px;
+            background: rgba(0, 255, 163, 0.16);
+            top: -120px;
+            left: -120px;
+        }
+
+        .glow-2 {
+            width: 550px;
+            height: 550px;
+            background: rgba(0, 212, 255, 0.15);
+            bottom: -150px;
+            right: -150px;
+            animation-delay: -5s;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.6; }
+            100% { transform: scale(1.25) translate(40px, -30px); opacity: 0.95; }
+        }
+
+        /* Полный Glassmorphism карточки */
         .auth-container {
             width: 100%;
             max-width: 440px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px 32px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            background: rgba(10, 18, 32, 0.65);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border-radius: 28px;
+            padding: 42px 36px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(0, 212, 255, 0.05);
             position: relative;
-            z-index: 1;
+            z-index: 2;
+            overflow: hidden;
         }
 
-        .auth-header {
-            text-align: center;
-            margin-bottom: 30px;
+        /* Неоновая полоса по верху карточки */
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ffa3, #00d4ff, transparent);
         }
+
+        .auth-header { text-align: center; margin-bottom: 28px; }
 
         .logo-wrap {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             text-decoration: none;
         }
 
         .logo-svg {
-            width: 48px;
-            height: 48px;
-            filter: drop-shadow(0 0 10px rgba(0,212,255,0.4));
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 0 12px rgba(0,212,255,0.6));
+            animation: logoFloat 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoFloat {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
         }
 
         .logo-text h2 {
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #00ffa3, #00d4ff);
+            font-size: 26px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffa3 0%, #00d4ff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             text-align: left;
         }
 
         .logo-text p {
-            font-size: 11px;
+            font-size: 10px;
             color: #9fb5c8;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             text-transform: uppercase;
         }
 
-        .auth-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 6px;
-        }
+        .auth-title { font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+        .auth-subtitle { font-size: 13px; color: #8a9eb2; }
 
-        .auth-subtitle {
-            font-size: 13px;
-            color: #9fb5c8;
-        }
-
-        .lang-switch-top {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-
+        .lang-switch-top { position: absolute; top: 20px; right: 20px; z-index: 10; }
         .lang-btn {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.15);
             color: #fff;
-            padding: 6px 12px;
-            border-radius: 10px;
+            padding: 7px 14px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 12px;
-            font-weight: 600;
-            transition: 0.3s;
+            font-weight: 700;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
         }
-
         .lang-btn:hover {
             background: rgba(0, 212, 255, 0.2);
             border-color: #00d4ff;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
         }
 
-        .form-group {
-            margin-bottom: 20px;
-            position: relative;
-        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; color: #b0c4de; margin-bottom: 8px; font-weight: 500; }
 
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            color: #c0d1e0;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .input-wrap {
-            position: relative;
-        }
+        .input-wrap { position: relative; }
 
         .form-input {
             width: 100%;
             padding: 14px 16px;
-            padding-right: 42px;
-            background: rgba(255, 255, 255, 0.05);
+            padding-right: 44px;
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 12px;
+            border-radius: 14px;
             color: #fff;
             font-size: 14px;
             outline: none;
@@ -163,7 +173,7 @@
         .form-input:focus {
             border-color: #00d4ff;
             background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.25);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
         }
 
         .toggle-password {
@@ -175,70 +185,65 @@
             opacity: 0.6;
             font-size: 16px;
             user-select: none;
+            transition: opacity 0.2s;
         }
-
         .toggle-password:hover { opacity: 1; }
 
         .btn-submit {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #00d4ff, #0072ff);
+            padding: 15px;
+            background: linear-gradient(135deg, #00d4ff 0%, #0066ff 100%);
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             color: #fff;
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.35);
             margin-top: 10px;
         }
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(0, 212, 255, 0.5);
+            box-shadow: 0 14px 30px rgba(0, 212, 255, 0.55);
+            filter: brightness(1.1);
         }
 
-        .auth-footer {
-            margin-top: 25px;
-            text-align: center;
-            font-size: 13px;
-            color: #9fb5c8;
-        }
-
-        .auth-footer a {
-            color: #00d4ff;
-            text-decoration: none;
-            font-weight: 600;
-            margin-left: 5px;
-        }
-
-        .auth-footer a:hover { text-decoration: underline; }
+        .auth-footer { margin-top: 25px; text-align: center; font-size: 13px; color: #8a9eb2; }
+        .auth-footer a { color: #00d4ff; text-decoration: none; font-weight: 600; margin-left: 5px; transition: 0.2s; }
+        .auth-footer a:hover { color: #00ffa3; text-shadow: 0 0 8px rgba(0, 255, 163, 0.5); }
 
         .message {
             padding: 12px;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 13px;
             margin-bottom: 20px;
             display: none;
             text-align: center;
+            backdrop-filter: blur(10px);
         }
         .message.error { background: rgba(255, 77, 77, 0.15); border: 1px solid rgba(255, 77, 77, 0.4); color: #ff6b6b; }
         .message.success { background: rgba(0, 255, 163, 0.15); border: 1px solid rgba(0, 255, 163, 0.4); color: #00ffa3; }
 
         .hint-box {
-            background: rgba(255,255,255,0.03);
-            border: 1px dashed rgba(255,255,255,0.1);
-            padding: 10px;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(0, 212, 255, 0.2);
+            padding: 12px;
+            border-radius: 12px;
             font-size: 11px;
-            color: #8a9fb4;
-            margin-top: 15px;
-            line-height: 1.4;
+            color: #8a9eb2;
+            margin-top: 18px;
+            line-height: 1.5;
         }
     </style>
 </head>
 <body>
+
+    <!-- Фоновые визуальные эффекты -->
+    <canvas id="bgCanvas"></canvas>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
 
     <div class="lang-switch-top">
         <button class="lang-btn" id="langBtn">TM</button>
@@ -290,7 +295,7 @@
         </form>
 
         <div class="hint-box">
-            🔑 <strong>Админ доступ:</strong> admin@dtm.tm / 99363645817<br>
+            🔑 <strong style="color:#00ffa3;">Админ доступ:</strong> admin@dtm.tm / 99363645817<br>
             💡 Или войдите под любым созданным аккаунтом.
         </div>
 
@@ -300,13 +305,71 @@
         </div>
     </div>
 
+    <!-- Анимационный скрипт частичек Canvas -->
     <script>
-        // Инициализация базы с дефолтным админом
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particles = [];
+        const particleCount = 55;
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.7,
+                vy: (Math.random() - 0.5) * 0.7,
+                radius: Math.random() * 2 + 1,
+                color: Math.random() > 0.5 ? '#00ffa3' : '#00d4ff'
+            });
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = 0; i < particleCount; i++) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > width) p.vx *= -1;
+                if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.shadowColor = p.color;
+                ctx.shadowBlur = 10;
+                ctx.fill();
+
+                for (let j = i + 1; j < particleCount; j++) {
+                    let p2 = particles[j];
+                    let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if (dist < 130) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.strokeStyle = `rgba(0, 212, 255, ${1 - dist / 130 * 0.8})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(drawParticles);
+        }
+        drawParticles();
+
+        // Логика авторизации
         (function initSystemUsers() {
             let users = JSON.parse(localStorage.getItem('users') || '[]');
-            const adminExists = users.some(u => u.email === 'admin@dtm.tm');
-            
-            if (!adminExists) {
+            if (!users.some(u => u.email === 'admin@dtm.tm')) {
                 users.push({
                     id: 'admin-001',
                     username: 'System Admin',
@@ -412,7 +475,6 @@
                 return;
             }
 
-            // Установка сессии
             localStorage.setItem('token', 'sfera-token-' + Date.now());
             localStorage.setItem('user', JSON.stringify({
                 id: user.id,
@@ -423,9 +485,7 @@
             }));
 
             showMessage(translations[currentLang].login_success, 'success');
-            setTimeout(() => {
-                window.location.href = 'marketplace.html';
-            }, 800);
+            setTimeout(() => { window.location.href = 'marketplace.html'; }, 800);
         });
 
         function showMessage(text, type) {
