@@ -1,77 +1,330 @@
-
 <!DOCTYPE html>
 <html lang="tm">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>СФЕРА — Giriş</title>
+    <title>СФЕРА — Giriş / Вход</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/css/style.css" />
     <style>
-        /* ... все стили такие же, как в предыдущей версии ... */
-        .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 120px 20px 60px; background: linear-gradient(135deg, #06111d, #0b2035, #102b45); }
-        .login-box { background: rgba(255,255,255,.06); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,.12); border-radius: 24px; padding: 50px 40px; max-width: 420px; width: 100%; box-shadow: 0 25px 60px rgba(0,0,0,.35); animation: fadeUp 0.8s ease; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .login-box h2 { text-align: center; font-size: 32px; margin-bottom: 8px; background: linear-gradient(to right, #fff, #b4d7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .login-box .subtitle { text-align: center; color: #9fb5c8; font-size: 14px; margin-bottom: 30px; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 14px; font-weight: 500; color: #dbe9ff; margin-bottom: 6px; }
-        .form-group input { width: 100%; padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.05); color: white; font-size: 16px; transition: .3s; outline: none; }
-        .form-group input:focus { border-color: #00d4ff; box-shadow: 0 0 20px rgba(0,212,255,.2); background: rgba(255,255,255,.08); }
-        .form-group input::placeholder { color: rgba(255,255,255,.3); }
-        .login-btn { width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 18px; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, #00d4ff, #008cff); color: white; transition: .35s; box-shadow: 0 15px 35px rgba(0,212,255,.3); margin-top: 10px; }
-        .login-btn:hover { transform: translateY(-3px); box-shadow: 0 25px 50px rgba(0,212,255,.5); }
-        .login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .register-link { text-align: center; margin-top: 25px; color: #9fb5c8; font-size: 14px; }
-        .register-link a { color: #00d4ff; text-decoration: none; font-weight: 500; transition: .2s; }
-        .register-link a:hover { text-decoration: underline; }
-        .message { padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; display: none; }
-        .message.error { display: block; background: rgba(255,0,0,.15); border: 1px solid rgba(255,0,0,.3); color: #ff6b6b; }
-        .message.success { display: block; background: rgba(0,255,170,.1); border: 1px solid rgba(0,255,170,.3); color: #00ffa3; }
-        .logo-icon-small { display: flex; justify-content: center; margin-bottom: 20px; }
-        .logo-icon-small svg { width: 60px; height: 60px; }
-        .password-toggle { position: relative; }
-        .password-toggle input { padding-right: 48px; }
-        .toggle-eye { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #9fb5c8; cursor: pointer; font-size: 18px; padding: 4px; }
-        .toggle-eye:hover { color: white; }
-        @media (max-width: 480px) { .login-box { padding: 30px 20px; } }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body {
+            background: #080c14;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* Анимированный фоновый градиент */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0,212,255,0.15) 0%, rgba(0,0,0,0) 70%);
+            top: -100px;
+            left: -100px;
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0,255,163,0.12) 0%, rgba(0,0,0,0) 70%);
+            bottom: -100px;
+            right: -100px;
+            z-index: 0;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px 32px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            text-decoration: none;
+        }
+
+        .logo-svg {
+            width: 48px;
+            height: 48px;
+            filter: drop-shadow(0 0 10px rgba(0,212,255,0.4));
+        }
+
+        .logo-text h2 {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00ffa3, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            text-align: left;
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: #9fb5c8;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .auth-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .auth-subtitle {
+            font-size: 13px;
+            color: #9fb5c8;
+        }
+
+        .lang-switch-top {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .lang-btn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: #00d4ff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #c0d1e0;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            padding-right: 42px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: #00d4ff;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.25);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            opacity: 0.6;
+            font-size: 16px;
+            user-select: none;
+        }
+
+        .toggle-password:hover { opacity: 1; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00d4ff, #0072ff);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(0, 212, 255, 0.5);
+        }
+
+        .auth-footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 13px;
+            color: #9fb5c8;
+        }
+
+        .auth-footer a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .auth-footer a:hover { text-decoration: underline; }
+
+        .message {
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+            text-align: center;
+        }
+        .message.error { background: rgba(255, 77, 77, 0.15); border: 1px solid rgba(255, 77, 77, 0.4); color: #ff6b6b; }
+        .message.success { background: rgba(0, 255, 163, 0.15); border: 1px solid rgba(0, 255, 163, 0.4); color: #00ffa3; }
+
+        .hint-box {
+            background: rgba(255,255,255,0.03);
+            border: 1px dashed rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            color: #8a9fb4;
+            margin-top: 15px;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
-    <div id="particles"></div>
-    <header>
-        <div class="container">
-            <a href="index.html" class="logo">
-                <div class="logo-icon"><svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#1f6bff"/></linearGradient><filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4" result="blur"/><feComposite in="SourceGraphic" in2="blur" operator="over"/></filter></defs><circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)"/><g filter="url(#logoGlow)"><circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/><path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/><circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)"/></g></svg></div>
-                <div class="logo-text"><h2>SFERA</h2><p>Milli Sanly Platforma</p></div>
-            </a>
-            <div class="header-right" style="display:flex; align-items:center; gap:12px;"><button class="lang" id="langBtn">TM</button></div>
-        </div>
-    </header>
 
-    <section class="login-page">
-        <div class="login-box">
-            <div class="logo-icon-small"><svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="smallGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#1f6bff"/></linearGradient></defs><circle cx="50" cy="50" r="30" fill="url(#smallGrad)" opacity="0.15"/><path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#smallGrad)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="1 5"/><circle cx="48" cy="48" r="4" fill="#ffffff"/></svg></div>
-            <h2 data-i18n="login_title">Giriş</h2>
-            <p class="subtitle" data-i18n="login_subtitle">Platforma girmek üçin hasabyňyzy ulanyň</p>
-            <div id="message" class="message"></div>
-            <form id="loginForm" novalidate>
-                <div class="form-group"><label for="email" data-i18n="login_email_label">Email</label><input type="email" id="email" name="email" placeholder="email@example.com" required /></div>
-                <div class="form-group password-toggle"><label for="password" data-i18n="login_password_label">Parol</label><input type="password" id="password" name="password" placeholder="••••••••" required /><button type="button" class="toggle-eye" id="togglePassword" aria-label="Show password">👁️</button></div>
-                <button type="submit" class="login-btn" id="loginBtn" data-i18n="login_button">Girmek</button>
-            </form>
-            <div class="register-link"><span data-i18n="login_no_account">Hasabyňyz ýokmy?</span><a href="register.html" data-i18n="login_register_link">Hasap dörediň</a></div>
+    <div class="lang-switch-top">
+        <button class="lang-btn" id="langBtn">TM</button>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <a href="index.html" class="logo-wrap">
+                <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00ffa3"/>
+                            <stop offset="50%" stop-color="#00d4ff"/>
+                            <stop offset="100%" stop-color="#1f6bff"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15"/>
+                    <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3"/>
+                    <circle cx="48" cy="48" r="3.5" fill="#ffffff"/>
+                </svg>
+                <div class="logo-text">
+                    <h2>SFERA</h2>
+                    <p>Milli Platforma</p>
+                </div>
+            </a>
+            <h1 class="auth-title" data-i18n="login_title">Giriş</h1>
+            <p class="auth-subtitle" data-i18n="login_subtitle">Platforma girmek üçin hasabyňyzy ulanyň</p>
         </div>
-    </section>
+
+        <div id="message" class="message"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label data-i18n="login_email_label">Email adres</label>
+                <div class="input-wrap">
+                    <input type="email" id="email" class="form-input" placeholder="admin@dtm.tm" required />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label data-i18n="login_password_label">Parol</label>
+                <div class="input-wrap">
+                    <input type="password" id="password" class="form-input" value="99363645817" required />
+                    <span class="toggle-password" id="togglePassword">👁️</span>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="loginBtn" data-i18n="login_button">Girmek</button>
+        </form>
+
+        <div class="hint-box">
+            🔑 <strong>Админ доступ:</strong> admin@dtm.tm / 99363645817<br>
+            💡 Или войдите под любым созданным аккаунтом.
+        </div>
+
+        <div class="auth-footer">
+            <span data-i18n="login_no_account">Hasabyňyz ýokmy?</span>
+            <a href="register.html" data-i18n="login_register_link">Hasap dörediň</a>
+        </div>
+    </div>
 
     <script>
+        // Инициализация базы с дефолтным админом
+        (function initSystemUsers() {
+            let users = JSON.parse(localStorage.getItem('users') || '[]');
+            const adminExists = users.some(u => u.email === 'admin@dtm.tm');
+            
+            if (!adminExists) {
+                users.push({
+                    id: 'admin-001',
+                    username: 'System Admin',
+                    email: 'admin@dtm.tm',
+                    password: '99363645817',
+                    role: 'admin',
+                    userType: 'gov',
+                    createdAt: new Date().toISOString()
+                });
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        })();
+
         const translations = {
             tm: {
                 login_title: "Giriş",
                 login_subtitle: "Platforma girmek üçin hasabyňyzy ulanyň",
-                login_email_label: "Email",
+                login_email_label: "Email adres",
                 login_password_label: "Parol",
                 login_button: "Girmek",
                 login_no_account: "Hasabyňyz ýokmy?",
@@ -81,25 +334,25 @@
                 login_loading: "Girilýär..."
             },
             ru: {
-                login_title: "Вход",
-                login_subtitle: "Используйте свою учётную запись для входа",
-                login_email_label: "Email",
+                login_title: "Вход в систему",
+                login_subtitle: "Используйте свою учётную запись SFERA",
+                login_email_label: "Электронная почта",
                 login_password_label: "Пароль",
                 login_button: "Войти",
                 login_no_account: "Нет аккаунта?",
                 login_register_link: "Зарегистрироваться",
                 login_error: "Неверный email или пароль",
-                login_success: "Вход выполнен!",
-                login_loading: "Вход..."
+                login_success: "Вход выполнен успешно!",
+                login_loading: "Выполняется вход..."
             },
             en: {
                 login_title: "Login",
-                login_subtitle: "Use your account to access the platform",
-                login_email_label: "Email",
+                login_subtitle: "Enter your account details to access",
+                login_email_label: "Email address",
                 login_password_label: "Password",
-                login_button: "Login",
+                login_button: "Sign In",
                 login_no_account: "Don't have an account?",
-                login_register_link: "Sign up",
+                login_register_link: "Register now",
                 login_error: "Invalid email or password",
                 login_success: "Login successful!",
                 login_loading: "Logging in..."
@@ -107,6 +360,7 @@
         };
 
         let currentLang = localStorage.getItem('lang') || 'tm';
+
         function setLanguage(lang) {
             if (!translations[lang]) return;
             currentLang = lang;
@@ -117,6 +371,7 @@
             document.getElementById('langBtn').textContent = lang.toUpperCase();
             localStorage.setItem('lang', lang);
         }
+
         document.getElementById('langBtn').addEventListener('click', function() {
             const cycle = ['tm', 'ru', 'en'];
             let idx = cycle.indexOf(currentLang);
@@ -148,7 +403,7 @@
             loginBtn.textContent = translations[currentLang].login_loading;
 
             const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const user = users.find(u => u.email === email && u.password === password);
+            const user = users.find(u => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
 
             if (!user) {
                 showMessage(translations[currentLang].login_error, 'error');
@@ -157,48 +412,30 @@
                 return;
             }
 
-            // СОХРАНЯЕМ ТОКЕН И ПОЛЬЗОВАТЕЛЯ
-            localStorage.setItem('token', 'demo-token-' + Date.now());
+            // Установка сессии
+            localStorage.setItem('token', 'sfera-token-' + Date.now());
             localStorage.setItem('user', JSON.stringify({
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                userType: user.userType || 'private'
             }));
-
-            console.log('✅ Токен сохранён:', localStorage.getItem('token'));
-            console.log('✅ Пользователь сохранён:', localStorage.getItem('user'));
 
             showMessage(translations[currentLang].login_success, 'success');
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1000);
+                window.location.href = 'marketplace.html';
+            }, 800);
         });
 
         function showMessage(text, type) {
             messageEl.textContent = text;
             messageEl.className = 'message ' + type;
             messageEl.style.display = 'block';
-            clearTimeout(window.messageTimeout);
-            window.messageTimeout = setTimeout(() => { messageEl.style.display = 'none'; }, 5000);
-        }
-
-        // Частицы
-        const particles = document.getElementById('particles');
-        if (particles && particles.children.length === 0) {
-            for (let i = 0; i < 60; i++) {
-                const p = document.createElement('span');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.top = Math.random() * 100 + '%';
-                p.style.animationDuration = (6 + Math.random() * 12) + 's';
-                p.style.animationDelay = Math.random() * 5 + 's';
-                particles.appendChild(p);
-            }
+            setTimeout(() => { messageEl.style.display = 'none'; }, 4000);
         }
 
         setLanguage(currentLang);
-        console.log('Login page loaded');
     </script>
 </body>
 </html>
