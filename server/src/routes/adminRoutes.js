@@ -1,10 +1,9 @@
-// server/src/routes/adminRoutes.js
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
-const adminAuth = require('../middleware/adminAuth');
+const { adminAuth } = require('../middleware/adminAuth');
 
-// Все маршруты защищены middleware adminAuth
+// Все маршруты требуют прав администратора
 router.use(adminAuth);
 
 // Статистика
