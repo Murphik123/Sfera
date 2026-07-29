@@ -8,29 +8,41 @@ const app = express();
 
 // Middlewares
 app.use(cors());
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: false // Отключаем жесткий CSP для работы встроенных SVG и внешних шрифтов
+}));
 app.use(express.json());
 
-// Статика (для frontend)
-app.use(express.static(path.join(__dirname, '../public')));
+// Статика (исправленный путь к папке public в корне проекта)
+const publicPath = path.join(__dirname, '../../public');
+app.use(express.static(publicPath));
 
-// Подключение маршрутов
+// Маршруты API
 app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/admin', require('./routes/adminRoutes'));   // ← обязательно
 
 // Health check
 app.get('/ping', (req, res) => {
     res.json({ status: 'ok' });
 });
 
-// Обработка 404
-app.use((req, res) => {
-    res.status(404).json({ message: 'Not found' });
+// Перенаправление всех остальных GET запросов на статические HTML файлы
+app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api/')) return next();
+    res.sendFile(path.join(publicPath, req.path.endsWith('.html') ? req.path : 'index.html'), (err) => {
+        if (err) {
+            res.status(404).json({ message: 'Page not found' });
+        }
+    });
 });
 
-// Обработка ошибок
+// 404 для API
+app.use((req, res) => {
+    res.status(404).json({ message: 'API route not found' });
+});
+
+// Обработка ошибок (гарантирует отпуск ответ в формате JSON)
 app.use((err, req, res, next) => {
-    console.error(err.stack);
+    console.error('Server Error:', err.stack);
     res.status(500).json({ message: err.message || 'Internal server error' });
 });
 
