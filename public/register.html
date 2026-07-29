@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="tm">
 <head>
@@ -13,7 +12,7 @@
     <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="auth-page">
-    <!-- Эффекты (как на главной) -->
+    <!-- Эффекты с главной страницы -->
     <div class="hero-grid"></div>
     <div class="hero-glow glow-left"></div>
     <div class="hero-glow glow-right"></div>
@@ -53,7 +52,7 @@
             <!-- Заголовок -->
             <h2 class="auth-title" data-i18n="register_title">Ýazylmak / Registrasiya</h2>
 
-            <!-- ФОРМА РЕГИСТРАЦИИ (теперь точно видна) -->
+            <!-- ✅ ФОРМА РЕГИСТРАЦИИ (теперь точно видна) -->
             <form id="registerForm" class="auth-form">
                 <div class="form-group">
                     <label data-i18n="register_name_label">Atyňyz / Имя</label>
@@ -179,7 +178,7 @@
         });
 
         // ============================================================
-        // ОБРАБОТКА ФОРМЫ РЕГИСТРАЦИИ
+        // ОБРАБОТКА ФОРМЫ РЕГИСТРАЦИИ (с проверкой ответа)
         // ============================================================
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -201,8 +200,8 @@
                     body: JSON.stringify({ username: name, email, password, role })
                 });
 
-                const contentType = response.headers.get('content-type');
                 let data;
+                const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('application/json')) {
                     data = await response.json();
                 } else {
@@ -225,7 +224,7 @@
         });
 
         // ============================================================
-        // ЧАСТИЦЫ (эффекты)
+        // СОЗДАНИЕ ЧАСТИЦ (если их нет)
         // ============================================================
         const particles = document.getElementById('particles');
         if (particles && particles.children.length === 0) {
@@ -240,6 +239,7 @@
             }
         }
 
+        // Установка языка при загрузке
         document.addEventListener('DOMContentLoaded', () => {
             setLanguage(currentLang);
         });
