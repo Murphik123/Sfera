@@ -272,9 +272,7 @@
                 login_register_link: "Hasap dörediň",
                 login_error: "Nädogry email ýa-da parol",
                 login_success: "Giriş başaryldy!",
-                login_loading: "Girilýär...",
-                login_redirect_admin: "Administrasiýa paneline geçilýär...",
-                login_redirect_user: "Platforma geçilýär..."
+                login_loading: "Girilýär..."
             },
             ru: {
                 logo_title: "СФЕРА",
@@ -288,9 +286,7 @@
                 login_register_link: "Зарегистрироваться",
                 login_error: "Неверный email или пароль",
                 login_success: "Вход выполнен!",
-                login_loading: "Вход...",
-                login_redirect_admin: "Перенаправление в панель администратора...",
-                login_redirect_user: "Перенаправление на платформу..."
+                login_loading: "Вход..."
             },
             en: {
                 logo_title: "SFERA",
@@ -304,15 +300,10 @@
                 login_register_link: "Sign up",
                 login_error: "Invalid email or password",
                 login_success: "Login successful!",
-                login_loading: "Logging in...",
-                login_redirect_admin: "Redirecting to admin panel...",
-                login_redirect_user: "Redirecting to platform..."
+                login_loading: "Logging in..."
             }
         };
 
-        // ============================================================
-        // ЯЗЫК
-        // ============================================================
         let currentLang = localStorage.getItem('lang') || 'tm';
 
         function setLanguage(lang) {
@@ -346,7 +337,7 @@
         });
 
         // ============================================================
-        // ЛОГИКА ВХОДА
+        // ЛОГИКА ВХОДА (СОХРАНЯЕМ ОРИГИНАЛЬНУЮ ЛОГИКУ)
         // ============================================================
         const form = document.getElementById('loginForm');
         const messageEl = document.getElementById('message');
@@ -383,7 +374,6 @@
                     
                     showMessage(translations[currentLang].login_success, 'success');
                     
-                    // Перенаправление по роли
                     setTimeout(() => {
                         if (data.user.role === 'admin') {
                             window.location.href = 'admin-dashboard.html';
@@ -415,7 +405,7 @@
         }
 
         // ============================================================
-        // ЧАСТИЦЫ
+        // ЧАСТИЦЫ (ОРИГИНАЛЬНАЯ ЛОГИКА ИЗ dashboard.html)
         // ============================================================
         const particles = document.getElementById('particles');
         if (particles && particles.children.length === 0) {
@@ -434,7 +424,7 @@
         // ИНИЦИАЛИЗАЦИЯ
         // ============================================================
         setLanguage(currentLang);
-        console.log('Login page loaded with role-based redirect');
+        console.log('Login page loaded');
     </script>
 </body>
 </html>
