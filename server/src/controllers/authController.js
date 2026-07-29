@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');        // ← изменено с bcryptjs
 const jwt = require('jsonwebtoken');
 const redisClient = require('../config/redis');
 
@@ -7,8 +7,8 @@ const redisClient = require('../config/redis');
 exports.register = async (req, res) => {
   try {
     const { username, email, password, role } = req.body;
+    console.log('Register attempt:', { username, email, role });
 
-    // Проверяем, существует ли пользователь
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
@@ -19,12 +19,14 @@ exports.register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      role: role || 'user'   // по умолчанию обычный пользователь
+      role: role || 'user'
     });
 
     await user.save();
+    console.log('User registered:', user.username);
     res.status(201).json({ message: 'User created successfully' });
   } catch (err) {
+    console.error('Registration error:', err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -33,35 +35,46 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('Login attempt:', email);
+
     const user = await User.findOne({ email });
     if (!user) {
+      console.log('User not found:', email);
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log('Invalid password for:', email);
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
     const token = jwt.sign(
-      { userId: user._id },  // используем userId для совместимости с authMiddleware
-      process.env.JWT_SECRET,
+      { userId: user._id },
+      process.env.JWT_SECRET || 'secret',
       { expiresIn: '7d' }
     );
 
-    // Сохраняем сессию в Redis
-    await redisClient.set(`session:${user._id}`, token, 'EX', 7 * 24 * 60 * 60);
+    // Сохраняем сессию в Redis (если Redis недоступен – пропускаем)
+    try {
+      await redisClient.set(`session:${user._id}`, token, 'EX', 7 * 24 * 60 * 60);
+    } catch (redisErr) {
+      console.error('Redis error:', redisErr);
+      // Можно продолжить, но в продакшене лучше вернуть 500
+    }
 
+    console.log('Login successful:', user.username);
     res.json({
       token,
       user: {
         id: user._id,
         username: user.username,
         email: user.email,
-        role: user.role
+        role: user.role || 'user'
       }
     });
   } catch (err) {
+    console.error('Login error:', err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -73,12 +86,17 @@ exports.logout = async (req, res) => {
     await redisClient.del(`session:${userId}`);
     res.json({ message: 'Logged out successfully' });
   } catch (err) {
+    console.error('Logout error:', err);
     res.status(500).json({ message: err.message });
   }
 };
 
 // Получить текущего пользователя
 exports.getMe = async (req, res) => {
-  // req.user уже установлен authMiddleware
-  res.json(req.user);
+  try {
+    res.json(req.user);
+  } catch (err) {
+    console.error('GetMe error:', err);
+    res.status(500).json({ message: err.message });
+  }
 };
