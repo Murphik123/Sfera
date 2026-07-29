@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-    <!-- Внешний CSS -->
+    <!-- Подключаем CSS из папки public/css/ -->
     <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="auth-page">
@@ -95,7 +95,7 @@
         </div>
     </div>
 
-    <!-- Подключаем логику -->
+    <!-- Скрипты -->
     <script src="/js/auth.js"></script>
     <script>
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
@@ -108,28 +108,24 @@
             const targetModule = document.getElementById('targetModule').value;
 
             try {
-                // Отправка запроса на ваш бэкенд (Render / Node.js + MongoDB)
-                const response = await fetch('/api/register', {
+                // Запрос к Express API (authRoutes.js)
+                const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, password, role })
                 });
 
-                let data;
+                const data = await response.json();
+
                 if (response.ok) {
-                    data = await response.json();
+                    onAuthSuccess(data.user, data.token, targetModule);
                 } else {
-                    // Фолбэк-симуляция для теста фронтенда
-                    data = { user: { name, email, role }, token: 'mock-jwt-token' };
+                    alert(data.message || 'Ошибка регистрации');
                 }
-
-                // Вызываем авто-вход с выбором роли и модуля
-                onAuthSuccess(data.user || { name, email, role }, data.token, targetModule);
-
             } catch (err) {
-                console.warn('Сервер не ответил, выполняем вход локально:', err);
-                // Если бэкенд временно недоступен — авторизуем локально
-                onAuthSuccess({ name, email, role }, 'demo-token', targetModule);
+                console.error('Ошибка связи с бэкендом:', err);
+                // Фолбэк для автономной работы фронтенда
+                onAuthSuccess({ name, email, role }, 'fallback-token', targetModule);
             }
         });
     </script>
