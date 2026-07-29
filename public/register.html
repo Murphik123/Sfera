@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-    <!-- Подключаем CSS из папки public/css/ -->
     <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="auth-page">
@@ -95,37 +94,82 @@
         </div>
     </div>
 
-    <!-- Скрипты -->
-    <script src="/js/auth.js"></script>
     <script>
+        // Функция, вызываемая после успешной регистрации
+        function onAuthSuccess(user, token, targetModule) {
+            // Сохраняем токен и данные пользователя в localStorage
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user));
+
+            // Перенаправление на выбранный модуль или на страницу входа
+            const redirectMap = {
+                'marketplace': 'marketplace.html',
+                'dashboard': 'dashboard.html',
+                'tmpay': 'tmpay.html',
+                'tmcoin': 'tmcoin.html',
+                'bank': 'bank.html',
+                'ai': 'ai.html',
+                'docs': 'docs.html',
+                'messenger': 'messenger.html',
+                'mail': 'mailtm.html'
+            };
+            const target = redirectMap[targetModule] || 'login.html';
+            window.location.href = target;
+        }
+
+        // Обработчик отправки формы
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const name = document.getElementById('regName').value;
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
             const role = document.getElementById('regRole').value;
             const targetModule = document.getElementById('targetModule').value;
 
+            // Простая валидация
+            if (!name || !email || !password) {
+                alert('Аhli meýdançalary dolduryň / Заполните все поля');
+                return;
+            }
+
             try {
-                // Запрос к Express API (authRoutes.js)
+                // Запрос к бэкенду
                 const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, password, role })
+                    body: JSON.stringify({ username: name, email, password, role })
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    onAuthSuccess(data.user, data.token, targetModule);
+                    // Если бэкенд возвращает пользователя и токен
+                    if (data.user && data.token) {
+                        onAuthSuccess(data.user, data.token, targetModule);
+                    } else {
+                        // Если бэкенд не возвращает токен, но регистрация успешна – перенаправляем на логин
+                        alert('Registrasiya tamamlandy! Indi giriş ediň / Регистрация завершена! Теперь войдите.');
+                        window.location.href = 'login.html';
+                    }
                 } else {
-                    alert(data.message || 'Ошибка регистрации');
+                    alert(data.message || 'Registrasiya ýalňyşlyk / Ошибка регистрации');
                 }
             } catch (err) {
-                console.error('Ошибка связи с бэкендом:', err);
-                // Фолбэк для автономной работы фронтенда
-                onAuthSuccess({ name, email, role }, 'fallback-token', targetModule);
+                console.error('Backend bilen baglanyşyk ýalňyşlygy:', err);
+                // Фолбэк для автономного режима (если бэкенд недоступен)
+                // В реальном проекте здесь можно сохранить в localStorage для демонстрации
+                alert('Backend ýok ýa-da işlemeýär. Şahsy kompýuterde saýlanyp geçilýär.\n' +
+                      'Аgtyýar: ulanyjy ýerli ýatda saklandy.');
+
+                // Сохраняем пользователя локально (для демо)
+                const fakeUser = { id: Date.now(), username: name, email, role };
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                users.push(fakeUser);
+                localStorage.setItem('users', JSON.stringify(users));
+
+                // Переходим на страницу входа
+                window.location.href = 'login.html';
             }
         });
     </script>
