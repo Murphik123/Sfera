@@ -1,89 +1,37 @@
-// ============================================================
-// EXPRESS APP
-// Путь: server/src/app.js
-// ============================================================
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
-const { authMiddleware } = require('./middleware/auth');
-const errorHandler = require('./middleware/errorHandler');
+require('dotenv').config();
 
-// Импорт маршрутов
-const authRoutes = require('./routes/authRoutes');
-const chatRoutes = require('./routes/chatRoutes');
-const marketplaceRoutes = require('./routes/marketplaceRoutes');
-const mailRoutes = require('./routes/mailRoutes');
-const bankRoutes = require('./routes/bankRoutes');
-const aiRoutes = require('./routes/aiRoutes');
-const statsRoutes = require('./routes/statsRoutes');
-
-// ========== ОБЪЯВЛЕНИЕ app ==========
 const app = express();
 
-// Защита заголовков
+// Middlewares
+app.use(cors());
 app.use(helmet());
+app.use(express.json());
 
-// CORS
-app.use(cors({
-  origin: '*',
-  credentials: true
-}));
+// Статика (для frontend)
+app.use(express.static(path.join(__dirname, '../public')));
 
-// Парсеры
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Подключение маршрутов
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));   // ← обязательно
 
-// Статика (фронтенд) – если запускаем из одной папки
-app.use(express.static(path.join(__dirname, '../../public')));
-
-// ============================================================
-// ПУБЛИЧНЫЕ МАРШРУТЫ
-// ============================================================
-app.use('/api/auth', authRoutes);
-app.use('/api/stats', statsRoutes);
-
-// ============================================================
-// ЗАЩИЩЁННЫЕ МАРШРУТЫ (требуют аутентификации)
-// ============================================================
-app.use('/api/chat', authMiddleware, chatRoutes);
-app.use('/api/marketplace', authMiddleware, marketplaceRoutes);
-app.use('/api/mail', authMiddleware, mailRoutes);
-app.use('/api/bank', authMiddleware, bankRoutes);
-app.use('/api/ai', authMiddleware, aiRoutes);
-
-// ============================================================
-// ТЕСТОВЫЙ МАРШРУТ
-// ============================================================
+// Health check
 app.get('/ping', (req, res) => {
-  res.json({ status: 'ok', time: new Date().toISOString() });
+    res.json({ status: 'ok' });
 });
 
-// ============================================================
-// HEALTH CHECK (добавлен)
-// ============================================================
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Server is running' });
-});
-
-// ============================================================
-// ОБРАБОТКА 404 (должна быть ПОСЛЕ всех маршрутов)
-// ============================================================
+// Обработка 404
 app.use((req, res) => {
-  res.status(404).json({ error: 'Not Found' });
+    res.status(404).json({ message: 'Not found' });
 });
 
-// ============================================================
-// SPA FALLBACK – отдаём index.html для всех неизвестных маршрутов
-// (Должен быть ПОСЛЕ обработки 404 и ПОСЛЕ всех API-маршрутов)
-// ============================================================
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public/index.html'));
+// Обработка ошибок
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: err.message || 'Internal server error' });
 });
-
-// ============================================================
-// ОБРАБОТКА ОШИБОК (всегда в конце)
-// ============================================================
-app.use(errorHandler);
 
 module.exports = app;
