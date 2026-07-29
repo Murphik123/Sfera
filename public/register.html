@@ -177,11 +177,6 @@
         .toggle-eye:hover {
             color: white;
         }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
         @media (max-width: 480px) {
             .register-box { padding: 30px 20px; }
         }
@@ -220,7 +215,7 @@
                 </div>
             </a>
 
-            <div class="header-right">
+            <div class="header-buttons">
                 <button class="lang" id="langBtn">TM</button>
             </div>
         </div>
@@ -290,7 +285,7 @@
 
     <script>
         // ============================================================
-        // ПЕРЕВОДЫ (ОРИГИНАЛЬНЫЕ)
+        // ПЕРЕВОДЫ
         // ============================================================
         const translations = {
             tm: {
@@ -357,6 +352,4 @@
                 register_have_account: "Already have an account?",
                 register_login_link: "Login",
                 register_loading: "Registering...",
-                register_error_username: "Username is required",
-                register_error_email: "Invalid email",
-                register
+                register_error_username:
