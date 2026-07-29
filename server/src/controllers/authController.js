@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const Account = require('../models/Account');
-const bcrypt = require('bcryptjs'); // Заменено на bcryptjs для стабильности на Render
+const bcrypt = require('bcryptjs'); // bcryptjs не ломает сборку на Linux/Render
 const { generateToken } = require('../utils/jwt');
 const redisClient = require('../config/redis');
 
@@ -8,58 +8,38 @@ exports.register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
 
-    if (!username || !email || !password) {
-      return res.status(400).json({ message: 'Заполните все поля' });
-    }
-
-    const normalizedEmail = email.toLowerCase().trim();
-
-    // Проверка существования по email или username
-    const existing = await User.findOne({ 
-      $or: [{ email: normalizedEmail }, { username: username.trim() }] 
-    });
-    
+    // Проверка существования
+    const existing = await User.findOne({ $or: [{ email }, { username }] });
     if (existing) {
-      return res.status(400).json({ message: 'Пользователь с таким email или именем уже существует' });
+      return res.status(400).json({ message: 'User already exists' });
     }
 
     // Хеширование пароля
     const hash = await bcrypt.hash(password, 10);
-    const user = new User({ 
-      username: username.trim(), 
-      email: normalizedEmail, 
-      passwordHash: hash 
-    });
+    const user = new User({ username, email, passwordHash: hash });
     await user.save();
 
-    // Безопасное создание счета
-    try {
-      if (Account) {
-        const account = new Account({ userId: user._id });
-        await account.save();
-      }
-    } catch (accError) {
-      console.warn('Предупреждение: Не удалось создать счет:', accError.message);
-    }
+    // Создаём счёт для пользователя
+    const account = new Account({ userId: user._id });
+    await account.save();
 
-    return res.status(201).json({ message: 'Пользователь успешно зарегистрирован' });
+    res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
-    console.error('Ошибка регистрации:', error);
-    return res.status(500).json({ message: error.message || 'Ошибка сервера при регистрации' });
+    res.status(500).json({ message: error.message });
   }
 };
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body; // email может содержать и имя пользователя
+    const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: 'Укажите email/логин и пароль' });
+      return res.status(400).json({ message: 'Заполните все поля' });
     }
 
     const inputVal = email.trim();
 
-    // Поиск пользователя как по email, так и по username
+    // Ищем и по email, и по username
     const user = await User.findOne({
       $or: [
         { email: inputVal.toLowerCase() },
@@ -68,27 +48,28 @@ exports.login = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(401).json({ message: 'Неверный email/логин или пароль' });
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Проверка пароля по полю passwordHash
+    // Проверяем хеш пароля
     const match = await bcrypt.compare(password, user.passwordHash || user.password);
     if (!match) {
-      return res.status(401).json({ message: 'Неверный email/логин или пароль' });
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     const token = generateToken(user._id);
 
-    // Безопасная запись сессии в Redis (не ломает вход, если Redis выключен)
+    // Безопасное сохранение в Redis (не ломает ответ, если Redis недоступен)
     try {
       if (redisClient && typeof redisClient.set === 'function') {
         await redisClient.set(`session:${user._id}`, token, 'EX', 60 * 60 * 24 * 7);
       }
-    } catch (redisError) {
-      console.warn('Redis недоступен, сессия пропущена:', redisError.message);
+    } catch (redisErr) {
+      console.warn('Redis offline, skipping session store:', redisErr.message);
     }
 
-    return res.json({
+    // Возвращаем точную структуру ответа для твоей фронтенд скрипт-логики
+    res.json({
       token,
       user: {
         id: user._id,
@@ -99,18 +80,20 @@ exports.login = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Ошибка входа:', error);
-    return res.status(500).json({ message: error.message || 'Внутренняя ошибка сервера' });
+    console.error('Login error:', error);
+    res.status(500).json({ message: error.message || 'Server error' });
   }
 };
 
 exports.logout = async (req, res) => {
   try {
-    if (redisClient && typeof redisClient.del === 'function') {
-      await redisClient.del(`session:${req.userId}`);
-    }
-    return res.json({ message: 'Успешный выход' });
+    try {
+      if (redisClient && typeof redisClient.del === 'function') {
+        await redisClient.del(`session:${req.userId}`);
+      }
+    } catch (e) {}
+    res.json({ message: 'Logged out' });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
