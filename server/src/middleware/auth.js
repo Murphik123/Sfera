@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const redisClient = require('../config/redis');
+const User = require('../models/User');
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -14,7 +15,15 @@ const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ message: 'Invalid session' });
     }
 
-    req.userId = decoded.userId;
+    // Загружаем пользователя из БД
+    const user = await User.findById(decoded.userId).select('-password');
+    if (!user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+
+    req.user = user;          // полный объект пользователя
+    req.userId = decoded.userId; // для обратной совместимости
+
     next();
   } catch (error) {
     return res.status(401).json({ message: 'Unauthorized' });
