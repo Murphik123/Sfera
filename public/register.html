@@ -44,42 +44,137 @@
                 </div>
             </a>
 
-            <h2 class="auth-title">Ýazylmak / Registrasiya</h2>
+            <h2 class="auth-title" data-i18n="register_title">Ýazylmak / Registrasiya</h2>
 
             <form id="registerForm" class="auth-form">
                 <div class="form-group">
-                    <label for="regName">Atyňyz / Имя</label>
+                    <label data-i18n="register_name_label">Atyňyz / Имя</label>
                     <input type="text" id="regName" required placeholder="Имя" />
                 </div>
 
                 <div class="form-group">
-                    <label for="regEmail">E-mail</label>
+                    <label data-i18n="register_email_label">E-mail</label>
                     <input type="email" id="regEmail" required placeholder="example@sfera.tm" />
                 </div>
 
                 <div class="form-group">
-                    <label for="regPassword">Aşakdaky syr / Пароль</label>
+                    <label data-i18n="register_password_label">Aşakdaky syr / Пароль</label>
                     <input type="password" id="regPassword" required placeholder="••••••••" />
                 </div>
 
                 <div class="form-group">
-                    <label for="regRole">Roly / Роль</label>
+                    <label data-i18n="register_role_label">Roly / Роль</label>
                     <select id="regRole" class="form-select">
-                        <option value="user">Ulanyjy / Пользователь</option>
-                        <option value="admin">Administrator / Админ</option>
+                        <option value="user" data-i18n="role_user">Ulanyjy / Пользователь</option>
+                        <option value="admin" data-i18n="role_admin">Administrator / Админ</option>
                     </select>
                 </div>
 
-                <button type="submit" class="primary-btn auth-btn">Ýazylmak / Зарегистрироваться</button>
+                <button type="submit" class="primary-btn auth-btn" data-i18n="register_button">Ýazylmak / Зарегистрироваться</button>
             </form>
 
             <div class="auth-footer">
-                <p>Eýýäm akkountyňyz barmy? <a href="login.html">Girmek</a></p>
+                <p data-i18n="register_have_account">Eýýäm akkountyňyz barmy? <a href="login.html" data-i18n="register_login_link">Girmek</a></p>
+            </div>
+
+            <div style="text-align:center; margin-top:15px;">
+                <button class="lang-btn" id="langBtn">TM</button>
             </div>
         </div>
     </div>
 
     <script>
+        // ============================================================
+        // ПЕРЕВОДЫ
+        // ============================================================
+        const translations = {
+            tm: {
+                register_title: "Ýazylmak",
+                register_name_label: "Atyňyz",
+                register_email_label: "E-mail",
+                register_password_label: "Aşakdaky syr",
+                register_role_label: "Roly",
+                role_user: "Ulanyjy",
+                role_admin: "Administrator",
+                register_button: "Ýazylmak",
+                register_have_account: "Eýýäm akkountyňyz barmy?",
+                register_login_link: "Girmek",
+                register_success: "Registrasiya tamamlandy! Indi giriş ediň.",
+                register_error: "Registrasiya ýalňyşlyk",
+                register_network_error: "Serwer bilen baglanyşyk ýalňyşlygy"
+            },
+            ru: {
+                register_title: "Регистрация",
+                register_name_label: "Имя",
+                register_email_label: "E-mail",
+                register_password_label: "Пароль",
+                register_role_label: "Роль",
+                role_user: "Пользователь",
+                role_admin: "Администратор",
+                register_button: "Зарегистрироваться",
+                register_have_account: "Уже есть аккаунт?",
+                register_login_link: "Войти",
+                register_success: "Регистрация завершена! Теперь войдите.",
+                register_error: "Ошибка регистрации",
+                register_network_error: "Ошибка связи с сервером"
+            },
+            en: {
+                register_title: "Register",
+                register_name_label: "Name",
+                register_email_label: "E-mail",
+                register_password_label: "Password",
+                register_role_label: "Role",
+                role_user: "User",
+                role_admin: "Administrator",
+                register_button: "Register",
+                register_have_account: "Already have an account?",
+                register_login_link: "Login",
+                register_success: "Registration successful! Now login.",
+                register_error: "Registration error",
+                register_network_error: "Network error"
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'tm';
+
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'SELECT') {
+                        // для полей ввода и select обрабатываем отдельно
+                        if (el.tagName === 'INPUT') {
+                            el.placeholder = translations[lang][key];
+                        } else if (el.tagName === 'SELECT') {
+                            // для option перебираем
+                            el.querySelectorAll('option').forEach(opt => {
+                                const optKey = opt.getAttribute('data-i18n');
+                                if (optKey && translations[lang][optKey]) {
+                                    opt.textContent = translations[lang][optKey];
+                                }
+                            });
+                        }
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
+                }
+            });
+            document.getElementById('langBtn').textContent = lang.toUpperCase();
+            localStorage.setItem('lang', lang);
+        }
+
+        document.getElementById('langBtn').addEventListener('click', function() {
+            const cycle = ['tm', 'ru', 'en'];
+            let idx = cycle.indexOf(currentLang);
+            idx = (idx + 1) % cycle.length;
+            setLanguage(cycle[idx]);
+        });
+
+        // ============================================================
+        // ОБРАБОТКА ФОРМЫ
+        // ============================================================
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -89,7 +184,7 @@
             const role = document.getElementById('regRole').value;
 
             if (!name || !email || !password) {
-                alert('Аhli meýdançalary dolduryň / Заполните все поля');
+                alert(translations[currentLang].register_error + ': Doldurmaly ýerler boş');
                 return;
             }
 
@@ -100,18 +195,34 @@
                     body: JSON.stringify({ username: name, email, password, role })
                 });
 
-                const data = await response.json();
+                // Проверяем, является ли ответ JSON
+                const contentType = response.headers.get('content-type');
+                let data;
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                } else {
+                    // Если не JSON, читаем как текст для отладки
+                    const text = await response.text();
+                    console.error('Server response (not JSON):', text);
+                    alert('Serwerden nädogry jogap / Неверный ответ сервера. Подробности в консоли.');
+                    return;
+                }
 
                 if (response.ok) {
-                    alert('Registrasiya tamamlandy! Indi giriş ediň / Регистрация завершена! Теперь войдите.');
+                    alert(translations[currentLang].register_success);
                     window.location.href = 'login.html';
                 } else {
-                    alert(data.message || 'Registrasiya ýalňyşlyk / Ошибка регистрации');
+                    alert(data.message || translations[currentLang].register_error);
                 }
             } catch (err) {
                 console.error('Registration error:', err);
-                alert('Serwer bilen baglanyşyk ýalňyşlygy / Ошибка связи с сервером');
+                alert(translations[currentLang].register_network_error);
             }
+        });
+
+        // Установка языка при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage(currentLang);
         });
     </script>
 </body>
