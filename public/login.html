@@ -1,133 +1,56 @@
 <!DOCTYPE html>
-<html lang="tm">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SFERA — Giriş / Вход</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
-    <link rel="stylesheet" href="/css/style.css" />
+    <meta charset="UTF-8">
+    <title>Вход — Sfera</title>
 </head>
-<body class="auth-page">
-    <div class="hero-grid"></div>
-    <div class="hero-glow glow-left"></div>
-    <div class="hero-glow glow-right"></div>
-    <div id="particles"></div>
+<body>
 
-    <div class="auth-container">
-        <div class="auth-card glass-panel">
-            <!-- Логотип -->
-            <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00ffa3" />
-                                <stop offset="50%" stop-color="#00d4ff" />
-                                <stop offset="100%" stop-color="#1f6bff" />
-                            </linearGradient>
-                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="4" result="blur" />
-                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                            </filter>
-                        </defs>
-                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
-                        <g filter="url(#logoGlow)">
-                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
-                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
-                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
-                        </g>
-                    </svg>
-                </div>
-                <div class="logo-text">
-                    <h2>SFERA</h2>
-                    <p>Milli Sanly Platforma</p>
-                </div>
-            </a>
-
-            <h2 class="auth-title" data-i18n="login_title">Giriş / Вход</h2>
-
-            <!-- Форма входа -->
-            <form id="loginForm" class="auth-form">
-                <div class="form-group">
-                    <label data-i18n="login_email_label">E-mail</label>
-                    <input type="email" id="loginEmail" required placeholder="example@sfera.tm" />
-                </div>
-
-                <div class="form-group">
-                    <label data-i18n="login_password_label">Aşakdaky syr / Пароль</label>
-                    <input type="password" id="loginPassword" required placeholder="••••••••" />
-                </div>
-
-                <button type="submit" class="primary-btn auth-btn" data-i18n="login_button">Girmek / Войти</button>
-            </form>
-
-            <div class="auth-footer">
-                <p data-i18n="login_no_account">Hasabyňyz ýokmy? <a href="register.html" data-i18n="login_register_link">Ýazylmak</a></p>
-            </div>
-
-            <div style="text-align:center; margin-top:15px;">
-                <button class="lang-btn" id="langBtn">TM</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Основной единый скрипт логики и перевода -->
-    <script src="/js/main.js"></script>
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Пароль" required>
+        <button type="submit">Войти</button>
+    </form>
 
     <script>
-        // ============================================================
-        // ОБРАБОТКА ФОРМЫ ВХОДА
-        // ============================================================
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-
-            if (!email || !password) {
-                alert('E-mail we parol hökmany / Введите Email и пароль');
-                return;
-            }
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
             try {
+                // Используем относительный путь /api/auth/login
                 const response = await fetch('/api/auth/login', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({ email, password })
                 });
 
-                let data;
+                // Проверяем, действительно ли пришел JSON
                 const contentType = response.headers.get('content-type');
-                
-                if (contentType && contentType.includes('application/json')) {
-                    data = await response.json();
-                } else {
+                if (!contentType || !contentType.includes('application/json')) {
                     const text = await response.text();
-                    console.error('Server returned non-JSON response:', text);
-                    alert('Ошибка сервера (получен не JSON ответ). Проверьте запуск бэкенда на Render.');
+                    console.error('Сервер вернул не JSON:', text);
+                    alert('Ошибка сервера: получен неверный формат ответа');
                     return;
                 }
 
-                if (response.ok) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
+                const data = await response.json();
 
-                    const role = data.user?.role || 'user';
-                    if (role === 'admin') {
-                        window.location.href = 'admin.html';
-                    } else {
-                        window.location.href = 'dashboard.html';
-                    }
+                if (response.ok && data.success) {
+                    alert('Успешный вход!');
+                    // localStorage.setItem('token', data.token);
+                    // window.location.href = '/dashboard.html';
                 } else {
-                    alert(data.message || 'Ошибка авторизации');
+                    alert(data.message || 'Ошибка входа');
                 }
+
             } catch (err) {
-                console.error('Login request error:', err);
-                alert('Ошибка связи с сервером');
+                console.error('Стековая ошибка запроса:', err);
+                alert('Не удалось связаться с сервером');
             }
         });
     </script>
