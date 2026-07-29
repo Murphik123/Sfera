@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="tm">
 <head>
@@ -12,7 +13,7 @@
     <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="auth-page">
-    <!-- Эффекты с главной страницы -->
+    <!-- Эффекты (как на главной) -->
     <div class="hero-grid"></div>
     <div class="hero-glow glow-left"></div>
     <div class="hero-glow glow-right"></div>
@@ -20,6 +21,7 @@
 
     <div class="auth-container">
         <div class="auth-card glass-panel">
+            <!-- Логотип -->
             <a href="index.html" class="logo">
                 <div class="logo-icon">
                     <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -48,8 +50,10 @@
                 </div>
             </a>
 
+            <!-- Заголовок -->
             <h2 class="auth-title" data-i18n="register_title">Ýazylmak / Registrasiya</h2>
 
+            <!-- ФОРМА РЕГИСТРАЦИИ (теперь точно видна) -->
             <form id="registerForm" class="auth-form">
                 <div class="form-group">
                     <label data-i18n="register_name_label">Atyňyz / Имя</label>
@@ -77,10 +81,12 @@
                 <button type="submit" class="primary-btn auth-btn" data-i18n="register_button">Ýazylmak / Зарегистрироваться</button>
             </form>
 
+            <!-- Ссылка на вход -->
             <div class="auth-footer">
                 <p data-i18n="register_have_account">Eýýäm akkountyňyz barmy? <a href="login.html" data-i18n="register_login_link">Girmek</a></p>
             </div>
 
+            <!-- Кнопка переключения языка -->
             <div style="text-align:center; margin-top:15px;">
                 <button class="lang-btn" id="langBtn">TM</button>
             </div>
@@ -173,7 +179,7 @@
         });
 
         // ============================================================
-        // ОБРАБОТКА ФОРМЫ РЕГИСТРАЦИИ (с улучшенной обработкой ошибок)
+        // ОБРАБОТКА ФОРМЫ РЕГИСТРАЦИИ
         // ============================================================
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -219,7 +225,7 @@
         });
 
         // ============================================================
-        // СОЗДАНИЕ ЧАСТИЦ (если их нет)
+        // ЧАСТИЦЫ (эффекты)
         // ============================================================
         const particles = document.getElementById('particles');
         if (particles && particles.children.length === 0) {
