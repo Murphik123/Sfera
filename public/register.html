@@ -70,21 +70,6 @@
                     </select>
                 </div>
 
-                <div class="form-group">
-                    <label for="targetModule">Giriş moduly / Модуль для входа</label>
-                    <select id="targetModule" class="form-select">
-                        <option value="marketplace">Marketpleýs (Маркетплейс)</option>
-                        <option value="dashboard">Dashboard (Панель)</option>
-                        <option value="tmpay">TM Pay</option>
-                        <option value="tmcoin">TM Coin</option>
-                        <option value="bank">TM Bank</option>
-                        <option value="ai">AI Analitika</option>
-                        <option value="docs">Resmiýetler</option>
-                        <option value="messenger">Messenger</option>
-                        <option value="mail">Mail TM</option>
-                    </select>
-                </div>
-
                 <button type="submit" class="primary-btn auth-btn">Ýazylmak / Зарегистрироваться</button>
             </form>
 
@@ -95,29 +80,6 @@
     </div>
 
     <script>
-        // Функция, вызываемая после успешной регистрации
-        function onAuthSuccess(user, token, targetModule) {
-            // Сохраняем токен и данные пользователя в localStorage
-            localStorage.setItem('token', token);
-            localStorage.setItem('user', JSON.stringify(user));
-
-            // Перенаправление на выбранный модуль или на страницу входа
-            const redirectMap = {
-                'marketplace': 'marketplace.html',
-                'dashboard': 'dashboard.html',
-                'tmpay': 'tmpay.html',
-                'tmcoin': 'tmcoin.html',
-                'bank': 'bank.html',
-                'ai': 'ai.html',
-                'docs': 'docs.html',
-                'messenger': 'messenger.html',
-                'mail': 'mailtm.html'
-            };
-            const target = redirectMap[targetModule] || 'login.html';
-            window.location.href = target;
-        }
-
-        // Обработчик отправки формы
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -125,16 +87,13 @@
             const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value.trim();
             const role = document.getElementById('regRole').value;
-            const targetModule = document.getElementById('targetModule').value;
 
-            // Простая валидация
             if (!name || !email || !password) {
                 alert('Аhli meýdançalary dolduryň / Заполните все поля');
                 return;
             }
 
             try {
-                // Запрос к бэкенду
                 const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -144,32 +103,14 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Если бэкенд возвращает пользователя и токен
-                    if (data.user && data.token) {
-                        onAuthSuccess(data.user, data.token, targetModule);
-                    } else {
-                        // Если бэкенд не возвращает токен, но регистрация успешна – перенаправляем на логин
-                        alert('Registrasiya tamamlandy! Indi giriş ediň / Регистрация завершена! Теперь войдите.');
-                        window.location.href = 'login.html';
-                    }
+                    alert('Registrasiya tamamlandy! Indi giriş ediň / Регистрация завершена! Теперь войдите.');
+                    window.location.href = 'login.html';
                 } else {
                     alert(data.message || 'Registrasiya ýalňyşlyk / Ошибка регистрации');
                 }
             } catch (err) {
-                console.error('Backend bilen baglanyşyk ýalňyşlygy:', err);
-                // Фолбэк для автономного режима (если бэкенд недоступен)
-                // В реальном проекте здесь можно сохранить в localStorage для демонстрации
-                alert('Backend ýok ýa-da işlemeýär. Şahsy kompýuterde saýlanyp geçilýär.\n' +
-                      'Аgtyýar: ulanyjy ýerli ýatda saklandy.');
-
-                // Сохраняем пользователя локально (для демо)
-                const fakeUser = { id: Date.now(), username: name, email, role };
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                users.push(fakeUser);
-                localStorage.setItem('users', JSON.stringify(users));
-
-                // Переходим на страницу входа
-                window.location.href = 'login.html';
+                console.error('Registration error:', err);
+                alert('Serwer bilen baglanyşyk ýalňyşlygy / Ошибка связи с сервером');
             }
         });
     </script>
