@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="tm">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>СФЕРА — Administrasiýa paneli</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <style>
+        /* Общие стили для админки */
+        body {
+            background: #0b1a2a;
+        }
+        .admin-wrapper {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 80px; /* чтобы не перекрывать header */
+        }
+        .admin-sidebar {
+            width: 240px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid rgba(255,255,255,0.08);
+            padding: 24px 16px;
+            flex-shrink: 0;
+            height: calc(100vh - 80px);
+            position: sticky;
+            top: 80px;
+            overflow-y: auto;
+        }
+        .admin-sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .admin-sidebar li {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            color: #bdd0df;
+            transition: .2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+        .admin-sidebar li:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+        .admin-sidebar li.active {
+            background: rgba(0,212,255,0.12);
+            color: #00d4ff;
+            font-weight: 600;
+        }
+        .admin-sidebar li .icon {
+            font-size: 20px;
+            width: 28px;
+            text-align: center;
+        }
+        .admin-content {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+        }
+        .admin-content h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #fff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .admin-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+        }
+        .admin-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #dbe9ff;
+        }
+        .admin-card p {
+            color: #9fb5c8;
+        }
+        .admin-card .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+        .admin-card .stat-item {
+            background: rgba(0,0,0,0.2);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .admin-card .stat-item .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+        .admin-card .stat-item .label {
+            font-size: 13px;
+            color: #9fb5c8;
+            margin-top: 4px;
+        }
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        .admin-table th {
+            text-align: left;
+            padding: 10px 12px;
+            color: #9fb5c8;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .admin-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: #dbe9ff;
+        }
+        .admin-table .badge {
+            background: rgba(0,212,255,0.15);
+            color: #00d4ff;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+        .admin-table .badge.admin {
+            background: rgba(255,200,0,0.15);
+            color: #f5c542;
+        }
+        .admin-table .badge.user {
+            background: rgba(0,255,170,0.1);
+            color: #00ffa3;
+        }
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .admin-actions button {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #bdd0df;
+            padding: 4px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: .2s;
+            font-size: 13px;
+        }
+        .admin-actions button:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+        .admin-actions button.danger {
+            border-color: rgba(255,0,0,0.3);
+            color: #ff6b6b;
+        }
+        .admin-actions button.danger:hover {
+            background: rgba(255,0,0,0.1);
+        }
+        @media (max-width: 768px) {
+            .admin-wrapper { flex-direction: column; }
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                top: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
+                padding: 12px 16px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .admin-sidebar ul {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .admin-sidebar li {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            .admin-content { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles"></div>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3" />
+                                <stop offset="50%" stop-color="#00d4ff" />
+                                <stop offset="100%" stop-color="#1f6bff" />
+                            </linearGradient>
+                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="4" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
+                        <g filter="url(#logoGlow)">
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>SFERA</h2>
+                    <p>Administrasiýa paneli</p>
+                </div>
+            </a>
+
+            <div class="header-right" style="display:flex; align-items:center; gap:12px;">
+                <span class="user-info">👑 <strong id="adminName">Admin</strong></span>
+                <button class="lang" id="langBtn">TM</button>
+                <button class="logout-btn" id="logoutBtn" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="admin-wrapper">
+        <aside class="admin-sidebar">
+            <ul id="adminMenu">
+                <li class="active" data-section="dashboard"><span class="icon">📊</span> Umumy</li>
+                <li data-section="users"><span class="icon">👥</span> Ulanyjylar</li>
+                <li data-section="transactions"><span class="icon">💰</span> Tranzaksiýalar</li>
+                <li data-section="listings"><span class="icon">🛒</span> Harytlar</li>
+                <li data-section="mail"><span class="icon">📬</span> Poçta</li>
+                <li data-section="ai"><span class="icon">🤖</span> AI çaklamalar</li>
+                <li data-section="settings"><span class="icon">⚙️</span> Sazlamalar</li>
+            </ul>
+        </aside>
+
+        <main class="admin-content" id="adminContent">
+            <!-- Содержимое будет загружаться динамически через JS -->
+            <h1>Hoş geldiňiz, Administrator!</h1>
+            <div class="admin-card">
+                <h3>Platformanyň ýagdaýy</h3>
+                <div class="stat-grid">
+                    <div class="stat-item"><div class="number" id="statUsers">0</div><div class="label">Ulanyjylar</div></div>
+                    <div class="stat-item"><div class="number" id="statOrders">0</div><div class="label">Sargytlar</div></div>
+                    <div class="stat-item"><div class="number" id="statCoins">0</div><div class="label">TM Coin söwdalary</div></div>
+                    <div class="stat-item"><div class="number" id="statMails">0</div><div class="label">Hatlar</div></div>
+                </div>
+            </div>
+            <div class="admin-card">
+                <h3>Iň soňky ulanyjylar</h3>
+                <table class="admin-table" id="recentUsersTable">
+                    <thead><tr><th>Ulanyjy</th><th>Email</th><th>Rol</th><th>Döredilen</th></tr></thead>
+                    <tbody id="recentUsersBody"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ============================================================
+        // ЗАЩИТА: ТОЛЬКО ДЛЯ АДМИНИСТРАТОРОВ
+        // ============================================================
+        const token = localStorage.getItem('token');
+        const userData = JSON.parse(localStorage.getItem('user') || '{}');
+
+        if (!token || userData.role !== 'admin') {
+            // Если нет токена или роль не admin – отправляем на логин
+            window.location.href = 'login.html';
+        }
+
+        // ============================================================
+        // ПЕРЕВОДЫ (минимальный набор для админки)
+        // ============================================================
+        const translations = {
+            tm: {
+                logout: "Çykmak",
+                dashboard: "Umumy",
+                users: "Ulanyjylar",
+                transactions: "Tranzaksiýalar",
+                listings: "Harytlar",
+                mail: "Poçta",
+                ai: "AI çaklamalar",
+                settings: "Sazlamalar",
+                welcome: "Hoş geldiňiz, Administrator!",
+                no_data: "Maglumat ýok"
+            },
+            ru: {
+                logout: "Выйти",
+                dashboard: "Обзор",
+                users: "Пользователи",
+                transactions: "Транзакции",
+                listings: "Объявления",
+                mail: "Почта",
+                ai: "AI прогнозы",
+                settings: "Настройки",
+                welcome: "Добро пожаловать, Администратор!",
+                no_data: "Нет данных"
+            },
+            en: {
+                logout: "Logout",
+                dashboard: "Dashboard",
+                users: "Users",
+                transactions: "Transactions",
+                listings: "Listings",
+                mail: "Mail",
+                ai: "AI Predictions",
+                settings: "Settings",
+                welcome: "Welcome, Administrator!",
+                no_data: "No data"
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'tm';
+
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            document.getElementById('langBtn').textContent = lang.toUpperCase();
+            localStorage.setItem('lang', lang);
+        }
+
+        document.getElementById('langBtn').addEventListener('click', function() {
+            const cycle = ['tm', 'ru', 'en'];
+            let idx = cycle.indexOf(currentLang);
+            idx = (idx + 1) % cycle.length;
+            setLanguage(cycle[idx]);
+        });
+
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ ИМЕНИ АДМИНА
+        // ============================================================
+        document.getElementById('adminName').textContent = userData.username || 'Admin';
+
+        // ============================================================
+        // ВЫХОД
+        // ============================================================
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // ============================================================
+        // НАВИГАЦИЯ ПО РАЗДЕЛАМ (демо)
+        // ============================================================
+        const menuItems = document.querySelectorAll('#adminMenu li');
+        const contentArea = document.getElementById('adminContent');
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                const section = this.dataset.section;
+
+                // Заглушка – для каждого раздела показываем разный контент
+                // В реальном проекте здесь загружаются данные через API
+                let html = '';
+                switch(section) {
+                    case 'dashboard':
+                        html = `<h1>${translations[currentLang].welcome}</h1>
+                                <div class="admin-card"><h3>${translations[currentLang].dashboard}</h3><p>Bu ýerde platformanyň umumy statistika görkezijileri görkeziler.</p></div>`;
+                        break;
+                    case 'users':
+                        html = `<h1>${translations[currentLang].users}</h1>
+                                <div class="admin-card">
+                                    <h3>Ulanyjylary dolandyrmak</h3>
+                                    <p>Şu ýerde ulanyjylaryň sanawyny görüp, olaryň hasaplaryny üýtgedip ýa-da pozup bilersiňiz.</p>
+                                    <table class="admin-table">
+                                        <thead><tr><th>Ulanyjy</th><th>Email</th><th>Rol</th><th>Hereket</th></tr></thead>
+                                        <tbody>
+                                            <tr><td>admin</td><td>admin@example.com</td><td><span class="badge admin">admin</span></td><td><div class="admin-actions"><button class="danger">Poz</button></div></td></tr>
+                                            <tr><td>user1</td><td>user1@example.com</td><td><span class="badge user">user</span></td><td><div class="admin-actions"><button>Üýtget</button><button class="danger">Poz</button></div></td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>`;
+                        break;
+                    case 'transactions':
+                        html = `<h1>${translations[currentLang].transactions}</h1>
+                                <div class="admin-card"><h3>Tranzaksiýalar</h3><p>Maliýe amallarynyň gözlegi we filtrläp bolar.</p></div>`;
+                        break;
+                    case 'listings':
+                        html = `<h1>${translations[currentLang].listings}</h1>
+                                <div class="admin-card"><h3>Harytlar we sargytlar</h3><p>Marketpleýsde ýerleşdirilen harytlary we sargytlary gözegçilik ediň.</p></div>`;
+                        break;
+                    case 'mail':
+                        html = `<h1>${translations[currentLang].mail}</h1>
+                                <div class="admin-card"><h3>Poçta ulgamy</h3><p>Ulanyjylaryň hatlaryny gözläp we dolandyryp bilersiňiz.</p></div>`;
+                        break;
+                    case 'ai':
+                        html = `<h1>${translations[currentLang].ai}</h1>
+                                <div class="admin-card"><h3>AI çaklamalar we analitika</h3><p>TM Coin bahasynyň prognozlary we trendler.</p></div>`;
+                        break;
+                    case 'settings':
+                        html = `<h1>${translations[currentLang].settings}</h1>
+                                <div class="admin-card"><h3>Platformanyň sazlamalary</h3><p>Umumy parametrleri üýtgedip bilersiňiz.</p></div>`;
+                        break;
+                    default:
+                        html = `<h1>${translations[currentLang].welcome}</h1>`;
+                }
+                contentArea.innerHTML = html;
+                // Перезапускаем переводы для нового контента (если есть элементы с data-i18n)
+            });
+        });
+
+        // ============================================================
+        // ЗАГРУЗКА ДЕМО-СТАТИСТИКИ (можно заменить реальным API)
+        // ============================================================
+        function loadStats() {
+            // Имитация загрузки данных из localStorage (или с сервера)
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            document.getElementById('statUsers').textContent = users.length;
+
+            // Другие статистики можно взять из других хранилищ или API
+            document.getElementById('statOrders').textContent = '24';
+            document.getElementById('statCoins').textContent = '142';
+            document.getElementById('statMails').textContent = '8';
+
+            // Заполним таблицу последних пользователей
+            const tbody = document.getElementById('recentUsersBody');
+            if (!tbody) return;
+            const recent = users.slice(-5).reverse();
+            tbody.innerHTML = recent.map(u => `
+                <tr>
+                    <td>${u.username || 'N/A'}</td>
+                    <td>${u.email || ''}</td>
+                    <td><span class="badge ${u.role === 'admin' ? 'admin' : 'user'}">${u.role || 'user'}</span></td>
+                    <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : ''}</td>
+                </tr>
+            `).join('');
+        }
+
+        // ============================================================
+        // ЧАСТИЦЫ
+        // ============================================================
+        const particles = document.getElementById('particles');
+        if (particles && particles.children.length === 0) {
+            for (let i = 0; i < 60; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDuration = (6 + Math.random() * 12) + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                particles.appendChild(p);
+            }
+        }
+
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+        setLanguage(currentLang);
+        loadStats();
+        // Активируем раздел "Обзор"
+        document.querySelector('#adminMenu li[data-section="dashboard"]').click();
+
+        console.log('Admin panel loaded');
+    </script>
+</body>
+</html>
