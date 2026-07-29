@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SFERA — Giriş</title>
+    <title>SFERA — Giriş / Вход</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,10 +12,14 @@
     <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="auth-page">
+    <div class="hero-grid"></div>
+    <div class="hero-glow glow-left"></div>
+    <div class="hero-glow glow-right"></div>
     <div id="particles"></div>
 
     <div class="auth-container">
         <div class="auth-card glass-panel">
+            <!-- Логотип -->
             <a href="index.html" class="logo">
                 <div class="logo-icon">
                     <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -46,6 +50,7 @@
 
             <h2 class="auth-title" data-i18n="login_title">Giriş / Вход</h2>
 
+            <!-- Форма входа -->
             <form id="loginForm" class="auth-form">
                 <div class="form-group">
                     <label data-i18n="login_email_label">E-mail</label>
@@ -70,72 +75,10 @@
         </div>
     </div>
 
+    <!-- Основной единый скрипт логики и перевода -->
+    <script src="/js/main.js"></script>
+
     <script>
-        // ============================================================
-        // ПЕРЕВОДЫ
-        // ============================================================
-        const translations = {
-            tm: {
-                login_title: "Giriş",
-                login_email_label: "E-mail",
-                login_password_label: "Aşakdaky syr",
-                login_button: "Girmek",
-                login_no_account: "Hasabyňyz ýokmy?",
-                login_register_link: "Ýazylmak",
-                login_error: "Giriş ýalňyşlygy",
-                login_success: "Giriş başaryldy!",
-                login_network_error: "Serwer bilen baglanyşyk ýalňyşlygy"
-            },
-            ru: {
-                login_title: "Вход",
-                login_email_label: "E-mail",
-                login_password_label: "Пароль",
-                login_button: "Войти",
-                login_no_account: "Нет аккаунта?",
-                login_register_link: "Зарегистрироваться",
-                login_error: "Ошибка входа",
-                login_success: "Вход выполнен!",
-                login_network_error: "Ошибка связи с сервером"
-            },
-            en: {
-                login_title: "Login",
-                login_email_label: "E-mail",
-                login_password_label: "Password",
-                login_button: "Login",
-                login_no_account: "Don't have an account?",
-                login_register_link: "Register",
-                login_error: "Login error",
-                login_success: "Login successful!",
-                login_network_error: "Network error"
-            }
-        };
-
-        let currentLang = localStorage.getItem('lang') || 'tm';
-
-        function setLanguage(lang) {
-            if (!translations[lang]) return;
-            currentLang = lang;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    if (el.tagName === 'INPUT') {
-                        el.placeholder = translations[lang][key];
-                    } else {
-                        el.textContent = translations[lang][key];
-                    }
-                }
-            });
-            document.getElementById('langBtn').textContent = lang.toUpperCase();
-            localStorage.setItem('lang', lang);
-        }
-
-        document.getElementById('langBtn').addEventListener('click', function() {
-            const cycle = ['tm', 'ru', 'en'];
-            let idx = cycle.indexOf(currentLang);
-            idx = (idx + 1) % cycle.length;
-            setLanguage(cycle[idx]);
-        });
-
         // ============================================================
         // ОБРАБОТКА ФОРМЫ ВХОДА
         // ============================================================
@@ -146,7 +89,7 @@
             const password = document.getElementById('loginPassword').value.trim();
 
             if (!email || !password) {
-                alert(translations[currentLang].login_error + ': E-mail we parol hökmany');
+                alert('E-mail we parol hökmany / Введите Email и пароль');
                 return;
             }
 
@@ -157,14 +100,15 @@
                     body: JSON.stringify({ email, password })
                 });
 
-                const contentType = response.headers.get('content-type');
                 let data;
+                const contentType = response.headers.get('content-type');
+                
                 if (contentType && contentType.includes('application/json')) {
                     data = await response.json();
                 } else {
                     const text = await response.text();
-                    console.error('Server response (not JSON):', text);
-                    alert('Serwerden nädogry jogap / Неверный ответ сервера. Подробности в консоли.');
+                    console.error('Server returned non-JSON response:', text);
+                    alert('Ошибка сервера (получен не JSON ответ). Проверьте запуск бэкенда на Render.');
                     return;
                 }
 
@@ -179,16 +123,12 @@
                         window.location.href = 'dashboard.html';
                     }
                 } else {
-                    alert(data.message || translations[currentLang].login_error);
+                    alert(data.message || 'Ошибка авторизации');
                 }
             } catch (err) {
-                console.error('Login error:', err);
-                alert(translations[currentLang].login_network_error);
+                console.error('Login request error:', err);
+                alert('Ошибка связи с сервером');
             }
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            setLanguage(currentLang);
         });
     </script>
 </body>
