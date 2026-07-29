@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="tm">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>СФЕРА — Administrasiýa paneli</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <style>
+        .admin-panel {
+            padding: 120px 7% 60px;
+            min-height: 100vh;
+        }
+        .admin-panel h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .admin-panel .subtitle {
+            font-size: 18px;
+            color: #bcd0e2;
+            margin-bottom: 40px;
+        }
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .admin-card {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.12);
+            backdrop-filter: blur(25px);
+            border-radius: 18px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: .35s;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+        .admin-card:hover {
+            transform: translateY(-8px);
+            border-color: #00d4ff;
+            box-shadow: 0 25px 50px rgba(0,212,255,.2);
+        }
+        .admin-card .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .admin-card h3 {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+        .admin-card p {
+            font-size: 14px;
+            color: #bdd0df;
+        }
+        .admin-card .badge {
+            display: inline-block;
+            background: rgba(0,212,255,.2);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #00d4ff;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        .admin-card .badge-admin {
+            background: rgba(255,215,0,.15);
+            color: #ffd700;
+        }
+        .admin-card .badge-warning {
+            background: rgba(255,100,0,.15);
+            color: #ff6b35;
+        }
+        .admin-card .badge-success {
+            background: rgba(0,255,170,.15);
+            color: #00ffa3;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .user-info-admin {
+            color: #bcd0e2;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .user-info-admin strong {
+            color: white;
+        }
+        .admin-badge-header {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #000;
+            letter-spacing: 0.5px;
+        }
+        .logout-btn {
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.15);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: .3s;
+            font-weight: 600;
+        }
+        .logout-btn:hover {
+            background: rgba(255,0,0,.15);
+            border-color: rgba(255,0,0,.3);
+        }
+        @media (max-width: 768px) {
+            .admin-panel h1 { font-size: 28px; }
+            .admin-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+            .header-right { flex-wrap: wrap; gap: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles"></div>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3" />
+                                <stop offset="50%" stop-color="#00d4ff" />
+                                <stop offset="100%" stop-color="#1f6bff" />
+                            </linearGradient>
+                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="4" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
+                        <g filter="url(#logoGlow)">
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>SFERA</h2>
+                    <p>Administrasiýa paneli</p>
+                </div>
+            </a>
+
+            <div class="header-right">
+                <span class="user-info-admin">
+                    <span class="admin-badge-header">👑 Admin</span>
+                    <strong id="adminName">Admin</strong>
+                </span>
+                <button class="lang" id="langBtn">TM</button>
+                <button class="logout-btn" id="logoutBtn" data-i18n="logout">Çykmak</button>
+                <a href="user-dashboard.html" class="btn btn-outline" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">👤 Ulanyjy görnüşi</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="admin-panel">
+        <div class="container">
+            <h1 data-i18n="admin_title">👑 Administrasiýa paneli</h1>
+            <p class="subtitle" data-i18n="admin_subtitle">Platformany dolandyrmak üçin aşakdaky bölümleri ulanyň.</p>
+
+            <div class="admin-grid">
+                <!-- Статистика -->
+                <a href="#" class="admin-card" id="cardStats">
+                    <div class="icon">📊</div>
+                    <h3 data-i18n="admin_stats">Statistika</h3>
+                    <p data-i18n="admin_stats_desc">Ulanyjylar, söwdalar, TM Coin</p>
+                    <span class="badge badge-success" data-i18n="admin_active">Işjeň</span>
+                </a>
+
+                <!-- Пользователи -->
+                <a href="#" class="admin-card" id="cardUsers">
+                    <div class="icon">👥</div>
+                    <h3 data-i18n="admin_users">Ulanyjylar</h3>
+                    <p data-i18n="admin_users_desc">Hasaplary dolandyrmak</p>
+                    <span class="badge" data-i18n="admin_manage">Dolandyrmak</span>
+                </a>
+
+                <!-- Модули -->
+                <a href="#" class="admin-card" id="cardModules">
+                    <div class="icon">⚙️</div>
+                    <h3 data-i18n="admin_modules">Modullary dolandyrmak</h3>
+                    <p data-i18n="admin_modules_desc">Marketpleýs, Bank, AI</p>
+                    <span class="badge badge-admin" data-i18n="admin_configure">Konfigurasiýa</span>
+                </a>
+
+                <!-- Логи -->
+                <a href="#" class="admin-card" id="cardLogs">
+                    <div class="icon">📝</div>
+                    <h3 data-i18n="admin_logs">Loglar</h3>
+                    <p data-i18n="admin_logs_desc">Ulgam ýazgylary</p>
+                    <span class="badge badge-warning" data-i18n="admin_monitor">Gözlem</span>
+                </a>
+
+                <!-- TM Coin -->
+                <a href="#" class="admin-card" id="cardCoin">
+                    <div class="icon">💰</div>
+                    <h3 data-i18n="admin_tmcoin">TM Coin dolandyryş</h3>
+                    <p data-i18n="admin_tmcoin_desc">Walýuta emessiýasy</p>
+                    <span class="badge badge-admin" data-i18n="admin_issue">Emessiýa</span>
+                </a>
+
+                <!-- Документы -->
+                <a href="#" class="admin-card" id="cardDocs">
+                    <div class="icon">📄</div>
+                    <h3 data-i18n="admin_docs">Resmiýet barlagy</h3>
+                    <p data-i18n="admin_docs_desc">Awtomatik tassyklama</p>
+                    <span class="badge badge-success" data-i18n="admin_verify">Tassyklamak</span>
+                </a>
+
+                <!-- Безопасность -->
+                <a href="#" class="admin-card" id="cardSecurity">
+                    <div class="icon">🔒</div>
+                    <h3 data-i18n="admin_security">Howpsuzlyk</h3>
+                    <p data-i18n="admin_security_desc">Giriş hukuklary, loglar</p>
+                    <span class="badge badge-warning" data-i18n="admin_protect">Goramak</span>
+                </a>
+
+                <!-- Настройки -->
+                <a href="#" class="admin-card" id="cardSettings">
+                    <div class="icon">⚡</div>
+                    <h3 data-i18n="admin_settings">Ulgam sazlamalary</h3>
+                    <p data-i18n="admin_settings_desc">Platforma parametrleri</p>
+                    <span class="badge" data-i18n="admin_config">Sazlamak</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ============================================================
+        // ПРОВЕРКА РОЛИ (защита страницы)
+        // ============================================================
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (!user || user.role !== 'admin') {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('adminName').textContent = user.username || 'Admin';
+
+        // ============================================================
+        // ВЫХОД
+        // ============================================================
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // ============================================================
+        // ПЕРЕВОДЫ
+        // ============================================================
+        const translations = {
+            tm: {
+                logout: "Çykmak",
+                admin_title: "👑 Administrasiýa paneli",
+                admin_subtitle: "Platformany dolandyrmak üçin aşakdaky bölümleri ulanyň.",
+                admin_stats: "Statistika",
+                admin_stats_desc: "Ulanyjylar, söwdalar, TM Coin",
+                admin_active: "Işjeň",
+                admin_users: "Ulanyjylar",
+                admin_users_desc: "Hasaplary dolandyrmak",
+                admin_manage: "Dolandyrmak",
+                admin_modules: "Modullary dolandyrmak",
+                admin_modules_desc: "Marketpleýs, Bank, AI",
+                admin_configure: "Konfigurasiýa",
+                admin_logs: "Loglar",
+                admin_logs_desc: "Ulgam ýazgylary",
+                admin_monitor: "Gözlem",
+                admin_tmcoin: "TM Coin dolandyryş",
+                admin_tmcoin_desc: "Walýuta emessiýasy",
+                admin_issue: "Emessiýa",
+                admin_docs: "Resmiýet barlagy",
+                admin_docs_desc: "Awtomatik tassyklama",
+                admin_verify: "Tassyklamak",
+                admin_security: "Howpsuzlyk",
+                admin_security_desc: "Giriş hukuklary, loglar",
+                admin_protect: "Goramak",
+                admin_settings: "Ulgam sazlamalary",
+                admin_settings_desc: "Platforma parametrleri",
+                admin_config: "Sazlamak"
+            },
+            ru: {
+                logout: "Выйти",
+                admin_title: "👑 Панель администратора",
+                admin_subtitle: "Используйте разделы ниже для управления платформой.",
+                admin_stats: "Статистика",
+                admin_stats_desc: "Пользователи, сделки, TM Coin",
+                admin_active: "Активно",
+                admin_users: "Пользователи",
+                admin_users_desc: "Управление аккаунтами",
+                admin_manage: "Управление",
+                admin_modules: "Управление модулями",
+                admin_modules_desc: "Маркетплейс, Банк, ИИ",
+                admin_configure: "Конфигурация",
+                admin_logs: "Логи",
+                admin_logs_desc: "Системные записи",
+                admin_monitor: "Мониторинг",
+                admin_tmcoin: "Управление TM Coin",
+                admin_tmcoin_desc: "Эмиссия валюты",
+                admin_issue: "Эмиссия",
+                admin_docs: "Проверка документов",
+                admin_docs_desc: "Автоматическое подтверждение",
+                admin_verify: "Подтвердить",
+                admin_security: "Безопасность",
+                admin_security_desc: "Права доступа, логи",
+                admin_protect: "Защита",
+                admin_settings: "Настройки системы",
+                admin_settings_desc: "Параметры платформы",
+                admin_config: "Настройка"
+            },
+            en: {
+                logout: "Logout",
+                admin_title: "👑 Admin Panel",
+                admin_subtitle: "Use the sections below to manage the platform.",
+                admin_stats: "Statistics",
+                admin_stats_desc: "Users, trades, TM Coin",
+                admin_active: "Active",
+                admin_users: "Users",
+                admin_users_desc: "Manage accounts",
+                admin_manage: "Manage",
+                admin_modules: "Module Management",
+                admin_modules_desc: "Marketplace, Bank, AI",
+                admin_configure: "Configure",
+                admin_logs: "Logs",
+                admin_logs_desc: "System records",
+                admin_monitor: "Monitor",
+                admin_tmcoin: "TM Coin Management",
+                admin_tmcoin_desc: "Currency emission",
+                admin_issue: "Issue",
+                admin_docs: "Document Verification",
+                admin_docs_desc: "Automatic verification",
+                admin_verify: "Verify",
+                admin_security: "Security",
+                admin_security_desc: "Access rights, logs",
+                admin_protect: "Protect",
+                admin_settings: "System Settings",
+                admin_settings_desc: "Platform parameters",
+                admin_config: "Configure"
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'tm';
+
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            document.getElementById('langBtn').textContent = lang.toUpperCase();
+            localStorage.setItem('lang', lang);
+        }
+
+        document.getElementById('langBtn').addEventListener('click', function() {
+            const cycle = ['tm', 'ru', 'en'];
+            let idx = cycle.indexOf(currentLang);
+            idx = (idx + 1) % cycle.length;
+            setLanguage(cycle[idx]);
+        });
+
+        // ============================================================
+        // ЧАСТИЦЫ
+        // ============================================================
+        const particles = document.getElementById('particles');
+        if (particles && particles.children.length === 0) {
+            for (let i = 0; i < 60; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDuration = (6 + Math.random() * 12) + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                particles.appendChild(p);
+            }
+        }
+
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+        setLanguage(currentLang);
+        console.log('Admin dashboard loaded');
+    </script>
+</body>
+</html>
