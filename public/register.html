@@ -3,24 +3,165 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SFERA — Registrasiya</title>
+    <title>СФЕРА — Registrasiya</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="/css/style.css" />
+
+    <style>
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 20px 60px;
+            background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
+        }
+
+        .login-box {
+            background: rgba(255,255,255,.06);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 24px;
+            padding: 50px 40px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0,0,0,.35);
+            animation: fadeUp 0.8s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-box h2 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 8px;
+            background: linear-gradient(to right, #fff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-box .subtitle {
+            text-align: center;
+            color: #9fb5c8;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #dbe9ff;
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.15);
+            background: rgba(255,255,255,.05);
+            color: white;
+            font-size: 16px;
+            transition: .3s;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0,212,255,.2);
+            background: rgba(255,255,255,.08);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #00ffa3, #00d4ff);
+            color: #06111d;
+            transition: .35s;
+            box-shadow: 0 15px 35px rgba(0,255,163,.3);
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 25px 50px rgba(0,255,163,.5);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #9fb5c8;
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .message.error {
+            display: block;
+            background: rgba(255,0,0,.15);
+            border: 1px solid rgba(255,0,0,.3);
+            color: #ff6b6b;
+        }
+
+        .message.success {
+            display: block;
+            background: rgba(0,255,170,.1);
+            border: 1px solid rgba(0,255,170,.3);
+            color: #00ffa3;
+        }
+
+        .logo-icon-small {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon-small svg {
+            width: 60px;
+            height: 60px;
+        }
+    </style>
 </head>
-<body class="auth-page">
-    <!-- Эффекты с главной страницы -->
-    <div class="hero-grid"></div>
-    <div class="hero-glow glow-left"></div>
-    <div class="hero-glow glow-right"></div>
+<body>
     <div id="particles"></div>
 
-    <div class="auth-container">
-        <div class="auth-card glass-panel">
-            <!-- Логотип -->
+    <header>
+        <div class="container">
             <a href="index.html" class="logo">
                 <div class="logo-icon">
                     <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,117 +171,92 @@
                                 <stop offset="50%" stop-color="#00d4ff" />
                                 <stop offset="100%" stop-color="#1f6bff" />
                             </linearGradient>
-                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="4" result="blur" />
-                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                            </filter>
                         </defs>
-                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
-                        <g filter="url(#logoGlow)">
-                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
-                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
-                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
-                        </g>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" />
+                        <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" />
                     </svg>
                 </div>
                 <div class="logo-text">
-                    <h2>SFERA</h2>
-                    <p>Milli Sanly Platforma</p>
+                    <h2 data-i18n="logo_title">SFERA</h2>
+                    <p data-i18n="logo_subtitle">Milli Sanly Platforma</p>
                 </div>
             </a>
 
-            <!-- Заголовок -->
-            <h2 class="auth-title" data-i18n="register_title">Ýazylmak / Registrasiya</h2>
-
-            <!-- ✅ ФОРМА РЕГИСТРАЦИИ (теперь точно видна) -->
-            <form id="registerForm" class="auth-form">
-                <div class="form-group">
-                    <label data-i18n="register_name_label">Atyňyz / Имя</label>
-                    <input type="text" id="regName" required placeholder="Имя" />
-                </div>
-
-                <div class="form-group">
-                    <label data-i18n="register_email_label">E-mail</label>
-                    <input type="email" id="regEmail" required placeholder="example@sfera.tm" />
-                </div>
-
-                <div class="form-group">
-                    <label data-i18n="register_password_label">Aşakdaky syr / Пароль</label>
-                    <input type="password" id="regPassword" required placeholder="••••••••" />
-                </div>
-
-                <div class="form-group">
-                    <label data-i18n="register_role_label">Roly / Роль</label>
-                    <select id="regRole" class="form-select">
-                        <option value="user" data-i18n="role_user">Ulanyjy / Пользователь</option>
-                        <option value="admin" data-i18n="role_admin">Administrator / Админ</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="primary-btn auth-btn" data-i18n="register_button">Ýazylmak / Зарегистрироваться</button>
-            </form>
-
-            <!-- Ссылка на вход -->
-            <div class="auth-footer">
-                <p data-i18n="register_have_account">Eýýäm akkountyňyz barmy? <a href="login.html" data-i18n="register_login_link">Girmek</a></p>
-            </div>
-
-            <!-- Кнопка переключения языка -->
-            <div style="text-align:center; margin-top:15px;">
-                <button class="lang-btn" id="langBtn">TM</button>
+            <div class="header-buttons">
+                <button class="lang" id="langBtn">TM</button>
             </div>
         </div>
-    </div>
+    </header>
+
+    <section class="login-page">
+        <div class="login-box">
+            <div class="logo-icon-small">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="smallGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00ffa3" />
+                            <stop offset="50%" stop-color="#00d4ff" />
+                            <stop offset="100%" stop-color="#1f6bff" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="30" fill="url(#smallGrad)" opacity="0.15" />
+                    <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#smallGrad)" stroke-width="3.5" />
+                </svg>
+            </div>
+
+            <h2 data-i18n="reg_title">Registrasiya</h2>
+            <p class="subtitle" data-i18n="reg_subtitle">Täze hasap dörediň</p>
+
+            <div id="message" class="message"></div>
+
+            <form id="registerForm" novalidate>
+                <div class="form-group">
+                    <label for="username" data-i18n="reg_username_label">Ulanyjy ady</label>
+                    <input type="text" id="username" name="username" placeholder="Ulanyjy adyňyz" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="email" data-i18n="reg_email_label">Email</label>
+                    <input type="email" id="email" name="email" placeholder="email@example.com" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="password" data-i18n="reg_password_label">Parol</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required />
+                </div>
+
+                <button type="submit" class="login-btn" id="regBtn" data-i18n="reg_button">Döretmek</button>
+            </form>
+
+            <div class="register-link">
+                <span data-i18n="reg_has_account">Hasabyňyz barmy?</span>
+                <a href="login.html" data-i18n="reg_login_link">Giriş</a>
+            </div>
+        </div>
+    </section>
 
     <script>
-        // ============================================================
-        // ПЕРЕВОДЫ (tm, ru, en)
-        // ============================================================
         const translations = {
             tm: {
-                register_title: "Ýazylmak",
-                register_name_label: "Atyňyz",
-                register_email_label: "E-mail",
-                register_password_label: "Aşakdaky syr",
-                register_role_label: "Roly",
-                role_user: "Ulanyjy",
-                role_admin: "Administrator",
-                register_button: "Ýazylmak",
-                register_have_account: "Eýýäm akkountyňyz barmy?",
-                register_login_link: "Girmek",
-                register_success: "Registrasiya tamamlandy! Indi giriş ediň.",
-                register_error: "Registrasiya ýalňyşlyk",
-                register_network_error: "Serwer bilen baglanyşyk ýalňyşlygy"
+                logo_title: "SFERA", logo_subtitle: "Milli Sanly Platforma",
+                reg_title: "Registrasiya", reg_subtitle: "Täze hasap dörediň",
+                reg_username_label: "Ulanyjy ady", reg_email_label: "Email", reg_password_label: "Parol",
+                reg_button: "Döretmek", reg_has_account: "Hasabyňyz barmy?", reg_login_link: "Giriş",
+                reg_success: "Hasap döredildi! Giriş edilýär...", reg_loading: "Döredilýär..."
             },
             ru: {
-                register_title: "Регистрация",
-                register_name_label: "Имя",
-                register_email_label: "E-mail",
-                register_password_label: "Пароль",
-                register_role_label: "Роль",
-                role_user: "Пользователь",
-                role_admin: "Администратор",
-                register_button: "Зарегистрироваться",
-                register_have_account: "Уже есть аккаунт?",
-                register_login_link: "Войти",
-                register_success: "Регистрация завершена! Теперь войдите.",
-                register_error: "Ошибка регистрации",
-                register_network_error: "Ошибка связи с сервером"
+                logo_title: "СФЕРА", logo_subtitle: "Национальная Цифровая Платформа",
+                reg_title: "Регистрация", reg_subtitle: "Создайте новый аккаунт",
+                reg_username_label: "Имя пользователя", reg_email_label: "Email", reg_password_label: "Пароль",
+                reg_button: "Создать аккаунт", reg_has_account: "Уже есть аккаунт?", reg_login_link: "Войти",
+                reg_success: "Аккаунт создан! Переход на вход...", reg_loading: "Создание..."
             },
             en: {
-                register_title: "Register",
-                register_name_label: "Name",
-                register_email_label: "E-mail",
-                register_password_label: "Password",
-                register_role_label: "Role",
-                role_user: "User",
-                role_admin: "Administrator",
-                register_button: "Register",
-                register_have_account: "Already have an account?",
-                register_login_link: "Login",
-                register_success: "Registration successful! Now login.",
-                register_error: "Registration error",
-                register_network_error: "Network error"
+                logo_title: "SFERA", logo_subtitle: "National Digital Platform",
+                reg_title: "Register", reg_subtitle: "Create a new account",
+                reg_username_label: "Username", reg_email_label: "Email", reg_password_label: "Password",
+                reg_button: "Sign Up", reg_has_account: "Already have an account?", reg_login_link: "Login",
+                reg_success: "Account created! Redirecting...", reg_loading: "Creating..."
             }
         };
 
@@ -151,98 +267,68 @@
             currentLang = lang;
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    if (el.tagName === 'INPUT') {
-                        el.placeholder = translations[lang][key];
-                    } else if (el.tagName === 'SELECT') {
-                        el.querySelectorAll('option').forEach(opt => {
-                            const optKey = opt.getAttribute('data-i18n');
-                            if (optKey && translations[lang][optKey]) {
-                                opt.textContent = translations[lang][optKey];
-                            }
-                        });
-                    } else {
-                        el.textContent = translations[lang][key];
-                    }
-                }
+                if (translations[lang][key]) el.textContent = translations[lang][key];
             });
             document.getElementById('langBtn').textContent = lang.toUpperCase();
             localStorage.setItem('lang', lang);
         }
 
-        document.getElementById('langBtn').addEventListener('click', function() {
-            const cycle = ['tm', 'ru', 'en'];
-            let idx = cycle.indexOf(currentLang);
-            idx = (idx + 1) % cycle.length;
-            setLanguage(cycle[idx]);
+        const langBtn = document.getElementById('langBtn');
+        const langCycle = ['tm', 'ru', 'en'];
+        langBtn.addEventListener('click', () => {
+            let idx = (langCycle.indexOf(currentLang) + 1) % langCycle.length;
+            setLanguage(langCycle[idx]);
         });
 
-        // ============================================================
-        // ОБРАБОТКА ФОРМЫ РЕГИСТРАЦИИ (с проверкой ответа)
-        // ============================================================
-        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        const form = document.getElementById('registerForm');
+        const messageEl = document.getElementById('message');
+        const regBtn = document.getElementById('regBtn');
+
+        form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
 
-            const name = document.getElementById('regName').value.trim();
-            const email = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value.trim();
-            const role = document.getElementById('regRole').value;
-
-            if (!name || !email || !password) {
-                alert(translations[currentLang].register_error + ': Doldurmaly ýerler boş');
+            if (!username || !email || !password) {
+                showMessage('Заполните все поля', 'error');
                 return;
             }
+
+            regBtn.disabled = true;
+            regBtn.textContent = translations[currentLang].reg_loading;
 
             try {
                 const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: name, email, password, role })
+                    body: JSON.stringify({ username, email, password })
                 });
 
-                let data;
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    data = await response.json();
-                } else {
-                    const text = await response.text();
-                    console.error('Server response (not JSON):', text);
-                    alert('Serwerden nädogry jogap / Неверный ответ сервера. Подробности в консоли.');
-                    return;
-                }
+                const data = await response.json();
 
                 if (response.ok) {
-                    alert(translations[currentLang].register_success);
-                    window.location.href = 'login.html';
+                    showMessage(translations[currentLang].reg_success, 'success');
+                    setTimeout(() => { window.location.href = 'login.html'; }, 1500);
                 } else {
-                    alert(data.message || translations[currentLang].register_error);
+                    showMessage(data.message || 'Ошибка регистрации', 'error');
+                    regBtn.disabled = false;
+                    regBtn.textContent = translations[currentLang].reg_button;
                 }
             } catch (err) {
-                console.error('Registration error:', err);
-                alert(translations[currentLang].register_network_error);
+                showMessage(' Ошибка сети', 'error');
+                regBtn.disabled = false;
+                regBtn.textContent = translations[currentLang].reg_button;
             }
         });
 
-        // ============================================================
-        // СОЗДАНИЕ ЧАСТИЦ (если их нет)
-        // ============================================================
-        const particles = document.getElementById('particles');
-        if (particles && particles.children.length === 0) {
-            for (let i = 0; i < 60; i++) {
-                const p = document.createElement('span');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.top = Math.random() * 100 + '%';
-                p.style.animationDuration = (6 + Math.random() * 12) + 's';
-                p.style.animationDelay = Math.random() * 5 + 's';
-                particles.appendChild(p);
-            }
+        function showMessage(text, type) {
+            messageEl.textContent = text;
+            messageEl.className = 'message ' + type;
+            messageEl.style.display = 'block';
         }
 
-        // Установка языка при загрузке
-        document.addEventListener('DOMContentLoaded', () => {
-            setLanguage(currentLang);
-        });
+        document.addEventListener('DOMContentLoaded', () => setLanguage(currentLang));
     </script>
 </body>
 </html>
