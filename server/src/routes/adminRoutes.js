@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const adminController = require('../controllers/adminController');
-const { adminAuth } = require('../middleware/adminAuth');
+const { adminAuth } = require('../middleware/adminAuth'); // правильный импорт
 
 // Все маршруты требуют прав администратора
 router.use(adminAuth);
@@ -18,7 +18,7 @@ router.delete('/users/:id', adminController.deleteUser);
 // Транзакции
 router.get('/transactions', adminController.getTransactions);
 
-// Объявления
+// Объявления (листинги)
 router.get('/listings', adminController.getListings);
 router.put('/listings/:id', adminController.updateListing);
 router.delete('/listings/:id', adminController.deleteListing);
