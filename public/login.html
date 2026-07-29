@@ -2,15 +2,97 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Вход — Sfera</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sfera — Вход в систему</title>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .login-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2.5rem;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        .login-card h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #fff;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: none;
+            background: #2563eb;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button[type="submit"]:hover {
+            background: #1d4ed8;
+        }
+        .error-message {
+            color: #f87171;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-    <form id="loginForm">
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Пароль" required>
-        <button type="submit">Войти</button>
-    </form>
+    <div class="login-card">
+        <h2>Вход в Sfera</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="name@example.com" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit">Войти</button>
+            <div id="errorMessage" class="error-message"></div>
+        </form>
+    </div>
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -18,9 +100,12 @@
 
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMessage');
+            
+            errorDiv.style.display = 'none';
+            errorDiv.textContent = '';
 
             try {
-                // Используем относительный путь /api/auth/login
                 const response = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: {
@@ -29,28 +114,38 @@
                     body: JSON.stringify({ email, password })
                 });
 
-                // Проверяем, действительно ли пришел JSON
+                // Проверяем формат ответа
                 const contentType = response.headers.get('content-type');
                 if (!contentType || !contentType.includes('application/json')) {
                     const text = await response.text();
                     console.error('Сервер вернул не JSON:', text);
-                    alert('Ошибка сервера: получен неверный формат ответа');
+                    errorDiv.textContent = 'Ошибка сервера: получен неверный формат ответа.';
+                    errorDiv.style.display = 'block';
                     return;
                 }
 
                 const data = await response.json();
 
                 if (response.ok && data.success) {
-                    alert('Успешный вход!');
-                    // localStorage.setItem('token', data.token);
-                    // window.location.href = '/dashboard.html';
+                    // Сохраняем авторизационные данные
+                    if (data.token) {
+                        localStorage.setItem('token', data.token);
+                    }
+                    if (data.user) {
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                    }
+
+                    // Переходим на главную страницу платформы
+                    window.location.href = '/index.html';
                 } else {
-                    alert(data.message || 'Ошибка входа');
+                    errorDiv.textContent = data.message || 'Неверный логин или пароль';
+                    errorDiv.style.display = 'block';
                 }
 
             } catch (err) {
                 console.error('Стековая ошибка запроса:', err);
-                alert('Не удалось связаться с сервером');
+                errorDiv.textContent = 'Не удалось связаться с сервером. Проверьте подключение.';
+                errorDiv.style.display = 'block';
             }
         });
     </script>
