@@ -1,50 +1,56 @@
 const User = require('../models/User');
-const Account = require('../models/Account');
-const bcrypt = require('bcrypt');
-const { generateToken } = require('../utils/jwt');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const redisClient = require('../config/redis');
 
+// Регистрация
 exports.register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, role } = req.body;
 
-    // Проверка существования
-    const existing = await User.findOne({ $or: [{ email }, { username }] });
-    if (existing) {
+    // Проверяем, существует ли пользователь
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    // Хеширование пароля
-    const hash = await bcrypt.hash(password, 10);
-    const user = new User({ username, email, passwordHash: hash });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({
+      username,
+      email,
+      password: hashedPassword,
+      role: role || 'user'   // по умолчанию обычный пользователь
+    });
+
     await user.save();
-
-    // Создаём счёт для пользователя
-    const account = new Account({ userId: user._id });
-    await account.save();
-
-    res.status(201).json({ message: 'User registered successfully' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(201).json({ message: 'User created successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
+// Вход
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const match = await bcrypt.compare(password, user.passwordHash);
-    if (!match) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const token = generateToken(user._id);
+    const token = jwt.sign(
+      { userId: user._id },  // используем userId для совместимости с authMiddleware
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
     // Сохраняем сессию в Redis
-    await redisClient.set(`session:${user._id}`, token, 'EX', 60 * 60 * 24 * 7); // 7 дней
+    await redisClient.set(`session:${user._id}`, token, 'EX', 7 * 24 * 60 * 60);
 
     res.json({
       token,
@@ -52,20 +58,27 @@ exports.login = async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
-        role: user.role,
-        avatar: user.avatar
+        role: user.role
       }
     });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
+// Выход
 exports.logout = async (req, res) => {
   try {
-    await redisClient.del(`session:${req.userId}`);
-    res.json({ message: 'Logged out' });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    const userId = req.userId;
+    await redisClient.del(`session:${userId}`);
+    res.json({ message: 'Logged out successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
+};
+
+// Получить текущего пользователя
+exports.getMe = async (req, res) => {
+  // req.user уже установлен authMiddleware
+  res.json(req.user);
 };
