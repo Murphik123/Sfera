@@ -975,6 +975,62 @@ footer p {
     text-decoration: underline;
 }
 
+/* ============================================================
+   УМЕНЬШАЕМ ЭЛЕМЕНТЫ В ПРАВОЙ ЧАСТИ ШАПКИ
+   ============================================================ */
+
+/* Общие правила для всех элементов в правой части */
+.header-right .user-info,
+.header-right .role-badge,
+.header-right .logout-btn,
+.header-right .btn-switch,
+.header-right .lang,
+.header-buttons .user-info,
+.header-buttons .role-badge,
+.header-buttons .logout-btn,
+.header-buttons .btn-switch,
+.header-buttons .lang {
+    font-size: 12px !important;
+    padding: 4px 10px !important;
+}
+
+/* Кнопка "Выйти" – чуть больше отступы по бокам */
+.header-right .logout-btn,
+.header-buttons .logout-btn {
+    padding: 6px 14px !important;
+}
+
+/* Кнопка "Назад" и переключатель "Пользователь" */
+.header-right .btn-switch,
+.header-buttons .btn-switch {
+    padding: 4px 12px !important;
+}
+
+/* Бейдж роли (Администратор / Пользователь) – самый мелкий */
+.header-right .role-badge,
+.header-buttons .role-badge {
+    font-size: 11px !important;
+    padding: 2px 10px !important;
+}
+
+/* Имя пользователя – делаем чуть крупнее, но не слишком */
+.header-right .user-info strong,
+.header-buttons .user-info strong {
+    font-size: 13px !important;
+}
+
+/* Переключатель языка */
+.header-right .lang,
+.header-buttons .lang {
+    padding: 4px 10px !important;
+    font-size: 12px !important;
+}
+
+/* (Опционально) можно уменьшить отступы в шапке, чтобы она стала компактнее */
+header .container {
+    padding: 12px 0 !important;
+}
+
 /* ===== ЛОГОТИП: скрываем подзаголовок ===== */
 .logo-text p {
     display: none;
