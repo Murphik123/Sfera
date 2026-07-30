@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html lang="tm">
+<html lang="ru">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SFERA — Административная панель</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <title>СФЕРА — Административная панель</title>
+    
+    <!-- ПОДКЛЮЧАЕМ ОБЩИЙ СТИЛЬ -->
+    <link rel="stylesheet" href="/css/style.css" />
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: #060911; color: #ffffff; min-height: 100vh; }
-        
         .admin-panel { padding: 120px 7% 60px; min-height: 100vh; }
         .admin-panel h1 { font-size: 42px; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #ffd700, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .admin-panel .subtitle { font-size: 18px; color: #bcd0e2; margin-bottom: 40px; }
@@ -23,7 +21,7 @@
         .admin-card .badge { display: inline-block; background: rgba(255,215,0,.2); padding: 4px 14px; border-radius: 20px; font-size: 11px; color: #ffd700; margin-top: 10px; font-weight: 600; }
         .badge-admin { background: rgba(255,215,0,.15) !important; color: #ffd700 !important; }
         
-        header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 7%; background: rgba(6,9,17,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,215,0,.15); display: flex; justify-content: space-between; align-items: center; }
+        header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 7%; background: rgba(6,9,17,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,215,0,.15); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
         .logo-svg { width: 40px; height: 40px; }
         .logo-text h2 { font-size: 22px; font-weight: 900; background: linear-gradient(135deg, #ffd700, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -77,32 +75,22 @@
     </section>
 
     <script>
-        // ============================================================
-        // ПРОВЕРКА АВТОРИЗАЦИИ И РОЛИ
-        // ============================================================
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         const token = localStorage.getItem('token');
 
-        console.log('🔍 Проверка авторизации админа:');
-        console.log('Token:', token);
-        console.log('User:', user);
-
         if (!token || !user || user.role !== 'admin') {
-            console.log('❌ Нет доступа, перенаправление на login');
             window.location.href = 'login.html';
         }
 
         document.getElementById('adminName').textContent = user.username || 'Admin';
-        console.log('✅ Административная панель загружена');
 
-        // ============================================================
-        // ВЫХОД
-        // ============================================================
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = 'login.html';
         });
+
+        console.log('✅ Admin dashboard loaded');
     </script>
 </body>
 </html>
