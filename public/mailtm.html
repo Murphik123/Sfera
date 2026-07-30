@@ -1,19 +1,17 @@
 <!DOCTYPE html>
-<html lang="tm">
+<html lang="ru">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>СФЕРА — TM Poçta</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
+    <!-- Общий CSS -->
     <link rel="stylesheet" href="/css/style.css" />
 
     <style>
+        /* ===== СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ ПОЧТЫ ===== */
         .mail-page {
-            padding: 120px 0 60px;
+            padding: 140px 0 60px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -21,7 +19,7 @@
         .mail-container {
             display: flex;
             flex: 1;
-            height: calc(100vh - 180px);
+            height: calc(100vh - 200px);
             min-height: 500px;
             border-radius: 24px;
             overflow: hidden;
@@ -29,7 +27,7 @@
             border: 1px solid rgba(255,255,255,.08);
             backdrop-filter: blur(12px);
         }
-        /* Левая панель (список папок) */
+        /* Левая панель */
         .mail-sidebar {
             width: 240px;
             min-width: 200px;
@@ -99,7 +97,7 @@
             text-align: center;
         }
 
-        /* Правая панель (список писем) */
+        /* Список писем */
         .mail-list {
             flex: 1;
             display: flex;
@@ -285,7 +283,7 @@
             color: #bdd0df;
         }
 
-        /* Композиция письма (модальное окно) */
+        /* Модальное окно композиции */
         .compose-modal {
             display: none;
             position: fixed;
@@ -407,6 +405,7 @@
 <body>
     <div id="particles"></div>
 
+    <!-- ШАПКА (единая) -->
     <header>
         <div class="container">
             <a href="index.html" class="logo">
@@ -414,74 +413,75 @@
                     <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00ffa3" />
-                                <stop offset="50%" stop-color="#00d4ff" />
-                                <stop offset="100%" stop-color="#1f6bff" />
+                                <stop offset="0%" stop-color="#00ffa3"/>
+                                <stop offset="50%" stop-color="#00d4ff"/>
+                                <stop offset="100%" stop-color="#1f6bff"/>
                             </linearGradient>
                             <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="4" result="blur" />
-                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                <feGaussianBlur stdDeviation="4" result="blur"/>
+                                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
                             </filter>
                         </defs>
-                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)"/>
                         <g filter="url(#logoGlow)">
-                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
-                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
-                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)"/>
                         </g>
                     </svg>
                 </div>
                 <div class="logo-text">
                     <h2>SFERA</h2>
-                    <p>Milli Sanly Platforma</p>
+                    <p id="logoSubtitle" data-i18n="logo_subtitle">Milli Sanly Platforma</p>
                 </div>
             </a>
 
-            <div class="header-right" style="display:flex; align-items:center; gap:12px;">
-                <span class="user-info" id="userDisplay">👤 <strong id="username">User</strong></span>
-                <a href="dashboard.html" class="btn btn-outline" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Dashboard</a>
-                <button class="lang" id="langBtn">TM</button>
-                <button class="logout-btn" id="logoutBtn" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
+            <div class="header-right">
+                <span class="user-info">👤 <strong id="username">User</strong></span>
+                <button class="lang" id="langBtn">RU</button>
+                <button class="logout-btn" id="logoutBtn" data-i18n="logout">🚪 Çykmak</button>
+                <a href="#" id="backLink" class="btn-switch" style="display:inline-block; padding:8px 16px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;" data-i18n="back">← Yza</a>
             </div>
         </div>
     </header>
 
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
     <section class="mail-page">
         <div class="container" style="flex:1; display:flex; flex-direction:column;">
             <div class="mail-container">
-                <!-- Левая панель: папки и кнопка "Написать" -->
+                <!-- Левая панель -->
                 <div class="mail-sidebar">
-                    <button class="compose-btn" id="composeBtn">✏️ Täze hat</button>
+                    <button class="compose-btn" id="composeBtn" data-i18n="compose">✏️ Täze hat</button>
                     <ul class="folder-list" id="folderList">
-                        <li class="active" data-folder="inbox"><span class="icon">📥</span> Gelen <span class="badge" id="inboxCount">0</span></li>
-                        <li data-folder="sent"><span class="icon">📤</span> Iberilen</li>
-                        <li data-folder="drafts"><span class="icon">📝</span> Garamalar</li>
-                        <li data-folder="trash"><span class="icon">🗑️</span> Pozulan</li>
+                        <li class="active" data-folder="inbox" data-i18n="folder_inbox"><span class="icon">📥</span> Gelen <span class="badge" id="inboxCount">0</span></li>
+                        <li data-folder="sent" data-i18n="folder_sent"><span class="icon">📤</span> Iberilen</li>
+                        <li data-folder="drafts" data-i18n="folder_drafts"><span class="icon">📝</span> Garamalar</li>
+                        <li data-folder="trash" data-i18n="folder_trash"><span class="icon">🗑️</span> Pozulan</li>
                     </ul>
                 </div>
 
-                <!-- Правая панель: список писем -->
+                <!-- Список писем -->
                 <div class="mail-list" id="mailList">
                     <div class="mail-list-header">
-                        <h2 id="folderTitle">Gelen</h2>
+                        <h2 id="folderTitle" data-i18n="folder_inbox">Gelen</h2>
                         <div class="actions">
-                            <button id="refreshBtn">⟳ Täzele</button>
-                            <button id="selectAllBtn">☑︎</button>
+                            <button id="refreshBtn" data-i18n="refresh">⟳ Täzele</button>
+                            <button id="selectAllBtn" data-i18n="select_all">☑︎</button>
                         </div>
                     </div>
                     <div class="mail-items" id="mailItems">
-                        <!-- Письма будут загружены динамически -->
+                        <!-- Письма загружаются динамически -->
                     </div>
                 </div>
 
-                <!-- Просмотр письма (скрыт) -->
+                <!-- Просмотр письма -->
                 <div class="mail-view" id="mailView">
-                    <button class="back-btn" id="backToList">←</button>
+                    <button class="back-btn" id="backToList" data-i18n="view_back">←</button>
                     <div class="mail-header-view">
                         <div class="subject" id="viewSubject">Тема</div>
                         <div class="meta">
-                            <span id="viewFrom">От: User</span>
-                            <span id="viewDate">Дата</span>
+                            <span id="viewFrom" data-i18n="from_label">От: </span>
+                            <span id="viewDate" data-i18n="date_label">Дата: </span>
                         </div>
                     </div>
                     <div class="mail-body-view" id="viewBody">Текст письма</div>
@@ -491,30 +491,30 @@
         </div>
     </section>
 
-    <!-- Модальное окно для написания письма -->
+    <!-- Модалка написания письма -->
     <div class="compose-modal" id="composeModal">
         <div class="compose-box">
-            <h2>Täze hat</h2>
+            <h2 data-i18n="compose_title">Täze hat</h2>
             <form id="composeForm">
                 <div class="form-group">
-                    <label for="composeTo">Kime</label>
+                    <label for="composeTo" data-i18n="to_label">Kime</label>
                     <input type="text" id="composeTo" placeholder="alýan@example.com" required />
                 </div>
                 <div class="form-group">
-                    <label for="composeSubject">Tema</label>
+                    <label for="composeSubject" data-i18n="subject_label">Tema</label>
                     <input type="text" id="composeSubject" placeholder="Hatyň temasy" required />
                 </div>
                 <div class="form-group">
-                    <label for="composeBody">Hatyň teksti</label>
+                    <label for="composeBody" data-i18n="body_label">Hatyň teksti</label>
                     <textarea id="composeBody" placeholder="Bu ýere hatyňyzy ýazyň..." rows="6"></textarea>
                 </div>
                 <div class="form-group">
-                    <label>Faýl goşmak (islege görä)</label>
+                    <label data-i18n="attach_label">Faýl goşmak (islege görä)</label>
                     <input type="file" id="composeFile" multiple style="color:#bdd0df;" />
                 </div>
                 <div class="form-actions">
-                    <button type="button" class="btn-cancel" id="cancelComposeBtn">Ýatyr</button>
-                    <button type="submit" class="btn-send">Iber</button>
+                    <button type="button" class="btn-cancel" id="cancelComposeBtn" data-i18n="cancel">Ýatyr</button>
+                    <button type="submit" class="btn-send" data-i18n="send">Iber</button>
                 </div>
             </form>
         </div>
@@ -522,92 +522,90 @@
 
     <script>
         // ============================================================
-        // НАСТРОЙКА API
-        // ============================================================
-        const API_BASE_URL = 'https://sfera-1.onrender.com';
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            window.location.href = 'login.html';
-        }
-
-        // ============================================================
         // ПЕРЕВОДЫ
         // ============================================================
         const translations = {
-            tm: {
-                logout: "Çykmak",
-                compose: "Täze hat",
-                inbox: "Gelen",
-                sent: "Iberilen",
-                drafts: "Garamalar",
-                trash: "Pozulan",
-                refresh: "Täzele",
-                select_all: "Hemmesini saýla",
-                from: "Kimden",
-                date: "Senesi",
-                subject: "Tema",
-                no_mails: "Hiç hili hat ýok",
-                send_success: "Hat iberildi!",
-                send_error: "Hat iberilmedi. Täzeden synanyşyň.",
-                view_back: "← Yza",
-                compose_title: "Täze hat",
-                to: "Kime",
-                body: "Hatyň teksti",
-                cancel: "Ýatyr",
-                send: "Iber"
-            },
             ru: {
-                logout: "Выйти",
-                compose: "Новое письмо",
-                inbox: "Входящие",
-                sent: "Отправленные",
-                drafts: "Черновики",
-                trash: "Корзина",
-                refresh: "Обновить",
-                select_all: "Выбрать все",
-                from: "От",
-                date: "Дата",
-                subject: "Тема",
+                logo_subtitle: "Национальная Цифровая Платформа",
+                logout: "🚪 Выйти",
+                back: "← Назад",
+                compose: "✏️ Новое письмо",
+                folder_inbox: "Входящие",
+                folder_sent: "Отправленные",
+                folder_drafts: "Черновики",
+                folder_trash: "Корзина",
+                refresh: "⟳ Обновить",
+                select_all: "☑︎ Выбрать все",
+                view_back: "←",
+                from_label: "От: ",
+                date_label: "Дата: ",
+                compose_title: "Новое письмо",
+                to_label: "Кому",
+                subject_label: "Тема",
+                body_label: "Текст письма",
+                attach_label: "Прикрепить файлы (опционально)",
+                cancel: "Отмена",
+                send: "Отправить",
                 no_mails: "Нет писем",
                 send_success: "Письмо отправлено!",
-                send_error: "Ошибка отправки. Попробуйте снова.",
-                view_back: "← Назад",
-                compose_title: "Новое письмо",
-                to: "Кому",
-                body: "Текст письма",
-                cancel: "Отмена",
-                send: "Отправить"
+                send_error: "Ошибка отправки. Попробуйте снова."
+            },
+            tm: {
+                logo_subtitle: "Milli Sanly Platforma",
+                logout: "🚪 Çykmak",
+                back: "← Yza",
+                compose: "✏️ Täze hat",
+                folder_inbox: "Gelen",
+                folder_sent: "Iberilen",
+                folder_drafts: "Garamalar",
+                folder_trash: "Pozulan",
+                refresh: "⟳ Täzele",
+                select_all: "☑︎ Hemmesini saýla",
+                view_back: "←",
+                from_label: "Kimden: ",
+                date_label: "Senesi: ",
+                compose_title: "Täze hat",
+                to_label: "Kime",
+                subject_label: "Tema",
+                body_label: "Hatyň teksti",
+                attach_label: "Faýl goşmak (islege görä)",
+                cancel: "Ýatyr",
+                send: "Iber",
+                no_mails: "Hiç hili hat ýok",
+                send_success: "Hat iberildi!",
+                send_error: "Hat iberilmedi. Täzeden synanyşyň."
             },
             en: {
-                logout: "Logout",
-                compose: "New message",
-                inbox: "Inbox",
-                sent: "Sent",
-                drafts: "Drafts",
-                trash: "Trash",
-                refresh: "Refresh",
-                select_all: "Select all",
-                from: "From",
-                date: "Date",
-                subject: "Subject",
+                logo_subtitle: "National Digital Platform",
+                logout: "🚪 Logout",
+                back: "← Back",
+                compose: "✏️ New message",
+                folder_inbox: "Inbox",
+                folder_sent: "Sent",
+                folder_drafts: "Drafts",
+                folder_trash: "Trash",
+                refresh: "⟳ Refresh",
+                select_all: "☑︎ Select all",
+                view_back: "←",
+                from_label: "From: ",
+                date_label: "Date: ",
+                compose_title: "New message",
+                to_label: "To",
+                subject_label: "Subject",
+                body_label: "Message body",
+                attach_label: "Attach files (optional)",
+                cancel: "Cancel",
+                send: "Send",
                 no_mails: "No messages",
                 send_success: "Message sent!",
-                send_error: "Failed to send. Try again.",
-                view_back: "← Back",
-                compose_title: "New message",
-                to: "To",
-                body: "Message body",
-                cancel: "Cancel",
-                send: "Send"
+                send_error: "Failed to send. Try again."
             }
         };
 
-        let currentLang = localStorage.getItem('lang') || 'tm';
-        let currentFolder = 'inbox';
-        let mails = [];
-        let selectedMails = new Set();
-        let viewingMailId = null;
+        // ============================================================
+        // УСТАНОВКА ЯЗЫКА
+        // ============================================================
+        let currentLang = localStorage.getItem('lang') || 'ru';
 
         function setLanguage(lang) {
             if (!translations[lang]) return;
@@ -615,53 +613,65 @@
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang][key]) {
-                    el.textContent = translations[lang][key];
+                    if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
+                        el.placeholder = translations[lang][key];
+                    } else {
+                        el.textContent = translations[lang][key];
+                    }
                 }
             });
             document.getElementById('langBtn').textContent = lang.toUpperCase();
-            document.getElementById('logoutBtn').textContent = translations[lang].logout;
-            document.getElementById('composeBtn').innerHTML = `✏️ ${translations[lang].compose}`;
             localStorage.setItem('lang', lang);
-            // Обновить интерфейс
-            updateFolderTitles();
-            renderMails();
+            updateUI();
         }
 
-        function updateFolderTitles() {
+        function updateUI() {
+            // Обновить заголовки папок
             const folderNames = {
-                inbox: translations[currentLang].inbox,
-                sent: translations[currentLang].sent,
-                drafts: translations[currentLang].drafts,
-                trash: translations[currentLang].trash
+                inbox: translations[currentLang].folder_inbox,
+                sent: translations[currentLang].folder_sent,
+                drafts: translations[currentLang].folder_drafts,
+                trash: translations[currentLang].folder_trash
             };
             document.querySelectorAll('.folder-list li').forEach(li => {
                 const key = li.dataset.folder;
                 const icon = li.querySelector('.icon').textContent;
+                // Сохраняем бейдж
                 const badge = li.querySelector('.badge');
-                const textNode = li.childNodes[2]; // текст после иконки
-                // Упрощённо: обновляем только название (без иконки и бейджа)
-                // Но мы сделаем через data-i18n отдельно
+                const textNode = li.childNodes[2]; // может быть текстовый узел
+                // Проще обновить через data-i18n, но у нас уже есть атрибуты, поэтому используем их
+                // Но для заголовка папки используем data-i18n
             });
-            // Обновляем заголовок папки
-            document.getElementById('folderTitle').textContent = folderNames[currentFolder] || translations[currentLang].inbox;
+            // Заголовок текущей папки
+            const folderTitle = document.getElementById('folderTitle');
+            folderTitle.textContent = translations[currentLang][`folder_${currentFolder}`] || translations[currentLang].folder_inbox;
+            // Кнопка композиции
+            document.getElementById('composeBtn').innerHTML = `✏️ ${translations[currentLang].compose}`;
         }
 
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            // Инициализация переводов будет сделана ниже
-        });
-
         document.getElementById('langBtn').addEventListener('click', function() {
-            const cycle = ['tm', 'ru', 'en'];
+            const cycle = ['ru', 'tm', 'en'];
             let idx = cycle.indexOf(currentLang);
             idx = (idx + 1) % cycle.length;
             setLanguage(cycle[idx]);
         });
 
         // ============================================================
-        // ЗАГРУЗКА ПОЛЬЗОВАТЕЛЯ
+        // АВТОРИЗАЦИЯ И НАВИГАЦИЯ
         // ============================================================
-        const userData = JSON.parse(localStorage.getItem('user') || '{"username":"Guest"}');
-        document.getElementById('username').textContent = userData.username || 'User';
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'login.html';
+
+        const user = JSON.parse(localStorage.getItem('user') || '{"username":"User","role":"user"}');
+        document.getElementById('username').textContent = user.username || 'User';
+
+        // Ссылка "Назад" в зависимости от роли
+        const backLink = document.getElementById('backLink');
+        if (user.role === 'admin') {
+            backLink.href = 'admin-dashboard.html';
+        } else {
+            backLink.href = 'user-dashboard.html';
+        }
 
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('token');
@@ -670,8 +680,12 @@
         });
 
         // ============================================================
-        // ФУНКЦИИ РАБОТЫ С ДАННЫМИ (имитация)
+        // ДАННЫЕ (МОКОВЫЕ)
         // ============================================================
+        let currentFolder = 'inbox';
+        let mails = [];
+        let selectedMails = new Set();
+
         function generateMockMails() {
             const now = Date.now();
             const fromUsers = ['Aýdar', 'Meret', 'Gülşat', 'Saparmyrat', 'Oguljeren'];
@@ -693,7 +707,7 @@
                 mails.push({
                     id: `mail-${i}`,
                     from,
-                    to: userData.username || 'User',
+                    to: user.username || 'User',
                     subject,
                     body,
                     date: date.toISOString(),
@@ -706,7 +720,6 @@
             return mails;
         }
 
-        // Инициализация данных
         mails = generateMockMails();
 
         function getMailsForFolder(folder) {
@@ -716,15 +729,8 @@
         function renderMails() {
             const container = document.getElementById('mailItems');
             const folderMails = getMailsForFolder(currentFolder);
-            const folderNames = {
-                inbox: translations[currentLang].inbox,
-                sent: translations[currentLang].sent,
-                drafts: translations[currentLang].drafts,
-                trash: translations[currentLang].trash
-            };
-            document.getElementById('folderTitle').textContent = folderNames[currentFolder] || translations[currentLang].inbox;
 
-            // Обновляем счётчик входящих
+            // Обновить счётчик входящих
             const inboxCount = getMailsForFolder('inbox').filter(m => m.unread).length;
             document.getElementById('inboxCount').textContent = inboxCount;
 
@@ -733,7 +739,7 @@
                 return;
             }
 
-            // Сортируем по дате (новые сверху)
+            // Сортировка по дате (новые сверху)
             folderMails.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             container.innerHTML = folderMails.map(m => {
@@ -755,17 +761,15 @@
                 `;
             }).join('');
 
-            // Обработчики для писем (клик для открытия)
+            // Обработчики
             container.querySelectorAll('.mail-item').forEach(el => {
                 el.addEventListener('click', function(e) {
-                    // Если клик по чекбоксу или звёздочке – не открываем письмо
                     if (e.target.closest('.checkbox') || e.target.closest('.star')) return;
                     const id = this.dataset.id;
                     openMailView(id);
                 });
             });
 
-            // Чекбоксы
             container.querySelectorAll('.checkbox').forEach(el => {
                 el.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -782,7 +786,6 @@
                 });
             });
 
-            // Звёздочки
             container.querySelectorAll('.star').forEach(el => {
                 el.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -790,7 +793,7 @@
                     const mail = mails.find(m => m.id === id);
                     if (mail) {
                         mail.starred = !mail.starred;
-                        renderMails(); // перерисовать
+                        renderMails();
                     }
                 });
             });
@@ -802,16 +805,14 @@
         function openMailView(id) {
             const mail = mails.find(m => m.id === id);
             if (!mail) return;
-            viewingMailId = id;
-            // Пометить как прочитанное
             mail.unread = false;
 
             document.getElementById('mailList').style.display = 'none';
             document.getElementById('mailView').classList.add('active');
 
             document.getElementById('viewSubject').textContent = mail.subject;
-            document.getElementById('viewFrom').textContent = `${translations[currentLang].from}: ${mail.from}`;
-            document.getElementById('viewDate').textContent = `${translations[currentLang].date}: ${new Date(mail.date).toLocaleString('ru-RU')}`;
+            document.getElementById('viewFrom').textContent = `${translations[currentLang].from_label} ${mail.from}`;
+            document.getElementById('viewDate').textContent = `${translations[currentLang].date_label} ${new Date(mail.date).toLocaleString('ru-RU')}`;
             document.getElementById('viewBody').textContent = mail.body || '(Пусто)';
 
             const attachContainer = document.getElementById('viewAttachments');
@@ -820,7 +821,6 @@
             } else {
                 attachContainer.innerHTML = '';
             }
-            // Обновить список
             renderMails();
         }
 
@@ -839,9 +839,10 @@
                 this.classList.add('active');
                 currentFolder = this.dataset.folder;
                 selectedMails.clear();
-                // Скрыть просмотр
                 document.getElementById('mailView').classList.remove('active');
                 document.getElementById('mailList').style.display = 'flex';
+                // Обновить заголовок папки
+                document.getElementById('folderTitle').textContent = translations[currentLang][`folder_${currentFolder}`] || translations[currentLang].folder_inbox;
                 renderMails();
             });
         });
@@ -875,13 +876,12 @@
                 return;
             }
 
-            // Создаём новое письмо в папке "Отправленные"
             const newMail = {
                 id: `mail-${Date.now()}`,
-                from: userData.username || 'User',
+                from: user.username || 'User',
                 to: to,
-                subject: subject,
-                body: body,
+                subject,
+                body,
                 date: new Date().toISOString(),
                 unread: false,
                 folder: 'sent',
@@ -889,15 +889,15 @@
                 attachments: files
             };
             mails.push(newMail);
-            // Также дублируем во входящие получателя (для демонстрации)
-            // Здесь можно было бы отправить на сервер, но для демо просто добавим копию во входящие
+            // Дублируем во входящие получателя (для демонстрации)
             const receivedMail = {
                 ...newMail,
                 id: `mail-${Date.now() + 1}`,
-                from: userData.username || 'User',
+                from: user.username || 'User',
                 to: to,
                 folder: 'inbox',
-                unread: true
+                unread: true,
+                attachments: files
             };
             mails.push(receivedMail);
 
@@ -911,7 +911,6 @@
         // ============================================================
         document.getElementById('refreshBtn').addEventListener('click', function() {
             renderMails();
-            // В реальности здесь был бы запрос к серверу
         });
 
         // ============================================================
@@ -950,7 +949,7 @@
         // ============================================================
         setLanguage(currentLang);
         renderMails();
-        console.log('Mail page loaded');
+        console.log('✅ Mail module loaded with unified design');
     </script>
 </body>
 </html>
