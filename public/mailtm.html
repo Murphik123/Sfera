@@ -328,7 +328,7 @@
             color: #bdd0df;
         }
 
-        /* ===== МОДАЛЬНОЕ ОКНО "НОВОЕ ПИСЬМО" (исправленное) ===== */
+        /* ===== МОДАЛЬНОЕ ОКНО "НОВОЕ ПИСЬМО" (исправленное — стеклянный фон) ===== */
         .compose-modal {
             display: none;
             position: fixed;
@@ -336,9 +336,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,.65) !important;
-            backdrop-filter: blur(12px) !important;
-            -webkit-backdrop-filter: blur(12px) !important;
+            background: rgba(0,0,0,.75) !important;
+            backdrop-filter: blur(18px) !important;
+            -webkit-backdrop-filter: blur(18px) !important;
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -349,15 +349,15 @@
         }
 
         .compose-modal .compose-box {
-            background: rgba(255,255,255,.06) !important;
-            backdrop-filter: blur(25px) !important;
-            -webkit-backdrop-filter: blur(25px) !important;
-            border: 1px solid rgba(255,255,255,.12) !important;
+            background: rgba(20, 30, 45, 0.92) !important; /* плотный полупрозрачный фон */
+            backdrop-filter: blur(35px) !important;
+            -webkit-backdrop-filter: blur(35px) !important;
+            border: 1px solid rgba(255,255,255,.18) !important;
             border-radius: 24px !important;
             padding: 30px 35px;
             max-width: 600px;
             width: 95%;
-            box-shadow: 0 25px 60px rgba(0,0,0,.5), inset 0 0 20px rgba(0,212,255,.05) !important;
+            box-shadow: 0 30px 80px rgba(0,0,0,.6) !important;
             max-height: 90vh;
             overflow-y: auto;
             position: relative;
@@ -396,8 +396,8 @@
             width: 100%;
             padding: 12px 16px;
             border-radius: 12px;
-            border: 1px solid rgba(255,255,255,.15);
-            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.2);
+            background: rgba(255,255,255,.1) !important;
             color: white;
             font-size: 15px;
             transition: .3s;
@@ -406,8 +406,8 @@
         .compose-modal .compose-box .form-group input:focus,
         .compose-modal .compose-box .form-group textarea:focus {
             border-color: #00d4ff;
-            box-shadow: 0 0 20px rgba(0,212,255,.2);
-            background: rgba(255,255,255,.08);
+            box-shadow: 0 0 25px rgba(0,212,255,.3);
+            background: rgba(255,255,255,.15) !important;
         }
         .compose-modal .compose-box .form-group textarea {
             min-height: 120px;
@@ -438,12 +438,12 @@
             box-shadow: 0 15px 35px rgba(0,212,255,.5);
         }
         .compose-modal .compose-box .form-actions .btn-draft {
-            background: rgba(255,255,255,.08);
-            border: 1px solid rgba(255,255,255,.15);
+            background: rgba(255,255,255,.1);
+            border: 1px solid rgba(255,255,255,.2);
             color: white;
         }
         .compose-modal .compose-box .form-actions .btn-draft:hover {
-            background: rgba(255,255,255,.15);
+            background: rgba(255,255,255,.2);
         }
         .compose-modal .compose-box .form-actions .btn-cancel {
             background: transparent;
