@@ -4,34 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>СФЕРА — Marketpleýs</title>
-    <!-- Общий CSS -->
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        /* Специфические стили только для маркетплейса */
         .marketplace { padding: 140px 0 60px; min-height: 100vh; }
         .mp-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
         .mp-header h1 { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #fff, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .mp-header p { color: #9fb5c8; font-size: 14px; }
 
         /* Сегменты */
-        .segment-selector { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; background: rgba(255,255,255,0.04); padding: 8px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); }
-        .segment-btn { flex: 1; min-width: 120px; padding: 10px 16px; border: none; border-radius: 12px; background: transparent; color: #9fb5c8; font-weight: 600; font-size: 14px; cursor: pointer; transition: .3s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .segment-selector { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; background: rgba(255,255,255,0.04); padding: 8px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); }
+        .segment-btn { flex: 1; min-width: 100px; padding: 10px 16px; border: none; border-radius: 12px; background: transparent; color: #9fb5c8; font-weight: 600; font-size: 14px; cursor: pointer; transition: .3s; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .segment-btn.active { background: linear-gradient(135deg, #00d4ff, #1f6bff); color: #fff; box-shadow: 0 8px 20px rgba(0,212,255,0.3); }
         .segment-btn:hover:not(.active) { background: rgba(255,255,255,0.08); color: #fff; }
 
-        /* Поиск */
+        /* Категории */
+        .category-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
+        .category-btn { padding: 6px 16px; border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; background: transparent; color: #bdd0df; cursor: pointer; transition: .3s; font-size: 13px; }
+        .category-btn.active { background: rgba(0,212,255,0.15); border-color: #00d4ff; color: #00d4ff; }
+        .category-btn:hover { background: rgba(255,255,255,0.05); }
+
         .search-bar { display: flex; gap: 12px; margin-bottom: 25px; }
         .search-bar input { flex: 1; padding: 12px 18px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: #fff; font-size: 15px; outline: none; transition: .3s; }
         .search-bar input:focus { border-color: #00d4ff; box-shadow: 0 0 15px rgba(0,212,255,0.2); }
 
-        /* Табы */
         .mp-tabs { display: flex; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 25px; flex-wrap: wrap; }
         .mp-tabs button { padding: 10px 20px; background: transparent; border: none; color: #9fb5c8; font-size: 16px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; transition: .3s; }
         .mp-tabs button.active { color: #00d4ff; border-bottom-color: #00d4ff; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* Сетка товаров */
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
         .product-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; padding: 16px; backdrop-filter: blur(15px); transition: .3s; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
         .product-card:hover { transform: translateY(-5px); border-color: rgba(0,212,255,0.4); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
@@ -45,8 +46,9 @@
         .product-card .name { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 4px; }
         .product-card .price { font-size: 20px; font-weight: 800; color: #00ffa3; }
         .product-card .seller { font-size: 12px; color: #9fb5c8; margin: 4px 0 12px; }
+        .product-card .favorite-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 22px; cursor: pointer; color: #9fb5c8; transition: .2s; }
+        .product-card .favorite-btn.active { color: #ffd700; }
 
-        /* Корзина */
         .cart-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); padding: 12px 18px; border-radius: 12px; margin-bottom: 10px; }
         .cart-item .info { flex: 1; }
         .cart-item .info strong { color: #fff; }
@@ -59,13 +61,12 @@
         .cart-total { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 16px; text-align: right; margin-top: 20px; }
         .cart-total .total-price { font-size: 22px; font-weight: 700; color: #00ffa3; }
 
-        /* Профиль */
         .profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .profile-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; }
-        .profile-card h3 { font-size: 18px; margin-bottom: 16px; color: #00d4ff; }
+        .profile-card h3 { font-size: 18px; margin-bottom: 16px; color: #00d4ff; display: flex; justify-content: space-between; align-items: center; }
         .profile-card .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+        .profile-card .edit-btn { background: none; border: none; color: #00d4ff; cursor: pointer; font-size: 14px; }
 
-        /* Админка */
         .admin-panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; }
         .admin-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
         .admin-form .form-group label { display: block; font-size: 13px; color: #9fb5c8; margin-bottom: 4px; }
@@ -74,63 +75,55 @@
         .empty-state { text-align: center; padding: 40px; color: #9fb5c8; }
         .empty-state .icon { font-size: 48px; margin-bottom: 10px; }
 
+        /* Модальное окно оформления заказа */
+        .order-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.7); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 1000; }
+        .order-modal.active { display: flex; }
+        .order-modal .modal-box { background: rgba(20,30,45,0.95); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,.15); border-radius: 24px; padding: 30px; max-width: 500px; width: 95%; max-height: 90vh; overflow-y: auto; }
+        .order-modal .modal-box h2 { color: #fff; margin-bottom: 20px; }
+        .order-modal .form-group { margin-bottom: 16px; }
+        .order-modal .form-group label { display: block; font-size: 14px; color: #dbe9ff; margin-bottom: 4px; }
+        .order-modal .form-group input, .order-modal .form-group select { width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.2); color: #fff; }
+        .order-modal .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; }
+
         @media (max-width: 768px) {
             .mp-header h1 { font-size: 26px; }
-            .segment-btn { min-width: 80px; font-size: 12px; padding: 8px 12px; }
-            .products-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+            .segment-btn { min-width: 70px; font-size: 12px; padding: 6px 10px; }
+            .category-btn { font-size: 12px; padding: 4px 12px; }
+            .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
         }
     </style>
 </head>
 <body>
     <div id="particles"></div>
 
-    <!-- ШАПКА (единая) -->
+    <!-- ШАПКА -->
     <header>
         <div class="container">
             <a href="index.html" class="logo">
                 <div class="logo-icon">
                     <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00ffa3"/>
-                                <stop offset="50%" stop-color="#00d4ff"/>
-                                <stop offset="100%" stop-color="#1f6bff"/>
-                            </linearGradient>
-                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="4" result="blur"/>
-                                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-                            </filter>
-                        </defs>
-                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)"/>
-                        <g filter="url(#logoGlow)">
-                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
-                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
-                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)"/>
-                        </g>
+                        <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#1f6bff"/></linearGradient></defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15"/>
+                        <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3"/>
+                        <circle cx="48" cy="48" r="3.5" fill="#ffffff"/>
                     </svg>
                 </div>
-                <div class="logo-text">
-                    <h2>SFERA</h2>
-                    <p id="logoSubtitle" data-i18n="logo_subtitle">Milli Sanly Platforma</p>
-                </div>
+                <div class="logo-text"><h2>SFERA</h2><p id="logoSubtitle" data-i18n="logo_subtitle">Milli Sanly Platforma</p></div>
             </a>
             <div class="header-right">
                 <span class="user-info">👤 <strong id="username">User</strong></span>
                 <button class="lang" id="langBtn">RU</button>
                 <button class="logout-btn" id="logoutBtn" data-i18n="logout">🚪 Çykmak</button>
-                <a href="admin-dashboard.html" class="btn-switch" id="adminLink" style="display:none; padding:8px 16px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">👑 Admin</a>
+                <a href="admin-dashboard.html" class="btn-switch" id="adminLink" style="display:none;">👑 Admin</a>
             </div>
         </div>
     </header>
 
-    <!-- Содержимое маркетплейса -->
+    <!-- Содержимое -->
     <section class="marketplace">
         <div class="container">
             <div class="mp-header">
-                <div>
-                    <h1 data-i18n="mp_title">🛒 SFERA Marketpleýs</h1>
-                    <p data-i18n="mp_subtitle">Частные продажи • Бизнес-поставки • Госзакупки</p>
-                </div>
+                <div><h1 data-i18n="mp_title">🛒 SFERA Marketpleýs</h1><p data-i18n="mp_subtitle">Частные продажи • Бизнес-поставки • Госзакупки</p></div>
                 <button class="btn btn-outline" id="refreshBtn" data-i18n="refresh">⟳ Täzele</button>
             </div>
 
@@ -144,12 +137,14 @@
                 <button class="segment-btn" data-segment="b2g" data-i18n="segment_b2g">🏛️ B2G</button>
             </div>
 
-            <!-- Табы -->
-            <div class="mp-tabs">
-                <button class="active" data-tab="catalog" data-i18n="tab_catalog">Katalog</button>
-                <button data-tab="cart" data-i18n="tab_cart">Sebet (<span id="cartCount">0</span>)</button>
-                <button data-tab="profile" data-i18n="tab_profile">Şahsy kabinet</button>
-                <button id="adminTab" data-tab="admin" style="display:none; color:#00ffa3;" data-i18n="tab_admin">Admin Panel</button>
+            <!-- Категории -->
+            <div class="category-selector" id="categorySelector">
+                <button class="category-btn active" data-category="all" data-i18n="category_all">Ähli kategoriýa</button>
+                <button class="category-btn" data-category="electronics">📱 Электроника</button>
+                <button class="category-btn" data-category="food">🍎 Продукты</button>
+                <button class="category-btn" data-category="industry">⚙️ Промышленность</button>
+                <button class="category-btn" data-category="agriculture">🌾 Сельское хозяйство</button>
+                <button class="category-btn" data-category="gov_tenders">📋 Гос. тендеры</button>
             </div>
 
             <!-- Поиск -->
@@ -157,10 +152,17 @@
                 <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" placeholder="Harytlary gözlemek..." />
             </div>
 
-            <!-- Каталог -->
-            <div class="tab-content active" id="tab-catalog">
-                <div id="catalogContent"></div>
+            <!-- Табы -->
+            <div class="mp-tabs">
+                <button class="active" data-tab="catalog" data-i18n="tab_catalog">Katalog</button>
+                <button data-tab="cart" data-i18n="tab_cart">Sebet (<span id="cartCount">0</span>)</button>
+                <button data-tab="profile" data-i18n="tab_profile">Şahsy kabinet</button>
+                <button data-tab="wishlist" data-i18n="tab_wishlist">⭐ Söýliler</button>
+                <button id="adminTab" data-tab="admin" style="display:none; color:#00ffa3;" data-i18n="tab_admin">Admin</button>
             </div>
+
+            <!-- Каталог -->
+            <div class="tab-content active" id="tab-catalog"><div id="catalogContent"></div></div>
 
             <!-- Корзина -->
             <div class="tab-content" id="tab-cart">
@@ -181,11 +183,25 @@
             <div class="tab-content" id="tab-profile">
                 <div class="profile-grid">
                     <div class="profile-card">
-                        <h3 data-i18n="profile_info">Profil maglumatlary</h3>
-                        <div class="row"><span data-i18n="username_label">Ulanyjy ady:</span><span id="profileUsername">User</span></div>
-                        <div class="row"><span data-i18n="email_label">Email:</span><span id="profileEmail">user@example.com</span></div>
-                        <div class="row"><span data-i18n="type_label">Status:</span><span id="profileUserType" style="color:#00d4ff; font-weight:600;">Физическое лицо</span></div>
-                        <div class="row"><span data-i18n="role_label">Rol:</span><span id="profileRole">user</span></div>
+                        <h3 data-i18n="profile_info">Profil maglumatlary
+                            <button class="edit-btn" id="editProfileBtn" data-i18n="edit">✎</button>
+                        </h3>
+                        <div id="profileDisplay">
+                            <div class="row"><span data-i18n="username_label">Ulanyjy ady:</span><span id="profileUsername">User</span></div>
+                            <div class="row"><span data-i18n="email_label">Email:</span><span id="profileEmail">user@example.com</span></div>
+                            <div class="row"><span data-i18n="phone_label">Telefon:</span><span id="profilePhone">+993 12 345678</span></div>
+                            <div class="row"><span data-i18n="address_label">Adres:</span><span id="profileAddress">Aşgabat, ...</span></div>
+                            <div class="row"><span data-i18n="type_label">Status:</span><span id="profileUserType" style="color:#00d4ff;">Физическое лицо</span></div>
+                            <div class="row"><span data-i18n="role_label">Rol:</span><span id="profileRole">user</span></div>
+                        </div>
+                        <div id="profileEdit" style="display:none; margin-top:10px;">
+                            <div class="form-group"><input type="text" id="editUsername" placeholder="Ulanyjy ady" class="form-input" /></div>
+                            <div class="form-group"><input type="email" id="editEmail" placeholder="Email" class="form-input" /></div>
+                            <div class="form-group"><input type="text" id="editPhone" placeholder="Telefon" class="form-input" /></div>
+                            <div class="form-group"><input type="text" id="editAddress" placeholder="Adres" class="form-input" /></div>
+                            <button class="btn btn-success" id="saveProfileBtn" data-i18n="save">Ýatda sakla</button>
+                            <button class="btn btn-outline" id="cancelEditBtn" data-i18n="cancel">Ýatyr</button>
+                        </div>
                     </div>
                     <div class="profile-card">
                         <h3 data-i18n="orders_history">Sargyt taryhy</h3>
@@ -194,167 +210,116 @@
                 </div>
             </div>
 
+            <!-- Избранное -->
+            <div class="tab-content" id="tab-wishlist">
+                <div id="wishlistContent"><div class="empty-state"><div class="icon">⭐</div><p data-i18n="wishlist_empty">Söýli harytlar ýok</p></div></div>
+            </div>
+
             <!-- Админ-панель -->
             <div class="tab-content" id="tab-admin">
                 <div class="admin-panel">
                     <h3 data-i18n="admin_title">Управление каталогом</h3>
                     <form id="adminProductForm">
                         <div class="admin-form">
-                            <div class="form-group">
-                                <label data-i18n="admin_segment">Сегмент</label>
-                                <select id="adminSegment" required>
-                                    <option value="b2c">B2C</option>
-                                    <option value="b2b">B2B</option>
-                                    <option value="b2g">B2G</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label data-i18n="admin_category">Kategoriýa</label>
-                                <select id="adminCategory" required>
-                                    <option value="electronics">Электроника</option>
-                                    <option value="industry">Промышленность</option>
-                                    <option value="food">Продукты</option>
-                                    <option value="agriculture">Сельское хозяйство</option>
-                                    <option value="gov_tenders">Гос. тендеры</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label data-i18n="admin_name">Ady</label>
-                                <input type="text" id="adminName" placeholder="Nazwanie" required />
-                            </div>
-                            <div class="form-group">
-                                <label data-i18n="admin_price">Bahasy (TMT)</label>
-                                <input type="number" id="adminPrice" step="0.01" required placeholder="0.00" />
-                            </div>
-                            <div class="form-group">
-                                <label data-i18n="admin_seller">Satyjy / Supplier</label>
-                                <input type="text" id="adminSeller" required placeholder="ООО / ИП" />
-                            </div>
-                            <div class="form-group">
-                                <label data-i18n="admin_image">Surat URL</label>
-                                <input type="url" id="adminImageUrl" placeholder="https://..." />
-                            </div>
+                            <div class="form-group"><label data-i18n="admin_segment">Сегмент</label><select id="adminSegment"><option value="b2c">B2C</option><option value="b2b">B2B</option><option value="b2g">B2G</option></select></div>
+                            <div class="form-group"><label data-i18n="admin_category">Kategoriýa</label><select id="adminCategory"><option value="electronics">Электроника</option><option value="industry">Промышленность</option><option value="food">Продукты</option><option value="agriculture">Сельское хозяйство</option><option value="gov_tenders">Гос. тендеры</option></select></div>
+                            <div class="form-group"><label data-i18n="admin_name">Ady</label><input type="text" id="adminName" placeholder="Nazwanie" required /></div>
+                            <div class="form-group"><label data-i18n="admin_price">Bahasy (TMT)</label><input type="number" id="adminPrice" step="0.01" required placeholder="0.00" /></div>
+                            <div class="form-group"><label data-i18n="admin_seller">Satyjy</label><input type="text" id="adminSeller" required placeholder="ООО / ИП" /></div>
+                            <div class="form-group"><label data-i18n="admin_image">Surat URL</label><input type="url" id="adminImageUrl" placeholder="https://..." /></div>
                         </div>
                         <button type="submit" class="btn btn-primary" style="max-width:200px;" data-i18n="admin_add">Goşmak</button>
                     </form>
-                    <div style="margin-top:30px;">
-                        <h4 data-i18n="admin_list">Ähli harytlar</h4>
-                        <div id="adminProductsList"></div>
-                    </div>
+                    <div style="margin-top:30px;"><h4 data-i18n="admin_list">Ähli harytlar</h4><div id="adminProductsList"></div></div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Модальное окно оформления заказа -->
+    <div class="order-modal" id="orderModal">
+        <div class="modal-box">
+            <h2 data-i18n="order_title">Sargyt et</h2>
+            <form id="orderForm">
+                <div class="form-group"><label data-i18n="order_name">Adyňyz</label><input type="text" id="orderName" required /></div>
+                <div class="form-group"><label data-i18n="order_phone">Telefon</label><input type="text" id="orderPhone" required /></div>
+                <div class="form-group"><label data-i18n="order_address">Adres</label><input type="text" id="orderAddress" required /></div>
+                <div class="form-group"><label data-i18n="order_payment">Töleg usuly</label><select id="orderPayment"><option value="tm_pay">TM Pay</option><option value="tm_coin">TM Coin</option><option value="card">Bank karta</option></select></div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" id="cancelOrderBtn" data-i18n="cancel">Ýatyr</button>
+                    <button type="submit" class="btn btn-success" data-i18n="confirm_order">Tassykla</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         // ============================================================
-        // ПЕРЕВОДЫ
+        // ПЕРЕВОДЫ (расширенные)
         // ============================================================
         const translations = {
             ru: {
-                logo_subtitle: "Национальная Цифровая Платформа",
-                logout: "🚪 Выйти",
-                mp_title: "🛒 SFERA Marketpleýs",
-                mp_subtitle: "Частные продажи • Бизнес-поставки • Госзакупки",
-                refresh: "⟳ Обновить",
-                segment_all: "🌐 Все",
-                segment_b2c: "👤 B2C",
-                segment_b2b: "🏢 B2B",
-                segment_b2g: "🏛️ B2G",
-                tab_catalog: "Каталог",
-                tab_cart: "Корзина",
-                tab_profile: "Профиль",
-                tab_admin: "Админка",
-                search_placeholder: "Поиск товаров...",
-                cart_empty: "Корзина пуста",
-                total: "Итого:",
-                checkout: "Оформить заказ",
-                profile_info: "Информация профиля",
-                username_label: "Имя пользователя:",
-                email_label: "Email:",
-                type_label: "Статус:",
-                role_label: "Роль:",
-                orders_history: "История заказов",
-                no_orders: "Заказов нет",
-                admin_title: "Управление каталогом",
-                admin_segment: "Сегмент",
-                admin_category: "Категория",
-                admin_name: "Наименование",
-                admin_price: "Цена (TMT)",
-                admin_seller: "Продавец / Поставщик",
-                admin_image: "URL картинки",
-                admin_add: "Добавить",
-                admin_list: "Все товары"
+                logo_subtitle: "Национальная Цифровая Платформа", logout: "🚪 Выйти",
+                mp_title: "🛒 SFERA Marketpleýs", mp_subtitle: "Частные продажи • Бизнес-поставки • Госзакупки",
+                refresh: "⟳ Обновить", segment_all: "🌐 Все", segment_b2c: "👤 B2C", segment_b2b: "🏢 B2B", segment_b2g: "🏛️ B2G",
+                category_all: "Все категории",
+                tab_catalog: "Каталог", tab_cart: "Корзина", tab_profile: "Профиль", tab_wishlist: "⭐ Избранное", tab_admin: "Админка",
+                search_placeholder: "Поиск товаров...", cart_empty: "Корзина пуста", total: "Итого:", checkout: "Оформить заказ",
+                profile_info: "Информация профиля", edit: "✎", username_label: "Имя пользователя:", email_label: "Email:",
+                phone_label: "Телефон:", address_label: "Адрес:", type_label: "Статус:", role_label: "Роль:",
+                orders_history: "История заказов", no_orders: "Заказов нет",
+                wishlist_empty: "Нет избранных товаров",
+                admin_title: "Управление каталогом", admin_segment: "Сегмент", admin_category: "Категория",
+                admin_name: "Наименование", admin_price: "Цена (TMT)", admin_seller: "Продавец", admin_image: "URL картинки",
+                admin_add: "Добавить", admin_list: "Все товары",
+                order_title: "Оформление заказа", order_name: "Ваше имя", order_phone: "Телефон",
+                order_address: "Адрес доставки", order_payment: "Способ оплаты",
+                confirm_order: "Подтвердить заказ", cancel: "Отмена", save: "Сохранить",
+                add_to_cart: "В корзину", product_added: "Товар добавлен в корзину!",
+                order_success: "Заказ успешно оформлен!", order_fail: "Ошибка оформления заказа.",
+                favorite_add: "Добавлено в избранное", favorite_remove: "Удалено из избранного"
             },
             tm: {
-                logo_subtitle: "Milli Sanly Platforma",
-                logout: "🚪 Çykmak",
-                mp_title: "🛒 SFERA Marketpleýs",
-                mp_subtitle: "Şahsy satuwlar • Biznes üpjünçilik • Döwlet satyn alyşlar",
-                refresh: "⟳ Täzele",
-                segment_all: "🌐 Ähli",
-                segment_b2c: "👤 B2C",
-                segment_b2b: "🏢 B2B",
-                segment_b2g: "🏛️ B2G",
-                tab_catalog: "Katalog",
-                tab_cart: "Sebet",
-                tab_profile: "Şahsy kabinet",
-                tab_admin: "Admin panel",
-                search_placeholder: "Harytlary gözlemek...",
-                cart_empty: "Sebet boş",
-                total: "Jemi:",
-                checkout: "Sargyt et",
-                profile_info: "Profil maglumatlary",
-                username_label: "Ulanyjy ady:",
-                email_label: "Email:",
-                type_label: "Status:",
-                role_label: "Rol:",
-                orders_history: "Sargyt taryhy",
-                no_orders: "Sargyt ýok",
-                admin_title: "Katalog dolandyrmak",
-                admin_segment: "Segment",
-                admin_category: "Kategoriýa",
-                admin_name: "Ady",
-                admin_price: "Bahasy (TMT)",
-                admin_seller: "Satyjy / Üpjünçi",
-                admin_image: "Surat URL",
-                admin_add: "Goşmak",
-                admin_list: "Ähli harytlar"
+                logo_subtitle: "Milli Sanly Platforma", logout: "🚪 Çykmak",
+                mp_title: "🛒 SFERA Marketpleýs", mp_subtitle: "Şahsy satuwlar • Biznes üpjünçilik • Döwlet satyn alyşlar",
+                refresh: "⟳ Täzele", segment_all: "🌐 Ähli", segment_b2c: "👤 B2C", segment_b2b: "🏢 B2B", segment_b2g: "🏛️ B2G",
+                category_all: "Ähli kategoriýa",
+                tab_catalog: "Katalog", tab_cart: "Sebet", tab_profile: "Şahsy kabinet", tab_wishlist: "⭐ Söýliler", tab_admin: "Admin",
+                search_placeholder: "Harytlary gözlemek...", cart_empty: "Sebet boş", total: "Jemi:", checkout: "Sargyt et",
+                profile_info: "Profil maglumatlary", edit: "✎", username_label: "Ulanyjy ady:", email_label: "Email:",
+                phone_label: "Telefon:", address_label: "Adres:", type_label: "Status:", role_label: "Rol:",
+                orders_history: "Sargyt taryhy", no_orders: "Sargyt ýok",
+                wishlist_empty: "Söýli harytlar ýok",
+                admin_title: "Katalog dolandyrmak", admin_segment: "Segment", admin_category: "Kategoriýa",
+                admin_name: "Ady", admin_price: "Bahasy (TMT)", admin_seller: "Satyjy", admin_image: "Surat URL",
+                admin_add: "Goşmak", admin_list: "Ähli harytlar",
+                order_title: "Sargyt et", order_name: "Adyňyz", order_phone: "Telefon",
+                order_address: "Adres", order_payment: "Töleg usuly",
+                confirm_order: "Tassykla", cancel: "Ýatyr", save: "Ýatda sakla",
+                add_to_cart: "Sebete goş", product_added: "Haryt sebeta goşuldy!",
+                order_success: "Sargyt üstünlikli!", order_fail: "Sargyt baş tutmady.",
+                favorite_add: "Söýlilere goşuldy", favorite_remove: "Söýlilerden aýryldy"
             },
             en: {
-                logo_subtitle: "National Digital Platform",
-                logout: "🚪 Logout",
-                mp_title: "🛒 SFERA Marketplace",
-                mp_subtitle: "Private sales • Business supplies • Government procurement",
-                refresh: "⟳ Refresh",
-                segment_all: "🌐 All",
-                segment_b2c: "👤 B2C",
-                segment_b2b: "🏢 B2B",
-                segment_b2g: "🏛️ B2G",
-                tab_catalog: "Catalog",
-                tab_cart: "Cart",
-                tab_profile: "Profile",
-                tab_admin: "Admin",
-                search_placeholder: "Search products...",
-                cart_empty: "Cart is empty",
-                total: "Total:",
-                checkout: "Checkout",
-                profile_info: "Profile info",
-                username_label: "Username:",
-                email_label: "Email:",
-                type_label: "Status:",
-                role_label: "Role:",
-                orders_history: "Order history",
-                no_orders: "No orders",
-                admin_title: "Catalog management",
-                admin_segment: "Segment",
-                admin_category: "Category",
-                admin_name: "Name",
-                admin_price: "Price (TMT)",
-                admin_seller: "Seller / Supplier",
-                admin_image: "Image URL",
-                admin_add: "Add",
-                admin_list: "All products"
+                logo_subtitle: "National Digital Platform", logout: "🚪 Logout",
+                mp_title: "🛒 SFERA Marketplace", mp_subtitle: "Private sales • Business supplies • Government procurement",
+                refresh: "⟳ Refresh", segment_all: "🌐 All", segment_b2c: "👤 B2C", segment_b2b: "🏢 B2B", segment_b2g: "🏛️ B2G",
+                category_all: "All categories",
+                tab_catalog: "Catalog", tab_cart: "Cart", tab_profile: "Profile", tab_wishlist: "⭐ Wishlist", tab_admin: "Admin",
+                search_placeholder: "Search products...", cart_empty: "Cart is empty", total: "Total:", checkout: "Checkout",
+                profile_info: "Profile info", edit: "✎", username_label: "Username:", email_label: "Email:",
+                phone_label: "Phone:", address_label: "Address:", type_label: "Status:", role_label: "Role:",
+                orders_history: "Order history", no_orders: "No orders",
+                wishlist_empty: "No favorite products",
+                admin_title: "Catalog management", admin_segment: "Segment", admin_category: "Category",
+                admin_name: "Name", admin_price: "Price (TMT)", admin_seller: "Seller", admin_image: "Image URL",
+                admin_add: "Add", admin_list: "All products",
+                order_title: "Place order", order_name: "Your name", order_phone: "Phone",
+                order_address: "Delivery address", order_payment: "Payment method",
+                confirm_order: "Confirm order", cancel: "Cancel", save: "Save",
+                add_to_cart: "Add to cart", product_added: "Product added to cart!",
+                order_success: "Order placed successfully!", order_fail: "Order failed.",
+                favorite_add: "Added to favorites", favorite_remove: "Removed from favorites"
             }
         };
 
@@ -368,18 +333,16 @@
             currentLang = lang;
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                }
+                if (translations[lang][key]) el.textContent = translations[lang][key];
             });
             document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
                 const key = el.getAttribute('data-i18n-placeholder');
-                if (translations[lang][key]) {
-                    el.placeholder = translations[lang][key];
-                }
+                if (translations[lang][key]) el.placeholder = translations[lang][key];
             });
             document.getElementById('langBtn').textContent = lang.toUpperCase();
             localStorage.setItem('lang', lang);
+            renderCatalog();
+            renderWishlist();
         }
 
         document.getElementById('langBtn').addEventListener('click', function() {
@@ -404,10 +367,17 @@
         document.getElementById('profileRole').textContent = user.role;
         document.getElementById('profileUserType').textContent = user.role === 'admin' ? 'Госорган / Админ' : 'Физическое / Юр. лицо';
 
+        // Загрузка профиля из localStorage
+        const profile = JSON.parse(localStorage.getItem('user_profile') || JSON.stringify({
+            phone: '+993 12 345678',
+            address: 'Aşgabat, ...'
+        }));
+        document.getElementById('profilePhone').textContent = profile.phone;
+        document.getElementById('profileAddress').textContent = profile.address;
+
         if (isAdmin) {
             document.getElementById('adminTab').style.display = 'inline-block';
             document.getElementById('adminLink').style.display = 'inline-block';
-            document.getElementById('adminLink').href = 'admin-dashboard.html';
         }
 
         document.getElementById('logoutBtn').addEventListener('click', function() {
@@ -417,7 +387,7 @@
         });
 
         // ============================================================
-        // МАРКЕТПЛЕЙС ЛОГИКА
+        // ДАННЫЕ
         // ============================================================
         let products = JSON.parse(localStorage.getItem('marketplace_db')) || [
             { id: 'p1', segment: 'b2c', category: 'electronics', name: 'Смартфон SFERA X1 Pro', price: 3200, seller: 'Tech Store', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=300' },
@@ -430,16 +400,23 @@
         localStorage.setItem('marketplace_db', JSON.stringify(products));
 
         let cart = JSON.parse(localStorage.getItem('marketplace_cart') || '[]');
+        let favorites = JSON.parse(localStorage.getItem('marketplace_favorites') || '[]');
+        let orders = JSON.parse(localStorage.getItem('marketplace_orders') || '[]');
+
         let activeSegment = 'all';
+        let activeCategory = 'all';
         let searchQuery = '';
 
-        // Отрисовка каталога
+        // ============================================================
+        // ОТРИСОВКА КАТАЛОГА
+        // ============================================================
         function renderCatalog() {
             const container = document.getElementById('catalogContent');
             let filtered = products.filter(p => {
                 const matchSegment = activeSegment === 'all' || p.segment === activeSegment;
+                const matchCategory = activeCategory === 'all' || p.category === activeCategory;
                 const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.seller.toLowerCase().includes(searchQuery.toLowerCase());
-                return matchSegment && matchSearch;
+                return matchSegment && matchCategory && matchSearch;
             });
 
             if (!filtered.length) {
@@ -452,9 +429,11 @@
                 const badgeClass = p.segment === 'b2c' ? 'badge-b2c' : (p.segment === 'b2b' ? 'badge-b2b' : 'badge-b2g');
                 const badgeLabel = p.segment === 'b2c' ? 'B2C' : (p.segment === 'b2b' ? 'B2B' : 'B2G');
                 const imgHtml = p.image ? `<img src="${p.image}" alt="${p.name}"/>` : `<div class="no-img">📦</div>`;
+                const isFav = favorites.includes(p.id);
                 html += `
                     <div class="product-card">
                         <span class="badge ${badgeClass}">${badgeLabel}</span>
+                        <button class="favorite-btn ${isFav ? 'active' : ''}" data-id="${p.id}">${isFav ? '⭐' : '☆'}</button>
                         <div class="image">${imgHtml}</div>
                         <div class="name">${p.name}</div>
                         <div class="price">${p.price.toFixed(2)} TMT</div>
@@ -466,6 +445,61 @@
             html += '</div>';
             container.innerHTML = html;
 
+            // Обработчики "В корзину"
+            container.querySelectorAll('.add-to-cart').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const prod = products.find(x => x.id === this.dataset.id);
+                    if (prod) addToCart(prod);
+                });
+            });
+
+            // Обработчики "Избранное"
+            container.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    toggleFavorite(id);
+                });
+            });
+        }
+
+        // ============================================================
+        // ИЗБРАННОЕ
+        // ============================================================
+        function toggleFavorite(id) {
+            const idx = favorites.indexOf(id);
+            if (idx > -1) {
+                favorites.splice(idx, 1);
+                showMessage(currentLang === 'ru' ? 'Удалено из избранного' : currentLang === 'tm' ? 'Söýlilerden aýryldy' : 'Removed from favorites', 'info');
+            } else {
+                favorites.push(id);
+                showMessage(currentLang === 'ru' ? 'Добавлено в избранное' : currentLang === 'tm' ? 'Söýlilere goşuldy' : 'Added to favorites', 'success');
+            }
+            localStorage.setItem('marketplace_favorites', JSON.stringify(favorites));
+            renderCatalog();
+            renderWishlist();
+        }
+
+        function renderWishlist() {
+            const container = document.getElementById('wishlistContent');
+            const favProducts = products.filter(p => favorites.includes(p.id));
+            if (!favProducts.length) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">⭐</div><p data-i18n="wishlist_empty">Söýli harytlar ýok</p></div>`;
+                return;
+            }
+            let html = '<div class="products-grid">';
+            favProducts.forEach(p => {
+                html += `
+                    <div class="product-card">
+                        <div class="image">${p.image ? `<img src="${p.image}" alt="${p.name}"/>` : `<div class="no-img">📦</div>`}</div>
+                        <div class="name">${p.name}</div>
+                        <div class="price">${p.price.toFixed(2)} TMT</div>
+                        <div class="seller">${p.seller}</div>
+                        <button class="btn btn-primary add-to-cart" data-id="${p.id}">${translations[currentLang].add_to_cart}</button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
             container.querySelectorAll('.add-to-cart').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const prod = products.find(x => x.id === this.dataset.id);
@@ -474,14 +508,16 @@
             });
         }
 
-        // Корзина
+        // ============================================================
+        // КОРЗИНА
+        // ============================================================
         function addToCart(prod) {
             const item = cart.find(x => x.id === prod.id);
             if (item) item.qty++;
             else cart.push({ ...prod, qty: 1 });
             localStorage.setItem('marketplace_cart', JSON.stringify(cart));
             updateCartCount();
-            showMessage(currentLang === 'ru' ? 'Товар добавлен в корзину!' : currentLang === 'tm' ? 'Haryt sebeta goşuldy!' : 'Product added to cart!', 'success');
+            showMessage(translations[currentLang].product_added, 'success');
         }
 
         function updateCartCount() {
@@ -501,7 +537,6 @@
                 totalDiv.style.display = 'none';
                 return;
             }
-
             empty.style.display = 'none';
             container.style.display = 'block';
             totalDiv.style.display = 'block';
@@ -513,10 +548,7 @@
                 total += sum;
                 html += `
                     <div class="cart-item">
-                        <div class="info">
-                            <strong>${item.name}</strong>
-                            <div class="meta">${item.price.toFixed(2)} TMT x ${item.qty}</div>
-                        </div>
+                        <div class="info"><strong>${item.name}</strong><div class="meta">${item.price.toFixed(2)} TMT x ${item.qty}</div></div>
                         <div class="actions">
                             <button class="qty-btn" onclick="changeQty('${item.id}', -1)">−</button>
                             <span style="min-width:20px; text-align:center;">${item.qty}</span>
@@ -534,9 +566,7 @@
             const item = cart.find(x => x.id === id);
             if (!item) return;
             item.qty += delta;
-            if (item.qty <= 0) {
-                cart = cart.filter(x => x.id !== id);
-            }
+            if (item.qty <= 0) cart = cart.filter(x => x.id !== id);
             localStorage.setItem('marketplace_cart', JSON.stringify(cart));
             updateCartCount();
             renderCart();
@@ -549,7 +579,131 @@
             renderCart();
         };
 
-        // Сегменты
+        // ============================================================
+        // ОФОРМЛЕНИЕ ЗАКАЗА
+        // ============================================================
+        document.getElementById('checkoutBtn').addEventListener('click', function() {
+            if (!cart.length) {
+                showMessage('Sebet boş!', 'error');
+                return;
+            }
+            document.getElementById('orderModal').classList.add('active');
+            // Заполняем поля данными из профиля
+            document.getElementById('orderName').value = user.username || '';
+            document.getElementById('orderPhone').value = profile.phone || '';
+            document.getElementById('orderAddress').value = profile.address || '';
+        });
+
+        document.getElementById('cancelOrderBtn').addEventListener('click', function() {
+            document.getElementById('orderModal').classList.remove('active');
+        });
+
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('orderName').value.trim();
+            const phone = document.getElementById('orderPhone').value.trim();
+            const address = document.getElementById('orderAddress').value.trim();
+            const payment = document.getElementById('orderPayment').value;
+
+            if (!name || !phone || !address) {
+                showMessage('Doldurmaly ýerler boş!', 'error');
+                return;
+            }
+
+            const order = {
+                id: 'ord_' + Date.now(),
+                date: new Date().toISOString(),
+                items: cart.map(item => ({ id: item.id, name: item.name, price: item.price, qty: item.qty })),
+                total: cart.reduce((sum, item) => sum + item.price * item.qty, 0),
+                name, phone, address, payment,
+                status: 'pending'
+            };
+            orders.push(order);
+            localStorage.setItem('marketplace_orders', JSON.stringify(orders));
+
+            // Очищаем корзину
+            cart = [];
+            localStorage.setItem('marketplace_cart', JSON.stringify(cart));
+            updateCartCount();
+            document.getElementById('orderModal').classList.remove('active');
+            showMessage(translations[currentLang].order_success, 'success');
+            renderOrders();
+        });
+
+        // ============================================================
+        // ИСТОРИЯ ЗАКАЗОВ
+        // ============================================================
+        function renderOrders() {
+            const container = document.getElementById('orderHistory');
+            if (!orders.length) {
+                container.innerHTML = `<p style="color:#9fb5c8;" data-i18n="no_orders">Sargyt ýok</p>`;
+                return;
+            }
+            let html = '';
+            orders.slice().reverse().forEach(o => {
+                const statusMap = { pending: 'Garaşýan', shipped: 'Iberilen', delivered: 'Elýetdi', cancelled: 'Ýatyryldy' };
+                const status = statusMap[o.status] || o.status;
+                html += `
+                    <div style="background:rgba(255,255,255,0.03); border-radius:12px; padding:12px; margin-bottom:12px;">
+                        <div style="display:flex; justify-content:space-between; font-weight:600;">
+                            <span>${new Date(o.date).toLocaleDateString()}</span>
+                            <span style="color:#00ffa3;">${o.total.toFixed(2)} TMT</span>
+                        </div>
+                        <div style="font-size:13px; color:#bdd0df;">${o.items.map(i => `${i.name} x${i.qty}`).join(', ')}</div>
+                        <div style="font-size:12px; margin-top:4px;">Status: <span style="color:#00d4ff;">${status}</span></div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // ============================================================
+        // ПРОФИЛЬ (редактирование)
+        // ============================================================
+        document.getElementById('editProfileBtn').addEventListener('click', function() {
+            document.getElementById('profileDisplay').style.display = 'none';
+            document.getElementById('profileEdit').style.display = 'block';
+            document.getElementById('editUsername').value = user.username || '';
+            document.getElementById('editEmail').value = user.email || '';
+            document.getElementById('editPhone').value = profile.phone || '';
+            document.getElementById('editAddress').value = profile.address || '';
+        });
+
+        document.getElementById('cancelEditBtn').addEventListener('click', function() {
+            document.getElementById('profileDisplay').style.display = 'block';
+            document.getElementById('profileEdit').style.display = 'none';
+        });
+
+        document.getElementById('saveProfileBtn').addEventListener('click', function() {
+            const newUsername = document.getElementById('editUsername').value.trim();
+            const newEmail = document.getElementById('editEmail').value.trim();
+            const newPhone = document.getElementById('editPhone').value.trim();
+            const newAddress = document.getElementById('editAddress').value.trim();
+
+            if (newUsername) {
+                user.username = newUsername;
+                localStorage.setItem('user', JSON.stringify(user));
+                document.getElementById('username').textContent = newUsername;
+                document.getElementById('profileUsername').textContent = newUsername;
+            }
+            if (newEmail) {
+                user.email = newEmail;
+                localStorage.setItem('user', JSON.stringify(user));
+                document.getElementById('profileEmail').textContent = newEmail;
+            }
+            const profileData = { phone: newPhone, address: newAddress };
+            localStorage.setItem('user_profile', JSON.stringify(profileData));
+            document.getElementById('profilePhone').textContent = newPhone;
+            document.getElementById('profileAddress').textContent = newAddress;
+
+            document.getElementById('profileDisplay').style.display = 'block';
+            document.getElementById('profileEdit').style.display = 'none';
+            showMessage('Profil täzelendi!', 'success');
+        });
+
+        // ============================================================
+        // ФИЛЬТРЫ
+        // ============================================================
         document.querySelectorAll('.segment-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
@@ -559,13 +713,23 @@
             });
         });
 
-        // Поиск
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                activeCategory = this.dataset.category;
+                renderCatalog();
+            });
+        });
+
         document.getElementById('searchInput').addEventListener('input', function(e) {
             searchQuery = e.target.value;
             renderCatalog();
         });
 
-        // Табы
+        // ============================================================
+        // ВКЛАДКИ
+        // ============================================================
         document.querySelectorAll('.mp-tabs button').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.mp-tabs button').forEach(b => b.classList.remove('active'));
@@ -574,16 +738,15 @@
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                 document.getElementById('tab-' + tab).classList.add('active');
                 if (tab === 'cart') renderCart();
-                if (tab === 'profile') renderProfile();
+                if (tab === 'wishlist') renderWishlist();
+                if (tab === 'profile') { renderOrders(); }
                 if (tab === 'admin' && isAdmin) renderAdminProducts();
             });
         });
 
-        function renderProfile() {
-            // уже заполнено при загрузке
-        }
-
-        // Админка
+        // ============================================================
+        // АДМИНКА
+        // ============================================================
         document.getElementById('adminProductForm').addEventListener('submit', function(e) {
             e.preventDefault();
             if (!isAdmin) return;
@@ -601,7 +764,7 @@
             renderCatalog();
             renderAdminProducts();
             this.reset();
-            showMessage(currentLang === 'ru' ? 'Товар добавлен!' : currentLang === 'tm' ? 'Haryt goşuldy!' : 'Product added!', 'success');
+            showMessage('Haryt goşuldy!', 'success');
         });
 
         function renderAdminProducts() {
@@ -623,10 +786,12 @@
             localStorage.setItem('marketplace_db', JSON.stringify(products));
             renderCatalog();
             renderAdminProducts();
-            showMessage(currentLang === 'ru' ? 'Удалено' : currentLang === 'tm' ? 'Aýyryldy' : 'Deleted', 'success');
+            showMessage('Aýyryldy', 'success');
         };
 
-        // Вспомогательные
+        // ============================================================
+        // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+        // ============================================================
         function showMessage(text, type) {
             const msg = document.getElementById('message');
             msg.textContent = text;
@@ -635,35 +800,24 @@
             setTimeout(() => { msg.style.display = 'none'; }, 3000);
         }
 
-        document.getElementById('refreshBtn').addEventListener('click', renderCatalog);
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            renderCatalog();
+            renderCart();
+            renderWishlist();
+            renderOrders();
+            showMessage('Täzelendi!', 'success');
+        });
 
-        // Инициализация
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
         setLanguage(currentLang);
         renderCatalog();
         updateCartCount();
+        renderWishlist();
+        renderOrders();
         if (isAdmin) renderAdminProducts();
-        console.log('✅ Marketplace module loaded');
-
-        // Небольшой костыль для кнопки "В корзину" — перевод добавляется через data-i18n, но у нас динамическое создание, поэтому добавим вручную
-        // Будем использовать data-i18n="add_to_cart" уже есть в шаблоне, но он не будет переводиться при смене языка, поэтому добавим отдельный обработчик
-        // Но мы уже перерисовываем каталог при смене языка? Нет, поэтому при смене языка нужно перерисовать каталог.
-        // Для простоты, после смены языка можно вызывать renderCatalog().
-        // Добавим в setLanguage вызов renderCatalog().
-        const originalSetLanguage = setLanguage;
-        setLanguage = function(lang) {
-            originalSetLanguage(lang);
-            renderCatalog();
-        };
-        // Переопределим кнопку языка
-        document.getElementById('langBtn').removeEventListener('click', function() {});
-        document.getElementById('langBtn').addEventListener('click', function() {
-            const cycle = ['ru', 'tm', 'en'];
-            let idx = cycle.indexOf(currentLang);
-            idx = (idx + 1) % cycle.length;
-            setLanguage(cycle[idx]);
-        });
-        // Повторно инициализируем язык
-        setLanguage(currentLang);
+        console.log('✅ Marketplace module with full features loaded');
     </script>
 </body>
 </html>
