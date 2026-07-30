@@ -117,7 +117,7 @@
         .order-modal .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; }
 
         /* ============================================================
-           ЕДИНЫЙ СТИЛЬ КНОПОК ДЛЯ МАРКЕТПЛЕЙСА (в соответствии с общим дизайном)
+           ЕДИНЫЙ СТИЛЬ КНОПОК ДЛЯ МАРКЕТПЛЕЙСА
            ============================================================ */
         .btn {
             padding: 10px 24px;
@@ -134,9 +134,7 @@
             backdrop-filter: blur(4px);
             border: 1px solid rgba(255,255,255,0.15);
         }
-        .btn:hover {
-            transform: translateY(-2px);
-        }
+        .btn:hover { transform: translateY(-2px); }
         .btn-primary {
             background: linear-gradient(135deg, #00d4ff, #008cff);
             color: white;
@@ -183,7 +181,7 @@
         }
 
         /* ============================================================
-           СТЕКЛЯННАЯ ШАПКА (glassmorphism)
+           СТЕКЛЯННАЯ ШАПКА
            ============================================================ */
         header {
             background: rgba(255, 255, 255, 0.06) !important;
@@ -192,7 +190,6 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
         }
-
         .header-right .user-info {
             color: #bcd0e2 !important;
             font-size: 13px !important;
@@ -201,7 +198,6 @@
             color: #fff !important;
             font-size: 14px !important;
         }
-
         .header-right .logout-btn,
         .header-right .lang,
         .header-right .btn-switch {
@@ -218,10 +214,7 @@
             border-color: #00d4ff !important;
             color: #00d4ff !important;
         }
-
-        .logo-text p {
-            display: none; /* скрываем подзаголовок "Milli Sanly Platforma" */
-        }
+        .logo-text p { display: none; }
 
         @media (max-width: 768px) {
             .mp-header h1 { font-size: 26px; }
@@ -233,9 +226,10 @@
     </style>
 </head>
 <body>
+    <!-- Контейнер для частиц -->
     <div id="particles"></div>
 
-    <!-- ШАПКА (теперь стеклянная) -->
+    <!-- ШАПКА (стеклянная) -->
     <header>
         <div class="container">
             <a href="index.html" class="logo">
@@ -393,7 +387,7 @@
 
     <script>
         // ============================================================
-        // ПЕРЕВОДЫ (расширенные)
+        // ПЕРЕВОДЫ
         // ============================================================
         const translations = {
             ru: {
@@ -940,6 +934,22 @@
             renderOrders();
             showMessage('Täzelendi!', 'success');
         });
+
+        // ============================================================
+        // ЧАСТИЦЫ (ПЛАВАЮЩИЕ ТОЧКИ)
+        // ============================================================
+        const particles = document.getElementById('particles');
+        if (particles && particles.children.length === 0) {
+            for (let i = 0; i < 60; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDuration = (6 + Math.random() * 12) + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                particles.appendChild(p);
+            }
+        }
 
         // ============================================================
         // ИНИЦИАЛИЗАЦИЯ
