@@ -297,3 +297,20 @@
 
 </body>
 </html>
+// ============================================================
+// ПЛАВНЫЙ СКРОЛЛ К БЛОКУ "МОДУЛИ"
+// ============================================================
+(function initDemoScroll() {
+    const demoBtn = document.querySelector('.glass-btn'); // кнопка "Демо"
+    const modulesSection = document.querySelector('.modules'); // блок с модулями
+
+    if (demoBtn && modulesSection) {
+        demoBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            modulesSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        });
+    }
+})();
