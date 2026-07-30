@@ -13,7 +13,7 @@
 
     <style>
         /* ============================================================
-           ПЕРЕОПРЕДЕЛЕНИЕ ШАПКИ (стеклянная, как в маркетплейсе)
+           СТЕКЛЯННАЯ ШАПКА (как в маркетплейсе)
            ============================================================ */
         header {
             background: rgba(255, 255, 255, 0.06) !important;
@@ -49,8 +49,6 @@
         .logo-text p {
             display: none !important;
         }
-
-        /* Адаптив для гамбургера и меню (оставляем как есть) */
     </style>
 </head>
 <body>
@@ -251,6 +249,51 @@
         <p data-i18n="footer_copyright">© 2026 — Milli sanly platforma</p>
     </footer>
 
+    <!-- Подключаем общий main.js -->
     <script src="/js/main.js"></script>
+
+    <!-- ============================================================
+         СКРИПТ АНИМАЦИИ СЧЁТЧИКОВ
+         ============================================================ -->
+    <script>
+        (function animateCounters() {
+            const counters = [
+                { id: "online", target: 234 },
+                { id: "users", target: 2340000 },
+                { id: "orders", target: 18540291 },
+                { id: "docs", target: 11328901 },
+                { id: "coin", target: 21000000 }
+            ];
+
+            function formatNumber(num) {
+                return num.toLocaleString("ru-RU");
+            }
+
+            function startCounter(el, target) {
+                let current = 0;
+                const step = Math.max(1, Math.floor(target / 180)); // 180 кадров (~3 секунды при 60fps)
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    el.textContent = formatNumber(current);
+                }, 16);
+            }
+
+            // Запускаем анимацию после загрузки страницы
+            window.addEventListener("load", function() {
+                // Небольшая задержка для красоты
+                setTimeout(() => {
+                    counters.forEach(c => {
+                        const el = document.getElementById(c.id);
+                        if (el) startCounter(el, c.target);
+                    });
+                }, 300);
+            });
+        })();
+    </script>
+
 </body>
 </html>
