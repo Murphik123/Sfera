@@ -11,13 +11,11 @@
         .mp-header h1 { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #fff, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .mp-header p { color: #9fb5c8; font-size: 14px; }
 
-        /* Сегменты */
         .segment-selector { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; background: rgba(255,255,255,0.04); padding: 8px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); }
         .segment-btn { flex: 1; min-width: 100px; padding: 10px 16px; border: none; border-radius: 12px; background: transparent; color: #9fb5c8; font-weight: 600; font-size: 14px; cursor: pointer; transition: .3s; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .segment-btn.active { background: linear-gradient(135deg, #00d4ff, #1f6bff); color: #fff; box-shadow: 0 8px 20px rgba(0,212,255,0.3); }
         .segment-btn:hover:not(.active) { background: rgba(255,255,255,0.08); color: #fff; }
 
-        /* Категории */
         .category-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
         .category-btn { padding: 6px 16px; border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; background: transparent; color: #bdd0df; cursor: pointer; transition: .3s; font-size: 13px; }
         .category-btn.active { background: rgba(0,212,255,0.15); border-color: #00d4ff; color: #00d4ff; }
@@ -70,19 +68,51 @@
         .admin-panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; }
         .admin-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
         .admin-form .form-group label { display: block; font-size: 13px; color: #9fb5c8; margin-bottom: 4px; }
-        .admin-form .form-group input, .admin-form .form-group select { width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.2); color: #fff; }
+        .admin-form .form-group input,
+        .admin-form .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.2);
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: .3s;
+        }
+        .admin-form .form-group input:focus,
+        .admin-form .form-group select:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 15px rgba(0,212,255,0.2);
+        }
+        .admin-form .form-group select option { background: #0b2035; color: #fff; }
 
         .empty-state { text-align: center; padding: 40px; color: #9fb5c8; }
         .empty-state .icon { font-size: 48px; margin-bottom: 10px; }
 
-        /* Модальное окно оформления заказа */
         .order-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.7); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 1000; }
         .order-modal.active { display: flex; }
         .order-modal .modal-box { background: rgba(20,30,45,0.95); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,.15); border-radius: 24px; padding: 30px; max-width: 500px; width: 95%; max-height: 90vh; overflow-y: auto; }
         .order-modal .modal-box h2 { color: #fff; margin-bottom: 20px; }
         .order-modal .form-group { margin-bottom: 16px; }
         .order-modal .form-group label { display: block; font-size: 14px; color: #dbe9ff; margin-bottom: 4px; }
-        .order-modal .form-group input, .order-modal .form-group select { width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: rgba(0,0,0,0.2); color: #fff; }
+        .order-modal .form-group input,
+        .order-modal .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.2);
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: .3s;
+        }
+        .order-modal .form-group input:focus,
+        .order-modal .form-group select:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 15px rgba(0,212,255,0.2);
+        }
         .order-modal .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; }
 
         @media (max-width: 768px) {
@@ -119,7 +149,6 @@
         </div>
     </header>
 
-    <!-- Содержимое -->
     <section class="marketplace">
         <div class="container">
             <div class="mp-header">
@@ -221,12 +250,12 @@
                     <h3 data-i18n="admin_title">Управление каталогом</h3>
                     <form id="adminProductForm">
                         <div class="admin-form">
-                            <div class="form-group"><label data-i18n="admin_segment">Сегмент</label><select id="adminSegment"><option value="b2c">B2C</option><option value="b2b">B2B</option><option value="b2g">B2G</option></select></div>
-                            <div class="form-group"><label data-i18n="admin_category">Kategoriýa</label><select id="adminCategory"><option value="electronics">Электроника</option><option value="industry">Промышленность</option><option value="food">Продукты</option><option value="agriculture">Сельское хозяйство</option><option value="gov_tenders">Гос. тендеры</option></select></div>
-                            <div class="form-group"><label data-i18n="admin_name">Ady</label><input type="text" id="adminName" placeholder="Nazwanie" required /></div>
-                            <div class="form-group"><label data-i18n="admin_price">Bahasy (TMT)</label><input type="number" id="adminPrice" step="0.01" required placeholder="0.00" /></div>
-                            <div class="form-group"><label data-i18n="admin_seller">Satyjy</label><input type="text" id="adminSeller" required placeholder="ООО / ИП" /></div>
-                            <div class="form-group"><label data-i18n="admin_image">Surat URL</label><input type="url" id="adminImageUrl" placeholder="https://..." /></div>
+                            <div class="form-group"><label data-i18n="admin_segment">Сегмент</label><select id="adminSegment" class="form-select"><option value="b2c">B2C</option><option value="b2b">B2B</option><option value="b2g">B2G</option></select></div>
+                            <div class="form-group"><label data-i18n="admin_category">Kategoriýa</label><select id="adminCategory" class="form-select"><option value="electronics">Электроника</option><option value="industry">Промышленность</option><option value="food">Продукты</option><option value="agriculture">Сельское хозяйство</option><option value="gov_tenders">Гос. тендеры</option></select></div>
+                            <div class="form-group"><label data-i18n="admin_name">Ady</label><input type="text" id="adminName" placeholder="Nazwanie" class="form-input" required /></div>
+                            <div class="form-group"><label data-i18n="admin_price">Bahasy (TMT)</label><input type="number" id="adminPrice" step="0.01" class="form-input" required placeholder="0.00" /></div>
+                            <div class="form-group"><label data-i18n="admin_seller">Satyjy</label><input type="text" id="adminSeller" class="form-input" required placeholder="ООО / ИП" /></div>
+                            <div class="form-group"><label data-i18n="admin_image">Surat URL</label><input type="url" id="adminImageUrl" class="form-input" placeholder="https://..." /></div>
                         </div>
                         <button type="submit" class="btn btn-primary" style="max-width:200px;" data-i18n="admin_add">Goşmak</button>
                     </form>
@@ -241,10 +270,10 @@
         <div class="modal-box">
             <h2 data-i18n="order_title">Sargyt et</h2>
             <form id="orderForm">
-                <div class="form-group"><label data-i18n="order_name">Adyňyz</label><input type="text" id="orderName" required /></div>
-                <div class="form-group"><label data-i18n="order_phone">Telefon</label><input type="text" id="orderPhone" required /></div>
-                <div class="form-group"><label data-i18n="order_address">Adres</label><input type="text" id="orderAddress" required /></div>
-                <div class="form-group"><label data-i18n="order_payment">Töleg usuly</label><select id="orderPayment"><option value="tm_pay">TM Pay</option><option value="tm_coin">TM Coin</option><option value="card">Bank karta</option></select></div>
+                <div class="form-group"><label data-i18n="order_name">Adyňyz</label><input type="text" id="orderName" class="form-input" required /></div>
+                <div class="form-group"><label data-i18n="order_phone">Telefon</label><input type="text" id="orderPhone" class="form-input" required /></div>
+                <div class="form-group"><label data-i18n="order_address">Adres</label><input type="text" id="orderAddress" class="form-input" required /></div>
+                <div class="form-group"><label data-i18n="order_payment">Töleg usuly</label><select id="orderPayment" class="form-select"><option value="tm_pay">TM Pay</option><option value="tm_coin">TM Coin</option><option value="card">Bank karta</option></select></div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-outline" id="cancelOrderBtn" data-i18n="cancel">Ýatyr</button>
                     <button type="submit" class="btn btn-success" data-i18n="confirm_order">Tassykla</button>
@@ -367,7 +396,6 @@
         document.getElementById('profileRole').textContent = user.role;
         document.getElementById('profileUserType').textContent = user.role === 'admin' ? 'Госорган / Админ' : 'Физическое / Юр. лицо';
 
-        // Загрузка профиля из localStorage
         const profile = JSON.parse(localStorage.getItem('user_profile') || JSON.stringify({
             phone: '+993 12 345678',
             address: 'Aşgabat, ...'
@@ -469,10 +497,10 @@
             const idx = favorites.indexOf(id);
             if (idx > -1) {
                 favorites.splice(idx, 1);
-                showMessage(currentLang === 'ru' ? 'Удалено из избранного' : currentLang === 'tm' ? 'Söýlilerden aýryldy' : 'Removed from favorites', 'info');
+                showMessage(translations[currentLang].favorite_remove, 'info');
             } else {
                 favorites.push(id);
-                showMessage(currentLang === 'ru' ? 'Добавлено в избранное' : currentLang === 'tm' ? 'Söýlilere goşuldy' : 'Added to favorites', 'success');
+                showMessage(translations[currentLang].favorite_add, 'success');
             }
             localStorage.setItem('marketplace_favorites', JSON.stringify(favorites));
             renderCatalog();
@@ -494,7 +522,7 @@
                         <div class="name">${p.name}</div>
                         <div class="price">${p.price.toFixed(2)} TMT</div>
                         <div class="seller">${p.seller}</div>
-                        <button class="btn btn-primary add-to-cart" data-id="${p.id}">${translations[currentLang].add_to_cart}</button>
+                        <button class="btn btn-primary add-to-cart" data-id="${p.id}" data-i18n="add_to_cart">В корзину</button>
                     </div>
                 `;
             });
@@ -588,7 +616,6 @@
                 return;
             }
             document.getElementById('orderModal').classList.add('active');
-            // Заполняем поля данными из профиля
             document.getElementById('orderName').value = user.username || '';
             document.getElementById('orderPhone').value = profile.phone || '';
             document.getElementById('orderAddress').value = profile.address || '';
@@ -621,7 +648,6 @@
             orders.push(order);
             localStorage.setItem('marketplace_orders', JSON.stringify(orders));
 
-            // Очищаем корзину
             cart = [];
             localStorage.setItem('marketplace_cart', JSON.stringify(cart));
             updateCartCount();
@@ -739,7 +765,7 @@
                 document.getElementById('tab-' + tab).classList.add('active');
                 if (tab === 'cart') renderCart();
                 if (tab === 'wishlist') renderWishlist();
-                if (tab === 'profile') { renderOrders(); }
+                if (tab === 'profile') renderOrders();
                 if (tab === 'admin' && isAdmin) renderAdminProducts();
             });
         });
