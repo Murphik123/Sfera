@@ -271,7 +271,7 @@
 
             function startCounter(el, target) {
                 let current = 0;
-                const step = Math.max(1, Math.floor(target / 180)); // 180 кадров (~3 секунды при 60fps)
+                const step = Math.max(1, Math.floor(target / 180));
                 const timer = setInterval(() => {
                     current += step;
                     if (current >= target) {
@@ -282,9 +282,7 @@
                 }, 16);
             }
 
-            // Запускаем анимацию после загрузки страницы
             window.addEventListener("load", function() {
-                // Небольшая задержка для красоты
                 setTimeout(() => {
                     counters.forEach(c => {
                         const el = document.getElementById(c.id);
@@ -295,22 +293,25 @@
         })();
     </script>
 
+    <!-- ============================================================
+         ПЛАВНЫЙ СКРОЛЛ К БЛОКУ "МОДУЛИ" (исправлено)
+         ============================================================ -->
+    <script>
+        (function initDemoScroll() {
+            const demoBtn = document.querySelector('.glass-btn');
+            const modulesSection = document.querySelector('.modules');
+
+            if (demoBtn && modulesSection) {
+                demoBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    modulesSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                });
+            }
+        })();
+    </script>
+
 </body>
 </html>
-// ============================================================
-// ПЛАВНЫЙ СКРОЛЛ К БЛОКУ "МОДУЛИ"
-// ============================================================
-(function initDemoScroll() {
-    const demoBtn = document.querySelector('.glass-btn'); // кнопка "Демо"
-    const modulesSection = document.querySelector('.modules'); // блок с модулями
-
-    if (demoBtn && modulesSection) {
-        demoBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            modulesSection.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        });
-    }
-})();
