@@ -975,3 +975,8 @@ footer p {
     text-decoration: underline;
 }
 
+/* ===== ЛОГОТИП: скрываем подзаголовок ===== */
+.logo-text p {
+    display: none;
+}
+
