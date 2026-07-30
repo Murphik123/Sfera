@@ -10,6 +10,48 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
     <link rel="stylesheet" href="/css/style.css" />
+
+    <style>
+        /* ============================================================
+           ПЕРЕОПРЕДЕЛЕНИЕ ШАПКИ (стеклянная, как в маркетплейсе)
+           ============================================================ */
+        header {
+            background: rgba(255, 255, 255, 0.06) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .header-buttons .lang,
+        .header-buttons .login {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: #fff !important;
+            backdrop-filter: blur(4px) !important;
+            transition: all 0.3s !important;
+        }
+        .header-buttons .lang:hover,
+        .header-buttons .login:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: #00d4ff !important;
+            color: #00d4ff !important;
+        }
+        .header-buttons .login {
+            background: rgba(0, 212, 255, 0.15) !important;
+            border-color: rgba(0, 212, 255, 0.3) !important;
+        }
+        .header-buttons .login:hover {
+            background: rgba(0, 212, 255, 0.25) !important;
+        }
+
+        /* Скрываем подзаголовок в логотипе */
+        .logo-text p {
+            display: none !important;
+        }
+
+        /* Адаптив для гамбургера и меню (оставляем как есть) */
+    </style>
 </head>
 <body>
     <div id="particles"></div>
