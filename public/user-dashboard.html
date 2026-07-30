@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+// В самом начале тега <script> в user-dashboard.html
+const user = JSON.parse(localStorage.getItem('user') || '{}');
+if (!user || user.role !== 'user') {
+    window.location.href = 'login.html';
+}
 <html lang="tm">
 <head>
     <meta charset="UTF-8" />
