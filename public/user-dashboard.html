@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="tm">
+<html lang="ru">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SFERA — Пользовательский дашборд</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <title>СФЕРА — Пользовательский дашборд</title>
+    
+    <!-- ПОДКЛЮЧАЕМ ОБЩИЙ СТИЛЬ -->
+    <link rel="stylesheet" href="/css/style.css" />
+    
+    <!-- ДОПОЛНИТЕЛЬНЫЕ СТИЛИ (если нужны) -->
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: #060911; color: #ffffff; min-height: 100vh; }
-        
+        /* Здесь могут быть специфичные для дашборда стили */
         .dashboard { padding: 120px 7% 60px; min-height: 100vh; }
         .dashboard h1 { font-size: 42px; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #fff, #b4d7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .dashboard .welcome { font-size: 18px; color: #bcd0e2; margin-bottom: 40px; }
@@ -21,7 +21,7 @@
         .dashboard .card h3 { font-size: 20px; margin-bottom: 6px; }
         .dashboard .card p { font-size: 14px; color: #bdd0df; }
         
-        header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 7%; background: rgba(6,9,17,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); display: flex; justify-content: space-between; align-items: center; }
+        header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 7%; background: rgba(6,9,17,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
         .logo-svg { width: 40px; height: 40px; }
         .logo-text h2 { font-size: 22px; font-weight: 900; background: linear-gradient(135deg, #00ffa3, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -37,6 +37,7 @@
     </style>
 </head>
 <body>
+    <!-- Шапка -->
     <header>
         <a href="index.html" class="logo">
             <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -54,6 +55,7 @@
         </div>
     </header>
 
+    <!-- Контент дашборда -->
     <section class="dashboard">
         <div class="container" style="max-width:1400px;margin:0 auto;">
             <h1>👋 Hoş geldiňiz, <span id="greetingUser">User</span>!</h1>
@@ -72,35 +74,24 @@
     </section>
 
     <script>
-        // ============================================================
-        // ПРОВЕРКА АВТОРИЗАЦИИ
-        // ============================================================
+        // Проверка авторизации
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         const token = localStorage.getItem('token');
 
-        console.log('🔍 Проверка авторизации пользователя:');
-        console.log('Token:', token);
-        console.log('User:', user);
-
         if (!token || !user || user.role !== 'user') {
-            console.log('❌ Нет доступа, перенаправление на login');
             window.location.href = 'login.html';
         }
 
         document.getElementById('username').textContent = user.username || 'User';
         document.getElementById('greetingUser').textContent = user.username || 'User';
-        document.getElementById('roleBadge').textContent = '👤 ' + (user.role === 'admin' ? 'Администратор' : 'Пользователь');
 
-        console.log('✅ Пользовательский дашборд загружен');
-
-        // ============================================================
-        // ВЫХОД
-        // ============================================================
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = 'login.html';
         });
+
+        console.log('✅ User dashboard loaded');
     </script>
 </body>
 </html>
