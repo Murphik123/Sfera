@@ -294,10 +294,10 @@
     </script>
 
     <!-- ============================================================
-         ПЛАВНЫЙ СКРОЛЛ К БЛОКУ "МОДУЛИ" (исправлено)
+         ПЛАВНЫЙ СКРОЛЛ К БЛОКУ "МОДУЛИ" ПО КНОПКЕ "ДЕМО"
          ============================================================ -->
     <script>
-        (function initDemoScroll() {
+        document.addEventListener('DOMContentLoaded', function() {
             const demoBtn = document.querySelector('.glass-btn');
             const modulesSection = document.querySelector('.modules');
 
@@ -310,7 +310,7 @@
                     });
                 });
             }
-        })();
+        });
     </script>
 
 </body>
