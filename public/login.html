@@ -165,6 +165,11 @@
         .toggle-eye:hover {
             color: white;
         }
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
     </style>
 </head>
 <body>
@@ -332,7 +337,7 @@
         });
 
         // ============================================================
-        // ЛОГИКА ВХОДА
+        // ЛОГИКА ВХОДА (БЭКЕНД)
         // ============================================================
         const form = document.getElementById('loginForm');
         const messageEl = document.getElementById('message');
@@ -370,13 +375,13 @@
                     showMessage(translations[currentLang].login_success, 'success');
 
                     setTimeout(() => {
-    if (user.role === 'admin') {
-        window.location.href = 'admin-dashboard.html';
-    } else {
-        window.location.href = 'user-dashboard.html';
-    }
-}, 800);
-            } else {
+                        if (data.user.role === 'admin') {
+                            window.location.href = 'admin-dashboard.html';
+                        } else {
+                            window.location.href = 'user-dashboard.html';
+                        }
+                    }, 800);
+                } else {
                     showMessage(data.message || translations[currentLang].login_error, 'error');
                     loginBtn.disabled = false;
                     loginBtn.textContent = translations[currentLang].login_button;
@@ -419,7 +424,8 @@
         // ИНИЦИАЛИЗАЦИЯ
         // ============================================================
         setLanguage(currentLang);
-        console.log('Login page loaded');
+        console.log('✅ Login page loaded with backend auth');
+        console.log('🔗 API: https://sfera-1.onrender.com/api/auth');
     </script>
 </body>
 </html>
