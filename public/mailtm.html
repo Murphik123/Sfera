@@ -793,8 +793,14 @@
                 drafts: translations[currentLang].folder_drafts,
                 trash: translations[currentLang].folder_trash
             };
-            document.getElementById('folderTitle').textContent = folderNames[currentFolder] || translations[currentLang].folder_inbox;
-            document.getElementById('composeBtn').innerHTML = `✏️ ${translations[currentLang].compose}`;
+            const folderTitleEl = document.getElementById('folderTitle');
+            if (folderTitleEl) {
+                folderTitleEl.textContent = folderNames[currentFolder] || translations[currentLang].folder_inbox;
+            }
+            const composeBtn = document.getElementById('composeBtn');
+            if (composeBtn) {
+                composeBtn.innerHTML = `✏️ ${translations[currentLang].compose}`;
+            }
         }
 
         document.getElementById('langBtn').addEventListener('click', function() {
@@ -814,10 +820,12 @@
         document.getElementById('username').textContent = user.username || 'User';
 
         const backLink = document.getElementById('backLink');
-        if (user.role === 'admin') {
-            backLink.href = 'admin-dashboard.html';
-        } else {
-            backLink.href = 'user-dashboard.html';
+        if (backLink) {
+            if (user.role === 'admin') {
+                backLink.href = 'admin-dashboard.html';
+            } else {
+                backLink.href = 'user-dashboard.html';
+            }
         }
 
         document.getElementById('logoutBtn').addEventListener('click', function() {
@@ -885,7 +893,6 @@
                 mails = generateMockMails();
                 localStorage.setItem('mail_data', JSON.stringify(mails));
             }
-            // Принудительная проверка: если всё ещё пусто – перегенерировать
             if (!mails || mails.length === 0) {
                 mails = generateMockMails();
                 localStorage.setItem('mail_data', JSON.stringify(mails));
@@ -897,7 +904,6 @@
             localStorage.setItem('mail_data', JSON.stringify(mails));
         }
 
-        // Загружаем данные ДО рендеринга
         loadMails();
 
         function getMailsForFolder(folder) {
@@ -916,12 +922,17 @@
 
         function renderMails() {
             const container = document.getElementById('mailItems');
+            if (!container) return;
+
             const folderMails = getMailsForFolder(currentFolder);
             const filtered = filterMails(folderMails);
 
             // Обновить счётчик входящих
-            const inboxCount = getMailsForFolder('inbox').filter(m => m.unread).length;
-            document.getElementById('inboxCount').textContent = inboxCount;
+            const inboxCountEl = document.getElementById('inboxCount');
+            if (inboxCountEl) {
+                const inboxCount = getMailsForFolder('inbox').filter(m => m.unread).length;
+                inboxCountEl.textContent = inboxCount;
+            }
 
             if (!filtered.length) {
                 container.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>${translations[currentLang].no_mails}</p></div>`;
@@ -950,7 +961,6 @@
                 `;
             }).join('');
 
-            // Обработчики
             container.querySelectorAll('.mail-item').forEach(el => {
                 el.addEventListener('click', function(e) {
                     if (e.target.closest('.checkbox') || e.target.closest('.star')) return;
@@ -994,19 +1004,22 @@
 
         function updateBulkActions() {
             const bulk = document.getElementById('bulkActions');
-            const count = selectedMails.size;
-            if (count > 0) {
-                bulk.classList.add('visible');
-                document.getElementById('selectedCount').textContent = `${count} ${translations[currentLang].selected_count}`;
-            } else {
-                bulk.classList.remove('visible');
+            const selectedCountEl = document.getElementById('selectedCount');
+            if (bulk && selectedCountEl) {
+                const count = selectedMails.size;
+                if (count > 0) {
+                    bulk.classList.add('visible');
+                    selectedCountEl.textContent = `${count} ${translations[currentLang].selected_count}`;
+                } else {
+                    bulk.classList.remove('visible');
+                }
             }
         }
 
         // ============================================================
         // МАССОВЫЕ ДЕЙСТВИЯ
         // ============================================================
-        document.getElementById('deleteSelectedBtn').addEventListener('click', function() {
+        document.getElementById('deleteSelectedBtn')?.addEventListener('click', function() {
             if (selectedMails.size === 0) return;
             if (!confirm('Pozmak isleýärsiňiz?')) return;
             const ids = Array.from(selectedMails);
@@ -1020,9 +1033,9 @@
             showToast(translations[currentLang].delete_selected + ' OK', 'success');
         });
 
-        document.getElementById('moveSelectedBtn').addEventListener('click', function() {
+        document.getElementById('moveSelectedBtn')?.addEventListener('click', function() {
             if (selectedMails.size === 0) return;
-            const target = document.getElementById('moveFolderSelect').value;
+            const target = document.getElementById('moveFolderSelect')?.value;
             if (target === currentFolder) {
                 showToast('Indiki paýda eýýäm bar', 'info');
                 return;
@@ -1038,7 +1051,7 @@
             showToast(translations[currentLang].move_selected + ' OK', 'success');
         });
 
-        document.getElementById('clearSelectionBtn').addEventListener('click', function() {
+        document.getElementById('clearSelectionBtn')?.addEventListener('click', function() {
             selectedMails.clear();
             renderMails();
         });
@@ -1046,15 +1059,18 @@
         // ============================================================
         // ПОИСК
         // ============================================================
-        document.getElementById('searchInput').addEventListener('input', function() {
+        document.getElementById('searchInput')?.addEventListener('input', function() {
             searchQuery = this.value.trim();
             renderMails();
         });
 
-        document.getElementById('clearSearchBtn').addEventListener('click', function() {
-            document.getElementById('searchInput').value = '';
-            searchQuery = '';
-            renderMails();
+        document.getElementById('clearSearchBtn')?.addEventListener('click', function() {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.value = '';
+                searchQuery = '';
+                renderMails();
+            }
         });
 
         // ============================================================
@@ -1066,33 +1082,44 @@
             mail.unread = false;
             saveMails();
 
-            document.getElementById('mailList').style.display = 'none';
-            document.getElementById('mailView').classList.add('active');
+            const mailList = document.getElementById('mailList');
+            const mailView = document.getElementById('mailView');
+            if (mailList) mailList.style.display = 'none';
+            if (mailView) mailView.classList.add('active');
 
-            document.getElementById('viewSubject').textContent = mail.subject;
-            document.getElementById('viewFrom').textContent = `${translations[currentLang].from_label} ${mail.from}`;
-            document.getElementById('viewDate').textContent = `${translations[currentLang].date_label} ${new Date(mail.date).toLocaleString('ru-RU')}`;
-            document.getElementById('viewBody').textContent = mail.body || '(Пусто)';
+            const viewSubject = document.getElementById('viewSubject');
+            const viewFrom = document.getElementById('viewFrom');
+            const viewDate = document.getElementById('viewDate');
+            const viewBody = document.getElementById('viewBody');
+            const viewAttachments = document.getElementById('viewAttachments');
 
-            const attachContainer = document.getElementById('viewAttachments');
-            if (mail.attachments && mail.attachments.length) {
-                attachContainer.innerHTML = mail.attachments.map(f => `<div class="file">📎 ${f}</div>`).join('');
-            } else {
-                attachContainer.innerHTML = '';
+            if (viewSubject) viewSubject.textContent = mail.subject;
+            if (viewFrom) viewFrom.textContent = `${translations[currentLang].from_label} ${mail.from}`;
+            if (viewDate) viewDate.textContent = `${translations[currentLang].date_label} ${new Date(mail.date).toLocaleString('ru-RU')}`;
+            if (viewBody) viewBody.textContent = mail.body || '(Пусто)';
+
+            if (viewAttachments) {
+                if (mail.attachments && mail.attachments.length) {
+                    viewAttachments.innerHTML = mail.attachments.map(f => `<div class="file">📎 ${f}</div>`).join('');
+                } else {
+                    viewAttachments.innerHTML = '';
+                }
             }
             renderMails();
         }
 
-        document.getElementById('backToList').addEventListener('click', function() {
-            document.getElementById('mailView').classList.remove('active');
-            document.getElementById('mailList').style.display = 'flex';
+        document.getElementById('backToList')?.addEventListener('click', function() {
+            const mailView = document.getElementById('mailView');
+            const mailList = document.getElementById('mailList');
+            if (mailView) mailView.classList.remove('active');
+            if (mailList) mailList.style.display = 'flex';
             renderMails();
         });
 
         // ============================================================
         // ПЕЧАТЬ ПИСЬМА
         // ============================================================
-        document.getElementById('printMailBtn').addEventListener('click', function() {
+        document.getElementById('printMailBtn')?.addEventListener('click', function() {
             window.print();
         });
 
@@ -1105,9 +1132,14 @@
                 this.classList.add('active');
                 currentFolder = this.dataset.folder;
                 selectedMails.clear();
-                document.getElementById('mailView').classList.remove('active');
-                document.getElementById('mailList').style.display = 'flex';
-                document.getElementById('folderTitle').textContent = translations[currentLang][`folder_${currentFolder}`] || translations[currentLang].folder_inbox;
+                const mailView = document.getElementById('mailView');
+                const mailList = document.getElementById('mailList');
+                if (mailView) mailView.classList.remove('active');
+                if (mailList) mailList.style.display = 'flex';
+                const folderTitle = document.getElementById('folderTitle');
+                if (folderTitle) {
+                    folderTitle.textContent = translations[currentLang][`folder_${currentFolder}`] || translations[currentLang].folder_inbox;
+                }
                 renderMails();
             });
         });
@@ -1115,30 +1147,36 @@
         // ============================================================
         // КОМПОЗИЦИЯ ПИСЬМА
         // ============================================================
-        document.getElementById('composeBtn').addEventListener('click', function() {
-            document.getElementById('composeModal').classList.add('active');
-            document.getElementById('composeForm').reset();
-            document.getElementById('composeFile').value = '';
+        document.getElementById('composeBtn')?.addEventListener('click', function() {
+            const modal = document.getElementById('composeModal');
+            if (modal) {
+                modal.classList.add('active');
+                const form = document.getElementById('composeForm');
+                if (form) form.reset();
+                const fileInput = document.getElementById('composeFile');
+                if (fileInput) fileInput.value = '';
+            }
         });
 
-        document.getElementById('cancelComposeBtn').addEventListener('click', function() {
-            document.getElementById('composeModal').classList.remove('active');
+        document.getElementById('cancelComposeBtn')?.addEventListener('click', function() {
+            const modal = document.getElementById('composeModal');
+            if (modal) modal.classList.remove('active');
         });
 
-        document.getElementById('composeModal').addEventListener('click', function(e) {
+        document.getElementById('composeModal')?.addEventListener('click', function(e) {
             if (e.target === this) this.classList.remove('active');
         });
 
-        document.getElementById('saveDraftBtn').addEventListener('click', function() {
-            const to = document.getElementById('composeTo').value.trim();
-            const subject = document.getElementById('composeSubject').value.trim();
-            const body = document.getElementById('composeBody').value.trim();
+        document.getElementById('saveDraftBtn')?.addEventListener('click', function() {
+            const to = document.getElementById('composeTo')?.value.trim() || '';
+            const subject = document.getElementById('composeSubject')?.value.trim() || '';
+            const body = document.getElementById('composeBody')?.value.trim() || '';
             const fileInput = document.getElementById('composeFile');
-            const files = fileInput.files ? Array.from(fileInput.files).map(f => f.name) : [];
+            const files = fileInput?.files ? Array.from(fileInput.files).map(f => f.name) : [];
 
             if (!subject && !body) {
                 showToast('Hiç zat ýok, ýatyr', 'info');
-                document.getElementById('composeModal').classList.remove('active');
+                document.getElementById('composeModal')?.classList.remove('active');
                 return;
             }
 
@@ -1156,18 +1194,18 @@
             };
             mails.push(draftMail);
             saveMails();
-            document.getElementById('composeModal').classList.remove('active');
+            document.getElementById('composeModal')?.classList.remove('active');
             showToast(translations[currentLang].draft_saved, 'success');
             renderMails();
         });
 
-        document.getElementById('composeForm').addEventListener('submit', function(e) {
+        document.getElementById('composeForm')?.addEventListener('submit', function(e) {
             e.preventDefault();
-            const to = document.getElementById('composeTo').value.trim();
-            const subject = document.getElementById('composeSubject').value.trim();
-            const body = document.getElementById('composeBody').value.trim();
+            const to = document.getElementById('composeTo')?.value.trim() || '';
+            const subject = document.getElementById('composeSubject')?.value.trim() || '';
+            const body = document.getElementById('composeBody')?.value.trim() || '';
             const fileInput = document.getElementById('composeFile');
-            const files = fileInput.files ? Array.from(fileInput.files).map(f => f.name) : [];
+            const files = fileInput?.files ? Array.from(fileInput.files).map(f => f.name) : [];
 
             if (!to || !subject || !body) {
                 showToast('Doldurmaly ýerler boş!', 'error');
@@ -1198,7 +1236,7 @@
             };
             mails.push(receivedMail);
             saveMails();
-            document.getElementById('composeModal').classList.remove('active');
+            document.getElementById('composeModal')?.classList.remove('active');
             showToast(translations[currentLang].send_success, 'success');
             renderMails();
         });
@@ -1250,7 +1288,7 @@
         // ============================================================
         // ВЫБОР ВСЕХ
         // ============================================================
-        document.getElementById('selectAllBtn').addEventListener('click', function() {
+        document.getElementById('selectAllBtn')?.addEventListener('click', function() {
             const folderMails = getMailsForFolder(currentFolder);
             const filtered = filterMails(folderMails);
             const allIds = filtered.map(m => m.id);
@@ -1266,7 +1304,7 @@
         // ============================================================
         // ОБНОВЛЕНИЕ
         // ============================================================
-        document.getElementById('refreshBtn').addEventListener('click', function() {
+        document.getElementById('refreshBtn')?.addEventListener('click', function() {
             const stored = localStorage.getItem('mail_data');
             if (stored) {
                 try {
