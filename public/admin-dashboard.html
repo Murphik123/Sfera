@@ -4,57 +4,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>СФЕРА — Административная панель</title>
+    <!-- Подключаем общий CSS -->
     <link rel="stylesheet" href="/css/style.css">
+    <!-- Дополнительные стили для админ-панели (золотые акценты) -->
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: #060911; color: #ffffff; min-height: 100vh; }
-        .admin-panel { padding: 120px 7% 60px; min-height: 100vh; }
-        .admin-panel h1 { font-size: 42px; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #ffd700, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .admin-panel .subtitle { font-size: 18px; color: #bcd0e2; margin-bottom: 40px; }
-        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-top: 20px; }
-        .admin-card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); backdrop-filter: blur(25px); border-radius: 18px; padding: 30px 20px; text-align: center; transition: .35s; text-decoration: none; color: white; display: block; }
-        .admin-card:hover { transform: translateY(-8px); border-color: #ffd700; box-shadow: 0 25px 50px rgba(255,215,0,.2); }
-        .admin-card .icon { font-size: 48px; margin-bottom: 12px; }
-        .admin-card h3 { font-size: 20px; margin-bottom: 6px; }
-        .admin-card p { font-size: 14px; color: #bdd0df; }
-        .admin-card .badge { display: inline-block; background: rgba(255,215,0,.2); padding: 4px 14px; border-radius: 20px; font-size: 11px; color: #ffd700; margin-top: 10px; font-weight: 600; }
-        header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 7%; background: rgba(6,9,17,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,215,0,.15); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .logo-svg { width: 40px; height: 40px; }
-        .logo-text h2 { font-size: 22px; font-weight: 900; background: linear-gradient(135deg, #ffd700, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .logo-text p { font-size: 9px; color: #9fb5c8; text-transform: uppercase; letter-spacing: 1px; }
-        .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-        .user-info { color: #bcd0e2; font-size: 14px; }
-        .user-info strong { color: white; }
-        .role-badge { background: rgba(255,215,0,.2); padding: 4px 14px; border-radius: 20px; font-size: 11px; color: #ffd700; font-weight: 700; }
-        .logout-btn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); color: white; padding: 10px 24px; border-radius: 12px; cursor: pointer; transition: .3s; font-weight: 600; }
-        .logout-btn:hover { background: rgba(255,0,0,.15); border-color: rgba(255,0,0,.3); }
-        .btn-switch { padding: 8px 16px; font-size: 13px; background: transparent; border: 1px solid rgba(255,255,255,.15); color: white; border-radius: 12px; text-decoration: none; transition: .3s; }
-        .btn-switch:hover { border-color: #00d4ff; background: rgba(0,212,255,.1); }
-        @media (max-width: 768px) { .admin-panel h1 { font-size: 28px; } .admin-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); } }
+        .admin-panel {
+            padding: 120px 7% 60px;
+            min-height: 100vh;
+        }
+        .admin-panel h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .admin-panel .subtitle {
+            font-size: 18px;
+            color: #bcd0e2;
+            margin-bottom: 40px;
+        }
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .admin-card {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.12);
+            backdrop-filter: blur(25px);
+            border-radius: 18px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: .35s;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+        .admin-card:hover {
+            transform: translateY(-8px);
+            border-color: #ffd700;
+            box-shadow: 0 25px 50px rgba(255,215,0,.2);
+        }
+        .admin-card .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        .admin-card h3 {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+        .admin-card p {
+            font-size: 14px;
+            color: #bdd0df;
+        }
+        .admin-card .badge {
+            display: inline-block;
+            background: rgba(255,215,0,.2);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #ffd700;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        /* Шапка админки – золотая полоса */
+        header {
+            border-bottom: 1px solid rgba(255,215,0,.15);
+        }
+        .logo-text h2 {
+            background: linear-gradient(135deg, #ffd700, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .role-badge {
+            background: rgba(255,215,0,.2);
+            color: #ffd700;
+        }
+
+        @media (max-width: 768px) {
+            .admin-panel h1 { font-size: 28px; }
+            .admin-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+        }
     </style>
 </head>
 <body>
+    <!-- Частицы из общего CSS (уже есть в style.css) -->
+
+    <!-- Шапка -->
     <header>
-        <a href="index.html" class="logo">
-            <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#1f6bff"/></linearGradient></defs>
-                <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15"/>
-                <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3"/>
-                <circle cx="48" cy="48" r="3.5" fill="#ffffff"/>
-            </svg>
-            <div class="logo-text"><h2>SFERA</h2><p>Administrasiýa paneli</p></div>
-        </a>
-        <div class="header-right">
-            <span class="user-info">👑 <strong id="adminName">Admin</strong></span>
-            <span class="role-badge">👑 Администратор</span>
-            <button class="logout-btn" id="logoutBtn">🚪 Çykmak</button>
-            <a href="user-dashboard.html" class="btn-switch">👤 Пользователь</a>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3"/>
+                                <stop offset="50%" stop-color="#00d4ff"/>
+                                <stop offset="100%" stop-color="#1f6bff"/>
+                            </linearGradient>
+                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="4" result="blur"/>
+                                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                            </filter>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)"/>
+                        <g filter="url(#logoGlow)">
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>SFERA</h2>
+                    <p>Administrasiýa paneli</p>
+                </div>
+            </a>
+
+            <div class="header-right">
+                <span class="user-info">👑 <strong id="adminName">Admin</strong></span>
+                <span class="role-badge">👑 Администратор</span>
+                <button class="logout-btn" id="logoutBtn">🚪 Çykmak</button>
+                <a href="user-dashboard.html" class="btn-switch">👤 Пользователь</a>
+            </div>
         </div>
     </header>
 
+    <!-- Админ-панель -->
     <section class="admin-panel">
-        <div class="container" style="max-width:1400px;margin:0 auto;">
+        <div class="container">
             <h1>👑 Administrasiýa paneli</h1>
             <p class="subtitle">Platformany dolandyrmak üçin aşakdaky bölümleri ulanyň.</p>
             <div class="admin-grid">
