@@ -328,6 +328,7 @@
             color: #bdd0df;
         }
 
+        /* ===== МОДАЛЬНОЕ ОКНО "НОВОЕ ПИСЬМО" (единый дизайн) ===== */
         .compose-modal {
             display: none;
             position: fixed;
@@ -335,42 +336,63 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,.6);
-            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            animation: fadeIn 0.3s ease;
         }
         .compose-modal.active {
             display: flex;
         }
+
         .compose-modal .compose-box {
-            background: rgba(13,28,41,.98);
+            background: rgba(255,255,255,.06);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255,255,255,.12);
             border-radius: 24px;
             padding: 30px 35px;
             max-width: 600px;
             width: 95%;
-            box-shadow: 0 30px 80px rgba(0,0,0,.6);
+            box-shadow: 0 25px 60px rgba(0,0,0,.5), inset 0 0 20px rgba(0,212,255,.05);
             max-height: 90vh;
             overflow-y: auto;
+            position: relative;
         }
-        .compose-box h2 {
-            margin-bottom: 20px;
+        .compose-modal .compose-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d4ff, #00ffa3, transparent);
+        }
+
+        .compose-modal .compose-box h2 {
             font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .compose-box .form-group {
+
+        .compose-modal .compose-box .form-group {
             margin-bottom: 16px;
         }
-        .compose-box .form-group label {
+        .compose-modal .compose-box .form-group label {
             display: block;
             font-size: 14px;
             font-weight: 500;
             color: #dbe9ff;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
-        .compose-box .form-group input,
-        .compose-box .form-group textarea {
+        .compose-modal .compose-box .form-group input,
+        .compose-modal .compose-box .form-group textarea {
             width: 100%;
             padding: 12px 16px;
             border-radius: 12px;
@@ -381,22 +403,24 @@
             transition: .3s;
             outline: none;
         }
-        .compose-box .form-group input:focus,
-        .compose-box .form-group textarea:focus {
+        .compose-modal .compose-box .form-group input:focus,
+        .compose-modal .compose-box .form-group textarea:focus {
             border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0,212,255,.2);
+            background: rgba(255,255,255,.08);
         }
-        .compose-box .form-group textarea {
+        .compose-modal .compose-box .form-group textarea {
             min-height: 120px;
             resize: vertical;
         }
-        .compose-box .form-actions {
+        .compose-modal .compose-box .form-actions {
             display: flex;
             gap: 12px;
             justify-content: flex-end;
             margin-top: 10px;
             flex-wrap: wrap;
         }
-        .compose-box .form-actions button {
+        .compose-modal .compose-box .form-actions button {
             padding: 12px 28px;
             border: none;
             border-radius: 12px;
@@ -404,29 +428,35 @@
             cursor: pointer;
             transition: .3s;
         }
-        .compose-box .form-actions .btn-send {
+        .compose-modal .compose-box .form-actions .btn-send {
             background: linear-gradient(135deg, #00d4ff, #008cff);
             color: white;
+            box-shadow: 0 10px 25px rgba(0,212,255,.35);
         }
-        .compose-box .form-actions .btn-send:hover {
+        .compose-modal .compose-box .form-actions .btn-send:hover {
             transform: scale(1.02);
-            box-shadow: 0 10px 30px rgba(0,212,255,.3);
+            box-shadow: 0 15px 35px rgba(0,212,255,.5);
         }
-        .compose-box .form-actions .btn-draft {
+        .compose-modal .compose-box .form-actions .btn-draft {
             background: rgba(255,255,255,.08);
             border: 1px solid rgba(255,255,255,.15);
             color: white;
         }
-        .compose-box .form-actions .btn-draft:hover {
+        .compose-modal .compose-box .form-actions .btn-draft:hover {
             background: rgba(255,255,255,.15);
         }
-        .compose-box .form-actions .btn-cancel {
+        .compose-modal .compose-box .form-actions .btn-cancel {
             background: transparent;
             border: 1px solid rgba(255,255,255,.2);
             color: white;
         }
-        .compose-box .form-actions .btn-cancel:hover {
+        .compose-modal .compose-box .form-actions .btn-cancel:hover {
             background: rgba(255,255,255,.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .empty-state {
