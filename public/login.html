@@ -368,15 +368,15 @@
                     localStorage.setItem('user', JSON.stringify(data.user));
                     
                     showMessage(translations[currentLang].login_success, 'success');
-                    
+
                     setTimeout(() => {
-                        if (data.user.role === 'admin') {
-                            window.location.href = 'admin-dashboard.html';
-                        } else {
-                            window.location.href = 'user-dashboard.html';
-                        }
-                    }, 1000);
-                } else {
+    if (user.role === 'admin') {
+        window.location.href = 'admin-dashboard.html';
+    } else {
+        window.location.href = 'user-dashboard.html';
+    }
+}, 800);
+            } else {
                     showMessage(data.message || translations[currentLang].login_error, 'error');
                     loginBtn.disabled = false;
                     loginBtn.textContent = translations[currentLang].login_button;
