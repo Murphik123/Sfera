@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="tm">
+<html lang="ru">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>СФЕРА — Resmiýetler</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
+    <!-- Общий CSS -->
     <link rel="stylesheet" href="/css/style.css" />
+    <!-- Chart.js для круговой диаграммы -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
     <style>
+        /* ===== СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ ДОКУМЕНТОВ ===== */
         .doc-page {
-            padding: 120px 7% 60px;
+            padding: 140px 7% 60px;
             min-height: 100vh;
         }
         .doc-header {
@@ -73,8 +73,15 @@
             transform: translateY(-3px);
             box-shadow: 0 20px 40px rgba(0,255,170,.3);
         }
+        .btn-danger {
+            background: rgba(200,0,0,.15);
+            border: 1px solid rgba(200,0,0,.3);
+            color: #ff6b6b;
+        }
+        .btn-danger:hover {
+            background: rgba(200,0,0,.25);
+        }
 
-        /* Вкладки */
         .doc-tabs {
             display: flex;
             gap: 4px;
@@ -114,7 +121,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Карточки документов в хранилище */
+        /* Карточки документов */
         .docs-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -128,6 +135,7 @@
             padding: 18px;
             backdrop-filter: blur(10px);
             transition: .3s;
+            position: relative;
         }
         .doc-item:hover {
             border-color: #00d4ff;
@@ -162,7 +170,23 @@
         .status-invalid { background: rgba(255,0,0,.15); color: #ff6b6b; }
         .status-manual { background: rgba(0,212,255,.15); color: #00d4ff; }
 
-        /* Зона загрузки */
+        .doc-item .delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255,0,0,.1);
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            transition: .2s;
+        }
+        .doc-item .delete-btn:hover {
+            background: rgba(255,0,0,.2);
+        }
+
         .upload-area {
             border: 2px dashed rgba(255,255,255,.2);
             border-radius: 18px;
@@ -185,7 +209,6 @@
             margin-bottom: 12px;
         }
 
-        /* Результат проверки */
         .verification-result {
             margin-top: 20px;
             padding: 16px 20px;
@@ -214,7 +237,6 @@
             font-weight: 500;
         }
 
-        /* Формы подписания */
         .sign-form {
             max-width: 500px;
             margin: 0 auto;
@@ -264,35 +286,107 @@
             margin-bottom: 10px;
         }
 
-        .message {
-            padding: 12px 16px;
-            border-radius: 12px;
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
             margin-bottom: 16px;
+        }
+        .filter-bar select {
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.15);
+            background: rgba(255,255,255,.05);
+            color: white;
             font-size: 14px;
-            display: none;
+            outline: none;
         }
-        .message.error {
-            display: block;
-            background: rgba(255,0,0,.1);
-            border: 1px solid rgba(255,0,0,.2);
-            color: #ff6b6b;
+        .filter-bar select:focus {
+            border-color: #00d4ff;
         }
-        .message.success {
-            display: block;
-            background: rgba(0,255,170,.1);
-            border: 1px solid rgba(0,255,170,.2);
-            color: #00ffa3;
+        .filter-bar input {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.15);
+            background: rgba(255,255,255,.05);
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+        .filter-bar input:focus {
+            border-color: #00d4ff;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .stat-item {
+            background: rgba(255,255,255,.04);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+        }
+        .stat-item .number {
+            font-size: 32px;
+            font-weight: 700;
+        }
+        .stat-item .label {
+            font-size: 13px;
+            color: #9fb5c8;
+        }
+
+        .chart-container {
+            background: rgba(255,255,255,.04);
+            border-radius: 16px;
+            padding: 16px;
+            margin: 16px 0;
+            max-width: 300px;
+            max-height: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Тосты */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(13,28,41,.95);
+            border: 1px solid rgba(0,212,255,.3);
+            border-radius: 16px;
+            padding: 16px 24px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 20px 40px rgba(0,0,0,.4);
+            z-index: 2000;
+            animation: slideUp 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        .toast.success { border-left: 4px solid #00ffa3; }
+        .toast.error { border-left: 4px solid #ff6b6b; }
+        .toast.info { border-left: 4px solid #00d4ff; }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 768px) {
             .doc-tabs button { padding: 10px 14px; font-size: 13px; }
             .docs-grid { grid-template-columns: 1fr; }
+            .filter-bar { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
 <body>
     <div id="particles"></div>
 
+    <!-- ШАПКА (единая) -->
     <header>
         <div class="container">
             <a href="index.html" class="logo">
@@ -300,34 +394,34 @@
                     <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00ffa3" />
-                                <stop offset="50%" stop-color="#00d4ff" />
-                                <stop offset="100%" stop-color="#1f6bff" />
+                                <stop offset="0%" stop-color="#00ffa3"/>
+                                <stop offset="50%" stop-color="#00d4ff"/>
+                                <stop offset="100%" stop-color="#1f6bff"/>
                             </linearGradient>
                             <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="4" result="blur" />
-                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                                <feGaussianBlur stdDeviation="4" result="blur"/>
+                                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
                             </filter>
                         </defs>
-                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)"/>
                         <g filter="url(#logoGlow)">
-                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
-                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
-                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)"/>
                         </g>
                     </svg>
                 </div>
                 <div class="logo-text">
                     <h2>SFERA</h2>
-                    <p>Milli Sanly Platforma</p>
+                    <p id="logoSubtitle" data-i18n="logo_subtitle">Milli Sanly Platforma</p>
                 </div>
             </a>
 
-            <div class="header-right" style="display:flex; align-items:center; gap:12px;">
-                <span class="user-info" id="userDisplay">👤 <strong id="username">User</strong></span>
-                <a href="dashboard.html" class="btn btn-outline" data-i18n="back" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Yza</a>
-                <button class="lang" id="langBtn">TM</button>
-                <button class="logout-btn" id="logoutBtn" data-i18n="logout" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:white; padding:8px 16px; border-radius:12px; cursor:pointer;">Çykmak</button>
+            <div class="header-right">
+                <span class="user-info">👤 <strong id="username">User</strong></span>
+                <button class="lang" id="langBtn">RU</button>
+                <button class="logout-btn" id="logoutBtn" data-i18n="logout">🚪 Çykmak</button>
+                <a href="#" id="backLink" class="btn-switch" style="display:inline-block; padding:8px 16px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;" data-i18n="back">← Yza</a>
             </div>
         </div>
     </header>
@@ -335,13 +429,11 @@
     <section class="doc-page">
         <div class="container">
             <div class="doc-header">
-                <h1>📄 Resmiýetler</h1>
+                <h1 data-i18n="page_title">📄 Resmiýetler</h1>
                 <div class="actions">
                     <button class="btn btn-outline" id="refreshBtn" data-i18n="refresh">⟳ Täzele</button>
                 </div>
             </div>
-
-            <div id="message" class="message"></div>
 
             <!-- Вкладки -->
             <div class="doc-tabs">
@@ -354,13 +446,18 @@
             <!-- ============================================ -->
             <!-- ВКЛАДКА ХРАНИЛИЩЕ -->
             <div class="tab-content active" id="tab-storage">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:16px;">
-                    <input type="text" id="docSearch" placeholder="Gözleg..." style="flex:1; min-width:200px; padding:10px 16px; border-radius:12px; border:1px solid rgba(255,255,255,.15); background:rgba(255,255,255,.05); color:white; font-size:15px; outline:none;" />
+                <div class="filter-bar">
+                    <input type="text" id="docSearch" placeholder="Gözleg..." data-i18n-placeholder="search_placeholder" />
+                    <select id="statusFilter" data-i18n="filter_status">
+                        <option value="all" data-i18n="all_status">Ähli status</option>
+                        <option value="verified" data-i18n="status_verified">Tassyklandy</option>
+                        <option value="pending" data-i18n="status_pending">Garaşýan</option>
+                        <option value="invalid" data-i18n="status_invalid">Nädogry</option>
+                        <option value="manual" data-i18n="status_manual">El bilen</option>
+                    </select>
                     <button class="btn btn-primary" id="uploadDocBtn" data-i18n="upload_doc">+ Ýüklemek</button>
                 </div>
-                <div class="docs-grid" id="docsGrid">
-                    <!-- Документы будут динамически загружены -->
-                </div>
+                <div class="docs-grid" id="docsGrid"></div>
             </div>
 
             <!-- ============================================ -->
@@ -379,9 +476,12 @@
                     <h4 data-i18n="verify_result">Barlag netijesi</h4>
                     <div class="row"><span class="label" data-i18n="doc_name">Resmiýet ady</span><span class="value" id="vDocName">-</span></div>
                     <div class="row"><span class="label" data-i18n="doc_type">Görnüşi</span><span class="value" id="vDocType">-</span></div>
-                    <div class="row"><span class="label" data-i18n="doc_status">Status</span><span class="value" id="vDocStatus">-</span></div>
+                    <div class="row"><span class="label" data-i18n="doc_series">Seriýa</span><span class="value" id="vDocSeries">-</span></div>
+                    <div class="row"><span class="label" data-i18n="doc_number">Nomär</span><span class="value" id="vDocNumber">-</span></div>
+                    <div class="row"><span class="label" data-i18n="doc_authority">Berjiň</span><span class="value" id="vDocAuthority">-</span></div>
                     <div class="row"><span class="label" data-i18n="doc_issue_date">Beriş senesi</span><span class="value" id="vDocIssue">-</span></div>
                     <div class="row"><span class="label" data-i18n="doc_expiry_date">Güýji gutarýar</span><span class="value" id="vDocExpiry">-</span></div>
+                    <div class="row"><span class="label" data-i18n="doc_status">Status</span><span class="value" id="vDocStatus">-</span></div>
                 </div>
             </div>
 
@@ -415,23 +515,34 @@
             <!-- ============================================ -->
             <!-- ВКЛАДКА ОТЧЁТЫ -->
             <div class="tab-content" id="tab-reports">
-                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap:16px; margin-bottom:20px;">
-                    <div class="stat-item" style="background:rgba(255,255,255,.04); border-radius:16px; padding:16px; text-align:center;">
-                        <div class="number" style="font-size:32px; font-weight:700; color:#00d4ff;" id="totalDocs">0</div>
-                        <div class="label" style="color:#9fb5c8;" data-i18n="total_docs">Jemi dokumentler</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="number" style="color:#00d4ff;" id="totalDocs">0</div>
+                        <div class="label" data-i18n="total_docs">Jemi dokumentler</div>
                     </div>
-                    <div class="stat-item" style="background:rgba(255,255,255,.04); border-radius:16px; padding:16px; text-align:center;">
-                        <div class="number" style="font-size:32px; font-weight:700; color:#00ffa3;" id="verifiedDocs">0</div>
-                        <div class="label" style="color:#9fb5c8;" data-i18n="verified_docs">Tassyklandy</div>
+                    <div class="stat-item">
+                        <div class="number" style="color:#00ffa3;" id="verifiedDocs">0</div>
+                        <div class="label" data-i18n="verified_docs">Tassyklandy</div>
                     </div>
-                    <div class="stat-item" style="background:rgba(255,255,255,.04); border-radius:16px; padding:16px; text-align:center;">
-                        <div class="number" style="font-size:32px; font-weight:700; color:#ffc107;" id="pendingDocs">0</div>
-                        <div class="label" style="color:#9fb5c8;" data-i18n="pending_docs">Garaşýan</div>
+                    <div class="stat-item">
+                        <div class="number" style="color:#ffc107;" id="pendingDocs">0</div>
+                        <div class="label" data-i18n="pending_docs">Garaşýan</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="number" style="color:#ff6b6b;" id="invalidDocs">0</div>
+                        <div class="label" data-i18n="invalid_docs">Nädogry</div>
                     </div>
                 </div>
-                <div style="background:rgba(255,255,255,.04); border-radius:16px; padding:20px;">
-                    <h4 data-i18n="recent_activity">Iň soňky işjeňlik</h4>
-                    <ul id="recentActivity" style="list-style:none; padding:0; margin:0;"></ul>
+                <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
+                    <div style="flex:1; min-width:200px;">
+                        <div class="chart-container">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
+                    <div style="flex:1; min-width:200px;">
+                        <h4 data-i18n="recent_activity">Iň soňky işjeňlik</h4>
+                        <ul id="recentActivity" style="list-style:none; padding:0; margin:0;"></ul>
+                    </div>
                 </div>
                 <div style="margin-top:20px;">
                     <button class="btn btn-outline" id="exportReportBtn" data-i18n="export_report">📊 Hasabat göçürip al (PDF)</button>
@@ -443,20 +554,63 @@
 
     <script>
         // ============================================================
-        // НАСТРОЙКА API и переводы
+        // ПЕРЕВОДЫ (полные)
         // ============================================================
-        const API_BASE_URL = 'https://sfera-1.onrender.com';
-        const token = localStorage.getItem('token');
-
-        if (!token) {
-            window.location.href = 'login.html';
-        }
-
         const translations = {
+            ru: {
+                logo_subtitle: "Национальная Цифровая Платформа",
+                logout: "🚪 Выйти",
+                back: "← Назад",
+                refresh: "⟳ Обновить",
+                page_title: "📄 Документы",
+                tab_storage: "Хранилище",
+                tab_verify: "Проверка",
+                tab_sign: "Подписание",
+                tab_reports: "Отчёты",
+                upload_doc: "+ Загрузить",
+                upload_hint: "Перетащите файл или нажмите для выбора (PDF, JPG, PNG, DOC)",
+                start_verify: "Проверить",
+                clear: "Очистить",
+                verify_result: "Результат проверки",
+                doc_name: "Название",
+                doc_type: "Тип",
+                doc_series: "Серия",
+                doc_number: "Номер",
+                doc_authority: "Кем выдан",
+                doc_issue_date: "Дата выдачи",
+                doc_expiry_date: "Срок действия",
+                doc_status: "Статус",
+                select_doc: "Выберите документ",
+                sign_type: "Тип подписи",
+                simple_sign: "Простая",
+                esign_sign: "Электронная подпись",
+                comment: "Комментарий",
+                sign_doc: "Подписать",
+                total_docs: "Всего документов",
+                verified_docs: "Подтверждено",
+                pending_docs: "На проверке",
+                invalid_docs: "Недействительных",
+                recent_activity: "Последняя активность",
+                export_report: "📊 Экспортировать отчёт (PDF)",
+                status_verified: "Подтверждён",
+                status_pending: "На проверке",
+                status_invalid: "Недействителен",
+                status_manual: "Требуется ручная проверка",
+                search_placeholder: "Поиск...",
+                filter_status: "Статус:",
+                all_status: "Все статусы",
+                delete_confirm: "Вы уверены, что хотите удалить этот документ?",
+                doc_deleted: "Документ удалён.",
+                no_docs: "Документов нет",
+                sign_success: "Документ подписан!",
+                verify_success: "Проверка завершена!"
+            },
             tm: {
-                logout: "Çykmak",
+                logo_subtitle: "Milli Sanly Platforma",
+                logout: "🚪 Çykmak",
                 back: "← Yza",
-                refresh: "Täzele",
+                refresh: "⟳ Täzele",
+                page_title: "📄 Resmiýetler",
                 tab_storage: "Ammar",
                 tab_verify: "Barlag",
                 tab_sign: "Gol çekmek",
@@ -468,9 +622,12 @@
                 verify_result: "Barlag netijesi",
                 doc_name: "Resmiýet ady",
                 doc_type: "Görnüşi",
-                doc_status: "Status",
+                doc_series: "Seriýa",
+                doc_number: "Nomär",
+                doc_authority: "Beren gurama",
                 doc_issue_date: "Beriş senesi",
                 doc_expiry_date: "Güýji gutarýar",
+                doc_status: "Status",
                 select_doc: "Resmiýet saýla",
                 sign_type: "Gol çekmegiň görnüşi",
                 simple_sign: "Ýönekeý",
@@ -480,51 +637,28 @@
                 total_docs: "Jemi dokumentler",
                 verified_docs: "Tassyklandy",
                 pending_docs: "Garaşýan",
+                invalid_docs: "Nädogry",
                 recent_activity: "Iň soňky işjeňlik",
                 export_report: "📊 Hasabat göçürip al (PDF)",
                 status_verified: "Tassyklandy",
                 status_pending: "Garaşýan",
                 status_invalid: "Nädogry",
-                status_manual: "El bilen barlag"
-            },
-            ru: {
-                logout: "Выйти",
-                back: "← Назад",
-                refresh: "Обновить",
-                tab_storage: "Хранилище",
-                tab_verify: "Проверка",
-                tab_sign: "Подписание",
-                tab_reports: "Отчёты",
-                upload_doc: "+ Загрузить",
-                upload_hint: "Перетащите файл или нажмите для выбора (PDF, JPG, PNG, DOC)",
-                start_verify: "Проверить",
-                clear: "Очистить",
-                verify_result: "Результат проверки",
-                doc_name: "Название документа",
-                doc_type: "Тип",
-                doc_status: "Статус",
-                doc_issue_date: "Дата выдачи",
-                doc_expiry_date: "Срок действия",
-                select_doc: "Выберите документ",
-                sign_type: "Тип подписи",
-                simple_sign: "Простая",
-                esign_sign: "Электронная подпись",
-                comment: "Комментарий",
-                sign_doc: "Подписать",
-                total_docs: "Всего документов",
-                verified_docs: "Подтверждено",
-                pending_docs: "На проверке",
-                recent_activity: "Последняя активность",
-                export_report: "📊 Экспортировать отчёт (PDF)",
-                status_verified: "Подтверждён",
-                status_pending: "На проверке",
-                status_invalid: "Недействителен",
-                status_manual: "Требуется ручная проверка"
+                status_manual: "El bilen barlag",
+                search_placeholder: "Gözleg...",
+                filter_status: "Status:",
+                all_status: "Ähli status",
+                delete_confirm: "Bu resmiýeti pozmak isleýärsiňizmi?",
+                doc_deleted: "Resmiýet pozuldy.",
+                no_docs: "Resmiýet ýok",
+                sign_success: "Resmiýet gol çekildi!",
+                verify_success: "Barlag tamamlandy!"
             },
             en: {
-                logout: "Logout",
+                logo_subtitle: "National Digital Platform",
+                logout: "🚪 Logout",
                 back: "← Back",
-                refresh: "Refresh",
+                refresh: "⟳ Refresh",
+                page_title: "📄 Documents",
                 tab_storage: "Storage",
                 tab_verify: "Verify",
                 tab_sign: "Sign",
@@ -536,9 +670,12 @@
                 verify_result: "Verification result",
                 doc_name: "Document name",
                 doc_type: "Type",
-                doc_status: "Status",
+                doc_series: "Series",
+                doc_number: "Number",
+                doc_authority: "Issued by",
                 doc_issue_date: "Issue date",
                 doc_expiry_date: "Expiry date",
+                doc_status: "Status",
                 select_doc: "Select document",
                 sign_type: "Signature type",
                 simple_sign: "Simple",
@@ -548,20 +685,28 @@
                 total_docs: "Total documents",
                 verified_docs: "Verified",
                 pending_docs: "Pending",
+                invalid_docs: "Invalid",
                 recent_activity: "Recent activity",
                 export_report: "📊 Export report (PDF)",
                 status_verified: "Verified",
                 status_pending: "Pending",
                 status_invalid: "Invalid",
-                status_manual: "Manual check required"
+                status_manual: "Manual check required",
+                search_placeholder: "Search...",
+                filter_status: "Status:",
+                all_status: "All statuses",
+                delete_confirm: "Are you sure you want to delete this document?",
+                doc_deleted: "Document deleted.",
+                no_docs: "No documents",
+                sign_success: "Document signed!",
+                verify_success: "Verification complete!"
             }
         };
 
-        let currentLang = localStorage.getItem('lang') || 'tm';
-        let documents = [];
-        let recentActivity = [];
-        const userData = JSON.parse(localStorage.getItem('user') || '{"username":"Guest"}');
-        document.getElementById('username').textContent = userData.username || 'User';
+        // ============================================================
+        // УСТАНОВКА ЯЗЫКА
+        // ============================================================
+        let currentLang = localStorage.getItem('lang') || 'ru';
 
         function setLanguage(lang) {
             if (!translations[lang]) return;
@@ -571,37 +716,59 @@
                 if (translations[lang][key]) {
                     if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
                         el.placeholder = translations[lang][key];
-                    } else if (el.tagName === 'SELECT' && el.getAttribute('placeholder')) {
-                        // для select placeholder не работает, пропускаем
+                    } else if (el.tagName === 'SELECT' && el.querySelectorAll('option').length) {
+                        // обновим опции отдельно
                     } else {
                         el.textContent = translations[lang][key];
                     }
                 }
             });
+            // Обновляем опции select
+            document.querySelectorAll('select option[data-i18n]').forEach(opt => {
+                const key = opt.getAttribute('data-i18n');
+                if (translations[lang][key]) opt.textContent = translations[lang][key];
+            });
             document.getElementById('langBtn').textContent = lang.toUpperCase();
-            document.getElementById('logoutBtn').textContent = translations[lang].logout;
             localStorage.setItem('lang', lang);
             updateUI();
         }
 
         function updateUI() {
+            // Обновляем вкладки
             document.querySelectorAll('.doc-tabs button').forEach(btn => {
                 const key = btn.dataset.i18n;
                 if (translations[currentLang][key]) btn.textContent = translations[currentLang][key];
             });
-            // Обновить select подписания
-            populateSignSelect();
+            // Перерисовать всё
             renderDocuments();
             updateStats();
             renderActivity();
+            populateSignSelect();
+            renderChart();
         }
 
         document.getElementById('langBtn').addEventListener('click', function() {
-            const cycle = ['tm', 'ru', 'en'];
+            const cycle = ['ru', 'tm', 'en'];
             let idx = cycle.indexOf(currentLang);
             idx = (idx + 1) % cycle.length;
             setLanguage(cycle[idx]);
         });
+
+        // ============================================================
+        // АВТОРИЗАЦИЯ И НАВИГАЦИЯ
+        // ============================================================
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = 'login.html';
+
+        const user = JSON.parse(localStorage.getItem('user') || '{"username":"User","role":"user"}');
+        document.getElementById('username').textContent = user.username || 'User';
+
+        const backLink = document.getElementById('backLink');
+        if (user.role === 'admin') {
+            backLink.href = 'admin-dashboard.html';
+        } else {
+            backLink.href = 'user-dashboard.html';
+        }
 
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('token');
@@ -610,32 +777,63 @@
         });
 
         // ============================================================
-        // ИНИЦИАЛИЗАЦИЯ ДАННЫХ (демо)
+        // ДАННЫЕ (localStorage)
         // ============================================================
-        function initData() {
-            documents = [
-                { id: 'd1', name: 'Pasport', type: 'Şahsyýet', status: 'verified', issueDate: '2020-05-12', expiryDate: '2030-05-12', icon: '🪪' },
-                { id: 'd2', name: 'Sürüjilik şahadatnamasy', type: 'Sürüjilik', status: 'pending', issueDate: '2021-03-01', expiryDate: '2026-03-01', icon: '🚗' },
-                { id: 'd3', name: 'Diplom', type: 'Bilim', status: 'manual', issueDate: '2019-06-20', expiryDate: '—', icon: '🎓' },
-                { id: 'd4', name: 'Welaýat şahadatnamasy', type: 'Başga', status: 'invalid', issueDate: '2022-01-15', expiryDate: '2027-01-15', icon: '📄' }
-            ];
-            recentActivity = [
-                { text: 'Pasport tassyklandy', date: new Date(Date.now() - 3600000 * 2) },
-                { text: 'Sürüjilik şahadatnamasy iberildi', date: new Date(Date.now() - 3600000 * 5) },
-                { text: 'Diplom el bilen barlaga iberildi', date: new Date(Date.now() - 3600000 * 24) },
-            ];
-            renderDocuments();
-            updateStats();
-            renderActivity();
-            populateSignSelect();
+        const DOCS_KEY = 'documents_docs';
+        const ACTIVITY_KEY = 'documents_activity';
+
+        let documents = [];
+        let recentActivity = [];
+
+        function loadData() {
+            const storedDocs = localStorage.getItem(DOCS_KEY);
+            if (storedDocs) {
+                try { documents = JSON.parse(storedDocs); } catch(e) { documents = []; }
+            }
+            if (!documents || documents.length === 0) {
+                documents = [
+                    { id: 'd1', name: 'Pasport', type: 'Şahsyýet', status: 'verified', issueDate: '2020-05-12', expiryDate: '2030-05-12', icon: '🪪', series: 'AA', number: '1234567', authority: 'MIA' },
+                    { id: 'd2', name: 'Sürüjilik şahadatnamasy', type: 'Sürüjilik', status: 'pending', issueDate: '2021-03-01', expiryDate: '2026-03-01', icon: '🚗', series: 'BB', number: '7654321', authority: 'GAI' },
+                    { id: 'd3', name: 'Diplom', type: 'Bilim', status: 'manual', issueDate: '2019-06-20', expiryDate: '—', icon: '🎓', series: 'CC', number: '9876543', authority: 'Education Min' },
+                    { id: 'd4', name: 'Welaýat şahadatnamasy', type: 'Başga', status: 'invalid', issueDate: '2022-01-15', expiryDate: '2027-01-15', icon: '📄', series: 'DD', number: '3456789', authority: 'Local Admin' }
+                ];
+                saveDocs();
+            }
+
+            const storedActivity = localStorage.getItem(ACTIVITY_KEY);
+            if (storedActivity) {
+                try { recentActivity = JSON.parse(storedActivity); } catch(e) { recentActivity = []; }
+            }
+            if (!recentActivity || recentActivity.length === 0) {
+                recentActivity = [
+                    { text: 'Pasport tassyklandy', date: new Date(Date.now() - 3600000 * 2).toISOString() },
+                    { text: 'Sürüjilik şahadatnamasy iberildi', date: new Date(Date.now() - 3600000 * 5).toISOString() },
+                    { text: 'Diplom el bilen barlaga iberildi', date: new Date(Date.now() - 3600000 * 24).toISOString() }
+                ];
+                saveActivity();
+            }
+        }
+
+        function saveDocs() {
+            localStorage.setItem(DOCS_KEY, JSON.stringify(documents));
+        }
+
+        function saveActivity() {
+            localStorage.setItem(ACTIVITY_KEY, JSON.stringify(recentActivity));
         }
 
         // ============================================================
-        // ОТОБРАЖЕНИЕ ДОКУМЕНТОВ (ХРАНИЛИЩЕ)
+        // ОТОБРАЖЕНИЕ ДОКУМЕНТОВ (с фильтрацией и поиском)
         // ============================================================
-        function renderDocuments(filter = '') {
+        function renderDocuments() {
             const container = document.getElementById('docsGrid');
-            const filtered = filter ? documents.filter(d => d.name.toLowerCase().includes(filter.toLowerCase())) : documents;
+            const search = document.getElementById('docSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            let filtered = documents;
+            if (search) filtered = filtered.filter(d => d.name.toLowerCase().includes(search) || d.type.toLowerCase().includes(search));
+            if (statusFilter !== 'all') filtered = filtered.filter(d => d.status === statusFilter);
+
             if (!filtered.length) {
                 container.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p data-i18n="no_docs">Dokument ýok</p></div>`;
                 return;
@@ -648,26 +846,56 @@
                 manual: translations[lang].status_manual || 'El bilen barlag'
             };
             container.innerHTML = filtered.map(d => `
-                <div class="doc-item">
+                <div class="doc-item" data-id="${d.id}">
                     <div class="doc-icon">${d.icon || '📄'}</div>
                     <div class="doc-name">${d.name}</div>
                     <div class="doc-type">${d.type}</div>
                     <span class="doc-status status-${d.status}">${statusMap[d.status] || d.status}</span>
+                    <button class="delete-btn" data-id="${d.id}" data-i18n="delete_btn">✕</button>
                 </div>
             `).join('');
+
+            // Обработчики удаления
+            container.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const id = this.dataset.id;
+                    if (confirm(translations[currentLang].delete_confirm)) {
+                        deleteDocument(id);
+                    }
+                });
+            });
         }
 
-        document.getElementById('docSearch').addEventListener('input', function() {
-            renderDocuments(this.value);
-        });
+        function deleteDocument(id) {
+            documents = documents.filter(d => d.id !== id);
+            saveDocs();
+            recentActivity.unshift({ text: translations[currentLang].doc_deleted, date: new Date().toISOString() });
+            saveActivity();
+            renderDocuments();
+            updateStats();
+            renderActivity();
+            populateSignSelect();
+            renderChart();
+            showToast(translations[currentLang].doc_deleted, 'info');
+        }
+
+        // Обработчики поиска и фильтра
+        document.getElementById('docSearch').addEventListener('input', renderDocuments);
+        document.getElementById('statusFilter').addEventListener('change', renderDocuments);
 
         // ============================================================
         // СТАТИСТИКА
         // ============================================================
         function updateStats() {
-            document.getElementById('totalDocs').textContent = documents.length;
-            document.getElementById('verifiedDocs').textContent = documents.filter(d => d.status === 'verified').length;
-            document.getElementById('pendingDocs').textContent = documents.filter(d => d.status === 'pending' || d.status === 'manual').length;
+            const total = documents.length;
+            const verified = documents.filter(d => d.status === 'verified').length;
+            const pending = documents.filter(d => d.status === 'pending' || d.status === 'manual').length;
+            const invalid = documents.filter(d => d.status === 'invalid').length;
+            document.getElementById('totalDocs').textContent = total;
+            document.getElementById('verifiedDocs').textContent = verified;
+            document.getElementById('pendingDocs').textContent = pending;
+            document.getElementById('invalidDocs').textContent = invalid;
         }
 
         // ============================================================
@@ -679,12 +907,48 @@
                 container.innerHTML = '<div class="empty-state"><p>Hiç hili işjeňlik ýok</p></div>';
                 return;
             }
-            container.innerHTML = recentActivity.map(a => `
+            const sorted = [...recentActivity].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+            container.innerHTML = sorted.map(a => `
                 <li style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,.04); display:flex; justify-content:space-between;">
                     <span>${a.text}</span>
                     <span style="color:#9fb5c8; font-size:12px;">${new Date(a.date).toLocaleString()}</span>
                 </li>
             `).join('');
+        }
+
+        // ============================================================
+        // КРУГОВАЯ ДИАГРАММА
+        // ============================================================
+        let chart = null;
+
+        function renderChart() {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            if (chart) chart.destroy();
+            const verified = documents.filter(d => d.status === 'verified').length;
+            const pending = documents.filter(d => d.status === 'pending' || d.status === 'manual').length;
+            const invalid = documents.filter(d => d.status === 'invalid').length;
+            chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: [
+                        translations[currentLang].status_verified || 'Tassyklandy',
+                        translations[currentLang].status_pending || 'Garaşýan',
+                        translations[currentLang].status_invalid || 'Nädogry'
+                    ],
+                    datasets: [{
+                        data: [verified, pending, invalid],
+                        backgroundColor: ['#00ffa3', '#ffc107', '#ff6b6b'],
+                        borderColor: 'transparent'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { labels: { color: '#bdd0df' } }
+                    }
+                }
+            });
         }
 
         // ============================================================
@@ -732,12 +996,13 @@
         // ============================================================
         document.getElementById('verifyBtn').addEventListener('click', function() {
             if (!selectedVerifyFile) {
-                showMessage(translations[currentLang].upload_hint, 'error');
+                showToast(translations[currentLang].upload_hint, 'error');
                 return;
             }
             const resultDiv = document.getElementById('verificationResult');
             resultDiv.classList.add('active');
-            // Имитация случайного статуса
+
+            // Случайные данные для имитации
             const statuses = ['verified', 'pending', 'invalid', 'manual'];
             const status = statuses[Math.floor(Math.random() * statuses.length)];
             const statusMap = {
@@ -748,43 +1013,49 @@
             };
             const issue = new Date(Date.now() - Math.random() * 365 * 24 * 3600000 * 5).toISOString().slice(0,10);
             const expiry = new Date(Date.now() + Math.random() * 365 * 24 * 3600000 * 5).toISOString().slice(0,10);
+            const series = 'XX' + Math.floor(10 + Math.random() * 90);
+            const number = Math.floor(100000 + Math.random() * 900000).toString();
+            const authorities = ['MIA', 'GAI', 'Education Min', 'Local Admin', 'Health Min', 'Economy Min'];
+            const authority = authorities[Math.floor(Math.random() * authorities.length)];
+
             document.getElementById('vDocName').textContent = selectedVerifyFile.name;
             document.getElementById('vDocType').textContent = selectedVerifyFile.type || 'PDF';
-            document.getElementById('vDocStatus').textContent = statusMap[status] || status;
+            document.getElementById('vDocSeries').textContent = series;
+            document.getElementById('vDocNumber').textContent = number;
+            document.getElementById('vDocAuthority').textContent = authority;
             document.getElementById('vDocIssue').textContent = issue;
             document.getElementById('vDocExpiry').textContent = status === 'invalid' ? '—' : expiry;
+            document.getElementById('vDocStatus').textContent = statusMap[status] || status;
 
-            // Добавляем в хранилище, если верифицирован
-            if (status === 'verified') {
+            // Добавляем в хранилище, если статус не invalid
+            if (status !== 'invalid') {
+                const icon = status === 'verified' ? '✅' : '⏳';
                 documents.push({
                     id: 'd' + Date.now(),
                     name: selectedVerifyFile.name,
                     type: selectedVerifyFile.type || 'PDF',
-                    status: 'verified',
+                    status: status,
                     issueDate: issue,
-                    expiryDate: expiry,
-                    icon: '✅'
+                    expiryDate: status === 'invalid' ? '—' : expiry,
+                    icon: icon,
+                    series: series,
+                    number: number,
+                    authority: authority
                 });
-                recentActivity.unshift({ text: `${selectedVerifyFile.name} tassyklandy`, date: new Date() });
+                saveDocs();
+                const msg = status === 'verified' ? translations[currentLang].verify_success : translations[currentLang].status_pending;
+                recentActivity.unshift({ text: `${selectedVerifyFile.name} — ${msg}`, date: new Date().toISOString() });
+                saveActivity();
             } else {
-                recentActivity.unshift({ text: `${selectedVerifyFile.name} barlagdan geçdi (${statusMap[status]})`, date: new Date() });
-                if (status === 'pending' || status === 'manual') {
-                    documents.push({
-                        id: 'd' + Date.now(),
-                        name: selectedVerifyFile.name,
-                        type: selectedVerifyFile.type || 'PDF',
-                        status: status,
-                        issueDate: issue,
-                        expiryDate: expiry,
-                        icon: '⏳'
-                    });
-                }
+                recentActivity.unshift({ text: `${selectedVerifyFile.name} — ${translations[currentLang].status_invalid}`, date: new Date().toISOString() });
+                saveActivity();
             }
-            renderDocuments(document.getElementById('docSearch').value);
+            renderDocuments();
             updateStats();
             renderActivity();
             populateSignSelect();
-            showMessage('Barlag tamamlandy!', 'success');
+            renderChart();
+            showToast(translations[currentLang].verify_success, 'success');
         });
 
         // ============================================================
@@ -794,7 +1065,7 @@
             const select = document.getElementById('signDoc');
             const verifiedDocs = documents.filter(d => d.status === 'verified');
             select.innerHTML = verifiedDocs.length ? verifiedDocs.map(d => `<option value="${d.id}">${d.name}</option>`).join('') :
-                '<option value="">' + (translations[currentLang].no_docs || 'Dokument ýok') + '</option>';
+                `<option value="">${translations[currentLang].no_docs || 'Dokument ýok'}</option>`;
         }
 
         document.getElementById('signForm').addEventListener('submit', function(e) {
@@ -803,26 +1074,20 @@
             const signType = document.getElementById('signType').value;
             const comment = document.getElementById('signComment').value.trim();
             if (!docId) {
-                showMessage(translations[currentLang].select_doc, 'error');
+                showToast(translations[currentLang].select_doc, 'error');
                 return;
             }
             const doc = documents.find(d => d.id === docId);
             if (!doc) return;
             recentActivity.unshift({
-                text: `${doc.name} gol çekildi (${signType === 'simple' ? 'ýönekeý' : 'sanly'})`,
-                date: new Date()
+                text: `${doc.name} ${translations[currentLang].sign_doc} (${signType === 'simple' ? translations[currentLang].simple_sign : translations[currentLang].esign_sign})`,
+                date: new Date().toISOString()
             });
+            saveActivity();
             renderActivity();
-            showMessage('Resmiýet gol çekildi!', 'success');
+            showToast(translations[currentLang].sign_success, 'success');
             this.reset();
             populateSignSelect();
-        });
-
-        // ============================================================
-        // ЭКСПОРТ ОТЧЁТА (заглушка)
-        // ============================================================
-        document.getElementById('exportReportBtn').addEventListener('click', function() {
-            alert('📊 Hasabat göçürilýär... (PDF) — imitasiýa');
         });
 
         // ============================================================
@@ -842,42 +1107,59 @@
                         status: 'pending',
                         issueDate: new Date().toISOString().slice(0,10),
                         expiryDate: '—',
-                        icon: '📄'
+                        icon: '📄',
+                        series: '—',
+                        number: '—',
+                        authority: '—'
                     });
-                    recentActivity.unshift({ text: `${file.name} ýüklendi`, date: new Date() });
-                    renderDocuments(document.getElementById('docSearch').value);
+                    saveDocs();
+                    recentActivity.unshift({ text: `${file.name} ${translations[currentLang].upload_doc}`, date: new Date().toISOString() });
+                    saveActivity();
+                    renderDocuments();
                     updateStats();
                     renderActivity();
                     populateSignSelect();
-                    showMessage('Resmiýet ýüklendi!', 'success');
+                    renderChart();
+                    showToast('Resmiýet ýüklendi!', 'success');
                 }
             };
             input.click();
         });
 
         // ============================================================
-        // ОБНОВЛЕНИЕ
+        // ЭКСПОРТ ОТЧЁТА (заглушка)
         // ============================================================
-        document.getElementById('refreshBtn').addEventListener('click', function() {
-            renderDocuments(document.getElementById('docSearch').value);
-            updateStats();
-            renderActivity();
-            populateSignSelect();
-            showMessage('Täzelendi!', 'success');
+        document.getElementById('exportReportBtn').addEventListener('click', function() {
+            showToast('📊 Hasabat göçürilýär... (PDF) — imitasiýa', 'info');
         });
 
         // ============================================================
-        // СООБЩЕНИЯ
+        // ОБНОВЛЕНИЕ (кнопка refresh)
         // ============================================================
-        const messageEl = document.getElementById('message');
-        function showMessage(text, type = 'success') {
-            messageEl.textContent = text;
-            messageEl.className = 'message ' + type;
-            messageEl.style.display = 'block';
-            clearTimeout(window.messageTimeout);
-            window.messageTimeout = setTimeout(() => {
-                messageEl.style.display = 'none';
-            }, 4000);
+        document.getElementById('refreshBtn').addEventListener('click', function() {
+            renderDocuments();
+            updateStats();
+            renderActivity();
+            populateSignSelect();
+            renderChart();
+            showToast('Täzelendi!', 'success');
+        });
+
+        // ============================================================
+        // УВЕДОМЛЕНИЯ (TOAST)
+        // ============================================================
+        function showToast(message, type = 'info') {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.5s';
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
         }
 
         // ============================================================
@@ -899,9 +1181,14 @@
         // ============================================================
         // ИНИЦИАЛИЗАЦИЯ
         // ============================================================
-        initData();
+        loadData();
         setLanguage(currentLang);
-        console.log('Documents module loaded');
+        renderDocuments();
+        updateStats();
+        renderActivity();
+        populateSignSelect();
+        renderChart();
+        console.log('✅ Documents module with chart, filters, delete and storage loaded');
     </script>
 </body>
 </html>
