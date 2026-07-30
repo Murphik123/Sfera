@@ -6,6 +6,7 @@
     <title>СФЕРА — Marketpleýs</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
+        /* ===== ОБЩИЕ СТИЛИ ДЛЯ МАРКЕТПЛЕЙСА ===== */
         .marketplace { padding: 140px 0 60px; min-height: 100vh; }
         .mp-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
         .mp-header h1 { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #fff, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -115,11 +116,78 @@
         }
         .order-modal .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; }
 
+        /* ============================================================
+           ЕДИНЫЙ СТИЛЬ КНОПОК ДЛЯ МАРКЕТПЛЕЙСА (в соответствии с общим дизайном)
+           ============================================================ */
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            background: rgba(255,255,255,0.06);
+            color: white;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #008cff);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,212,255,0.25);
+            border: none;
+        }
+        .btn-primary:hover {
+            box-shadow: 0 15px 40px rgba(0,212,255,0.4);
+            transform: translateY(-3px);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+        }
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: #00d4ff;
+            color: #00d4ff;
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #00ffa3, #00b894);
+            color: #08131d;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,255,170,0.25);
+        }
+        .btn-success:hover {
+            box-shadow: 0 15px 40px rgba(0,255,170,0.4);
+            transform: translateY(-3px);
+        }
+        .btn-danger {
+            background: rgba(200,0,0,0.15);
+            border: 1px solid rgba(200,0,0,0.3);
+            color: #ff6b6b;
+        }
+        .btn-danger:hover {
+            background: rgba(200,0,0,0.25);
+            transform: translateY(-2px);
+        }
+        .btn:disabled, .btn-primary:disabled, .btn-outline:disabled, .btn-success:disabled, .btn-danger:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
         @media (max-width: 768px) {
             .mp-header h1 { font-size: 26px; }
             .segment-btn { min-width: 70px; font-size: 12px; padding: 6px 10px; }
             .category-btn { font-size: 12px; padding: 4px 12px; }
             .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+            .btn { padding: 8px 16px; font-size: 13px; }
         }
     </style>
 </head>
@@ -473,7 +541,6 @@
             html += '</div>';
             container.innerHTML = html;
 
-            // Обработчики "В корзину"
             container.querySelectorAll('.add-to-cart').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const prod = products.find(x => x.id === this.dataset.id);
@@ -481,7 +548,6 @@
                 });
             });
 
-            // Обработчики "Избранное"
             container.querySelectorAll('.favorite-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const id = this.dataset.id;
