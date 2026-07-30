@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>СФЕРА — Пользовательский дашборд</title>
-    
-    <!-- ПОДКЛЮЧАЕМ ОБЩИЙ СТИЛЬ -->
-    <link rel="stylesheet" href="/css/style.css" />
-    
-    <!-- ДОПОЛНИТЕЛЬНЫЕ СТИЛИ (если нужны) -->
+    <link rel="stylesheet" href="/css/style.css">
     <style>
-        /* Здесь могут быть специфичные для дашборда стили */
         .dashboard { padding: 120px 7% 60px; min-height: 100vh; }
         .dashboard h1 { font-size: 42px; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #fff, #b4d7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .dashboard .welcome { font-size: 18px; color: #bcd0e2; margin-bottom: 40px; }
@@ -20,42 +15,64 @@
         .dashboard .card .icon { font-size: 48px; margin-bottom: 12px; }
         .dashboard .card h3 { font-size: 20px; margin-bottom: 6px; }
         .dashboard .card p { font-size: 14px; color: #bdd0df; }
-        
-        header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 7%; background: rgba(6,9,17,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .logo-svg { width: 40px; height: 40px; }
-        .logo-text h2 { font-size: 22px; font-weight: 900; background: linear-gradient(135deg, #00ffa3, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .logo-text p { font-size: 9px; color: #9fb5c8; text-transform: uppercase; letter-spacing: 1px; }
-        .header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-        .user-info { color: #bcd0e2; font-size: 14px; }
-        .user-info strong { color: white; }
-        .logout-btn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); color: white; padding: 10px 24px; border-radius: 12px; cursor: pointer; transition: .3s; font-weight: 600; }
-        .logout-btn:hover { background: rgba(255,0,0,.15); border-color: rgba(255,0,0,.3); }
-        .role-badge { background: rgba(0,212,255,.15); padding: 4px 14px; border-radius: 20px; font-size: 11px; color: #00d4ff; }
-        
-        @media (max-width: 768px) { .dashboard h1 { font-size: 28px; } .dashboard .grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); } }
+
+        /* Стеклянная шапка (переопределение из style.css) */
+        header {
+            background: rgba(255, 255, 255, 0.06) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+        }
+        .header-right .lang,
+        .header-right .logout-btn,
+        .header-right .btn-switch {
+            background: rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: #fff !important;
+            backdrop-filter: blur(4px) !important;
+            transition: all 0.3s !important;
+        }
+        .header-right .lang:hover,
+        .header-right .logout-btn:hover,
+        .header-right .btn-switch:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: #00d4ff !important;
+            color: #00d4ff !important;
+        }
+        .logo-text p { display: none !important; }
+
+        @media (max-width: 768px) {
+            .dashboard h1 { font-size: 28px; }
+            .dashboard .grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+        }
     </style>
 </head>
 <body>
-    <!-- Шапка -->
+    <div id="particles"></div>
+
     <header>
-        <a href="index.html" class="logo">
-            <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#1f6bff"/></linearGradient></defs>
-                <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15"/>
-                <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3"/>
-                <circle cx="48" cy="48" r="3.5" fill="#ffffff"/>
-            </svg>
-            <div class="logo-text"><h2>SFERA</h2><p>Milli Sanly Platforma</p></div>
-        </a>
-        <div class="header-right">
-            <span class="user-info">👤 <strong id="username">User</strong></span>
-            <span class="role-badge" id="roleBadge">👤 Пользователь</span>
-            <button class="logout-btn" id="logoutBtn">🚪 Çykmak</button>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#1f6bff"/></linearGradient></defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15"/>
+                        <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3"/>
+                        <circle cx="48" cy="48" r="3.5" fill="#ffffff"/>
+                    </svg>
+                </div>
+                <div class="logo-text"><h2>SFERA</h2><p id="logoSubtitle" data-i18n="logo_subtitle">Milli Sanly Platforma</p></div>
+            </a>
+            <div class="header-right">
+                <span class="user-info">👤 <strong id="username">User</strong></span>
+                <button class="lang" id="langBtn">RU</button>
+                <button class="logout-btn" id="logoutBtn" data-i18n="logout">🚪 Çykmak</button>
+                <!-- В пользовательском дашборде нет кнопки "Назад" -->
+            </div>
         </div>
     </header>
 
-    <!-- Контент дашборда -->
     <section class="dashboard">
         <div class="container" style="max-width:1400px;margin:0 auto;">
             <h1>👋 Hoş geldiňiz, <span id="greetingUser">User</span>!</h1>
@@ -77,7 +94,6 @@
         // Проверка авторизации
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         const token = localStorage.getItem('token');
-
         if (!token || !user || user.role !== 'user') {
             window.location.href = 'login.html';
         }
@@ -89,6 +105,31 @@
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = 'login.html';
+        });
+
+        // Частицы
+        const particles = document.getElementById('particles');
+        if (particles && particles.children.length === 0) {
+            for (let i = 0; i < 60; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDuration = (6 + Math.random() * 12) + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                particles.appendChild(p);
+            }
+        }
+
+        // Язык (простая имитация, можно расширить)
+        document.getElementById('langBtn').addEventListener('click', function() {
+            const cycle = ['ru', 'tm', 'en'];
+            let idx = cycle.indexOf(localStorage.getItem('lang') || 'ru');
+            idx = (idx + 1) % cycle.length;
+            const lang = cycle[idx];
+            localStorage.setItem('lang', lang);
+            this.textContent = lang.toUpperCase();
+            // Можно обновить переводы, но для дашборда это не критично
         });
 
         console.log('✅ User dashboard loaded');
