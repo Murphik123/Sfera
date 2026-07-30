@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>СФЕРА — Messenger</title>
 
-    <!-- Общий CSS -->
+    <!-- Общий CSS (обязательно) -->
     <link rel="stylesheet" href="/css/style.css" />
 
     <style>
-        /* ===== СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ МЕССЕНДЖЕРА (с улучшениями) ===== */
+        /* ===== СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ МЕССЕНДЖЕРА ===== */
         .messenger-page {
             padding: 140px 0 60px;
             min-height: 100vh;
@@ -28,7 +28,7 @@
             backdrop-filter: blur(12px);
             transition: background 0.3s, border-color 0.3s;
         }
-        /* Тёмная тема */
+        /* Тёмная / светлая тема */
         .messenger-container.light-theme {
             background: rgba(255,255,255,.1);
             border-color: rgba(255,255,255,.2);
@@ -372,26 +372,26 @@
         .chat-header .chat-actions {
             margin-left: auto;
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
         .chat-header .chat-actions button {
-            width: 34px !important;
-            height: 34px !important;
-            font-size: 15px !important;
-            border-radius: 50% !important;
-            background: transparent !important;
-            border: 1px solid rgba(255,255,255,.15) !important;
-            color: #9fb5c8 !important;
-            cursor: pointer !important;
-            transition: .2s !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
+            width: 34px;
+            height: 34px;
+            font-size: 15px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,.15);
+            color: #9fb5c8;
+            cursor: pointer;
+            transition: .2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .chat-header .chat-actions button:hover {
-            background: rgba(255,255,255,.05) !important;
-            border-color: #00d4ff !important;
-            color: white !important;
+            background: rgba(255,255,255,.05);
+            border-color: #00d4ff;
+            color: white;
         }
 
         .chat-messages {
@@ -519,22 +519,22 @@
             gap: 6px;
         }
         .chat-input-area .call-buttons button {
-            width: 38px !important;
-            height: 38px !important;
-            font-size: 18px !important;
-            border-radius: 50% !important;
-            background: transparent !important;
-            border: 1px solid rgba(255,255,255,.2) !important;
-            color: white !important;
-            cursor: pointer !important;
-            transition: .2s !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
+            width: 38px;
+            height: 38px;
+            font-size: 18px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,.2);
+            color: white;
+            cursor: pointer;
+            transition: .2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
         .chat-input-area .call-buttons button:hover {
-            background: rgba(255,255,255,.1) !important;
-            border-color: #00d4ff !important;
+            background: rgba(255,255,255,.1);
+            border-color: #00d4ff;
         }
         .chat-input-area .send-btn {
             padding: 12px 24px;
@@ -699,21 +699,21 @@
             margin-bottom: 10px;
         }
 
-        /* Тосты (приводим к общему дизайну) */
+        /* ===== ТОСТЫ (единый дизайн) ===== */
         .toast {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: rgba(13,28,41,.9) !important;
-            backdrop-filter: blur(10px) !important;
-            border: 1px solid rgba(0,212,255,.3) !important;
-            border-radius: 16px !important;
-            padding: 14px 24px !important;
-            color: white !important;
-            font-weight: 500 !important;
-            box-shadow: 0 20px 40px rgba(0,0,0,.4) !important;
-            z-index: 2000 !important;
-            animation: slideUp 0.3s ease !important;
+            background: rgba(13,28,41,.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,212,255,.3);
+            border-radius: 16px;
+            padding: 14px 24px;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 20px 40px rgba(0,0,0,.4);
+            z-index: 2000;
+            animation: slideUp 0.3s ease;
         }
         .toast.success { border-left: 4px solid #00ffa3; }
         .toast.error { border-left: 4px solid #ff6b6b; }
@@ -746,7 +746,7 @@
 <body>
     <div id="particles"></div>
 
-    <!-- ШАПКА (единая) -->
+    <!-- ШАПКА (полностью наследует стили из style.css) -->
     <header>
         <div class="container">
             <a href="index.html" class="logo">
@@ -853,7 +853,7 @@
                         </div>
                         <button class="send-btn" id="sendBtn" data-i18n="send">Iber</button>
                     </div>
-                    <!-- Emoji-picker (всплывающий) -->
+                    <!-- Emoji-picker -->
                     <div class="emoji-picker" id="emojiPicker">
                         <div class="emoji-grid" id="emojiGrid"></div>
                     </div>
@@ -930,8 +930,8 @@
                 group_members: "Участники (выберите из списка)",
                 create: "Создать",
                 cancel: "Отмена",
-                search_chat: "🔍 Поиск",
-                export_chat: "📥 Экспорт",
+                search_chat: "🔍 Поиск в чате",
+                export_chat: "📥 Экспорт чата",
                 export_success: "История чата экспортирована!",
                 no_export: "Нет сообщений для экспорта."
             },
@@ -1055,11 +1055,10 @@
                     el.placeholder = translations[lang][key];
                 }
             });
-            // Обновляем тултипы (после смены языка)
-            updateTitles();
             document.getElementById('langBtn').textContent = lang.toUpperCase();
             localStorage.setItem('lang', lang);
             updateUI();
+            updateTitles(); // обновляем тултипы
         }
 
         function updateUI() {
@@ -1494,9 +1493,8 @@
             // Создаём сообщение
             const msg = { from: 'user', text: text || '', time: new Date().toISOString() };
             if (pendingFiles.length > 0) {
-                // Для демонстрации сохраняем имя файла (в реальности можно было бы сохранить base64, но для простоты оставляем так)
                 const fileNames = pendingFiles.map(f => f.name).join(', ');
-                msg.file = '#file-' + Date.now(); // псевдо-ссылка
+                msg.file = '#file-' + Date.now();
                 msg.fileName = fileNames;
                 pendingFiles = [];
             }
@@ -1580,18 +1578,14 @@
         // АУДИО / ВИДЕО ВЫЗОВЫ (имитация)
         // ============================================================
         document.getElementById('audioCallBtn').addEventListener('click', function() {
-            // Звуковое оповещение (beep)
             playBeep();
-            showToast('📞 ' + translations[currentLang].audio_call + ' (simulýasiýa)', 'info');
+            showToast('📞 ' + translations[currentLang].audio_call, 'info');
         });
         document.getElementById('videoCallBtn').addEventListener('click', function() {
             playBeep();
-            showToast('📹 ' + translations[currentLang].video_call + ' (simulýasiýa)', 'info');
+            showToast('📹 ' + translations[currentLang].video_call, 'info');
         });
 
-        // ============================================================
-        // ЗВУКОВОЕ ОПОВЕЩЕНИЕ (beep)
-        // ============================================================
         function playBeep() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1607,9 +1601,7 @@
                     oscillator.stop();
                     audioCtx.close();
                 }, 200);
-            } catch (e) {
-                // Если AudioContext не поддерживается, просто игнорируем
-            }
+            } catch (e) { /* Игнорируем */ }
         }
 
         // ============================================================
@@ -1650,7 +1642,6 @@
         // ============================================================
         // ПОИСК ВНУТРИ ЧАТА
         // ============================================================
-        let searchInChatActive = false;
         document.getElementById('searchInChatBtn').addEventListener('click', function() {
             if (!currentDialogId) {
                 showToast('Ilki söhbeti saýlaň!', 'error');
@@ -1668,7 +1659,6 @@
                 showToast('Hiç zat tapylmady', 'info');
             } else {
                 showToast(`${results.length} habar tapyldy`, 'success');
-                // Подсветка сообщений (простая)
                 const container = document.getElementById('chatMessages');
                 container.innerHTML = msgs.map(msg => {
                     const isSent = msg.from === 'user';
@@ -1682,7 +1672,6 @@
                     `;
                 }).join('');
                 container.scrollTop = 0;
-                // Восстановить через 5 секунд
                 setTimeout(() => renderMessages(currentDialogId), 5000);
             }
         });
@@ -1709,7 +1698,6 @@
                 content += `[${time}] ${m.from}: ${m.text}\n`;
                 if (m.fileName) content += `  (Faýl: ${m.fileName})\n`;
             });
-            // Скачиваем как .txt
             const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1747,7 +1735,6 @@
         function startAutoUpdate() {
             if (autoUpdateInterval) clearInterval(autoUpdateInterval);
             autoUpdateInterval = setInterval(() => {
-                // Имитация нового сообщения от случайного контакта (кроме ассистента)
                 const contacts = dialogs.filter(d => !d.isGroup && d.id !== 'assistant');
                 if (contacts.length === 0) return;
                 const randomContact = contacts[Math.floor(Math.random() * contacts.length)];
@@ -1759,7 +1746,6 @@
                 if (!messages[randomContact.id]) messages[randomContact.id] = [];
                 messages[randomContact.id].push(newMsg);
                 saveMessages(randomContact.id);
-                // Обновить последнее сообщение
                 const dialog = dialogs.find(d => d.id === randomContact.id);
                 if (dialog) {
                     dialog.lastMessage = newMsg.text;
@@ -1767,31 +1753,23 @@
                     dialog.unread = (dialog.unread || 0) + 1;
                     saveDialogs();
                 }
-                // Если этот диалог открыт, обновить сообщения
                 if (currentDialogId === randomContact.id) {
                     renderMessages(currentDialogId);
                 }
                 renderDialogs(dialogs);
-                // Звуковое оповещение
                 playBeep();
                 showToast(`📩 ${translations[currentLang].online}: ${newMsg.text}`, 'info');
-            }, 30000); // каждые 30 секунд
+            }, 30000);
         }
 
         // ============================================================
         // ИНИЦИАЛИЗАЦИЯ
         // ============================================================
-        // Сначала загружаем данные
         loadDialogs();
-        // Затем устанавливаем язык
         setLanguage(currentLang);
-        // Переключаем на вкладку чатов
         switchTab('chats', true);
-        // Запускаем автообновление
         startAutoUpdate();
-        // Применяем тему
         applyTheme(currentTheme);
-        // Обновляем тултипы
         updateTitles();
         console.log('✅ Messenger with full improvements loaded');
     </script>
