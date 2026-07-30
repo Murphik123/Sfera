@@ -250,11 +250,6 @@
             line-height: 1.6;
         }
         .hint-box strong { color: var(--primary); }
-        .admin-key-group {
-            display: none;
-            margin-top: 4px;
-        }
-        .admin-key-group.visible { display: block; }
         @media (max-width: 480px) {
             .auth-container { padding: 32px 20px; }
             .auth-title { font-size: 24px; }
@@ -267,7 +262,6 @@
     <div class="auth-container">
         <div class="auth-header">
             <a href="index.html" class="logo-wrap" id="langToggle">
-                <!-- Оригинальный логотип SFERA -->
                 <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -321,16 +315,13 @@
                     <option value="admin" data-i18n="admin">Администратор</option>
                 </select>
             </div>
-            <div class="form-group admin-key-group" id="adminKeyGroup">
-                <label for="adminKey" data-i18n="admin_key">Ключ администратора</label>
-                <input type="password" id="adminKey" class="form-input" placeholder="Введите ключ (admin123)">
-            </div>
+            <!-- УБРАЛИ ПОЛЕ КЛЮЧА -->
             <button type="submit" class="btn-submit" id="registerBtn" data-i18n="button">Зарегистрироваться</button>
         </form>
 
         <div class="hint-box">
-            🔑 Ключ администратора: <strong>admin123</strong><br>
-            👤 Пароль по умолчанию: <strong>99363645817</strong>
+            👤 Пароль по умолчанию: <strong>99363645817</strong><br>
+            🔑 <strong>Администратор</strong> создаётся выбором роли "Администратор".
         </div>
 
         <div class="auth-footer">
@@ -353,13 +344,11 @@
                 role: "Роль",
                 user: "Пользователь",
                 admin: "Администратор",
-                admin_key: "Ключ администратора",
                 button: "Зарегистрироваться",
                 have_account: "Уже есть аккаунт?",
                 login: "Войти",
                 success: "Регистрация успешна! Перенаправление на вход...",
                 error: "Ошибка регистрации",
-                key_error: "Неверный ключ администратора!",
                 loading: "Регистрация..."
             },
             tm: {
@@ -371,13 +360,11 @@
                 role: "Rol",
                 user: "Ulanyjy",
                 admin: "Administrator",
-                admin_key: "Administrator açary",
                 button: "Hasap döret",
                 have_account: "Hasabyňyz bar?",
                 login: "Giriş",
                 success: "Hasap döredildi! Giriş sahypasyna geçýärsiňiz...",
                 error: "Hasap döredilmedi",
-                key_error: "Administrator açary ýalňyş!",
                 loading: "Hasap döredilýär..."
             },
             en: {
@@ -389,13 +376,11 @@
                 role: "Role",
                 user: "User",
                 admin: "Administrator",
-                admin_key: "Admin key",
                 button: "Sign Up",
                 have_account: "Already have an account?",
                 login: "Login",
                 success: "Registration successful! Redirecting to login...",
                 error: "Registration failed",
-                key_error: "Invalid admin key!",
                 loading: "Registering..."
             }
         };
@@ -461,19 +446,7 @@
         });
 
         // ============================================================
-        // ПОКАЗАТЬ ПОЛЕ КЛЮЧА ПРИ ВЫБОРЕ АДМИНА
-        // ============================================================
-        document.getElementById('role').addEventListener('change', function() {
-            const group = document.getElementById('adminKeyGroup');
-            if (this.value === 'admin') {
-                group.classList.add('visible');
-            } else {
-                group.classList.remove('visible');
-            }
-        });
-
-        // ============================================================
-        // ОБРАБОТКА РЕГИСТРАЦИИ (БЭКЕНД)
+        // ОБРАБОТКА РЕГИСТРАЦИИ (БЭКЕНД) - БЕЗ КЛЮЧА
         // ============================================================
         const form = document.getElementById('registerForm');
         const messageEl = document.getElementById('message');
@@ -485,16 +458,10 @@
             const username = document.getElementById('username').value.trim();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
-            const role = document.getElementById('role').value;
-            const adminKey = document.getElementById('adminKey').value.trim();
+            const role = document.getElementById('role').value; // 'user' или 'admin'
 
             if (!username || !email || !password) {
                 showMessage(translations[currentLang].error, 'error');
-                return;
-            }
-
-            if (role === 'admin' && adminKey !== 'admin123') {
-                showMessage(translations[currentLang].key_error, 'error');
                 return;
             }
 
@@ -509,7 +476,7 @@
                         username,
                         email,
                         password,
-                        role: role === 'admin' ? 'admin' : 'user'
+                        role: role // бэкенд сам обработает
                     })
                 });
                 const data = await response.json();
@@ -556,7 +523,7 @@
             }
         })();
 
-        console.log('✅ Register page loaded (SFERA design with effects)');
+        console.log('✅ Register page loaded (без ключа)');
     </script>
 </body>
 </html>
