@@ -6,8 +6,8 @@
     <title>СФЕРА — Административная панель</title>
     <!-- Подключаем общий CSS -->
     <link rel="stylesheet" href="/css/style.css">
+    <!-- Специфичные стили для админ-панели (только цвета и бейджи, размеры карточек берутся из .card) -->
     <style>
-        /* ===== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ АДМИН-ПАНЕЛИ ===== */
         .admin-panel {
             padding: 120px 7% 60px;
             min-height: 100vh;
@@ -31,6 +31,7 @@
             gap: 35px;
             margin-top: 20px;
         }
+        /* Карточки используют общий класс .card, но с админ-акцентами */
         .admin-card {
             position: relative;
             text-align: center;
@@ -65,33 +66,6 @@
         .role-badge {
             background: rgba(0,212,255,.15);
             color: #00d4ff;
-        }
-        /* === Единый стиль кнопок в шапке === */
-        .header-right .logout-btn,
-        .header-right .lang {
-            background: transparent !important;
-            border: 1px solid rgba(255,255,255,.25) !important;
-            color: white !important;
-            border-radius: 12px !important;
-            font-size: 13px !important;
-            font-weight: 500 !important;
-            padding: 6px 16px !important;
-            cursor: pointer !important;
-            transition: .3s !important;
-            text-decoration: none !important;
-        }
-        .header-right .logout-btn:hover {
-            background: rgba(255,0,0,.12) !important;
-            border-color: rgba(255,0,0,.4) !important;
-            color: #ff6b6b !important;
-        }
-        .header-right .lang:hover {
-            background: rgba(255,255,255,.08) !important;
-            border-color: #00d4ff !important;
-        }
-        /* Убираем белую заливку у logout-btn */
-        .header-right .logout-btn {
-            background: transparent !important;
         }
         @media (max-width: 768px) {
             .admin-panel h1 { font-size: 28px; }
@@ -139,7 +113,7 @@
                 <span class="role-badge" data-i18n="admin_role">👑 Администратор</span>
                 <button class="lang" id="langBtn">RU</button>
                 <button class="logout-btn" id="logoutBtn" data-i18n="logout">🚪 Çykmak</button>
-                <!-- УДАЛЯЕМ ССЫЛКУ "👤 Пользователь", чтобы не было мерцания -->
+                <!-- Ссылка "Пользователь" удалена, чтобы избежать мерцания при переходе -->
             </div>
         </div>
     </header>
@@ -212,6 +186,7 @@
                 admin_logo_subtitle: "Административная панель",
                 admin_role: "👑 Администратор",
                 logout: "🚪 Выйти",
+                switch_to_user: "👤 Пользователь",
                 admin_title: "👑 Административная панель",
                 admin_subtitle: "Используйте разделы ниже для управления платформой.",
                 card_marketplace: "🛒 Marketpleýs",
@@ -227,6 +202,7 @@
                 admin_logo_subtitle: "Administrasiýa paneli",
                 admin_role: "👑 Administrator",
                 logout: "🚪 Çykmak",
+                switch_to_user: "👤 Ulanyjy",
                 admin_title: "👑 Administrasiýa paneli",
                 admin_subtitle: "Platformany dolandyrmak üçin aşakdaky bölümleri ulanyň.",
                 card_marketplace: "🛒 Marketpleýs",
@@ -242,6 +218,7 @@
                 admin_logo_subtitle: "Admin Panel",
                 admin_role: "👑 Administrator",
                 logout: "🚪 Logout",
+                switch_to_user: "👤 User",
                 admin_title: "👑 Admin Panel",
                 admin_subtitle: "Use the sections below to manage the platform.",
                 card_marketplace: "🛒 Marketplace",
@@ -266,6 +243,7 @@
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang][key]) {
+                    // Для ссылок и кнопок меняем текст
                     if (el.tagName === 'INPUT' && el.placeholder) {
                         el.placeholder = translations[lang][key];
                     } else {
