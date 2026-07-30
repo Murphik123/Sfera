@@ -1237,4 +1237,49 @@ header .container {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
+/* ============================================================
+   СТЕКЛЯННАЯ ШАПКА (для всех страниц)
+   ============================================================ */
+header {
+    background: rgba(255, 255, 255, 0.06) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+}
 
+/* Кнопки в шапке (язык, вход, выход, назад и т.д.) */
+.header-buttons .lang,
+.header-buttons .login,
+.header-right .lang,
+.header-right .logout-btn,
+.header-right .btn-switch {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #fff !important;
+    backdrop-filter: blur(4px) !important;
+    transition: all 0.3s !important;
+}
+
+.header-buttons .lang:hover,
+.header-buttons .login:hover,
+.header-right .lang:hover,
+.header-right .logout-btn:hover,
+.header-right .btn-switch:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #00d4ff !important;
+    color: #00d4ff !important;
+}
+
+.header-buttons .login {
+    background: rgba(0, 212, 255, 0.15) !important;
+    border-color: rgba(0, 212, 255, 0.3) !important;
+}
+.header-buttons .login:hover {
+    background: rgba(0, 212, 255, 0.25) !important;
+}
+
+/* Скрываем подзаголовок в логотипе на всех страницах */
+.logo-text p {
+    display: none !important;
+}
