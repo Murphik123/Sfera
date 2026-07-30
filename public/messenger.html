@@ -375,23 +375,25 @@
             gap: 8px;
         }
         .chat-header .chat-actions button {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,.15);
-            border-radius: 50%;
-            width: 34px;
-            height: 34px;
-            color: #9fb5c8;
-            cursor: pointer;
-            font-size: 16px;
-            transition: .2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 34px !important;
+            height: 34px !important;
+            font-size: 15px !important;
+            border-radius: 50% !important;
+            background: transparent !important;
+            border: 1px solid rgba(255,255,255,.15) !important;
+            color: #9fb5c8 !important;
+            cursor: pointer !important;
+            transition: .2s !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
         .chat-header .chat-actions button:hover {
-            background: rgba(255,255,255,.05);
-            border-color: #00d4ff;
+            background: rgba(255,255,255,.05) !important;
+            border-color: #00d4ff !important;
+            color: white !important;
         }
+
         .chat-messages {
             flex: 1;
             overflow-y: auto;
@@ -517,22 +519,22 @@
             gap: 6px;
         }
         .chat-input-area .call-buttons button {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,.2);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: .2s;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 38px !important;
+            height: 38px !important;
+            font-size: 18px !important;
+            border-radius: 50% !important;
+            background: transparent !important;
+            border: 1px solid rgba(255,255,255,.2) !important;
+            color: white !important;
+            cursor: pointer !important;
+            transition: .2s !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
         .chat-input-area .call-buttons button:hover {
-            background: rgba(255,255,255,.1);
-            border-color: #00d4ff;
+            background: rgba(255,255,255,.1) !important;
+            border-color: #00d4ff !important;
         }
         .chat-input-area .send-btn {
             padding: 12px 24px;
@@ -697,21 +699,21 @@
             margin-bottom: 10px;
         }
 
-        /* Тосты */
+        /* Тосты (приводим к общему дизайну) */
         .toast {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: rgba(13,28,41,.95);
-            border: 1px solid rgba(0,212,255,.3);
-            border-radius: 16px;
-            padding: 16px 24px;
-            color: white;
-            font-weight: 500;
-            box-shadow: 0 20px 40px rgba(0,0,0,.4);
-            z-index: 2000;
-            animation: slideUp 0.3s ease;
-            backdrop-filter: blur(10px);
+            background: rgba(13,28,41,.9) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(0,212,255,.3) !important;
+            border-radius: 16px !important;
+            padding: 14px 24px !important;
+            color: white !important;
+            font-weight: 500 !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,.4) !important;
+            z-index: 2000 !important;
+            animation: slideUp 0.3s ease !important;
         }
         .toast.success { border-left: 4px solid #00ffa3; }
         .toast.error { border-left: 4px solid #ff6b6b; }
@@ -827,8 +829,8 @@
                             <div class="chat-status" id="chatStatus" data-i18n="online">onlaýn</div>
                         </div>
                         <div class="chat-actions">
-                            <button id="searchInChatBtn" title="Gözleg" data-i18n="search_chat">🔍</button>
-                            <button id="exportChatBtn" title="Eksport" data-i18n="export_chat">📥</button>
+                            <button id="searchInChatBtn" data-i18n-title="search_chat" title="🔍">🔍</button>
+                            <button id="exportChatBtn" data-i18n-title="export_chat" title="📥">📥</button>
                         </div>
                     </div>
                     <div class="chat-messages" id="chatMessages">
@@ -846,8 +848,8 @@
                             <input type="text" id="messageInput" placeholder="Habaryňyzy ýazyň..." data-i18n-placeholder="type_message" />
                         </div>
                         <div class="call-buttons">
-                            <button id="audioCallBtn" title="Ses jaňy" data-i18n="audio_call">📞</button>
-                            <button id="videoCallBtn" title="Wideo jaň" data-i18n="video_call">📹</button>
+                            <button id="audioCallBtn" data-i18n-title="audio_call" title="📞">📞</button>
+                            <button id="videoCallBtn" data-i18n-title="video_call" title="📹">📹</button>
                         </div>
                         <button class="send-btn" id="sendBtn" data-i18n="send">Iber</button>
                     </div>
@@ -905,8 +907,8 @@
                 assistant_name: "Помощник",
                 assistant_status: "онлайн",
                 assistant_hello: "Привет! Я помощник платформы Sfera. Чем могу помочь? (Маркетплейс, Банк, Почта, Документы, TM Coin)",
-                audio_call: "Аудиозвонок",
-                video_call: "Видеозвонок",
+                audio_call: "📞 Аудиозвонок",
+                video_call: "📹 Видеозвонок",
                 news_no_items: "Нет новостей",
                 news_title_1: "Обновление платформы",
                 news_summary_1: "Вышла новая версия платформы Sfera. Новые возможности.",
@@ -952,8 +954,8 @@
                 assistant_name: "Kömekçi",
                 assistant_status: "onlaýn",
                 assistant_hello: "Salam! Men Sfera platformasynyň kömekçisi. Size nähili kömek edip bilerin? (Marketpleýs, Bank, Poçta, Resmiýetler, TM Coin)",
-                audio_call: "Ses jaňy",
-                video_call: "Wideo jaň",
+                audio_call: "📞 Ses jaňy",
+                video_call: "📹 Wideo jaň",
                 news_no_items: "Habarlar ýok",
                 news_title_1: "Platforma täzelenmeleri",
                 news_summary_1: "Sfera platformasynyň täze wersiýasy çykdy. Täze mümkinçilikler.",
@@ -999,8 +1001,8 @@
                 assistant_name: "Assistant",
                 assistant_status: "online",
                 assistant_hello: "Hi! I'm the Sfera platform assistant. How can I help you? (Marketplace, Bank, Mail, Documents, TM Coin)",
-                audio_call: "Audio call",
-                video_call: "Video call",
+                audio_call: "📞 Audio call",
+                video_call: "📹 Video call",
                 news_no_items: "No news",
                 news_title_1: "Platform update",
                 news_summary_1: "New version of Sfera platform released. New features.",
@@ -1053,6 +1055,8 @@
                     el.placeholder = translations[lang][key];
                 }
             });
+            // Обновляем тултипы (после смены языка)
+            updateTitles();
             document.getElementById('langBtn').textContent = lang.toUpperCase();
             localStorage.setItem('lang', lang);
             updateUI();
@@ -1080,6 +1084,15 @@
             }
             renderNews();
             renderDialogs(dialogs);
+        }
+
+        function updateTitles() {
+            document.querySelectorAll('[data-i18n-title]').forEach(el => {
+                const key = el.getAttribute('data-i18n-title');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    el.title = translations[currentLang][key];
+                }
+            });
         }
 
         document.getElementById('langBtn').addEventListener('click', function() {
@@ -1778,6 +1791,8 @@
         startAutoUpdate();
         // Применяем тему
         applyTheme(currentTheme);
+        // Обновляем тултипы
+        updateTitles();
         console.log('✅ Messenger with full improvements loaded');
     </script>
 </body>
