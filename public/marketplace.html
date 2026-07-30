@@ -117,7 +117,7 @@
         .order-modal .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; }
 
         /* ============================================================
-           ЕДИНЫЙ СТИЛЬ КНОПОК ДЛЯ МАРКЕТПЛЕЙСА
+           ЕДИНЫЙ СТИЛЬ КНОПОК
            ============================================================ */
         .btn {
             padding: 10px 24px;
@@ -174,15 +174,9 @@
             background: rgba(200,0,0,0.25);
             transform: translateY(-2px);
         }
-        .btn:disabled, .btn-primary:disabled, .btn-outline:disabled, .btn-success:disabled, .btn-danger:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
 
-        /* ============================================================
-           СТЕКЛЯННАЯ ШАПКА
-           ============================================================ */
+        /* Стеклянная шапка – уже в style.css, но для уверенности дублируем */
         header {
             background: rgba(255, 255, 255, 0.06) !important;
             backdrop-filter: blur(20px) !important;
@@ -190,31 +184,23 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
         }
-        .header-right .user-info {
-            color: #bcd0e2 !important;
-            font-size: 13px !important;
-        }
-        .header-right .user-info strong {
-            color: #fff !important;
-            font-size: 14px !important;
-        }
-        .header-right .logout-btn,
+        .header-right .btn-switch,
         .header-right .lang,
-        .header-right .btn-switch {
+        .header-right .logout-btn {
             background: rgba(255, 255, 255, 0.08) !important;
             border: 1px solid rgba(255, 255, 255, 0.15) !important;
             color: #fff !important;
             backdrop-filter: blur(4px) !important;
             transition: all 0.3s !important;
         }
-        .header-right .logout-btn:hover,
+        .header-right .btn-switch:hover,
         .header-right .lang:hover,
-        .header-right .btn-switch:hover {
+        .header-right .logout-btn:hover {
             background: rgba(255, 255, 255, 0.15) !important;
             border-color: #00d4ff !important;
             color: #00d4ff !important;
         }
-        .logo-text p { display: none; }
+        .logo-text p { display: none !important; }
 
         @media (max-width: 768px) {
             .mp-header h1 { font-size: 26px; }
@@ -226,10 +212,8 @@
     </style>
 </head>
 <body>
-    <!-- Контейнер для частиц -->
     <div id="particles"></div>
 
-    <!-- ШАПКА (стеклянная) -->
     <header>
         <div class="container">
             <a href="index.html" class="logo">
@@ -247,7 +231,9 @@
                 <span class="user-info">👤 <strong id="username">User</strong></span>
                 <button class="lang" id="langBtn">RU</button>
                 <button class="logout-btn" id="logoutBtn" data-i18n="logout">🚪 Çykmak</button>
-                <a href="admin-dashboard.html" class="btn-switch" id="adminLink" style="display:none;">👑 Admin</a>
+                <!-- Динамическая кнопка "Назад" -->
+                <a href="#" id="backLink" class="btn-switch" data-i18n="back">← Yza</a>
+                <!-- Ссылка на админку теперь только в табах (вкладка Admin), поэтому убираем из шапки -->
             </div>
         </div>
     </header>
@@ -392,6 +378,7 @@
         const translations = {
             ru: {
                 logo_subtitle: "Национальная Цифровая Платформа", logout: "🚪 Выйти",
+                back: "← Назад",
                 mp_title: "🛒 SFERA Marketpleýs", mp_subtitle: "Частные продажи • Бизнес-поставки • Госзакупки",
                 refresh: "⟳ Обновить", segment_all: "🌐 Все", segment_b2c: "👤 B2C", segment_b2b: "🏢 B2B", segment_b2g: "🏛️ B2G",
                 category_all: "Все категории",
@@ -413,6 +400,7 @@
             },
             tm: {
                 logo_subtitle: "Milli Sanly Platforma", logout: "🚪 Çykmak",
+                back: "← Yza",
                 mp_title: "🛒 SFERA Marketpleýs", mp_subtitle: "Şahsy satuwlar • Biznes üpjünçilik • Döwlet satyn alyşlar",
                 refresh: "⟳ Täzele", segment_all: "🌐 Ähli", segment_b2c: "👤 B2C", segment_b2b: "🏢 B2B", segment_b2g: "🏛️ B2G",
                 category_all: "Ähli kategoriýa",
@@ -434,6 +422,7 @@
             },
             en: {
                 logo_subtitle: "National Digital Platform", logout: "🚪 Logout",
+                back: "← Back",
                 mp_title: "🛒 SFERA Marketplace", mp_subtitle: "Private sales • Business supplies • Government procurement",
                 refresh: "⟳ Refresh", segment_all: "🌐 All", segment_b2c: "👤 B2C", segment_b2b: "🏢 B2B", segment_b2g: "🏛️ B2G",
                 category_all: "All categories",
@@ -506,9 +495,17 @@
         document.getElementById('profilePhone').textContent = profile.phone;
         document.getElementById('profileAddress').textContent = profile.address;
 
+        // Показываем вкладку Admin для админа
         if (isAdmin) {
             document.getElementById('adminTab').style.display = 'inline-block';
-            document.getElementById('adminLink').style.display = 'inline-block';
+        }
+
+        // Динамическая ссылка "Назад"
+        const backLink = document.getElementById('backLink');
+        if (isAdmin) {
+            backLink.href = 'admin-dashboard.html';
+        } else {
+            backLink.href = 'user-dashboard.html';
         }
 
         document.getElementById('logoutBtn').addEventListener('click', function() {
@@ -936,7 +933,7 @@
         });
 
         // ============================================================
-        // ЧАСТИЦЫ (ПЛАВАЮЩИЕ ТОЧКИ)
+        // ЧАСТИЦЫ
         // ============================================================
         const particles = document.getElementById('particles');
         if (particles && particles.children.length === 0) {
