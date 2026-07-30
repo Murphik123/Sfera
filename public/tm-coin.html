@@ -770,11 +770,10 @@
                 const key = btn.dataset.i18n;
                 if (translations[currentLang][key]) btn.textContent = translations[currentLang][key];
             });
-            // Обновляем текст в полях формы (select options обновляются отдельно)
             renderCoins();
             renderTransactions();
             renderStaking();
-            updatePortfolio();
+            updatePortfolio(); // явно обновляем портфель при смене языка
         }
 
         document.getElementById('langBtn').addEventListener('click', function() {
@@ -857,6 +856,8 @@
 
             // Генерируем историю цен
             generatePriceHistory();
+            // Обновляем портфель после загрузки
+            updatePortfolio();
         }
 
         function saveCoins() {
@@ -892,6 +893,8 @@
         }
 
         function updatePortfolio() {
+            const el = document.getElementById('totalPortfolioUsd');
+            if (!el) return;
             let totalUsd = 0;
             // Условные цены для пересчёта (в USD)
             const rates = {
@@ -904,7 +907,7 @@
                 const rate = rates[c.symbol] || 0;
                 totalUsd += c.balance * rate;
             });
-            document.getElementById('totalPortfolioUsd').textContent = totalUsd.toFixed(2);
+            el.textContent = totalUsd.toFixed(2);
         }
 
         // ============================================================
@@ -1092,6 +1095,7 @@
             renderTransactions();
             showToast(translations[currentLang].transfer_success, 'success');
             this.reset();
+            updatePortfolio(); // обновить портфель после отправки
         });
 
         // ============================================================
@@ -1148,6 +1152,7 @@
             renderTransactions();
             showToast('Çalyşma tamamlandy!', 'success');
             this.reset();
+            updatePortfolio(); // обновить портфель после обмена
         });
 
         function getPrice(symbol) {
@@ -1207,6 +1212,7 @@
             renderTransactions();
             showToast(translations[currentLang].stake_success, 'success');
             document.getElementById('stakeAmount').value = '';
+            updatePortfolio(); // обновить портфель после стейкинга
         });
 
         function unstake(id) {
@@ -1241,6 +1247,7 @@
             renderStaking();
             renderTransactions();
             showToast(translations[currentLang].unstake_success, 'success');
+            updatePortfolio(); // обновить портфель после снятия
         }
 
         // ============================================================
@@ -1282,6 +1289,7 @@
             updateTotalBalance();
             updatePrices();
             showToast('Täzelendi!', 'success');
+            updatePortfolio(); // дополнительно обновить портфель
         });
 
         // ============================================================
@@ -1310,6 +1318,7 @@
             if (autoUpdateInterval) clearInterval(autoUpdateInterval);
             autoUpdateInterval = setInterval(() => {
                 updatePrices();
+                updatePortfolio(); // обновляем портфель при каждом автообновлении
             }, 30000);
         }
 
@@ -1341,6 +1350,8 @@
         renderChart();
         updatePrices();
         startAutoUpdate();
+        // Финишное обновление портфеля
+        setTimeout(() => updatePortfolio(), 100);
         console.log('✅ TM Coin module with chart, staking and auto-update loaded');
     </script>
 </body>
