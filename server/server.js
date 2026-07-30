@@ -42,21 +42,7 @@ if (MONGODB_URI) {
         .catch(err => console.error('Ошибка БД:', err));
 }
 
-const User = require('./src/models/User');
-
-// Временный скрипт удаления администратора (запустится один раз при старте)
-(async function cleanupAdmin() {
-    try {
-        const result = await User.deleteOne({ email: 'admin@dtm.tm' });
-        if (result.deletedCount > 0) {
-            console.log('✅ Старый администратор удалён');
-        } else {
-            console.log('ℹ️ Администратор не найден, пропускаем');
-        }
-    } catch (err) {
-        console.error('⚠️ Ошибка при удалении:', err.message);
-    }
-})();
+// ===== ВРЕМЕННЫЙ СКРИПТ УДАЛЁН =====
 
 app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
