@@ -1,19 +1,16 @@
 <!DOCTYPE html>
-// В самом начале тега <script> в user-dashboard.html
-const user = JSON.parse(localStorage.getItem('user') || '{}');
-if (!user || user.role !== 'user') {
-    window.location.href = 'login.html';
-}
 <html lang="tm">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>СФЕРА — Dashboard</title>
+    <title>СФЕРА — Пользовательский дашборд</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/css/style.css" />
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #060911; color: #ffffff; min-height: 100vh; }
+        
         .dashboard { padding: 120px 7% 60px; min-height: 100vh; }
         .dashboard h1 { font-size: 42px; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #fff, #b4d7ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .dashboard .welcome { font-size: 18px; color: #bcd0e2; margin-bottom: 40px; }
@@ -23,114 +20,87 @@ if (!user || user.role !== 'user') {
         .dashboard .card .icon { font-size: 48px; margin-bottom: 12px; }
         .dashboard .card h3 { font-size: 20px; margin-bottom: 6px; }
         .dashboard .card p { font-size: 14px; color: #bdd0df; }
-        .logout-btn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); color: white; padding: 10px 24px; border-radius: 12px; cursor: pointer; transition: .3s; font-weight: 600; margin-left: 20px; }
-        .logout-btn:hover { background: rgba(255,0,0,.15); border-color: rgba(255,0,0,.3); }
+        
+        header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 16px 7%; background: rgba(6,9,17,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,.08); display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-svg { width: 40px; height: 40px; }
+        .logo-text h2 { font-size: 22px; font-weight: 900; background: linear-gradient(135deg, #00ffa3, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-text p { font-size: 9px; color: #9fb5c8; text-transform: uppercase; letter-spacing: 1px; }
         .header-right { display: flex; align-items: center; gap: 12px; }
         .user-info { color: #bcd0e2; font-size: 14px; }
         .user-info strong { color: white; }
+        .logout-btn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); color: white; padding: 10px 24px; border-radius: 12px; cursor: pointer; transition: .3s; font-weight: 600; }
+        .logout-btn:hover { background: rgba(255,0,0,.15); border-color: rgba(255,0,0,.3); }
+        .role-badge { background: rgba(0,212,255,.15); padding: 4px 14px; border-radius: 20px; font-size: 11px; color: #00d4ff; }
+        
         @media (max-width: 768px) { .dashboard h1 { font-size: 28px; } .dashboard .grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); } }
     </style>
 </head>
 <body>
-    <div id="particles"></div>
     <header>
-        <div class="container">
-            <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00ffa3" />
-                                <stop offset="50%" stop-color="#00d4ff" />
-                                <stop offset="100%" stop-color="#1f6bff" />
-                            </linearGradient>
-                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="4" result="blur" />
-                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                            </filter>
-                        </defs>
-                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
-                        <g filter="url(#logoGlow)">
-                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
-                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
-                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
-                        </g>
-                    </svg>
-                </div>
-                <div class="logo-text">
-                    <h2>SFERA</h2>
-                    <p>Milli Sanly Platforma</p>
-                </div>
-            </a>
-            <div class="header-right">
-                <span class="user-info">👤 <strong id="username">User</strong></span>
-                <a href="index.html" class="btn btn-outline" data-i18n="back" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Yza</a>
-                <button class="lang" id="langBtn">TM</button>
-                <button class="logout-btn" id="logoutBtn" data-i18n="logout">Çykmak</button>
-            </div>
+        <a href="index.html" class="logo">
+            <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#1f6bff"/></linearGradient></defs>
+                <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15"/>
+                <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3"/>
+                <circle cx="48" cy="48" r="3.5" fill="#ffffff"/>
+            </svg>
+            <div class="logo-text"><h2>SFERA</h2><p>Milli Sanly Platforma</p></div>
+        </a>
+        <div class="header-right">
+            <span class="user-info">👤 <strong id="username">User</strong></span>
+            <span class="role-badge" id="roleBadge">Пользователь</span>
+            <button class="logout-btn" id="logoutBtn">🚪 Çykmak</button>
         </div>
     </header>
+
     <section class="dashboard">
-        <div class="container">
-            <h1>Hoş geldiňiz, <span id="greetingUser">User</span>!</h1>
-            <p class="welcome" data-i18n="dashboard_welcome">Platformanyň modullaryna giriş etmek üçin aşakdaky kartlardan saýlaň.</p>
+        <div class="container" style="max-width:1400px;margin:0 auto;">
+            <h1>👋 Hoş geldiňiz, <span id="greetingUser">User</span>!</h1>
+            <p class="welcome">Platformanyň modullaryna giriş etmek üçin aşakdaky kartlardan saýlaň.</p>
             <div class="grid">
-                <a href="marketplace.html" class="card"><div class="icon">🛒</div><h3 data-i18n="module_marketplace">Marketpleýs</h3><p data-i18n="module_marketplace_desc">Birža we söwda meýdançasy</p></a>
-                <a href="bank.html" class="card"><div class="icon">🏦</div><h3 data-i18n="module_bank">TM Bank</h3><p data-i18n="module_bank_desc">Sanly bank hyzmatlary</p></a>
-                <a href="messenger.html" class="card"><div class="icon">💬</div><h3 data-i18n="module_messenger">Messenger</h3><p data-i18n="module_messenger_desc">Çalt habarlaşma</p></a>
-                <a href="mailtm.html" class="card"><div class="icon">✉️</div><h3 data-i18n="module_mail">TM Poçta</h3><p data-i18n="module_mail_desc">Içki poçta ulgamy</p></a>
-                <a href="ai.html" class="card"><div class="icon">🤖</div><h3 data-i18n="module_ai">AI analitika</h3><p data-i18n="module_ai_desc">TM Coin prokgnozlary, trendler</p></a>
-                <a href="documents.html" class="card"><div class="icon">📄</div><h3 data-i18n="module_docs">Resmiýetler</h3><p data-i18n="module_docs_desc">Awtomatik tassyklama</p></a>
-                <a href="tm-pay.html" class="card"><div class="icon">💳</div><h3 data-i18n="module_tmpay">TM Pay</h3><p data-i18n="module_tmpay_desc">Milli töleg ulgamy</p></a>
-                <a href="tm-coin.html" class="card"><div class="icon">₮</div><h3 data-i18n="module_tmcoin">TM Coin</h3><p data-i18n="module_tmcoin_desc">Sanly döwlet walýutasy</p></a>
+                <a href="marketplace.html" class="card"><div class="icon">🛒</div><h3>Marketpleýs</h3><p>Birža we söwda meýdançasy</p></a>
+                <a href="bank.html" class="card"><div class="icon">🏦</div><h3>TM Bank</h3><p>Sanly bank hyzmatlary</p></a>
+                <a href="messenger.html" class="card"><div class="icon">💬</div><h3>Messenger</h3><p>Çalt habarlaşma</p></a>
+                <a href="mailtm.html" class="card"><div class="icon">✉️</div><h3>TM Poçta</h3><p>Içki poçta ulgamy</p></a>
+                <a href="ai.html" class="card"><div class="icon">🤖</div><h3>AI analitika</h3><p>TM Coin prokgnozlary, trendler</p></a>
+                <a href="documents.html" class="card"><div class="icon">📄</div><h3>Resmiýetler</h3><p>Awtomatik tassyklama</p></a>
+                <a href="tm-pay.html" class="card"><div class="icon">💳</div><h3>TM Pay</h3><p>Milli töleg ulgamy</p></a>
+                <a href="tm-coin.html" class="card"><div class="icon">₮</div><h3>TM Coin</h3><p>Sanly döwlet walýutasy</p></a>
             </div>
         </div>
     </section>
+
     <script>
-        const translations = {
-            tm: { logout: "Çykmak", back: "← Yza", dashboard_welcome: "Platformanyň modullaryna giriş etmek üçin aşakdaky kartlardan saýlaň.", module_marketplace: "Marketpleýs", module_marketplace_desc: "Birža we söwda meýdançasy", module_bank: "TM Bank", module_bank_desc: "Sanly bank hyzmatlary", module_messenger: "Messenger", module_messenger_desc: "Çalt habarlaşma", module_mail: "TM Poçta", module_mail_desc: "Içki poçta ulgamy", module_ai: "AI analitika", module_ai_desc: "TM Coin prokgnozlary, trendler", module_docs: "Resmiýetler", module_docs_desc: "Awtomatik tassyklama", module_tmpay: "TM Pay", module_tmpay_desc: "Milli töleg ulgamy", module_tmcoin: "TM Coin", module_tmcoin_desc: "Sanly döwlet walýutasy" },
-            ru: { logout: "Выйти", back: "← Назад", dashboard_welcome: "Выберите модуль платформы для входа.", module_marketplace: "Маркетплейс", module_marketplace_desc: "Биржа и торговая площадка", module_bank: "ТМ Банк", module_bank_desc: "Цифровые банковские услуги", module_messenger: "Мессенджер", module_messenger_desc: "Быстрая связь", module_mail: "TM Почта", module_mail_desc: "Внутренняя почта", module_ai: "ИИ-аналитика", module_ai_desc: "Прогнозы TM Coin, тренды", module_docs: "Документы", module_docs_desc: "Автоматическая проверка", module_tmpay: "TM Pay", module_tmpay_desc: "Национальная платёжная система", module_tmcoin: "TM Coin", module_tmcoin_desc: "Цифровая государственная валюта" },
-            en: { logout: "Logout", back: "← Back", dashboard_welcome: "Select a platform module to get started.", module_marketplace: "Marketplace", module_marketplace_desc: "Exchange and trading platform", module_bank: "TM Bank", module_bank_desc: "Digital banking services", module_messenger: "Messenger", module_messenger_desc: "Instant messaging", module_mail: "TM Mail", module_mail_desc: "Internal mail system", module_ai: "AI Analytics", module_ai_desc: "TM Coin forecasts, trends", module_docs: "Documents", module_docs_desc: "Automatic verification", module_tmpay: "TM Pay", module_tmpay_desc: "National payment system", module_tmcoin: "TM Coin", module_tmcoin_desc: "Digital state currency" }
-        };
-        let currentLang = localStorage.getItem('lang') || 'tm';
-        function setLanguage(lang) {
-            if (!translations[lang]) return;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) el.textContent = translations[lang][key];
-            });
-            document.getElementById('langBtn').textContent = lang.toUpperCase();
-            localStorage.setItem('lang', lang);
+        // ============================================================
+        // ПРОВЕРКА АВТОРИЗАЦИИ
+        // ============================================================
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const token = localStorage.getItem('token');
+
+        console.log('🔍 Проверка авторизации:');
+        console.log('Token:', token);
+        console.log('User:', user);
+
+        if (!token || !user || user.role !== 'user') {
+            console.log('❌ Нет доступа, перенаправление на login');
+            window.location.href = 'login.html';
         }
-        document.getElementById('langBtn').addEventListener('click', function() {
-            const cycle = ['tm', 'ru', 'en'];
-            let idx = cycle.indexOf(currentLang);
-            idx = (idx + 1) % cycle.length;
-            setLanguage(cycle[idx]);
-        });
-        const userData = JSON.parse(localStorage.getItem('user') || '{"username":"Guest"}');
-        document.getElementById('username').textContent = userData.username || 'User';
-        document.getElementById('greetingUser').textContent = userData.username || 'User';
+
+        // Отображаем имя пользователя
+        document.getElementById('username').textContent = user.username || 'User';
+        document.getElementById('greetingUser').textContent = user.username || 'User';
+
+        console.log('✅ Пользовательский дашборд загружен');
+
+        // ============================================================
+        // ВЫХОД
+        // ============================================================
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = 'login.html';
         });
-        const token = localStorage.getItem('token');
-        if (!token) window.location.href = 'login.html';
-        const particles = document.getElementById('particles');
-        if (particles && particles.children.length === 0) {
-            for (let i = 0; i < 60; i++) {
-                const p = document.createElement('span');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.top = Math.random() * 100 + '%';
-                p.style.animationDuration = (6 + Math.random() * 12) + 's';
-                p.style.animationDelay = Math.random() * 5 + 's';
-                particles.appendChild(p);
-            }
-        }
-        window.addEventListener('load', () => setLanguage(currentLang));
     </script>
 </body>
 </html>
