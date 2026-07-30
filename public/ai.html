@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
     <style>
-        /* Специфические стили для AI модуля (не нарушают общий дизайн) */
+        /* ===== СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ AI МОДУЛЯ ===== */
         .ai-page {
             padding: 140px 7% 60px;
             min-height: 100vh;
@@ -171,6 +171,38 @@
         .forecast-item .confidence {
             font-size: 13px;
             color: #bdd0df;
+        }
+
+        /* ===== ИСПРАВЛЕННЫЕ КНОПКИ ВЫБОРА ПЕРИОДА (единый стеклянный дизайн) ===== */
+        .report-period {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .report-period button {
+            padding: 8px 20px;
+            border: 1px solid rgba(255,255,255,.2);
+            border-radius: 30px;
+            background: rgba(255,255,255,.05);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            color: #bdd0df;
+            cursor: pointer;
+            transition: .3s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .report-period button:hover {
+            background: rgba(255,255,255,.1);
+            border-color: #00d4ff;
+            color: white;
+        }
+        .report-period button.active {
+            background: rgba(0,212,255,.2);
+            border-color: #00d4ff;
+            color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0,212,255,.2);
         }
 
         .report-form {
@@ -352,6 +384,7 @@
         @media (max-width: 768px) {
             .ai-tabs button { padding: 8px 14px; font-size: 13px; }
             .forecast-period button { font-size: 12px; padding: 4px 12px; }
+            .report-period button { font-size: 12px; padding: 6px 14px; }
             .ai-header h1 { font-size: 28px; }
         }
     </style>
@@ -439,7 +472,7 @@
             <div class="tab-content" id="tab-analytics">
                 <div class="card-glass">
                     <h3 data-i18n="analytics_title">Hasabatlar</h3>
-                    <div class="report-period" id="reportPeriod" style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;">
+                    <div class="report-period" id="reportPeriod">
                         <button class="active" data-period="day" data-i18n="period_day">Gün</button>
                         <button data-period="week" data-i18n="period_week">Hepde</button>
                         <button data-period="month" data-i18n="period_month">Aý</button>
@@ -926,6 +959,7 @@
             document.getElementById('statRevenue').textContent = (Math.floor(total * 0.8 + 1000)) + ' TMT';
         }
 
+        // Обработчики кнопок периода (уже используют улучшенные стили)
         document.querySelectorAll('#reportPeriod button').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('#reportPeriod button').forEach(b => b.classList.remove('active'));
@@ -1196,7 +1230,7 @@
         initAnalytics();
         renderForecasts('7d');
         renderReports();
-        console.log('✅ AI module loaded with unified design');
+        console.log('✅ AI module with unified design');
     </script>
 </body>
 </html>
