@@ -108,18 +108,111 @@
         .emoji-picker .emoji-grid button { background: transparent; border: none; font-size: 24px; cursor: pointer; padding: 4px; transition: .15s; border-radius: 8px; }
         .emoji-picker .emoji-grid button:hover { background: rgba(255,255,255,.1); }
 
-        .group-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.6); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; }
+        /* ===== МОДАЛЬНОЕ ОКНО ГРУППЫ (стеклянный дизайн) ===== */
+        .group-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
         .group-modal.active { display: flex; }
-        .group-modal .modal-box { background: rgba(13,28,41,.98); border: 1px solid rgba(255,255,255,.12); border-radius: 24px; padding: 30px 35px; max-width: 400px; width: 95%; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
-        .group-modal .modal-box h2 { margin-bottom: 20px; font-size: 24px; }
+
+        .group-modal .modal-box {
+            background: rgba(20,30,45,0.92);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 24px;
+            padding: 30px 35px;
+            max-width: 420px;
+            width: 95%;
+            box-shadow: 0 30px 80px rgba(0,0,0,.6);
+            position: relative;
+        }
+        .group-modal .modal-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d4ff, #00ffa3, transparent);
+        }
+        .group-modal .modal-box h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         .group-modal .modal-box .form-group { margin-bottom: 16px; }
-        .group-modal .modal-box .form-group label { display: block; font-size: 14px; color: #dbe9ff; margin-bottom: 4px; }
-        .group-modal .modal-box .form-group input, .group-modal .modal-box .form-group select { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.05); color: white; font-size: 15px; outline: none; }
-        .group-modal .modal-box .form-group input:focus { border-color: #00d4ff; }
-        .group-modal .modal-box .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px; }
-        .group-modal .modal-box .form-actions button { padding: 12px 28px; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: .3s; }
-        .group-modal .modal-box .form-actions .btn-create { background: linear-gradient(135deg, #00d4ff, #008cff); color: white; }
-        .group-modal .modal-box .form-actions .btn-cancel { background: transparent; border: 1px solid rgba(255,255,255,.2); color: white; }
+        .group-modal .modal-box .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #dbe9ff;
+            margin-bottom: 4px;
+        }
+        .group-modal .modal-box .form-group input,
+        .group-modal .modal-box .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.15);
+            background: rgba(255,255,255,.08);
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: .3s;
+        }
+        .group-modal .modal-box .form-group input:focus,
+        .group-modal .modal-box .form-group select:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0,212,255,.2);
+            background: rgba(255,255,255,.12);
+        }
+        .group-modal .modal-box .form-group select option { background: #0b2035; color: white; }
+        .group-modal .modal-box .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+        .group-modal .modal-box .form-actions button {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+        }
+        .group-modal .modal-box .form-actions .btn-create {
+            background: linear-gradient(135deg, #00d4ff, #008cff);
+            color: white;
+            box-shadow: 0 10px 25px rgba(0,212,255,.35);
+        }
+        .group-modal .modal-box .form-actions .btn-create:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,212,255,.5);
+        }
+        .group-modal .modal-box .form-actions .btn-cancel {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,.2);
+            color: white;
+        }
+        .group-modal .modal-box .form-actions .btn-cancel:hover {
+            background: rgba(255,255,255,.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
 
         .empty-chat { flex: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; color: #9fb5c8; text-align: center; padding: 40px; }
         .empty-chat .icon { font-size: 60px; margin-bottom: 20px; opacity: 0.5; }
@@ -136,7 +229,7 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Стеклянная шапка */
-        header { background: rgba(255, 255, 255, 0.06) !important; backdrop-filter: blur(20px) !important; -webkit-backdrop-filter: blur(20px) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important; }
+        header { background: rgba(255, 255, 255, 0.06) !important; backdrop-filter: blur(20px) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important; }
         .header-right .lang, .header-right .logout-btn, .header-right .btn-switch { background: rgba(255, 255, 255, 0.08) !important; border: 1px solid rgba(255, 255, 255, 0.15) !important; color: #fff !important; backdrop-filter: blur(4px) !important; transition: all 0.3s !important; }
         .header-right .lang:hover, .header-right .logout-btn:hover, .header-right .btn-switch:hover { background: rgba(255, 255, 255, 0.15) !important; border-color: #00d4ff !important; color: #00d4ff !important; }
         .logo-text p { display: none !important; }
@@ -1018,11 +1111,19 @@
             showToast(translations[currentLang].export_success, 'success');
         });
 
-        // Автообновление
+        // Автообновление (ограничено 3 сообщениями)
         let autoUpdateInterval = null;
+        let autoUpdateCount = 0;
+        const MAX_AUTO_MESSAGES = 3;
+
         function startAutoUpdate() {
             if (autoUpdateInterval) clearInterval(autoUpdateInterval);
             autoUpdateInterval = setInterval(() => {
+                if (autoUpdateCount >= MAX_AUTO_MESSAGES) {
+                    clearInterval(autoUpdateInterval);
+                    autoUpdateInterval = null;
+                    return;
+                }
                 const contacts = dialogs.filter(d => !d.isGroup && d.id !== 'assistant');
                 if (contacts.length === 0) return;
                 const randomContact = contacts[Math.floor(Math.random() * contacts.length)];
@@ -1046,6 +1147,7 @@
                 }
                 renderDialogs(dialogs);
                 showToast(`📩 ${translations[currentLang].online}: ${newMsg.text}`, 'info');
+                autoUpdateCount++;
             }, 30000);
         }
 
@@ -1081,21 +1183,6 @@
             renderNews();
             renderDialogs(dialogs);
         }
-
-        // Переключение вкладок по табам
-        document.querySelectorAll('.mp-tabs button').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.mp-tabs button').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                const tab = this.dataset.tab;
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                document.getElementById('tab-' + tab).classList.add('active');
-                if (tab === 'cart') renderCart();
-                if (tab === 'wishlist') renderWishlist();
-                if (tab === 'profile') renderOrders();
-                if (tab === 'admin' && isAdmin) renderAdminProducts();
-            });
-        });
 
         // Инициализация
         loadDialogs();
