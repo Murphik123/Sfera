@@ -13,7 +13,7 @@
 
     <style>
         /* ============================================================
-           СТЕКЛЯННАЯ ШАПКА (как в маркетплейсе)
+           СТЕКЛЯННАЯ ШАПКА
            ============================================================ */
         header {
             background: rgba(255, 255, 255, 0.06) !important;
@@ -291,26 +291,6 @@
                 }, 300);
             });
         })();
-    </script>
-
-    <!-- ============================================================
-         ПЛАВНЫЙ СКРОЛЛ К БЛОКУ "МОДУЛИ" ПО КНОПКЕ "ДЕМО"
-         ============================================================ -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const demoBtn = document.querySelector('.glass-btn');
-            const modulesSection = document.querySelector('.modules');
-
-            if (demoBtn && modulesSection) {
-                demoBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    modulesSection.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                });
-            }
-        });
     </script>
 
 </body>
