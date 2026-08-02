@@ -1,38 +1,55 @@
-const Message = require('../models/Message');
-const redisClient = require('../config/redis');
+// sockets/index.js
+const { Server } = require('socket.io');
 
-module.exports = (io) => {
+module.exports = (server, app) => {
+  const io = new Server(server, {
+    cors: {
+      origin: '*', // На продакшене замените на ваш домен
+      methods: ['GET', 'POST'],
+    },
+  });
+
+  // Хранилище активных пользователей
+  const users = {};
+
   io.on('connection', (socket) => {
-    console.log('🔌 New client connected');
+    console.log('🟢 Новое подключение:', socket.id);
 
-    // Присоединение к комнате пользователя
-    socket.on('join', (userId) => {
-      socket.join(`user_${userId}`);
-      // Добавляем пользователя в онлайн (Redis)
-      redisClient.sadd('online_users', userId);
-      // Можно оповестить всех о статусе
+    // Получаем токен и ID пользователя из auth
+    const token = socket.handshake.auth.token;
+    if (!token) {
+      socket.disconnect();
+      return;
+    }
+
+    // Здесь вы должны декодировать токен и получить userId
+    // Для примера используем заглушку
+    const userId = socket.handshake.query.userId || 'unknown';
+    users[userId] = socket.id;
+    console.log(`👤 Пользователь ${userId} онлайн`);
+
+    // Отправляем всем, что пользователь онлайн
+    io.emit('user_online', { userId });
+
+    // Обработка отправки сообщения
+    socket.on('send_message', (data) => {
+      console.log('📩 Получено сообщение:', data);
+      // data: { dialogId, text, from, time }
+
+      // Сохраняем сообщение в БД (ваша логика)
+
+      // Отправляем сообщение всем участникам диалога
+      // Для простоты отправляем обратно отправителю и в диалог
+      // В реальном проекте нужно найти всех участников диалога и отправить им
+      io.emit('new_message', data);
     });
 
-    // Отправка сообщения
-    socket.on('sendMessage', async (data) => {
-      try {
-        const { from, to, text, attachments } = data;
-        const message = new Message({ from, to, text, attachments });
-        await message.save();
-
-        // Отправляем получателю (если он в сети)
-        io.to(`user_${to}`).emit('newMessage', message);
-        // Отправляем отправителю подтверждение
-        socket.emit('messageSent', message);
-      } catch (error) {
-        console.error('❌ Error sending message:', error);
-      }
-    });
-
-    // Отключение
-    socket.on('disconnect', async () => {
-      console.log('🔌 Client disconnected');
-      // Можно удалить пользователя из онлайн, если известен userId
+    socket.on('disconnect', () => {
+      console.log('🔴 Отключение:', socket.id);
+      delete users[userId];
+      io.emit('user_offline', { userId });
     });
   });
+
+  return io;
 };
