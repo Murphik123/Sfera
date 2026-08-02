@@ -1,23 +1,35 @@
-// server.js
-const { createServer } = require('http');
-const app = require('./app');
-const setupSocket = require('./sockets');
+// ============================================================
+// СЕРВЕРНАЯ ТОЧКА ВХОДА
+// Путь: server/server.js
+// ============================================================
+require('dotenv').config();
+const app = require('./src/app');
+const http = require('http');
+const socketio = require('socket.io');
+const connectDB = require('./src/config/db');
+const redisClient = require('./src/config/redis');
 
 const PORT = process.env.PORT || 5000;
 
-// Создаём HTTP-сервер из приложения Express
-const server = createServer(app);
-
-// Подключаем Socket.IO
-const io = setupSocket(server);
-
-// Запускаем сервер
-server.listen(PORT, () => {
-  console.log(`🚀 Сервер запущен на порту ${PORT}`);
-  console.log(`🔌 WebSocket готов к подключениям`);
+const server = http.createServer(app);
+const io = socketio(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  }
 });
 
-// Обработка ошибок
-server.on('error', (err) => {
-  console.error('❌ Ошибка сервера:', err);
+// Подключение к MongoDB
+connectDB();
+
+// Подключение к Redis
+redisClient.on('connect', () => console.log('✅ Redis connected'));
+redisClient.on('error', (err) => console.error('❌ Redis error:', err));
+
+// Инициализация Socket.io (обработчики событий)
+require('./src/sockets')(io);
+
+// Запуск сервера
+server.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
