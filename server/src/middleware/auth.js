@@ -47,3 +47,4 @@ authMiddleware.authMiddleware = authMiddleware;
 authMiddleware.protect = authMiddleware;
 
 module.exports = authMiddleware;
+module.exports.authMiddleware = authMiddleware;
