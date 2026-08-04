@@ -18,8 +18,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Раздача статических файлов out of public (CSS, JS, изображения)
-app.use(express.static(path.join(__dirname, 'public')));
+// Раздача статических файлов out of public
+app.use(express.static(path.join(__dirname, '../public')));
 
 // -----------------------------------------------------------------------------
 // 2. ИНИЦИАЛИЗАЦИЯ И ПОДКЛЮЧЕНИЕ БАЗ ДАННЫХ
@@ -68,13 +68,13 @@ app.use((req, res, next) => {
 // -----------------------------------------------------------------------------
 // 4. ИМПОРТ И ПОДКЛЮЧЕНИЕ МАРШРУТОВ (ROUTES)
 // -----------------------------------------------------------------------------
-const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
-const listingRoutes = require('./routes/listingRoutes');
-const mailRoutes = require('./routes/mailRoutes');
-const predictionRoutes = require('./routes/predictionRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const paymentRoutes = require('./routes/paymentRoutes');
+const authRoutes = require('../routes/authRoutes');
+const userRoutes = require('../routes/userRoutes');
+const listingRoutes = require('../routes/listingRoutes');
+const mailRoutes = require('../routes/mailRoutes');
+const predictionRoutes = require('../routes/predictionRoutes');
+const adminRoutes = require('../routes/adminRoutes');
+const paymentRoutes = require('../routes/paymentRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -91,7 +91,7 @@ app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api')) {
     return next();
   }
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
 app.use('/api/*', (req, res) => {
