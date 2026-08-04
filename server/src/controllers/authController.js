@@ -1,6 +1,6 @@
+// src/controllers/authController.js
 const User = require('../models/User');
 const Account = require('../models/Account');
-const bcrypt = require('bcryptjs');
 const { generateToken } = require('../utils/jwt');
 const redisClient = require('../config/redis');
 
@@ -13,41 +13,34 @@ exports.register = async (req, res) => {
 
         console.log('📝 Registration attempt:', { username, email, role });
 
-        // Проверка обязательных полей
         if (!username || !email || !password) {
-            console.log('❌ Missing fields');
             return res.status(400).json({
-                message: 'Please provide username, email and password'
+                message: 'Укажите логин, email и пароль'
             });
         }
 
-        // Проверка существования пользователя
         const existing = await User.findOne({
             $or: [{ email: email.toLowerCase() }, { username }]
         });
 
         if (existing) {
-            console.log('❌ User already exists:', email);
             return res.status(400).json({
-                message: 'User with this email or username already exists'
+                message: 'Пользователь с таким email или логином уже существует'
             });
         }
 
-        // Хеширование пароля
-        const hash = await bcrypt.hash(password, 10);
-
-        // Создание пользователя
+        // Создание пользователя (пароль передаем в чистом виде — User.js захэширует его сам)
         const user = new User({
             username,
             email: email.toLowerCase(),
-            password: hash, // ← поле password
+            password, 
             role: role === 'admin' ? 'admin' : 'user'
         });
 
         await user.save();
         console.log('✅ User created:', { id: user._id, username: user.username, role: user.role });
 
-        // Создание счёта (если модель Account существует)
+        // Автоматическое создание банковского/финансового счёта
         try {
             const account = new Account({ userId: user._id });
             await account.save();
@@ -56,8 +49,11 @@ exports.register = async (req, res) => {
             console.log('⚠️ Account creation skipped:', accountError.message);
         }
 
+        const token = generateToken(user._id);
+
         res.status(201).json({
-            message: 'User registered successfully',
+            message: 'Пользователь успешно зарегистрирован',
+            token,
             user: {
                 id: user._id,
                 username: user.username,
@@ -68,7 +64,7 @@ exports.register = async (req, res) => {
 
     } catch (error) {
         console.error('❌ Registration error:', error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: 'Ошибка при регистрации', error: error.message });
     }
 };
 
@@ -82,31 +78,31 @@ exports.login = async (req, res) => {
         console.log('📥 Login attempt:', email);
 
         if (!email || !password) {
-            console.log('❌ Missing credentials');
             return res.status(400).json({
-                message: 'Please provide email and password'
+                message: 'Укажите email и пароль'
             });
         }
 
         const user = await User.findOne({ email: email.toLowerCase() });
         if (!user) {
-            console.log('❌ User not found:', email);
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'Неверный email или пароль' });
         }
 
-        // Сравнение пароля с хэшем из поля password
-        const match = await bcrypt.compare(password, user.password);
+        if (user.isBlocked) {
+            return res.status(403).json({ message: 'Аккаунт заблокирован' });
+        }
+
+        // Проверка пароля через метод модели User.js
+        const match = await user.comparePassword(password);
         if (!match) {
-            console.log('❌ Password mismatch for:', email);
-            return res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'Неверный email или пароль' });
         }
 
         const token = generateToken(user._id);
-        console.log('✅ Login successful for:', email);
 
-        // Сохранение сессии в Redis
+        // Сохранение сессии в Redis / RedisMock
         try {
-            await redisClient.set(`session:${user._id}`, token, 'EX', 60 * 60 * 24 * 7);
+            await redisClient.set(`session:${user._id}`, token);
             console.log('✅ Redis session saved');
         } catch (redisError) {
             console.log('⚠️ Redis session save skipped:', redisError.message);
@@ -125,7 +121,7 @@ exports.login = async (req, res) => {
 
     } catch (error) {
         console.error('❌ Login error:', error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: 'Ошибка при входе', error: error.message });
     }
 };
 
@@ -135,9 +131,30 @@ exports.login = async (req, res) => {
 exports.logout = async (req, res) => {
     try {
         const userId = req.userId;
-        await redisClient.del(`session:${userId}`);
-        res.json({ message: 'Logged out successfully' });
+        if (userId) {
+            await redisClient.del(`session:${userId}`);
+        }
+        res.json({ message: 'Успешный выход из системы' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ message: 'Ошибка при выходе', error: error.message });
+    }
+};
+
+// ============================================================
+// ПОЛУЧЕНИЕ ПРОФИЛЯ ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ (/me)
+// ============================================================
+exports.getMe = async (req, res) => {
+    try {
+        res.json({
+            user: {
+                id: req.user._id,
+                username: req.user.username,
+                email: req.user.email,
+                role: req.user.role,
+                avatar: req.user.avatar || ''
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Ошибка при получении профиля', error: error.message });
     }
 };
