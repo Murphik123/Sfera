@@ -16,8 +16,8 @@ const server = http.createServer(app);
 // -----------------------------------------------------------------------------
 const possiblePaths = [
   path.join(__dirname, 'routes'),          // ./routes
-  path.join(__dirname, '../routes'),       // ../routes
   path.join(__dirname, 'src/routes'),      // ./src/routes
+  path.join(__dirname, '../routes'),       // ../routes
   path.join(__dirname, '../src/routes')    // ../src/routes
 ];
 
@@ -31,8 +31,6 @@ for (const p of possiblePaths) {
 
 if (!routesDir) {
   console.error('❌ Критическая ошибка: Папка routes не найдена в файловой системе!');
-  console.error('Текущая директория __dirname:', __dirname);
-  console.error('Содержимое текущей директории:', fs.readdirSync(__dirname));
   process.exit(1);
 }
 
@@ -45,7 +43,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Определяем путь к папке public относительно найденной структуры
+// Определяем путь к папке public
 const publicDir = fs.existsSync(path.join(path.dirname(routesDir), 'public'))
   ? path.join(path.dirname(routesDir), 'public')
   : path.join(__dirname, 'public');
@@ -94,23 +92,41 @@ app.use((req, res, next) => {
 });
 
 // -----------------------------------------------------------------------------
-// 5. ИМПОРТ И ПОДКЛЮЧЕНИЕ МАРШРУТОВ (ROUTES)
+// 5. БЕЗОПАСНЫЙ ИМПОРТ И ПОДКЛЮЧЕНИЕ МАРШРУТОВ (ROUTES)
 // -----------------------------------------------------------------------------
-const authRoutes = require(path.join(routesDir, 'authRoutes'));
-const userRoutes = require(path.join(routesDir, 'userRoutes'));
-const listingRoutes = require(path.join(routesDir, 'listingRoutes'));
-const mailRoutes = require(path.join(routesDir, 'mailRoutes'));
-const predictionRoutes = require(path.join(routesDir, 'predictionRoutes'));
-const adminRoutes = require(path.join(routesDir, 'adminRoutes'));
-const paymentRoutes = require(path.join(routesDir, 'paymentRoutes'));
+const existingFiles = fs.readdirSync(routesDir);
 
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/listings', listingRoutes);
-app.use('/api/mail', mailRoutes);
-app.use('/api/predictions', predictionRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/tmpay', paymentRoutes);
+function loadRouteIfExists(endpoint, routeFileName) {
+  const matchedFile = existingFiles.find(
+    f => f.toLowerCase() === routeFileName.toLowerCase() || 
+         f.toLowerCase() === `${routeFileName.toLowerCase()}.js`
+  );
+
+  if (matchedFile) {
+    const routePath = path.join(routesDir, matchedFile);
+    const importedModule = require(routePath);
+    
+    // Извлекаем Router если модуль экспортирован через default, .router или напрямую
+    const routerHandler = importedModule.default || importedModule.router || importedModule;
+
+    if (typeof routerHandler === 'function' || typeof routerHandler.use === 'function') {
+      app.use(endpoint, routerHandler);
+      console.log(`✅ Маршрут подключен: ${endpoint} -> ${matchedFile}`);
+    } else {
+      console.error(`❌ Ошибка подключения ${matchedFile}: экспорт не является Express Router.`);
+    }
+  } else {
+    console.warn(`⚠️ Пропущен маршрут ${endpoint}: файл '${routeFileName}.js' не найден в ${routesDir}`);
+  }
+}
+
+loadRouteIfExists('/api/auth', 'authRoutes');
+loadRouteIfExists('/api/users', 'userRoutes');
+loadRouteIfExists('/api/listings', 'listingRoutes');
+loadRouteIfExists('/api/mail', 'mailRoutes');
+loadRouteIfExists('/api/predictions', 'predictionRoutes');
+loadRouteIfExists('/api/admin', 'adminRoutes');
+loadRouteIfExists('/api/tmpay', 'paymentRoutes');
 
 // -----------------------------------------------------------------------------
 // 6. ГЛАВНЫЕ СТРАНИЦЫ И ОБРАБОТКА ОШИБОК
