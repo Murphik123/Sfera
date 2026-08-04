@@ -1,6 +1,5 @@
 /* ============================================================
-   ВСЕ СТИЛИ (перенесены из index.html)
-   Путь: public/css/style.css
+   SFERA PLATFORM — GLOBAL STYLES
    ============================================================ */
 
 :root {
@@ -10,11 +9,11 @@
     --dark: #08131d;
     --dark2: #0d1c29;
     --dark3: #142738;
-    --glass: rgba(255,255,255,.08);
-    --border: rgba(255,255,255,.15);
+    --glass: rgba(255, 255, 255, 0.08);
+    --border: rgba(255, 255, 255, 0.15);
     --white: #ffffff;
     --text: #dbe9ff;
-    --shadow: 0 20px 60px rgba(0,0,0,.35);
+    --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
     --radius: 22px;
 }
 
@@ -41,17 +40,17 @@ body::before {
     width: 200%;
     height: 200%;
     background:
-        radial-gradient(circle at 20% 30%, rgba(0,212,255,.15), transparent 35%),
-        radial-gradient(circle at 80% 20%, rgba(0,255,170,.10), transparent 35%),
-        radial-gradient(circle at 60% 80%, rgba(32,108,255,.15), transparent 40%);
+        radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.15), transparent 35%),
+        radial-gradient(circle at 80% 20%, rgba(0, 255, 170, 0.10), transparent 35%),
+        radial-gradient(circle at 60% 80%, rgba(32, 108, 255, 0.15), transparent 40%);
     animation: bgmove 18s linear infinite;
     z-index: -2;
 }
 
 @keyframes bgmove {
-    0% { transform: translate(0,0); }
-    50% { transform: translate(-8%,-5%); }
-    100% { transform: translate(0,0); }
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(-8%, -5%); }
+    100% { transform: translate(0, 0); }
 }
 
 .container {
@@ -66,16 +65,18 @@ header {
     left: 0;
     width: 100%;
     z-index: 999;
-    backdrop-filter: blur(18px);
-    background: rgba(5,15,25,.55);
-    border-bottom: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.06) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
 }
 
 header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 18px 0;
+    padding: 12px 0 !important;
 }
 
 .logo {
@@ -131,15 +132,10 @@ header .container {
 }
 
 .logo-text p {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    margin: 4px 0 0 0;
-    color: #9fb5c8;
-    white-space: nowrap;
+    display: none !important;
 }
 
-/* ================= НАВИГАЦИЯ ================= */
+/* ================= NAV ================= */
 nav ul {
     display: flex;
     list-style: none;
@@ -151,7 +147,7 @@ nav a {
     text-decoration: none;
     color: white;
     font-weight: 500;
-    transition: .3s;
+    transition: 0.3s;
     white-space: nowrap;
 }
 
@@ -172,7 +168,7 @@ nav a:hover {
     position: absolute;
     top: 100%;
     left: 0;
-    background: rgba(5,15,25,.95);
+    background: rgba(5, 15, 25, 0.95);
     backdrop-filter: blur(12px);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -192,12 +188,12 @@ nav a:hover {
     padding: 10px 24px;
     color: #dbe9ff;
     font-weight: 400;
-    transition: .2s;
+    transition: 0.2s;
     white-space: nowrap;
 }
 
 .submenu a:hover {
-    background: rgba(0,212,255,.1);
+    background: rgba(0, 212, 255, 0.1);
     color: var(--primary);
 }
 
@@ -205,7 +201,7 @@ nav a:hover {
     display: flex;
 }
 
-/* ================= ГАМБУРГЕР ================= */
+/* ================= HAMBURGER ================= */
 .hamburger {
     display: none;
     flex-direction: column;
@@ -223,7 +219,7 @@ nav a:hover {
     height: 2.5px;
     background: white;
     border-radius: 4px;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .hamburger.active span:nth-child(1) {
@@ -252,29 +248,41 @@ nav a:hover {
     cursor: pointer;
     border-radius: 12px;
     font-weight: 600;
-    transition: .3s;
+    transition: 0.3s;
     text-decoration: none;
     display: inline-block;
     font-size: 14px;
 }
 
-.lang {
-    background: transparent;
-    border: 1px solid var(--border) !important;
-    color: white;
+.header-buttons .lang {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #fff !important;
+    backdrop-filter: blur(4px) !important;
+    transition: all 0.3s !important;
 }
 
-.login {
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: white;
+.header-buttons .lang:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: #00d4ff !important;
+    color: #00d4ff !important;
 }
 
-.login:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(0,212,255,.35);
+.header-buttons .login {
+    background: rgba(0, 212, 255, 0.15) !important;
+    border: 1px solid rgba(0, 212, 255, 0.3) !important;
+    color: #fff !important;
+    backdrop-filter: blur(4px) !important;
+    transition: all 0.3s !important;
 }
 
-/* ================= HERO ================= */
+.header-buttons .login:hover {
+    background: rgba(0, 212, 255, 0.25) !important;
+    border-color: #00d4ff !important;
+    color: #00d4ff !important;
+}
+
+/* ================= HERO SECTION ================= */
 .hero {
     position: relative;
     min-height: 100vh;
@@ -293,8 +301,8 @@ nav a:hover {
     width: 100%;
     height: 100%;
     background-image:
-        linear-gradient(rgba(0,212,255,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,212,255,.03) 1px, transparent 1px);
+        linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
     background-size: 60px 60px;
     pointer-events: none;
     z-index: 0;
@@ -302,7 +310,7 @@ nav a:hover {
 }
 
 @keyframes gridMove {
-    0% { transform: translate(0,0); }
+    0% { transform: translate(0, 0); }
     100% { transform: translate(60px, 60px); }
 }
 
@@ -332,13 +340,13 @@ nav a:hover {
 .glow-left {
     top: -10%;
     left: -10%;
-    background: rgba(0,212,255,.4);
+    background: rgba(0, 212, 255, 0.4);
 }
 
 .glow-right {
     bottom: -10%;
     right: -10%;
-    background: rgba(0,255,170,.3);
+    background: rgba(0, 255, 170, 0.3);
     animation-delay: 2s;
 }
 
@@ -384,8 +392,8 @@ nav a:hover {
     display: inline-block;
     padding: 8px 20px;
     border-radius: 30px;
-    background: rgba(0,212,255,.12);
-    border: 1px solid rgba(0,212,255,.3);
+    background: rgba(0, 212, 255, 0.12);
+    border: 1px solid rgba(0, 212, 255, 0.3);
     font-size: 14px;
     letter-spacing: 2px;
     color: var(--primary);
@@ -432,29 +440,29 @@ nav a:hover {
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    transition: .35s;
+    transition: 0.35s;
 }
 
 .primary-btn {
     background: linear-gradient(135deg, #00d4ff, #008cff);
     color: white;
-    box-shadow: 0 20px 45px rgba(0,212,255,.35);
+    box-shadow: 0 20px 45px rgba(0, 212, 255, 0.35);
 }
 
 .primary-btn:hover {
     transform: translateY(-5px);
-    box-shadow: 0 30px 60px rgba(0,212,255,.5);
+    box-shadow: 0 30px 60px rgba(0, 212, 255, 0.5);
 }
 
 .glass-btn {
-    background: rgba(255,255,255,.05);
-    border: 1px solid rgba(255,255,255,.25);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(10px);
     color: white;
 }
 
 .glass-btn:hover {
-    background: rgba(255,255,255,.15);
+    background: rgba(255, 255, 255, 0.15);
     transform: translateY(-5px);
 }
 
@@ -478,7 +486,7 @@ nav a:hover {
 .core-ring {
     position: absolute;
     border-radius: 50%;
-    border: 2px solid rgba(0,212,255,.3);
+    border: 2px solid rgba(0, 212, 255, 0.3);
     animation: spinRing linear infinite;
 }
 
@@ -493,14 +501,14 @@ nav a:hover {
     height: 120%;
     animation-duration: 15s;
     animation-direction: reverse;
-    border-color: rgba(0,255,170,.2);
+    border-color: rgba(0, 255, 170, 0.2);
 }
 
 .ring-3 {
     width: 140%;
     height: 140%;
     animation-duration: 25s;
-    border-color: rgba(31,107,255,.2);
+    border-color: rgba(31, 107, 255, 0.2);
 }
 
 @keyframes spinRing {
@@ -512,7 +520,7 @@ nav a:hover {
     height: 140px;
     border-radius: 50%;
     background: radial-gradient(circle, #00d4ff, #004d80);
-    box-shadow: 0 0 80px rgba(0,212,255,.4);
+    box-shadow: 0 0 80px rgba(0, 212, 255, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -520,8 +528,8 @@ nav a:hover {
 }
 
 @keyframes pulseCore {
-    0% { transform: scale(1); box-shadow: 0 0 80px rgba(0,212,255,.4); }
-    100% { transform: scale(1.05); box-shadow: 0 0 120px rgba(0,212,255,.7); }
+    0% { transform: scale(1); box-shadow: 0 0 80px rgba(0, 212, 255, 0.4); }
+    100% { transform: scale(1.05); box-shadow: 0 0 120px rgba(0, 212, 255, 0.7); }
 }
 
 /* ================= MODULES ================= */
@@ -544,14 +552,14 @@ nav a:hover {
 
 .card {
     position: relative;
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(25px);
     border-radius: 24px;
     padding: 40px 30px;
     overflow: hidden;
-    transition: .45s;
-    box-shadow: 0 25px 45px rgba(0,0,0,.25);
+    transition: 0.45s;
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.25);
     text-align: center;
 }
 
@@ -562,8 +570,8 @@ nav a:hover {
     left: -100%;
     width: 220%;
     height: 220%;
-    background: linear-gradient(45deg, transparent, rgba(255,255,255,.08), transparent);
-    transition: .7s;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+    transition: 0.7s;
 }
 
 .card:hover::before {
@@ -574,7 +582,7 @@ nav a:hover {
 .card:hover {
     transform: translateY(-12px);
     border-color: #00d4ff;
-    box-shadow: 0 35px 70px rgba(0,212,255,.25);
+    box-shadow: 0 35px 70px rgba(0, 212, 255, 0.25);
 }
 
 .icon {
@@ -601,13 +609,13 @@ nav a:hover {
 }
 
 .stat {
-    background: rgba(255,255,255,.05);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 22px;
     padding: 40px 20px;
     text-align: center;
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,.10);
-    transition: .35s;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    transition: 0.35s;
 }
 
 .stat:hover {
@@ -647,10 +655,10 @@ nav a:hover {
 .news-card {
     padding: 35px;
     border-radius: 22px;
-    background: rgba(255,255,255,.05);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,.08);
-    transition: .35s;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: 0.35s;
 }
 
 .news-card:hover {
@@ -674,7 +682,7 @@ footer {
     padding: 70px;
     text-align: center;
     background: #08131d;
-    border-top: 1px solid rgba(255,255,255,.10);
+    border-top: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 footer h2 {
@@ -686,7 +694,7 @@ footer p {
     color: #9fb5c8;
 }
 
-/* ================= SCROLLBAR ================= */
+/* ================= SCROLLBAR & PARTICLES ================= */
 ::-webkit-scrollbar {
     width: 10px;
 }
@@ -700,17 +708,6 @@ footer p {
     background: #08131d;
 }
 
-.hidden {
-    opacity: 0;
-    transform: translateY(60px);
-    transition: .8s;
-}
-
-.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
 #particles {
     position: fixed;
     left: 0;
@@ -720,23 +717,6 @@ footer p {
     pointer-events: none;
     overflow: hidden;
     z-index: -1;
-}
-
-.particle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: #00d4ff;
-    opacity: .5;
-    animation: float linear infinite;
-}
-
-@keyframes float {
-    0% { transform: translateY(0); opacity: 0; }
-    20% { opacity: .6; }
-    80% { opacity: .6; }
-    100% { transform: translateY(-120vh); opacity: 0; }
 }
 
 /* ================= RESPONSIVE ================= */
@@ -754,9 +734,7 @@ footer p {
     .core-center { width: 100px; height: 100px; font-size: 28px; }
     .hero-content h1 { font-size: 44px; }
 
-    .hamburger {
-        display: flex;
-    }
+    .hamburger { display: flex; }
 
     nav {
         display: none;
@@ -764,7 +742,7 @@ footer p {
         top: 100%;
         left: 0;
         width: 100%;
-        background: rgba(5,15,25,.95);
+        background: rgba(5, 15, 25, 0.95);
         backdrop-filter: blur(18px);
         border-bottom: 1px solid var(--border);
         padding: 20px 0;
@@ -772,9 +750,7 @@ footer p {
         align-items: center;
     }
 
-    nav.active {
-        display: flex;
-    }
+    nav.active { display: flex; }
 
     nav ul {
         flex-direction: column;
@@ -783,34 +759,7 @@ footer p {
         padding: 0 20px;
     }
 
-    nav ul li {
-        width: 100%;
-        text-align: center;
-    }
-
-    .dropdown .submenu {
-        position: static;
-        background: transparent;
-        border: none;
-        box-shadow: none;
-        padding: 10px 0 0;
-        display: none;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .dropdown.open .submenu {
-        display: flex;
-    }
-
-    .submenu a {
-        padding: 8px 0;
-        color: #bcd0e2;
-    }
-
-    .header-buttons .lang {
-        margin-left: auto;
-    }
+    nav ul li { width: 100%; text-align: center; }
 }
 
 @media(max-width: 768px) {
@@ -821,465 +770,6 @@ footer p {
     .core { width: 180px; height: 180px; }
     .core-center { width: 80px; height: 80px; font-size: 22px; }
     .primary-btn, .glass-btn { padding: 14px 28px; font-size: 16px; }
-
     .logo-text h2 { font-size: 18px; }
-    .logo-text p { font-size: 8px; }
     .logo-icon { width: 44px; height: 44px; }
-}
-/* ============================================================
-   АВТОРИЗАЦИЯ (страницы входа и регистрации)
-   ============================================================ */
-
-.auth-page {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
-    padding: 100px 20px 60px;
-}
-
-.auth-container {
-    width: 100%;
-    max-width: 440px;
-    margin: 0 auto;
-}
-
-.auth-card {
-    background: rgba(255,255,255,.06);
-    backdrop-filter: blur(25px);
-    border: 1px solid rgba(255,255,255,.12);
-    border-radius: 24px;
-    padding: 40px 35px;
-    box-shadow: 0 25px 60px rgba(0,0,0,.35);
-    animation: fadeUp 0.8s ease;
-}
-
-@keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.auth-card .logo {
-    justify-content: center;
-    margin-bottom: 25px;
-}
-
-.auth-title {
-    text-align: center;
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 25px;
-    background: linear-gradient(to right, #fff, #b4d7ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.auth-form .form-group {
-    margin-bottom: 18px;
-}
-
-.auth-form .form-group label {
-    display: block;
-    font-size: 14px;
-    font-weight: 500;
-    color: #dbe9ff;
-    margin-bottom: 6px;
-}
-
-.auth-form .form-group input,
-.auth-form .form-group select {
-    width: 100%;
-    padding: 14px 18px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,.15);
-    background: rgba(255,255,255,.05);
-    color: white;
-    font-size: 16px;
-    transition: .3s;
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-.auth-form .form-group input:focus,
-.auth-form .form-group select:focus {
-    border-color: #00d4ff;
-    box-shadow: 0 0 20px rgba(0,212,255,.2);
-    background: rgba(255,255,255,.08);
-}
-
-.auth-form .form-group input::placeholder {
-    color: rgba(255,255,255,.3);
-}
-
-.auth-form .form-group select option {
-    background: #0b2035;
-    color: white;
-}
-
-.auth-btn {
-    width: 100%;
-    padding: 16px;
-    border: none;
-    border-radius: 14px;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    background: linear-gradient(135deg, #00d4ff, #008cff);
-    color: white;
-    transition: .35s;
-    box-shadow: 0 15px 35px rgba(0,212,255,.3);
-    margin-top: 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.auth-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 25px 50px rgba(0,212,255,.5);
-}
-
-.auth-footer {
-    text-align: center;
-    margin-top: 25px;
-    color: #9fb5c8;
-    font-size: 14px;
-}
-
-.auth-footer a {
-    color: #00d4ff;
-    text-decoration: none;
-    font-weight: 500;
-    transition: .2s;
-}
-
-.lang-btn {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,.2);
-    color: white;
-    padding: 6px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: .2s;
-}
-.lang-btn:hover {
-    background: rgba(255,255,255,.1);
-}
-
-
-
-.auth-footer a:hover {
-    text-decoration: underline;
-}
-
-/* ============================================================
-   УМЕНЬШАЕМ ЭЛЕМЕНТЫ В ПРАВОЙ ЧАСТИ ШАПКИ
-   ============================================================ */
-
-/* Общие правила для всех элементов в правой части */
-.header-right .user-info,
-.header-right .role-badge,
-.header-right .logout-btn,
-.header-right .btn-switch,
-.header-right .lang,
-.header-buttons .user-info,
-.header-buttons .role-badge,
-.header-buttons .logout-btn,
-.header-buttons .btn-switch,
-.header-buttons .lang {
-    font-size: 12px !important;
-    padding: 4px 10px !important;
-}
-
-/* Кнопка "Выйти" – чуть больше отступы по бокам */
-.header-right .logout-btn,
-.header-buttons .logout-btn {
-    padding: 6px 14px !important;
-}
-
-/* Кнопка "Назад" и переключатель "Пользователь" */
-.header-right .btn-switch,
-.header-buttons .btn-switch {
-    padding: 4px 12px !important;
-}
-
-/* Бейдж роли (Администратор / Пользователь) – самый мелкий */
-.header-right .role-badge,
-.header-buttons .role-badge {
-    font-size: 11px !important;
-    padding: 2px 10px !important;
-}
-
-/* Имя пользователя – делаем чуть крупнее, но не слишком */
-.header-right .user-info strong,
-.header-buttons .user-info strong {
-    font-size: 13px !important;
-}
-
-/* Переключатель языка */
-.header-right .lang,
-.header-buttons .lang {
-    padding: 4px 10px !important;
-    font-size: 12px !important;
-}
-
-/* (Опционально) можно уменьшить отступы в шапке, чтобы она стала компактнее */
-header .container {
-    padding: 12px 0 !important;
-}
-
-/* ===== ЛОГОТИП: скрываем подзаголовок ===== */
-.logo-text p {
-    display: none;
-}
-
-/* ============================================================
-   КНОПКИ В ШАПКЕ (единый стиль)
-   ============================================================ */
-
-/* Кнопка "Назад" – прозрачная с рамкой, как на главной */
-.btn-switch,
-.header-right .btn-switch,
-.header-buttons .btn-switch,
-a.btn-switch {
-    background: transparent !important;
-    border: 1px solid rgba(255,255,255,.25) !important;
-    color: white !important;
-    padding: 6px 16px !important;
-    border-radius: 12px !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    text-decoration: none !important;
-    transition: .3s !important;
-    display: inline-block !important;
-}
-
-.btn-switch:hover,
-.header-right .btn-switch:hover,
-.header-buttons .btn-switch:hover {
-    background: rgba(255,255,255,.08) !important;
-    border-color: #00d4ff !important;
-    color: #00d4ff !important;
-}
-
-/* Кнопка "Выйти" – прозрачная с рамкой, но с красным оттенком при наведении */
-.logout-btn,
-.header-right .logout-btn,
-.header-buttons .logout-btn {
-    background: transparent !important;
-    border: 1px solid rgba(255,255,255,.25) !important;
-    color: white !important;
-    padding: 6px 18px !important;
-    border-radius: 12px !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    cursor: pointer !important;
-    transition: .3s !important;
-    text-decoration: none !important;
-}
-
-.logout-btn:hover,
-.header-right .logout-btn:hover,
-.header-buttons .logout-btn:hover {
-    background: rgba(255,0,0,.12) !important;
-    border-color: rgba(255,0,0,.4) !important;
-    color: #ff6b6b !important;
-}
-
-/* Кнопка переключения языка – как на главной */
-.lang,
-.header-right .lang,
-.header-buttons .lang {
-    background: transparent !important;
-    border: 1px solid rgba(255,255,255,.2) !important;
-    color: white !important;
-    padding: 4px 12px !important;
-    border-radius: 12px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    transition: .3s !important;
-}
-
-.lang:hover,
-.header-right .lang:hover,
-.header-buttons .lang:hover {
-    background: rgba(255,255,255,.08) !important;
-    border-color: #00d4ff !important;
-}
-
-/* Бейдж роли (Администратор / Пользователь) – оставляем как есть */
-.role-badge {
-    background: rgba(0,212,255,.15) !important;
-    color: #00d4ff !important;
-    padding: 2px 12px !important;
-    border-radius: 20px !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-}
-
-/* ============================================================
-   ЕДИНЫЙ ДИЗАЙН ШАПКИ И ТОСТОВ (для всех страниц)
-   ============================================================ */
-
-/* --- Шапка --- */
-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 0;
-}
-
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.header-right .user-info {
-    color: #bcd0e2;
-    font-size: 13px;
-    font-weight: 400;
-}
-.header-right .user-info strong {
-    color: white;
-    font-size: 14px;
-}
-
-.header-right .role-badge {
-    background: rgba(0,212,255,.15);
-    color: #00d4ff;
-    padding: 2px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.header-right .logout-btn {
-    background: transparent !important;
-    border: 1px solid rgba(255,255,255,.25) !important;
-    color: white !important;
-    padding: 6px 18px !important;
-    border-radius: 12px !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    cursor: pointer !important;
-    transition: .3s !important;
-    text-decoration: none !important;
-}
-.header-right .logout-btn:hover {
-    background: rgba(255,0,0,.12) !important;
-    border-color: rgba(255,0,0,.4) !important;
-    color: #ff6b6b !important;
-}
-
-.header-right .btn-switch {
-    background: transparent !important;
-    border: 1px solid rgba(255,255,255,.25) !important;
-    color: white !important;
-    padding: 4px 14px !important;
-    border-radius: 12px !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    text-decoration: none !important;
-    transition: .3s !important;
-    display: inline-block !important;
-}
-.header-right .btn-switch:hover {
-    background: rgba(255,255,255,.08) !important;
-    border-color: #00d4ff !important;
-    color: #00d4ff !important;
-}
-
-.header-right .lang {
-    background: transparent !important;
-    border: 1px solid rgba(255,255,255,.2) !important;
-    color: white !important;
-    padding: 4px 12px !important;
-    border-radius: 12px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    transition: .3s !important;
-}
-.header-right .lang:hover {
-    background: rgba(255,255,255,.08) !important;
-    border-color: #00d4ff !important;
-}
-
-/* --- Тосты --- */
-.toast {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: rgba(13,28,41,.9) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(0,212,255,.3) !important;
-    border-radius: 16px !important;
-    padding: 14px 24px !important;
-    color: white !important;
-    font-weight: 500 !important;
-    font-size: 14px !important;
-    box-shadow: 0 20px 40px rgba(0,0,0,.4) !important;
-    z-index: 2000 !important;
-    animation: slideUp 0.3s ease !important;
-}
-.toast.success { border-left: 4px solid #00ffa3; }
-.toast.error { border-left: 4px solid #ff6b6b; }
-.toast.info { border-left: 4px solid #00d4ff; }
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-/* ============================================================
-   СТЕКЛЯННАЯ ШАПКА (для всех страниц)
-   ============================================================ */
-header {
-    background: rgba(255, 255, 255, 0.06) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Кнопки в шапке (язык, вход, выход, назад и т.д.) */
-.header-buttons .lang,
-.header-buttons .login,
-.header-right .lang,
-.header-right .logout-btn,
-.header-right .btn-switch {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    color: #fff !important;
-    backdrop-filter: blur(4px) !important;
-    transition: all 0.3s !important;
-}
-
-.header-buttons .lang:hover,
-.header-buttons .login:hover,
-.header-right .lang:hover,
-.header-right .logout-btn:hover,
-.header-right .btn-switch:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
-    border-color: #00d4ff !important;
-    color: #00d4ff !important;
-}
-
-.header-buttons .login {
-    background: rgba(0, 212, 255, 0.15) !important;
-    border-color: rgba(0, 212, 255, 0.3) !important;
-}
-.header-buttons .login:hover {
-    background: rgba(0, 212, 255, 0.25) !important;
-}
-
-/* Скрываем подзаголовок в логотипе на всех страницах */
-.logo-text p {
-    display: none !important;
 }
