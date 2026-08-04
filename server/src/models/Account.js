@@ -1,3 +1,4 @@
+// src/models/Account.js
 const mongoose = require('mongoose');
 
 const accountSchema = new mongoose.Schema({
@@ -10,25 +11,14 @@ const accountSchema = new mongoose.Schema({
   balance: {
     type: Number,
     default: 0,
-    min: 0
+    min: [0, 'Баланс не может быть отрицательным']
   },
   currency: {
     type: String,
     default: 'TMT'
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
   }
-});
-
-accountSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  next();
+}, {
+  timestamps: true // Автоматически управляет createdAt и updatedAt
 });
 
 module.exports = mongoose.model('Account', accountSchema);
