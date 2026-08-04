@@ -1,8 +1,4 @@
-// ============================================================
-// ЗАГЛУШКА REDIS (без реального подключения)
-// Путь: server/src/config/redis.js
-// ============================================================
-// Эмуляция Redis client для случаев, когда Redis не используется
+// server/src/config/redis.js
 class RedisMock {
   constructor() {
     this.store = new Map();
@@ -47,9 +43,10 @@ class RedisMock {
 
   on(event, callback) {
     if (event === 'connect') {
-      // Имитируем подключение через 10 мс
+      // Симулируем успешное подключение
       setTimeout(callback, 10);
     }
+    // Для эвента 'error' ничего не делаем, так как это Mock
     return this;
   }
 
