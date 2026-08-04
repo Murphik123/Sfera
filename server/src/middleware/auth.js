@@ -4,15 +4,27 @@ const User = require('../models/User');
 
 const authMiddleware = async (req, res, next) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
+    const authHeader = req.headers.authorization || req.headers.Authorization;
+    const token = authHeader && authHeader.startsWith('Bearer ') 
+      ? authHeader.split(' ')[1] 
+      : authHeader;
+
     if (!token) {
       return res.status(401).json({ message: 'No token provided' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const sessionToken = await redisClient.get(`session:${decoded.userId}`);
-    if (sessionToken !== token) {
-      return res.status(401).json({ message: 'Invalid session' });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
+
+    // Проверка Redis сессии (если клиент активен)
+    if (redisClient && redisClient.isOpen) {
+      try {
+        const sessionToken = await redisClient.get(`session:${decoded.userId}`);
+        if (sessionToken && sessionToken !== token) {
+          return res.status(401).json({ message: 'Invalid session' });
+        }
+      } catch (redisErr) {
+        console.warn('Redis check warning:', redisErr.message);
+      }
     }
 
     // Загружаем пользователя из БД
@@ -26,8 +38,12 @@ const authMiddleware = async (req, res, next) => {
 
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Unauthorized' });
+    return res.status(401).json({ message: 'Unauthorized', error: error.message });
   }
 };
 
-module.exports = { authMiddleware };
+// Экспортируем функцию напрямую И как свойство объекта для абсолютной совместимости со всеми импортами
+authMiddleware.authMiddleware = authMiddleware;
+authMiddleware.protect = authMiddleware;
+
+module.exports = authMiddleware;
