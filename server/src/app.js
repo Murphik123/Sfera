@@ -16,19 +16,22 @@ const statsRoutes = require('./routes/statsRoutes');
 
 const app = express();
 
-// Настройка CSP для разрешения inline-скриптов (исправляем ошибку на сайте)
+// Безопасность и CSP (разрешаем внешние шрифты и скрипты)
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "*"] // Для работы WebSocket и внешних API
     },
   },
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 
+// CORS открыт для веб-сайта и мобильного приложения (Expo)
 app.use(cors({
   origin: '*',
   credentials: true,
@@ -39,10 +42,11 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Статика (фронтенд)
-app.use(express.static(path.join(__dirname, '../../public')));
+// 1. Раздача статики (Корректный путь к public: ../public)
+const publicPath = path.join(__dirname, '../public');
+app.use(express.static(publicPath));
 
-// API маршруты
+// 2. API маршруты
 app.use('/api/auth', authRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/chat', authMiddleware, chatRoutes);
@@ -51,9 +55,9 @@ app.use('/api/mail', authMiddleware, mailRoutes);
 app.use('/api/bank', authMiddleware, bankRoutes);
 app.use('/api/ai', authMiddleware, aiRoutes);
 
-// Обработка 404 – отдаём index.html для SPA
+// 3. Обработка статических HTML страниц или 404
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public/index.html'));
+  res.sendFile(path.join(publicPath, 'index.html'));
 });
 
 app.use(errorHandler);
