@@ -8,17 +8,35 @@ const mongoose = require('mongoose');
 const { Server } = require('socket.io');
 const redis = require('redis');
 
-// Инициализация Express приложения и HTTP сервера
 const app = express();
 const server = http.createServer(app);
 
 // -----------------------------------------------------------------------------
-// 1. ВСПOМОГАТЕЛЬНЫЙ РЕЗОЛВЕР ПУТЕЙ (Универсальное определение базовой директории)
+// 1. ДИНАМИЧЕСКИЙ ПОИСК БАЗОВОЙ ДИРЕКТОРИИ (Маршрутов и Статики)
 // -----------------------------------------------------------------------------
-// Ищем где относительно текущего файла находятся routes (в той же директории или уровнем выше)
-const baseDir = fs.existsSync(path.join(__dirname, 'routes')) 
-  ? __dirname 
-  : path.join(__dirname, '..');
+const possiblePaths = [
+  path.join(__dirname, 'routes'),          // ./routes
+  path.join(__dirname, '../routes'),       // ../routes
+  path.join(__dirname, 'src/routes'),      // ./src/routes
+  path.join(__dirname, '../src/routes')    // ../src/routes
+];
+
+let routesDir = null;
+for (const p of possiblePaths) {
+  if (fs.existsSync(p)) {
+    routesDir = p;
+    break;
+  }
+}
+
+if (!routesDir) {
+  console.error('❌ Критическая ошибка: Папка routes не найдена в файловой системе!');
+  console.error('Текущая директория __dirname:', __dirname);
+  console.error('Содержимое текущей директории:', fs.readdirSync(__dirname));
+  process.exit(1);
+}
+
+console.log(`📁 Найдена папка маршрутов (routes): ${routesDir}`);
 
 // -----------------------------------------------------------------------------
 // 2. МИДДЛВАРЫ И РАЗДАЧА СТАТИКИ
@@ -27,8 +45,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Раздача статических файлов out of public
-app.use(express.static(path.join(baseDir, 'public')));
+// Определяем путь к папке public относительно найденной структуры
+const publicDir = fs.existsSync(path.join(path.dirname(routesDir), 'public'))
+  ? path.join(path.dirname(routesDir), 'public')
+  : path.join(__dirname, 'public');
+
+app.use(express.static(publicDir));
 
 // -----------------------------------------------------------------------------
 // 3. ИНИЦИАЛИЗАЦИЯ И ПОДКЛЮЧЕНИЕ БАЗ ДАННЫХ
@@ -37,12 +59,10 @@ const PORT = process.env.PORT || 10000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/sfera';
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
-// Подключение к MongoDB
 mongoose.connect(MONGO_URI)
   .then((conn) => console.log(`✅ MongoDB connected: ${conn.connection.host}`))
   .catch((err) => console.error(`❌ MongoDB connection error: ${err.message}`));
 
-// Подключение к Redis
 const redisClient = redis.createClient({ url: REDIS_URL });
 redisClient.on('error', (err) => console.error('❌ Redis Error:', err));
 redisClient.connect()
@@ -67,7 +87,6 @@ io.on('connection', (socket) => {
   });
 });
 
-// Прокидываем io и redis в req для доступа из контроллеров
 app.use((req, res, next) => {
   req.io = io;
   req.redis = redisClient;
@@ -77,13 +96,13 @@ app.use((req, res, next) => {
 // -----------------------------------------------------------------------------
 // 5. ИМПОРТ И ПОДКЛЮЧЕНИЕ МАРШРУТОВ (ROUTES)
 // -----------------------------------------------------------------------------
-const authRoutes = require(path.join(baseDir, 'routes/authRoutes'));
-const userRoutes = require(path.join(baseDir, 'routes/userRoutes'));
-const listingRoutes = require(path.join(baseDir, 'routes/listingRoutes'));
-const mailRoutes = require(path.join(baseDir, 'routes/mailRoutes'));
-const predictionRoutes = require(path.join(baseDir, 'routes/predictionRoutes'));
-const adminRoutes = require(path.join(baseDir, 'routes/adminRoutes'));
-const paymentRoutes = require(path.join(baseDir, 'routes/paymentRoutes'));
+const authRoutes = require(path.join(routesDir, 'authRoutes'));
+const userRoutes = require(path.join(routesDir, 'userRoutes'));
+const listingRoutes = require(path.join(routesDir, 'listingRoutes'));
+const mailRoutes = require(path.join(routesDir, 'mailRoutes'));
+const predictionRoutes = require(path.join(routesDir, 'predictionRoutes'));
+const adminRoutes = require(path.join(routesDir, 'adminRoutes'));
+const paymentRoutes = require(path.join(routesDir, 'paymentRoutes'));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
@@ -100,7 +119,11 @@ app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api')) {
     return next();
   }
-  res.sendFile(path.join(baseDir, 'public', 'index.html'));
+  const indexPath = path.join(publicDir, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+  res.status(404).send('Index page not found');
 });
 
 app.use('/api/*', (req, res) => {
