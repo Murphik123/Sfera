@@ -43,7 +43,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Определяем путь к папке public
 const publicDir = fs.existsSync(path.join(path.dirname(routesDir), 'public'))
   ? path.join(path.dirname(routesDir), 'public')
   : path.join(__dirname, 'public');
@@ -104,16 +103,21 @@ function loadRouteIfExists(endpoint, routeFileName) {
 
   if (matchedFile) {
     const routePath = path.join(routesDir, matchedFile);
-    const importedModule = require(routePath);
-    
-    // Извлекаем Router если модуль экспортирован через default, .router или напрямую
-    const routerHandler = importedModule.default || importedModule.router || importedModule;
+    try {
+      const importedModule = require(routePath);
+      
+      // Автоматическое извлечение роутера из любых типов экспорта
+      const routerHandler = importedModule.default || importedModule.router || importedModule;
 
-    if (typeof routerHandler === 'function' || typeof routerHandler.use === 'function') {
-      app.use(endpoint, routerHandler);
-      console.log(`✅ Маршрут подключен: ${endpoint} -> ${matchedFile}`);
-    } else {
-      console.error(`❌ Ошибка подключения ${matchedFile}: экспорт не является Express Router.`);
+      if (typeof routerHandler === 'function' || (routerHandler && typeof routerHandler.use === 'function')) {
+        app.use(endpoint, routerHandler);
+        console.log(`✅ Маршрут подключен: ${endpoint} -> ${matchedFile}`);
+      } else {
+        console.error(`❌ Ошибка в ${matchedFile}: Модуль не экспортирует валидный Express Router.`);
+      }
+    } catch (err) {
+      console.error(`❌ Сбой при загрузке ${matchedFile}:`, err.message);
+      console.error(err.stack);
     }
   } else {
     console.warn(`⚠️ Пропущен маршрут ${endpoint}: файл '${routeFileName}.js' не найден в ${routesDir}`);
