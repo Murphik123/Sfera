@@ -16,7 +16,7 @@ const statsRoutes = require('./routes/statsRoutes');
 
 const app = express();
 
-// Безопасность и CSP (разрешаем внешние шрифты и скрипты)
+// Безопасность и CSP (разрешаем внешние шрифты, стили и WebSocket)
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -25,7 +25,7 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "*"] // Для работы WebSocket и внешних API
+      connectSrc: ["'self'", "*"]
     },
   },
   crossOriginResourcePolicy: { policy: "cross-origin" }
@@ -42,9 +42,12 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// 1. Раздача статики (Корректный путь к public: ../public)
-const publicPath = path.join(__dirname, '../public');
-app.use(express.static(publicPath));
+// 1. Раздача статики (проверяем обе возможные структуры папок: ../public и ../../public)
+const publicPath1 = path.resolve(__dirname, '../public');
+const publicPath2 = path.resolve(__dirname, '../../public');
+
+app.use(express.static(publicPath1));
+app.use(express.static(publicPath2));
 
 // 2. API маршруты
 app.use('/api/auth', authRoutes);
@@ -55,9 +58,20 @@ app.use('/api/mail', authMiddleware, mailRoutes);
 app.use('/api/bank', authMiddleware, bankRoutes);
 app.use('/api/ai', authMiddleware, aiRoutes);
 
-// 3. Обработка статических HTML страниц или 404
+// 3. Fallback для SPA (безопасный поиск index.html по двум путям)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(publicPath, 'index.html'));
+  const primaryIndex = path.join(publicPath1, 'index.html');
+  const fallbackIndex = path.join(publicPath2, 'index.html');
+
+  res.sendFile(primaryIndex, (err) => {
+    if (err) {
+      res.sendFile(fallbackIndex, (fallbackErr) => {
+        if (fallbackErr) {
+          res.status(404).send('Index page not found. Check public folder structure.');
+        }
+      });
+    }
+  });
 });
 
 app.use(errorHandler);
