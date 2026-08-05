@@ -7,7 +7,7 @@ const {
   updateListing,
   deleteListing
 } = require('../controllers/listingController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect } = require('../middleware/auth'); // Исправлено на auth
 const { upload } = require('../config/upload');
 
 router.get('/', getListings);
