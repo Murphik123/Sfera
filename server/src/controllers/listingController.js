@@ -1,27 +1,17 @@
 const Listing = require('../models/Listing');
 
-// @desc    Получить список всех объявлений (с фильтрацией, поиском и пагинацией)
-// @route   GET /api/listings
-// @access  Public
 exports.getListings = async (req, res) => {
   try {
     const { page = 1, limit = 10, category, search, minPrice, maxPrice, status = 'active' } = req.query;
-
     const query = { status };
 
-    if (category) {
-      query.category = category;
-    }
-
+    if (category) query.category = category;
     if (minPrice || maxPrice) {
       query.price = {};
       if (minPrice) query.price.$gte = Number(minPrice);
       if (maxPrice) query.price.$lte = Number(maxPrice);
     }
-
-    if (search) {
-      query.$text = { $search: search };
-    }
+    if (search) query.$text = { $search: search };
 
     const listings = await Listing.find(query)
       .populate('seller', 'name email avatar')
@@ -44,9 +34,6 @@ exports.getListings = async (req, res) => {
   }
 };
 
-// @desc    Получить одно объявление по ID
-// @route   GET /api/listings/:id
-// @access  Public
 exports.getListingById = async (req, res) => {
   try {
     const listing = await Listing.findByIdAndUpdate(
@@ -65,9 +52,6 @@ exports.getListingById = async (req, res) => {
   }
 };
 
-// @desc    Создать новое объявление (с загрузкой картинок)
-// @route   POST /api/listings
-// @access  Private
 exports.createListing = async (req, res) => {
   try {
     const { title, description, price, currency, category, location } = req.body;
@@ -81,10 +65,14 @@ exports.createListing = async (req, res) => {
       }
     }
 
+    // Собираем ссылки на загруженные локально картинки
     let images = [];
     if (req.files && req.files.length > 0) {
+      const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+      const host = req.get('host');
+      
       images = req.files.map((file) => ({
-        url: file.path,
+        url: `${protocol}://${host}/uploads/${file.filename}`,
         public_id: file.filename
       }));
     }
@@ -106,9 +94,6 @@ exports.createListing = async (req, res) => {
   }
 };
 
-// @desc    Обновить объявление
-// @route   PUT /api/listings/:id
-// @access  Private (только владелец)
 exports.updateListing = async (req, res) => {
   try {
     let listing = await Listing.findById(req.params.id);
@@ -121,10 +106,11 @@ exports.updateListing = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Нет прав на редактирование' });
     }
 
-    // Если при вызове загружены новые изображения, обновляем их
     if (req.files && req.files.length > 0) {
+      const protocol = req.headers['x-forwarded-proto'] || req.protocol;
+      const host = req.get('host');
       const newImages = req.files.map((file) => ({
-        url: file.path,
+        url: `${protocol}://${host}/uploads/${file.filename}`,
         public_id: file.filename
       }));
       req.body.images = [...listing.images, ...newImages];
@@ -141,9 +127,6 @@ exports.updateListing = async (req, res) => {
   }
 };
 
-// @desc    Удалить объявление
-// @route   DELETE /api/listings/:id
-// @access  Private (только владелец)
 exports.deleteListing = async (req, res) => {
   try {
     const listing = await Listing.findById(req.params.id);
