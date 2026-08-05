@@ -3,48 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SFERA — Цифровая Платформа</title>
+    <title>SFERA — Ecosystem Platform</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Главный контейнер мессенджера -->
-    <div id="messengerContainer" class="messenger-container">
-        <!-- Боковая панель (Список чатов) -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h2>Чаты</h2>
+    <!-- Шапка платформы и Навигация -->
+    <header class="app-header">
+        <div class="logo-container">
+            <span class="logo-icon">🌐</span>
+            <h1 class="logo-text">SFERA</h1>
+        </div>
+        <nav class="main-nav">
+            <button class="nav-btn active" data-tab="messenger">Мессенджер</button>
+            <button class="nav-btn" data-tab="marketplace">Маркетплейс</button>
+            <button class="nav-btn" data-tab="banking">Банк & ТМ-Pay</button>
+            <button class="nav-btn" data-tab="docs">Документация</button>
+        </nav>
+        <div class="header-right">
+            <!-- Переключатель языков -->
+            <div class="lang-selector">
+                <button class="lang-btn active" data-lang="ru">RU</button>
+                <button class="lang-btn" data-lang="tm">TM</button>
+                <button class="lang-btn" data-lang="en">EN</button>
             </div>
-            <div id="usersList" class="users-list">
-                <!-- Список пользователей загружается динамически -->
+            <div id="userProfileBadge" class="user-badge">
+                <span id="userNameDisplay">Гость</span>
             </div>
-        </aside>
+        </div>
+    </header>
 
-        <!-- Основная область чата -->
-        <main class="chat-area">
-            <div id="chatHeader" class="chat-header">
-                <span id="chatTitle">Выберите чат</span>
-                <div class="chat-actions">
-                    <button id="audioCallBtn" class="btn-icon" style="display:none;">📞</button>
-                    <button id="videoCallBtn" class="btn-icon" style="display:none;">📹</button>
+    <!-- Основной контент-контейнер -->
+    <main class="app-body">
+
+        <!-- СЕКЦИЯ 1: МЕССЕНДЖЕР -->
+        <section id="tab-messenger" class="tab-content active">
+            <div class="messenger-container">
+                <!-- Боковая панель списков -->
+                <aside class="sidebar">
+                    <div class="sidebar-search">
+                        <input type="text" id="userSearchInput" placeholder="Поиск контактов...">
+                    </div>
+                    <div id="usersList" class="users-list">
+                        <!-- Динамический список контактов -->
+                    </div>
+                </aside>
+
+                <!-- Окно чата -->
+                <div class="chat-area">
+                    <div id="chatHeader" class="chat-header">
+                        <div class="chat-user-info">
+                            <span id="chatTitle">Выберите пользователя для общения</span>
+                            <span id="chatUserStatus" class="status-indicator"></span>
+                        </div>
+                        <!-- Кнопки WebRTC Звонков -->
+                        <div class="chat-actions">
+                            <button id="audioCallBtn" class="btn-icon" style="display:none;" title="Голосовой звонок">📞</button>
+                            <button id="videoCallBtn" class="btn-icon" style="display:none;" title="Видеозвонок">📹</button>
+                        </div>
+                    </div>
+
+                    <div id="messagesContainer" class="messages-container">
+                        <div class="placeholder-text">Выберите чат из списка слева, чтобы начать переписку.</div>
+                    </div>
+
+                    <div class="chat-input-area">
+                        <input type="text" id="messageInput" placeholder="Напишите сообщение..." disabled>
+                        <button id="sendBtn" class="btn-send" disabled>Отправить</button>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div id="messagesContainer" class="messages-container">
-                <!-- Сообщения -->
+        <!-- СЕКЦИЯ 2: МАРКЕТПЛЕЙС -->
+        <section id="tab-marketplace" class="tab-content">
+            <div class="section-header">
+                <h2>Маркетплейс товаров и услуг</h2>
+                <button id="createListingBtn" class="btn-primary">+ Разместить объявление</button>
             </div>
-
-            <div class="chat-input-area">
-                <input type="text" id="messageInput" placeholder="Напишите сообщение..." disabled>
-                <button id="sendBtn" class="btn-send" disabled>Отправить</button>
+            <div id="listingsGrid" class="listings-grid">
+                <!-- Динамические карточки товаров -->
             </div>
-        </main>
-    </div>
+        </section>
 
-    <!-- Модальное окно звонка (WebRTC UI) -->
+        <!-- СЕКЦИЯ 3: БАНК И TM-PAY -->
+        <section id="tab-banking" class="tab-content">
+            <div class="section-header">
+                <h2>Финансы и Платежная система TM-Pay</h2>
+            </div>
+            <div class="banking-grid">
+                <div class="card balance-card">
+                    <h3>Ваш Баланс</h3>
+                    <div class="balance-amount" id="userBalanceDisplay">0.00 TMT</div>
+                    <button class="btn-secondary" id="topUpBalanceBtn">Пополнить</button>
+                </div>
+                <div class="card transfer-card">
+                    <h3>Перевод средств</h3>
+                    <input type="text" id="transferRecipient" placeholder="ID или Email получателя">
+                    <input type="number" id="transferAmount" placeholder="Сумма (TMT)">
+                    <button class="btn-primary" id="sendTransferBtn">Перевести</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- СЕКЦИЯ 4: ДОКУМЕНТАЦИЯ -->
+        <section id="tab-docs" class="tab-content">
+            <div class="section-header">
+                <h2>Документация платформы SFERA</h2>
+            </div>
+            <div class="docs-container">
+                <p>Добро пожаловать в единый центр документации SFERA API и сервисов платформы.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- МОДАЛЬНОЕ ОКНО ЗВОНКА (WebRTC UI) -->
     <div id="callModal" class="call-modal" style="display: none;">
+        <div class="call-overlay"></div>
         <div class="call-content">
-            <h3 id="callStatusText">Звонок...</h3>
+            <div class="call-header">
+                <h3 id="callStatusText">Инициализация вызова...</h3>
+            </div>
             <div class="video-container">
                 <video id="localVideo" autoplay playsinline muted></video>
                 <video id="remoteVideo" autoplay playsinline></video>
@@ -58,7 +138,8 @@
 
     <!-- 1. Библиотека Socket.io (Перед скриптом) -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <!-- 2. Главный клиентский скрипт -->
+    
+    <!-- 2. Главный клиентский скрипт SFERA -->
     <script src="script.js"></script>
 </body>
 </html>
