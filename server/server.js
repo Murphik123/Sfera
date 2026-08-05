@@ -1,138 +1,122 @@
-// Конфигурация WebRTC со STUN-серверами Google
-const rtcConfiguration = {
-    iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' }
-    ]
-};
+/* ==========================================================================
+   SFERA PLATFORM — MAIN SERVER (Node.js + Express + Socket.io + MongoDB + Redis)
+   ========================================================================== */
 
-let socket;
-let peerConnection;
-let localStream;
-let activeCallUserId = null;
+const express = require('express');
+const http = require('http');
+const path = require('path');
+const fs = require('fs');
+const { Server } = require('socket.io');
 
-// Инициализация Socket.io соединения
-function initSocketConnection(userId) {
-    socket = io();
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 
-    socket.emit('register_user', userId);
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-    // Обработка входящего вызова
-    socket.on('incoming_call', async (data) => {
-        activeCallUserId = data.from;
-        document.getElementById('callModal').style.display = 'flex';
-        document.getElementById('callStatusText').innerText = 'Входящий звонок...';
-        document.getElementById('acceptCallBtn').style.display = 'inline-block';
+// Раздача статики фронтенда (где лежит script.js, index.html и т.д.)
+app.use(express.static(path.join(__dirname, 'public')));
 
-        document.getElementById('acceptCallBtn').onclick = async () => {
-            await handleAcceptCall(data);
-        };
+// Автоматическое подключение маршрутов REST API
+const routesPath = path.join(__dirname, 'src', 'routes');
+if (fs.existsSync(routesPath)) {
+    console.log(`📁 Найдена папка маршрутов (routes): ${routesPath}`);
+    fs.readdirSync(routesPath).forEach(file => {
+        if (file.endsWith('.js')) {
+            const routeName = file.replace(/Routes\.js$|\.js$/, '');
+            let prefix = `/api/${routeName}`;
+            if (file === 'paymentRoutes.js') prefix = '/api/tmpay';
+            
+            const routeModule = require(path.join(routesPath, file));
+            app.use(prefix, routeModule);
+            console.log(`✅ Маршрут подключен: ${prefix} -> ${file}`);
+        }
+    });
+}
+
+// --- WebSocket & WebRTC Signaling Logic ---
+const activeUsers = new Map(); // userId -> socketId
+
+io.on('connection', (socket) => {
+    socket.on('register_user', (userId) => {
+        activeUsers.set(userId, socket.id);
+        io.emit('user_status_change', { userId, online: true });
     });
 
-    // Обработка ответа на звонок
-    socket.on('call_accepted', async (signal) => {
-        if (peerConnection) {
-            await peerConnection.setRemoteDescription(new RTCSessionDescription(signal));
-            document.getElementById('callStatusText').innerText = 'Разговор...';
+    // Чат сообщения
+    socket.on('send_message', (data) => {
+        const recipientSocketId = activeUsers.get(data.recipientId);
+        if (recipientSocketId) {
+            io.to(recipientSocketId).emit('receive_message', data);
         }
     });
 
-    // Обработка входящих ICE-кандидатов
-    socket.on('ice_candidate', async (data) => {
-        if (peerConnection && data.candidate) {
-            try {
-                await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
-            } catch (e) {
-                console.error('Ошибка добавления ICE кандидата:', e);
+    // WebRTC Сигналинг
+    socket.on('call_user', (data) => {
+        const recipientSocketId = activeUsers.get(data.userToCall);
+        if (recipientSocketId) {
+            io.to(recipientSocketId).emit('incoming_call', {
+                signal: data.signalData,
+                from: data.from,
+                isVideo: data.isVideo
+            });
+        }
+    });
+
+    socket.on('answer_call', (data) => {
+        const callerSocketId = activeUsers.get(data.to);
+        if (callerSocketId) {
+            io.to(callerSocketId).emit('call_accepted', data.signal);
+        }
+    });
+
+    socket.on('ice_candidate', (data) => {
+        const recipientSocketId = activeUsers.get(data.to);
+        if (recipientSocketId) {
+            io.to(recipientSocketId).emit('ice_candidate', { candidate: data.candidate });
+        }
+    });
+
+    socket.on('end_call', (data) => {
+        const recipientSocketId = activeUsers.get(data.to);
+        if (recipientSocketId) {
+            io.to(recipientSocketId).emit('call_ended');
+        }
+    });
+
+    socket.on('disconnect', () => {
+        for (let [userId, socketId] of activeUsers.entries()) {
+            if (socketId === socket.id) {
+                activeUsers.delete(userId);
+                io.emit('user_status_change', { userId, online: false });
+                break;
             }
         }
     });
+});
 
-    // Завершение звонка собеседником
-    socket.on('call_ended', () => {
-        closeCallUI();
-    });
-}
-
-// Старт исходящего звонка
-async function startCall(targetUserId, isVideo = false) {
-    activeCallUserId = targetUserId;
-    document.getElementById('callModal').style.display = 'flex';
-    document.getElementById('callStatusText').innerText = 'Вызов...';
-    document.getElementById('acceptCallBtn').style.display = 'none';
-
-    setupPeerConnection();
-
-    localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideo });
-    document.getElementById('localVideo').srcObject = localStream;
-    localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-
-    const offer = await peerConnection.createOffer();
-    await peerConnection.setLocalDescription(offer);
-
-    socket.emit('call_user', {
-        userToCall: targetUserId,
-        signalData: offer,
-        isVideo: isVideo
-    });
-}
-
-// Принятие входящего звонка
-async function handleAcceptCall(data) {
-    document.getElementById('acceptCallBtn').style.display = 'none';
-    document.getElementById('callStatusText').innerText = 'Соединение...';
-
-    setupPeerConnection();
-
-    localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: data.isVideo });
-    document.getElementById('localVideo').srcObject = localStream;
-    localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-
-    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.signal));
-    const answer = await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(answer);
-
-    socket.emit('answer_call', {
-        to: data.from,
-        signal: answer
-    });
-}
-
-// Настройка RTCPeerConnection и обработчиков ICE
-function setupPeerConnection() {
-    peerConnection = new RTCPeerConnection(rtcConfiguration);
-
-    peerConnection.onicecandidate = (event) => {
-        if (event.candidate && activeCallUserId) {
-            socket.emit('ice_candidate', {
-                to: activeCallUserId,
-                candidate: event.candidate
-            });
-        }
-    };
-
-    peerConnection.ontrack = (event) => {
-        document.getElementById('remoteVideo').srcObject = event.streams[0];
-    };
-}
-
-// Кнопка сброса / завершения вызова
-document.getElementById('rejectCallBtn').onclick = () => {
-    if (activeCallUserId && socket) {
-        socket.emit('end_call', { to: activeCallUserId });
+// Фолбэк для SPA / Фронтенда
+app.get('*', (req, res) => {
+    const indexPath = path.join(__dirname, 'public', 'index.html');
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(404).send('Front-end main file not found.');
     }
-    closeCallUI();
-};
+});
 
-function closeCallUI() {
-    if (peerConnection) {
-        peerConnection.close();
-        peerConnection = null;
-    }
-    if (localStream) {
-        localStream.getTracks().forEach(track => track.stop());
-        localStream = null;
-    }
-    activeCallUserId = null;
-    document.getElementById('callModal').style.display = 'none';
-}
+// Запуск сервера на порту от Render
+const PORT = process.env.PORT || 10000;
+const HOST = '0.0.0.0';
+
+server.listen(PORT, HOST, () => {
+    console.log(`🚀 Server running on http://${HOST}:${PORT}`);
+    console.log(`🔌 WebSocket готов`);
+});
