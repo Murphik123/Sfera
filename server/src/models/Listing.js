@@ -1,54 +1,62 @@
 const mongoose = require('mongoose');
 
-const listingSchema = new mongoose.Schema({
-  seller: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+const listingSchema = new mongoose.Schema(
+  {
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+      index: true
+    },
+    title: {
+      type: String,
+      required: [true, 'Укажите название товара/услуги'],
+      trim: true,
+      maxlength: [120, 'Название не может превышать 120 символов']
+    },
+    description: {
+      type: String,
+      trim: true,
+      maxlength: [2000, 'Описание не может превышать 2000 символов']
+    },
+    price: {
+      type: Number,
+      required: [true, 'Укажите цену'],
+      min: [0, 'Цена не может быть отрицательной']
+    },
+    currency: {
+      type: String,
+      default: 'TMT',
+      enum: ['TMT', 'RUB', 'USD', 'EUR', 'TMPAY']
+    },
+    category: {
+      type: String,
+      trim: true,
+      default: 'other'
+    },
+    // Поддержка и обычных URL-строк, и объектов Cloudinary
+    images: [
+      {
+        url: { type: String, required: true },
+        public_id: { type: String }
+      }
+    ],
+    status: {
+      type: String,
+      enum: ['active', 'sold', 'archived'],
+      default: 'active'
+    },
+    viewsCount: {
+      type: Number,
+      default: 0
+    }
   },
-  title: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  description: {
-    type: String,
-    trim: true
-  },
-  price: {
-    type: Number,
-    required: true,
-    min: 0
-  },
-  currency: {
-    type: String,
-    default: 'TMT'
-  },
-  category: {
-    type: String,
-    trim: true
-  },
-  images: [{
-    type: String
-  }],
-  status: {
-    type: String,
-    enum: ['active', 'sold', 'archived'],
-    default: 'active'
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+  {
+    timestamps: true // Автоматически создает и обновляет createdAt и updatedAt
   }
-});
+);
 
-listingSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  next();
-});
+// Текстовый индекс для поиска по названию и описанию
+listingSchema.index({ title: 'text', description: 'text' });
 
 module.exports = mongoose.model('Listing', listingSchema);
