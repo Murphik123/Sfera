@@ -54,7 +54,7 @@ app.use(express.static(publicDir));
 // 3. ИНИЦИАЛИЗАЦИЯ И ПОДКЛЮЧЕНИЕ БАЗ ДАННЫХ
 // -----------------------------------------------------------------------------
 const PORT = process.env.PORT || 10000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/sfera';
+const MONGO_URI = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/sfera';
 const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
 mongoose.connect(MONGO_URI)
@@ -62,10 +62,10 @@ mongoose.connect(MONGO_URI)
   .catch((err) => console.error(`❌ MongoDB connection error: ${err.message}`));
 
 const redisClient = redis.createClient({ url: REDIS_URL });
-redisClient.on('error', (err) => console.error('❌ Redis Error:', err));
+redisClient.on('error', (err) => console.error('❌ Redis Error:', err.message));
 redisClient.connect()
   .then(() => console.log('✅ Redis connected'))
-  .catch((err) => console.error('❌ Redis connection error:', err));
+  .catch((err) => console.error('❌ Redis connection error:', err.message));
 
 // -----------------------------------------------------------------------------
 // 4. НАСТРОЙКА WEBSOCKET
@@ -94,11 +94,9 @@ app.use((req, res, next) => {
 // -----------------------------------------------------------------------------
 // 5. БЕЗОПАСНЫЙ ИМПОРТ И ПОДКЛЮЧЕНИЕ МАРШРУТОВ (ROUTES)
 // -----------------------------------------------------------------------------
-// Получаем реальный список файлов из папки routes (без учёта регистра)
 const existingFiles = fs.readdirSync(routesDir);
 
 function loadRouteIfExists(endpoint, routeFileName) {
-  // Ищем совпадение без учета регистра и наличия расширения .js
   const matchedFile = existingFiles.find(
     f => f.toLowerCase() === routeFileName.toLowerCase() || 
          f.toLowerCase() === `${routeFileName.toLowerCase()}.js`
@@ -106,8 +104,21 @@ function loadRouteIfExists(endpoint, routeFileName) {
 
   if (matchedFile) {
     const routePath = path.join(routesDir, matchedFile);
-    app.use(endpoint, require(routePath));
-    console.log(`✅ Маршрут подключен: ${endpoint} -> ${matchedFile}`);
+    try {
+      const importedModule = require(routePath);
+      
+      // Извлекаем router из дефолтных и именованных экспортов
+      const router = importedModule.default || importedModule.router || importedModule;
+
+      if (typeof router === 'function' || (router && typeof router.use === 'function')) {
+        app.use(endpoint, router);
+        console.log(`✅ Маршрут подключен: ${endpoint} -> ${matchedFile}`);
+      } else {
+        console.error(`❌ Сбой при загрузке ${matchedFile}: экспортируемый модуль не является Express Router (получен ${typeof router})`);
+      }
+    } catch (err) {
+      console.error(`❌ Ошибка импорта ${matchedFile}:`, err.message);
+    }
   } else {
     console.warn(`⚠️ Пропущен маршрут ${endpoint}: файл '${routeFileName}.js' не найден в ${routesDir}`);
   }
