@@ -6,6 +6,7 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
+const cors = require('cors');
 const { Server } = require('socket.io');
 
 const app = express();
@@ -18,23 +19,34 @@ const io = new Server(server, {
 });
 
 // Middleware
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Раздача статики фронтенда (где лежит script.js, index.html и т.д.)
-app.use(express.static(path.join(__dirname, 'public')));
+// --- ДИНАМИЧЕСКИЙ ПОИСК ПАПКИ PUBLIC ---
+// Проверяем: public в той же папке или на уровень выше?
+let publicPath = path.join(__dirname, 'public');
+if (!fs.existsSync(publicPath)) {
+    publicPath = path.join(__dirname, '..', 'public');
+}
+
+console.log(`📂 Раздача статики из папки: ${publicPath}`);
+app.use(express.static(publicPath));
 
 // Автоматическое подключение маршрутов REST API
 const routesPath = path.join(__dirname, 'src', 'routes');
-if (fs.existsSync(routesPath)) {
-    console.log(`📁 Найдена папка маршрутов (routes): ${routesPath}`);
-    fs.readdirSync(routesPath).forEach(file => {
+const fallbackRoutesPath = path.join(__dirname, 'routes');
+const actualRoutesPath = fs.existsSync(routesPath) ? routesPath : (fs.existsSync(fallbackRoutesPath) ? fallbackRoutesPath : null);
+
+if (actualRoutesPath) {
+    console.log(`📁 Найдена папка маршрутов (routes): ${actualRoutesPath}`);
+    fs.readdirSync(actualRoutesPath).forEach(file => {
         if (file.endsWith('.js')) {
             const routeName = file.replace(/Routes\.js$|\.js$/, '');
             let prefix = `/api/${routeName}`;
             if (file === 'paymentRoutes.js') prefix = '/api/tmpay';
             
-            const routeModule = require(path.join(routesPath, file));
+            const routeModule = require(path.join(actualRoutesPath, file));
             app.use(prefix, routeModule);
             console.log(`✅ Маршрут подключен: ${prefix} -> ${file}`);
         }
@@ -50,7 +62,6 @@ io.on('connection', (socket) => {
         io.emit('user_status_change', { userId, online: true });
     });
 
-    // Чат сообщения
     socket.on('send_message', (data) => {
         const recipientSocketId = activeUsers.get(data.recipientId);
         if (recipientSocketId) {
@@ -58,7 +69,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // WebRTC Сигналинг
     socket.on('call_user', (data) => {
         const recipientSocketId = activeUsers.get(data.userToCall);
         if (recipientSocketId) {
@@ -102,9 +112,16 @@ io.on('connection', (socket) => {
     });
 });
 
-// Фолбэк для SPA / Фронтенда
+// Фолбэк для фронтенда и запрашиваемых HTML страниц
 app.get('*', (req, res) => {
-    const indexPath = path.join(__dirname, 'public', 'index.html');
+    // Если ищут файл .html (например /login.html)
+    const requestedPath = path.join(publicPath, req.path);
+    if (fs.existsSync(requestedPath) && fs.statSync(requestedPath).isFile()) {
+        return res.sendFile(requestedPath);
+    }
+
+    // По умолчанию отдаем index.html
+    const indexPath = path.join(publicPath, 'index.html');
     if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);
     } else {
