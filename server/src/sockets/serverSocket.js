@@ -1,57 +1,33 @@
-// serverSocket.js
 const { Server } = require('socket.io');
 
 function initSocket(server) {
   const io = new Server(server, {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
-    }
+    cors: { origin: "*", methods: ["GET", "POST"] }
   });
 
-  // Хранилище подключенных пользователей: userId -> socketId
   const onlineUsers = new Map();
 
   io.on('connection', (socket) => {
-    // 1. Авторизация сокета
+    // Регистрация пользователя
     socket.on('register_user', (userId) => {
       if (!userId) return;
       socket.userId = String(userId);
       onlineUsers.set(socket.userId, socket.id);
-      
-      // Оповещаем всех о смене статуса на онлайн
       io.emit('user_status_change', { userId: socket.userId, online: true });
     });
 
-    // 2. Отправка сообщений в реальном времени
+    // Передача сообщений
     socket.on('send_message', (data) => {
-      const { recipientId, text, file, time, tempId } = data;
-      const recipientSocketId = onlineUsers.get(String(recipientId));
-
-      const messagePayload = {
-        senderId: socket.userId,
-        recipientId,
-        text,
-        file,
-        time: time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        tempId
-      };
-
-      // Если получатель в сети — пересылаем напрямую
-      if (recipientSocketId) {
-        io.to(recipientSocketId).emit('receive_message', messagePayload);
-      }
-    });
-
-    // 3. Индикатор набора текста
-    socket.on('typing', (data) => {
       const recipientSocketId = onlineUsers.get(String(data.recipientId));
       if (recipientSocketId) {
-        io.to(recipientSocketId).emit('user_typing', { senderId: socket.userId });
+        io.to(recipientSocketId).emit('receive_message', {
+          senderId: socket.userId,
+          ...data
+        });
       }
     });
 
-    // 4. Signaling для WebRTC Звонков (Аудио / Видео)
+    // WebRTC: Инициация звонка
     socket.on('call_user', (data) => {
       const recipientSocketId = onlineUsers.get(String(data.userToCall));
       if (recipientSocketId) {
@@ -60,11 +36,10 @@ function initSocket(server) {
           from: socket.userId,
           isVideo: data.isVideo
         });
-      } else {
-        socket.emit('call_failed', { reason: 'Пользователь не в сети' });
       }
     });
 
+    // WebRTC: Ответ на звонок
     socket.on('answer_call', (data) => {
       const callerSocketId = onlineUsers.get(String(data.to));
       if (callerSocketId) {
@@ -72,21 +47,26 @@ function initSocket(server) {
       }
     });
 
-    socket.on('reject_call', (data) => {
-      const callerSocketId = onlineUsers.get(String(data.to));
-      if (callerSocketId) {
-        io.to(callerSocketId).emit('call_rejected');
+    // WebRTC: Обмен ICE-кандидатами
+    socket.on('ice_candidate', (data) => {
+      const recipientSocketId = onlineUsers.get(String(data.to));
+      if (recipientSocketId) {
+        io.to(recipientSocketId).emit('ice_candidate', {
+          candidate: data.candidate,
+          from: socket.userId
+        });
       }
     });
 
+    // WebRTC: Завершение звонка
     socket.on('end_call', (data) => {
-      const peerSocketId = onlineUsers.get(String(data.to));
-      if (peerSocketId) {
-        io.to(peerSocketId).emit('call_ended');
+      const recipientSocketId = onlineUsers.get(String(data.to));
+      if (recipientSocketId) {
+        io.to(recipientSocketId).emit('call_ended');
       }
     });
 
-    // 5. Отключение пользователя
+    // Отключение пользователя
     socket.on('disconnect', () => {
       if (socket.userId) {
         onlineUsers.delete(socket.userId);
