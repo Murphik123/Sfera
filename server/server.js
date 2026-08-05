@@ -37,7 +37,7 @@ if (!routesDir) {
 console.log(`📁 Найдена папка маршрутов (routes): ${routesDir}`);
 
 // -----------------------------------------------------------------------------
-// 2. МИДДЛВАРЫ И РАЗДАЧА СТАТИКИ
+// 2. МИДДЛВАРЫ И РАЗДАЧА СТАТИКИ (ВКЛЮЧАЯ UPLOADS)
 // -----------------------------------------------------------------------------
 app.use(cors());
 app.use(express.json());
@@ -48,6 +48,13 @@ const publicDir = fs.existsSync(path.join(path.dirname(routesDir), 'public'))
   : path.join(__dirname, 'public');
 
 app.use(express.static(publicDir));
+
+// Раздача загруженных картинок объявления (локальная папка uploads)
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+app.use('/uploads', express.static(uploadDir));
 
 // -----------------------------------------------------------------------------
 // 3. ИНИЦИАЛИЗАЦИЯ И ПОДКЛЮЧЕНИЕ БАЗ ДАННЫХ
@@ -158,9 +165,13 @@ app.use((err, req, res, next) => {
 });
 
 // -----------------------------------------------------------------------------
-// 7. ЗАПУСК СЕРВЕРА
+// 7. ЗАПУСК СЕРВЕРА С ЗАЩИТОЙ
 // -----------------------------------------------------------------------------
-server.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`🔌 WebSocket готов`);
-});
+if (require.main === module) {
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`🔌 WebSocket готов`);
+  });
+}
+
+module.exports = app;
