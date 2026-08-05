@@ -18,9 +18,9 @@ window.translations = window.translations || {
         send: "Отправить",
         online: "онлайн",
         offline: "офлайн",
-        assistant_name: "Помощник",
+        assistant_name: "Помощник Sfera AI",
         assistant_status: "онлайн",
-        assistant_hello: "Привет! Я помощник платформы Sfera. Чем могу помочь?",
+        assistant_hello: "Привет! Я ИИ-помощник платформы Sfera. Чем могу помочь?",
         audio_call: "📞 Аудиозвонок",
         video_call: "📹 Видеозвонок",
         news_no_items: "Нет новостей",
@@ -67,7 +67,7 @@ window.translations = window.translations || {
         send: "Iber",
         online: "onlaýn",
         offline: "offlaýn",
-        assistant_name: "Kömekçi",
+        assistant_name: "Kömekçi Sfera AI",
         assistant_status: "onlaýn",
         assistant_hello: "Salam! Men Sfera kömekçisi.",
         audio_call: "📞 Ses jaňy",
@@ -116,7 +116,7 @@ window.translations = window.translations || {
         send: "Send",
         online: "online",
         offline: "offline",
-        assistant_name: "Assistant",
+        assistant_name: "Sfera AI Assistant",
         assistant_status: "online",
         assistant_hello: "Hi! I'm Sfera assistant. How can I help you?",
         audio_call: "📞 Audio call",
@@ -152,12 +152,19 @@ window.translations = window.translations || {
 };
 
 // ============================================================
-// ОСНОВНОЙ МОДУЛЬ МЕССЕНДЖЕРА
+// ОСНОВНОЙ МОДУЛЬ МЕССЕНДЖЕРА И ЗВОНКОВ
 // ============================================================
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    const API_BASE = "https://sfera-1.onrender.com";
+    let token = localStorage.getItem("token");
+    let currentUser = null;
+    let socket = null;
     let currentLang = localStorage.getItem("sfera_lang") || "ru";
     let activeChatId = null;
     let activeTab = "chats";
+    let usersList = [];
+    let peerConnection = null;
+    let localStream = null;
 
     // Сбор элементов DOM
     const container = document.getElementById("messengerContainer");
@@ -182,37 +189,99 @@ document.addEventListener("DOMContentLoaded", () => {
     const backBtn = document.getElementById("backBtn");
     const sidebar = document.getElementById("sidebar");
     const exportChatBtn = document.getElementById("exportChatBtn");
+    const audioCallBtn = document.getElementById("audioCallBtn");
+    const videoCallBtn = document.getElementById("videoCallBtn");
 
-    // Демо-данные диалогов
-    let mockDialogs = [
-        {
-            id: 1,
-            name: "Аман Аманов",
-            isGroup: false,
-            online: true,
-            unread: 2,
-            messages: [
-                { sender: "received", text: "Привет! Как продвигается проект?", time: "14:20" },
-                { sender: "received", text: "Файлы уже на сервере.", time: "14:21" }
-            ]
-        },
-        {
-            id: 2,
-            name: "Разработка SFERA",
-            isGroup: true,
-            online: true,
-            unread: 0,
-            messages: [
-                { sender: "received", username: "Мердан", text: "Обновили модуль авторизации.", time: "11:05" },
-                { sender: "sent", text: "Отлично, тестирую клиентскую часть.", time: "11:10" }
-            ]
-        }
-    ];
-
-    // Базовый список эмодзи
     const emojis = ["😊", "😂", "👍", "🔥", "🎉", "❤️", "🙌", "😎", "🚀", "💡", "🤝", "📦", "💬", "✨"];
 
-    // 1. Инициализация переводов
+    // 1. Проверка авторизации и профиля
+    async function initAuth() {
+        if (!token) {
+            window.location.href = "login.html";
+            return;
+        }
+        try {
+            const res = await fetch(`${API_BASE}/api/users/profile`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error("Невалидный токен");
+            const data = await res.json();
+            currentUser = data.user || data;
+            initSocketConnection();
+        } catch (err) {
+            console.error("Ошибка проверки сессии:", err);
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+        }
+    }
+
+    // 2. Инициализация WebSocket
+    function initSocketConnection() {
+        if (typeof io === "undefined") return;
+        socket = io(API_BASE);
+
+        socket.on("connect", () => {
+            socket.emit("register_user", currentUser._id || currentUser.id);
+        });
+
+        socket.on("receive_message", (msg) => {
+            if (activeChatId && (String(msg.senderId) === String(activeChatId))) {
+                appendMessageUI({ sender: "received", text: msg.text, file: msg.file, time: msg.time });
+            }
+            fetchDialogsAndUsers();
+        });
+
+        socket.on("user_status_change", ({ userId, online }) => {
+            const user = usersList.find(u => String(u.id) === String(userId));
+            if (user) user.online = online;
+            renderDialogs(searchInput ? searchInput.value : "");
+        });
+
+        // WebRTC Сигналинг звонков
+        socket.on("incoming_call", async (data) => {
+            const accept = confirm(`Входящий ${data.isVideo ? 'видео' : 'аудио'}звонок от пользователя. Принять?`);
+            if (accept) {
+                activeChatId = data.from;
+                await startCall(data.isVideo, true, data.signal);
+            } else {
+                socket.emit("reject_call", { to: data.from });
+            }
+        });
+
+        socket.on("call_accepted", async (signal) => {
+            if (peerConnection) {
+                await peerConnection.setRemoteDescription(new RTCSessionDescription(signal));
+            }
+        });
+
+        socket.on("call_rejected", () => {
+            alert("Вызов отклонен");
+            endCall();
+        });
+
+        socket.on("call_ended", () => {
+            alert("Звонок завершен");
+            endCall();
+        });
+    }
+
+    // 3. Загрузка реальных диалогов и всех пользователей
+    async function fetchDialogsAndUsers() {
+        try {
+            const res = await fetch(`${API_BASE}/api/chat/dialogs`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                usersList = data.users || data.dialogs || [];
+                renderDialogs();
+            }
+        } catch (e) {
+            console.warn("Бэкенд недоступен, фолбэк на локальное состояние", e);
+        }
+    }
+
+    // 4. Инициализация переводов
     function updateTranslations() {
         const langData = window.translations[currentLang] || window.translations.ru;
         document.querySelectorAll("[data-i18n]").forEach(el => {
@@ -239,7 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 2. Переключение темы
+    // 5. Переключение темы
     if (themeToggleBtn && container) {
         themeToggleBtn.addEventListener("click", () => {
             container.classList.toggle("light-theme");
@@ -247,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 3. Выпадающий список вкладок
+    // 6. Выпадающий список вкладок
     const tabsDropdown = document.getElementById("tabsDropdown");
     const dropbtn = document.getElementById("dropbtn");
     const dropdownContent = document.getElementById("dropdownContent");
@@ -285,12 +354,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 4. Отрисовка списка диалогов
+    // 7. Отрисовка списка диалогов
     function renderDialogs(filter = "") {
         if (!dialogsList) return;
         dialogsList.innerHTML = "";
         const langData = window.translations[currentLang] || window.translations.ru;
-        const filtered = mockDialogs.filter(d => d.name.toLowerCase().includes(filter.toLowerCase()));
+        const filtered = usersList.filter(d => d.name.toLowerCase().includes(filter.toLowerCase()));
         
         if (filtered.length === 0) {
             dialogsList.innerHTML = `<div class="empty-state"><p>${langData.no_messages}</p></div>`;
@@ -298,7 +367,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         filtered.forEach(dialog => {
-            const lastMsg = dialog.messages[dialog.messages.length - 1];
             const item = document.createElement("div");
             item.className = `dialog-item ${activeChatId === dialog.id ? 'active' : ''}`;
             item.innerHTML = `
@@ -307,8 +375,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     ${dialog.online && !dialog.isGroup ? '<div class="online-dot"></div>' : ''}
                 </div>
                 <div class="dialog-info">
-                    <div class="name">${dialog.name}</div>
-                    <div class="last-msg">${lastMsg ? lastMsg.text : ''}</div>
+                    <div class="name">${dialog.name} ${dialog.role === 'admin' ? '🛡️' : ''}</div>
+                    <div class="last-msg">${dialog.lastMsg || ''}</div>
                 </div>
                 ${dialog.unread > 0 ? `<div class="unread-badge">${dialog.unread}</div>` : ''}
             `;
@@ -317,8 +385,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 5. Открытие диалога
-    function openChat(dialog) {
+    // 8. Открытие диалога
+    async function openChat(dialog) {
         activeChatId = dialog.id;
         dialog.unread = 0;
         renderDialogs(searchInput ? searchInput.value : "");
@@ -334,7 +402,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (chatMessages) {
             chatMessages.innerHTML = "";
-            dialog.messages.forEach(msg => appendMessageUI(msg));
+            try {
+                const res = await fetch(`${API_BASE}/api/chat/${dialog.id}`, {
+                    headers: { "Authorization": `Bearer ${token}` }
+                });
+                if (res.ok) {
+                    const messages = await res.json();
+                    messages.forEach(msg => appendMessageUI(msg));
+                }
+            } catch (err) {
+                console.warn("Локальная загрузка истории");
+                (dialog.messages || []).forEach(msg => appendMessageUI(msg));
+            }
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
@@ -368,8 +447,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 6. Отправка сообщений
-    function sendMessage() {
+    // 9. Отправка сообщений
+    async function sendMessage() {
         if (!messageInput) return;
         const text = messageInput.value.trim();
         if (!text && (!fileInput || !fileInput.files.length)) return;
@@ -389,14 +468,32 @@ document.addEventListener("DOMContentLoaded", () => {
             fileInput.value = "";
         }
 
-        const currentDialog = mockDialogs.find(d => d.id === activeChatId);
-        if (currentDialog) {
-            currentDialog.messages.push(newMsg);
-            appendMessageUI(newMsg);
-            renderDialogs(searchInput ? searchInput.value : "");
+        appendMessageUI(newMsg);
+        messageInput.value = "";
+
+        // Отправка через Socket.io и REST API
+        if (activeChatId && socket) {
+            socket.emit("send_message", {
+                recipientId: activeChatId,
+                text: newMsg.text,
+                file: newMsg.file,
+                time: timeStr
+            });
+
+            try {
+                await fetch(`${API_BASE}/api/chat/send`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ recipientId: activeChatId, text: newMsg.text })
+                });
+            } catch (e) {
+                console.warn("Ошибка сохранения сообщения на бэкенде");
+            }
         } else if (activeTab === "assistant") {
             const langData = window.translations[currentLang] || window.translations.ru;
-            appendMessageUI(newMsg);
             setTimeout(() => {
                 appendMessageUI({
                     sender: "received",
@@ -405,8 +502,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             }, 800);
         }
-
-        messageInput.value = "";
     }
 
     if (sendBtn) sendBtn.addEventListener("click", sendMessage);
@@ -416,7 +511,55 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 7. Эмодзи и файлы
+    // 10. WebRTC Звонки (Аудио и Видео)
+    async function startCall(isVideo = false, isIncoming = false, incomingSignal = null) {
+        if (!activeChatId) return alert("Выберите собеседника для звонка");
+        
+        const configuration = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
+        peerConnection = new RTCPeerConnection(configuration);
+
+        try {
+            localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideo });
+            localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+        } catch (e) {
+            console.warn("Медиаустройства недоступны или запрос отклонен");
+        }
+
+        peerConnection.onicecandidate = (event) => {
+            if (event.candidate && socket) {
+                // Передача ICE кандидатов
+            }
+        };
+
+        if (isIncoming && incomingSignal) {
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(incomingSignal));
+            const answer = await peerConnection.createAnswer();
+            await peerConnection.setLocalDescription(answer);
+            socket.emit("answer_call", { to: activeChatId, signal: answer });
+        } else {
+            const offer = await peerConnection.createOffer();
+            await peerConnection.setLocalDescription(offer);
+            socket.emit("call_user", { userToCall: activeChatId, signalData: offer, isVideo });
+        }
+    }
+
+    function endCall() {
+        if (localStream) {
+            localStream.getTracks().forEach(track => track.stop());
+        }
+        if (peerConnection) {
+            peerConnection.close();
+            peerConnection = null;
+        }
+        if (socket && activeChatId) {
+            socket.emit("end_call", { to: activeChatId });
+        }
+    }
+
+    if (audioCallBtn) audioCallBtn.addEventListener("click", () => startCall(false));
+    if (videoCallBtn) videoCallBtn.addEventListener("click", () => startCall(true));
+
+    // 11. Эмодзи и файлы
     if (emojiGrid && emojiPicker && messageInput) {
         emojis.forEach(emo => {
             const btn = document.createElement("button");
@@ -441,18 +584,18 @@ document.addEventListener("DOMContentLoaded", () => {
         fileBtn.addEventListener("click", () => fileInput.click());
     }
 
-    // 8. Поиск по чатам
+    // 12. Поиск по чатам
     if (searchInput) {
         searchInput.addEventListener("input", (e) => {
             if (activeTab === "chats") renderDialogs(e.target.value);
         });
     }
 
-    // 9. Создание группы
+    // 13. Создание группы
     if (createGroupBtn && groupMembersSelect && groupModal) {
         createGroupBtn.addEventListener("click", () => {
             groupMembersSelect.innerHTML = "";
-            mockDialogs.filter(d => !d.isGroup).forEach(user => {
+            usersList.filter(d => !d.isGroup).forEach(user => {
                 const opt = document.createElement("option");
                 opt.value = user.id;
                 opt.textContent = user.name;
@@ -482,7 +625,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 messages: []
             };
 
-            mockDialogs.unshift(newGroup);
+            usersList.unshift(newGroup);
             if (groupModal) groupModal.classList.remove("active");
             groupForm.reset();
             renderDialogs();
@@ -490,7 +633,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 10. Новости
+    // 14. Новости
     function renderNews() {
         if (!newsFeed) return;
         const langData = window.translations[currentLang] || window.translations.ru;
@@ -508,11 +651,11 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
     }
 
-    // 11. Помощник
+    // 15. Помощник Sfera AI
     function openAssistantChat() {
         if (dialogsList) dialogsList.style.display = "none";
         if (newsFeed) newsFeed.style.display = "none";
-        activeChatId = null;
+        activeChatId = "assistant";
         
         const langData = window.translations[currentLang] || window.translations.ru;
         const nameEl = document.getElementById("chatName");
@@ -533,11 +676,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // 12. Экспорт чата
+    // 16. Экспорт чата
     if (exportChatBtn) {
         exportChatBtn.addEventListener("click", () => {
-            const dialog = mockDialogs.find(d => d.id === activeChatId);
-            if (!dialog || !dialog.messages.length) return;
+            const dialog = usersList.find(d => d.id === activeChatId);
+            if (!dialog || !dialog.messages || !dialog.messages.length) return;
 
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dialog.messages, null, 2));
             const downloadAnchor = document.createElement("a");
@@ -549,7 +692,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Инициализация
+    // Запуск приложения
     updateTranslations();
-    renderDialogs();
+    await initAuth();
+    await fetchDialogsAndUsers();
 });
