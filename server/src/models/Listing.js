@@ -34,7 +34,6 @@ const listingSchema = new mongoose.Schema(
       trim: true,
       default: 'other'
     },
-    // Поддержка и обычных URL-строк, и объектов Cloudinary
     images: [
       {
         url: { type: String, required: true },
@@ -52,11 +51,10 @@ const listingSchema = new mongoose.Schema(
     }
   },
   {
-    timestamps: true // Автоматически создает и обновляет createdAt и updatedAt
+    timestamps: true
   }
 );
 
-// Текстовый индекс для поиска по названию и описанию
 listingSchema.index({ title: 'text', description: 'text' });
 
 module.exports = mongoose.model('Listing', listingSchema);
