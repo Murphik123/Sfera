@@ -1,7 +1,7 @@
 // ============================================================
-// ПЕРЕВОДЫ (продолжение и завершение объекта translations)
+// ПЕРЕВОДЫ (Безопасное объявление через глобальный объект window)
 // ============================================================
-const translations = {
+window.translations = window.translations || {
     ru: {
         logo_subtitle: "Национальная Цифровая Платформа",
         logout: "🚪 Выйти",
@@ -214,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 1. Инициализация переводов
     function updateTranslations() {
-        const langData = translations[currentLang] || translations.ru;
+        const langData = window.translations[currentLang] || window.translations.ru;
         document.querySelectorAll("[data-i18n]").forEach(el => {
             const key = el.getAttribute("data-i18n");
             if (langData[key]) el.textContent = langData[key];
@@ -227,64 +227,73 @@ document.addEventListener("DOMContentLoaded", () => {
             const key = el.getAttribute("data-i18n-title");
             if (langData[key]) el.title = langData[key];
         });
-        langBtn.textContent = currentLang.toUpperCase();
+        if (langBtn) langBtn.textContent = currentLang.toUpperCase();
     }
 
-    langBtn.addEventListener("click", () => {
-        currentLang = currentLang === "ru" ? "tm" : currentLang === "tm" ? "en" : "ru";
-        localStorage.setItem("sfera_lang", currentLang);
-        updateTranslations();
-        renderDialogs();
-    });
+    if (langBtn) {
+        langBtn.addEventListener("click", () => {
+            currentLang = currentLang === "ru" ? "tm" : currentLang === "tm" ? "en" : "ru";
+            localStorage.setItem("sfera_lang", currentLang);
+            updateTranslations();
+            renderDialogs();
+        });
+    }
 
     // 2. Переключение темы
-    themeToggleBtn.addEventListener("click", () => {
-        container.classList.toggle("light-theme");
-        themeToggleBtn.textContent = container.classList.contains("light-theme") ? "☀️" : "🌙";
-    });
+    if (themeToggleBtn && container) {
+        themeToggleBtn.addEventListener("click", () => {
+            container.classList.toggle("light-theme");
+            themeToggleBtn.textContent = container.classList.contains("light-theme") ? "☀️" : "🌙";
+        });
+    }
 
-    // 3. Выпадающий список вкладок (Чаты / Новости / Помощник)
+    // 3. Выпадающий список вкладок
     const tabsDropdown = document.getElementById("tabsDropdown");
     const dropbtn = document.getElementById("dropbtn");
     const dropdownContent = document.getElementById("dropdownContent");
     const currentTabLabel = document.getElementById("currentTabLabel");
 
-    dropbtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        tabsDropdown.classList.toggle("show");
-    });
-
-    document.addEventListener("click", () => tabsDropdown.classList.remove("show"));
-
-    dropdownContent.querySelectorAll("button").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            dropdownContent.querySelectorAll("button").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            activeTab = btn.getAttribute("data-tab");
-            currentTabLabel.textContent = btn.textContent;
-            tabsDropdown.classList.remove("show");
-
-            if (activeTab === "chats") {
-                dialogsList.style.display = "block";
-                newsFeed.style.display = "none";
-                renderDialogs();
-            } else if (activeTab === "news") {
-                dialogsList.style.display = "none";
-                newsFeed.style.display = "block";
-                renderNews();
-            } else if (activeTab === "assistant") {
-                openAssistantChat();
-            }
+    if (dropbtn && tabsDropdown) {
+        dropbtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            tabsDropdown.classList.toggle("show");
         });
-    });
+        document.addEventListener("click", () => tabsDropdown.classList.remove("show"));
+    }
+
+    if (dropdownContent) {
+        dropdownContent.querySelectorAll("button").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                dropdownContent.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                activeTab = btn.getAttribute("data-tab");
+                if (currentTabLabel) currentTabLabel.textContent = btn.textContent;
+                if (tabsDropdown) tabsDropdown.classList.remove("show");
+
+                if (activeTab === "chats") {
+                    if (dialogsList) dialogsList.style.display = "block";
+                    if (newsFeed) newsFeed.style.display = "none";
+                    renderDialogs();
+                } else if (activeTab === "news") {
+                    if (dialogsList) dialogsList.style.display = "none";
+                    if (newsFeed) newsFeed.style.display = "block";
+                    renderNews();
+                } else if (activeTab === "assistant") {
+                    openAssistantChat();
+                }
+            });
+        });
+    }
 
     // 4. Отрисовка списка диалогов
     function renderDialogs(filter = "") {
+        if (!dialogsList) return;
         dialogsList.innerHTML = "";
+        const langData = window.translations[currentLang] || window.translations.ru;
         const filtered = mockDialogs.filter(d => d.name.toLowerCase().includes(filter.toLowerCase()));
         
         if (filtered.length === 0) {
-            dialogsList.innerHTML = `<div class="empty-state"><p>${translations[currentLang].no_messages}</p></div>`;
+            dialogsList.innerHTML = `<div class="empty-state"><p>${langData.no_messages}</p></div>`;
             return;
         }
 
@@ -308,26 +317,34 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // 5. Открытие диалога и отрисовка сообщений
+    // 5. Открытие диалога
     function openChat(dialog) {
         activeChatId = dialog.id;
         dialog.unread = 0;
-        renderDialogs(searchInput.value);
+        renderDialogs(searchInput ? searchInput.value : "");
 
-        document.getElementById("chatName").textContent = dialog.name;
-        document.getElementById("chatStatus").textContent = dialog.online ? translations[currentLang].online : translations[currentLang].offline;
-        document.getElementById("chatAvatar").textContent = dialog.isGroup ? '👥' : dialog.name.charAt(0);
+        const langData = window.translations[currentLang] || window.translations.ru;
+        const nameEl = document.getElementById("chatName");
+        const statusEl = document.getElementById("chatStatus");
+        const avatarEl = document.getElementById("chatAvatar");
 
-        chatMessages.innerHTML = "";
-        dialog.messages.forEach(msg => appendMessageUI(msg));
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        if (nameEl) nameEl.textContent = dialog.name;
+        if (statusEl) statusEl.textContent = dialog.online ? langData.online : langData.offline;
+        if (avatarEl) avatarEl.textContent = dialog.isGroup ? '👥' : dialog.name.charAt(0);
 
-        if (window.innerWidth <= 768) {
+        if (chatMessages) {
+            chatMessages.innerHTML = "";
+            dialog.messages.forEach(msg => appendMessageUI(msg));
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        if (window.innerWidth <= 768 && sidebar) {
             sidebar.style.display = "none";
         }
     }
 
     function appendMessageUI(msg) {
+        if (!chatMessages) return;
         const msgDiv = document.createElement("div");
         msgDiv.className = `message ${msg.sender}`;
         
@@ -345,15 +362,17 @@ document.addEventListener("DOMContentLoaded", () => {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Кнопка Назад для мобильной адаптивности
-    backBtn.addEventListener("click", () => {
-        sidebar.style.display = "flex";
-    });
+    if (backBtn && sidebar) {
+        backBtn.addEventListener("click", () => {
+            sidebar.style.display = "flex";
+        });
+    }
 
     // 6. Отправка сообщений
     function sendMessage() {
+        if (!messageInput) return;
         const text = messageInput.value.trim();
-        if (!text && !fileInput.files.length) return;
+        if (!text && (!fileInput || !fileInput.files.length)) return;
 
         const now = new Date();
         const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -364,7 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
             time: timeStr
         };
 
-        if (fileInput.files.length > 0) {
+        if (fileInput && fileInput.files.length > 0) {
             const file = fileInput.files[0];
             newMsg.file = { name: file.name, url: URL.createObjectURL(file) };
             fileInput.value = "";
@@ -374,13 +393,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (currentDialog) {
             currentDialog.messages.push(newMsg);
             appendMessageUI(newMsg);
-            renderDialogs(searchInput.value);
+            renderDialogs(searchInput ? searchInput.value : "");
         } else if (activeTab === "assistant") {
+            const langData = window.translations[currentLang] || window.translations.ru;
             appendMessageUI(newMsg);
             setTimeout(() => {
                 appendMessageUI({
                     sender: "received",
-                    text: translations[currentLang].assistant_hello,
+                    text: langData.assistant_hello,
                     time: timeStr
                 });
             }, 800);
@@ -389,136 +409,147 @@ document.addEventListener("DOMContentLoaded", () => {
         messageInput.value = "";
     }
 
-    sendBtn.addEventListener("click", sendMessage);
-    messageInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") sendMessage();
-    });
-
-    // 7. Работа с эмодзи и файлами
-    emojis.forEach(emo => {
-        const btn = document.createElement("button");
-        btn.textContent = emo;
-        btn.addEventListener("click", () => {
-            messageInput.value += emo;
-            emojiPicker.classList.remove("active");
+    if (sendBtn) sendBtn.addEventListener("click", sendMessage);
+    if (messageInput) {
+        messageInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") sendMessage();
         });
-        emojiGrid.appendChild(btn);
-    });
+    }
 
-    emojiBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        emojiPicker.classList.toggle("active");
-    });
-    document.addEventListener("click", () => emojiPicker.classList.remove("active"));
+    // 7. Эмодзи и файлы
+    if (emojiGrid && emojiPicker && messageInput) {
+        emojis.forEach(emo => {
+            const btn = document.createElement("button");
+            btn.textContent = emo;
+            btn.addEventListener("click", () => {
+                messageInput.value += emo;
+                emojiPicker.classList.remove("active");
+            });
+            emojiGrid.appendChild(btn);
+        });
+    }
 
-    fileBtn.addEventListener("click", () => fileInput.click());
+    if (emojiBtn && emojiPicker) {
+        emojiBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            emojiPicker.classList.toggle("active");
+        });
+        document.addEventListener("click", () => emojiPicker.classList.remove("active"));
+    }
+
+    if (fileBtn && fileInput) {
+        fileBtn.addEventListener("click", () => fileInput.click());
+    }
 
     // 8. Поиск по чатам
-    searchInput.addEventListener("input", (e) => {
-        if (activeTab === "chats") renderDialogs(e.target.value);
-    });
-
-    // 9. Модальное окно создания группы
-    createGroupBtn.addEventListener("click", () => {
-        groupMembersSelect.innerHTML = "";
-        mockDialogs.filter(d => !d.isGroup).forEach(user => {
-            const opt = document.createElement("option");
-            opt.value = user.id;
-            opt.textContent = user.name;
-            groupMembersSelect.appendChild(opt);
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+            if (activeTab === "chats") renderDialogs(e.target.value);
         });
-        groupModal.classList.add("active");
-    });
+    }
 
-    cancelGroupBtn.addEventListener("click", () => groupModal.classList.remove("active"));
+    // 9. Создание группы
+    if (createGroupBtn && groupMembersSelect && groupModal) {
+        createGroupBtn.addEventListener("click", () => {
+            groupMembersSelect.innerHTML = "";
+            mockDialogs.filter(d => !d.isGroup).forEach(user => {
+                const opt = document.createElement("option");
+                opt.value = user.id;
+                opt.textContent = user.name;
+                groupMembersSelect.appendChild(opt);
+            });
+            groupModal.classList.add("active");
+        });
+    }
 
-    groupForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const name = document.getElementById("groupName").value.trim();
-        if (!name) return;
+    if (cancelGroupBtn && groupModal) {
+        cancelGroupBtn.addEventListener("click", () => groupModal.classList.remove("active"));
+    }
 
-        const newGroup = {
-            id: Date.now(),
-            name: name,
-            isGroup: true,
-            online: true,
-            unread: 0,
-            messages: []
-        };
+    if (groupForm) {
+        groupForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const groupNameEl = document.getElementById("groupName");
+            const name = groupNameEl ? groupNameEl.value.trim() : "";
+            if (!name) return;
 
-        mockDialogs.unshift(newGroup);
-        groupModal.classList.remove("active");
-        groupForm.reset();
-        renderDialogs();
-        openChat(newGroup);
-        showToast(translations[currentLang].favorite_add || "Группа создана!", "success");
-    });
+            const newGroup = {
+                id: Date.now(),
+                name: name,
+                isGroup: true,
+                online: true,
+                unread: 0,
+                messages: []
+            };
 
-    // 10. Вкладка "Новости"
+            mockDialogs.unshift(newGroup);
+            if (groupModal) groupModal.classList.remove("active");
+            groupForm.reset();
+            renderDialogs();
+            openChat(newGroup);
+        });
+    }
+
+    // 10. Новости
     function renderNews() {
-        const lang = translations[currentLang];
+        if (!newsFeed) return;
+        const langData = window.translations[currentLang] || window.translations.ru;
         newsFeed.innerHTML = `
             <div class="news-item">
-                <div class="title">${lang.news_title_1}</div>
-                <div class="summary">${lang.news_summary_1}</div>
+                <div class="title">${langData.news_title_1}</div>
+                <div class="summary">${langData.news_summary_1}</div>
                 <div class="meta"><span>05.08.2026</span><span>SFERA Admin</span></div>
             </div>
             <div class="news-item">
-                <div class="title">${lang.news_title_2}</div>
-                <div class="summary">${lang.news_summary_2}</div>
+                <div class="title">${langData.news_title_2}</div>
+                <div class="summary">${langData.news_summary_2}</div>
                 <div class="meta"><span>04.08.2026</span><span>Finance</span></div>
             </div>
         `;
     }
 
-    // 11. Вкладка "Помощник"
+    // 11. Помощник
     function openAssistantChat() {
-        dialogsList.style.display = "none";
-        newsFeed.style.display = "none";
+        if (dialogsList) dialogsList.style.display = "none";
+        if (newsFeed) newsFeed.style.display = "none";
         activeChatId = null;
         
-        const lang = translations[currentLang];
-        document.getElementById("chatName").textContent = lang.assistant_name;
-        document.getElementById("chatStatus").textContent = lang.assistant_status;
-        document.getElementById("chatAvatar").textContent = "🤖";
+        const langData = window.translations[currentLang] || window.translations.ru;
+        const nameEl = document.getElementById("chatName");
+        const statusEl = document.getElementById("chatStatus");
+        const avatarEl = document.getElementById("chatAvatar");
 
-        chatMessages.innerHTML = "";
-        appendMessageUI({
-            sender: "received",
-            text: lang.assistant_hello,
-            time: "00:00"
-        });
+        if (nameEl) nameEl.textContent = langData.assistant_name;
+        if (statusEl) statusEl.textContent = langData.assistant_status;
+        if (avatarEl) avatarEl.textContent = "🤖";
+
+        if (chatMessages) {
+            chatMessages.innerHTML = "";
+            appendMessageUI({
+                sender: "received",
+                text: langData.assistant_hello,
+                time: "00:00"
+            });
+        }
     }
 
     // 12. Экспорт чата
-    exportChatBtn.addEventListener("click", () => {
-        const dialog = mockDialogs.find(d => d.id === activeChatId);
-        if (!dialog || !dialog.messages.length) {
-            showToast(translations[currentLang].no_export, "error");
-            return;
-        }
+    if (exportChatBtn) {
+        exportChatBtn.addEventListener("click", () => {
+            const dialog = mockDialogs.find(d => d.id === activeChatId);
+            if (!dialog || !dialog.messages.length) return;
 
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dialog.messages, null, 2));
-        const downloadAnchor = document.createElement("a");
-        downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", `chat_${dialog.name.replace(/\s+/g, '_')}.json`);
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        downloadAnchor.remove();
-
-        showToast(translations[currentLang].export_success, "success");
-    });
-
-    // Вспомогательная функция вывода уведомлений (Toast)
-    function showToast(msg, type = "info") {
-        const toast = document.createElement("div");
-        toast.className = `toast ${type}`;
-        toast.textContent = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dialog.messages, null, 2));
+            const downloadAnchor = document.createElement("a");
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `chat_${dialog.name.replace(/\s+/g, '_')}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        });
     }
 
-    // Начальный запуск
+    // Инициализация
     updateTranslations();
     renderDialogs();
 });
