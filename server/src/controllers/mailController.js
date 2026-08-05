@@ -1,53 +1,35 @@
-const Mail = require('../models/Mail');
+// src/controllers/mailController.js
+const { Resend } = require('resend');
+
+// Ключ подтягивается автоматически из Environment на Render
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 exports.sendMail = async (req, res) => {
   try {
-    const { to, subject, body } = req.body;
-    const mail = new Mail({
-      from: req.userId,
-      to,
-      subject,
-      body
-    });
-    await mail.save();
-    res.status(201).json(mail);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+    const { to, subject, html, text } = req.body;
 
-exports.getInbox = async (req, res) => {
-  try {
-    const mails = await Mail.find({ to: req.userId }).sort({ createdAt: -1 });
-    res.json(mails);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-exports.getOutbox = async (req, res) => {
-  try {
-    const mails = await Mail.find({ from: req.userId }).sort({ createdAt: -1 });
-    res.json(mails);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-exports.markAsRead = async (req, res) => {
-  try {
-    const { mailId } = req.params;
-    const mail = await Mail.findById(mailId);
-    if (!mail) return res.status(404).json({ message: 'Mail not found' });
-
-    if (mail.to.toString() !== req.userId) {
-      return res.status(403).json({ message: 'Not authorized' });
+    if (!to) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Укажите email получателя в поле "to"' 
+      });
     }
 
-    mail.read = true;
-    await mail.save();
-    res.json({ message: 'Marked as read' });
+    const response = await resend.emails.send({
+      from: 'Sfera Platform <onboarding@resend.dev>',
+      to: [to],
+      subject: subject || 'Уведомление от платформы Sfera',
+      html: html || `<p>${text || 'Привет от Sfera!'}</p>`,
+    });
+
+    if (response.error) {
+      console.error('Ошибка от Resend:', response.error);
+      return res.status(400).json({ success: false, error: response.error });
+    }
+
+    return res.status(200).json({ success: true, id: response.data.id });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Ошибка при отправке почты:', error);
+    return res.status(500).json({ success: false, error: error.message });
   }
 };
