@@ -74,7 +74,7 @@ redisClient.connect()
   .catch((err) => console.error('❌ Redis connection error:', err));
 
 // -----------------------------------------------------------------------------
-// 4. НАСТРОЙКА WEBSOCKET
+// 4. НАСТРОЙКА WEBSOCKET (ЧАТ + P2P ЗВОНКИ WEBRTC)
 // -----------------------------------------------------------------------------
 const io = new Server(server, {
   cors: {
@@ -85,6 +85,34 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
   console.log(`🔌 Новый WebSocket клиент подключен: ${socket.id}`);
+
+  // Регистрация пользователя в его личной комнате Socket.io
+  socket.on('join-user', (userId) => {
+    socket.join(userId);
+    console.log(`👤 Пользователь ${userId} привязал сокет ${socket.id}`);
+  });
+
+  // --- WebRTC P2P Сигналинг для аудио/видео вызовов ---
+
+  // 1. Инициация звонка (Пользователь А -> Пользователю Б)
+  socket.on('call-user', ({ userToCall, offer, from }) => {
+    io.to(userToCall).emit('incoming-call', { offer, from });
+  });
+
+  // 2. Ответ на входящий звонок
+  socket.on('answer-call', ({ to, answer }) => {
+    io.to(to).emit('call-answered', { answer });
+  });
+
+  // 3. Обмен ICE-кандидатами (P2P сетевые маршруты)
+  socket.on('ice-candidate', ({ to, candidate }) => {
+    io.to(to).emit('ice-candidate', { candidate });
+  });
+
+  // 4. Завершение или отклон звонка
+  socket.on('end-call', ({ to }) => {
+    io.to(to).emit('call-ended');
+  });
 
   socket.on('disconnect', () => {
     console.log(`🔌 Клиент отключился: ${socket.id}`);
