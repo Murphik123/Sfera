@@ -1,5 +1,5 @@
 /* ==========================================================================
-   SFERA PLATFORM — MAIN SERVER (Node.js + Express + Socket.io + MongoDB + Redis)
+   SFERA PLATFORM — MAIN SERVER (Node.js + Express + Socket.io)
    ========================================================================== */
 
 const express = require('express');
@@ -24,7 +24,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --- ДИНАМИЧЕСКИЙ ПОИСК ПАПКИ PUBLIC ---
-// Проверяем: public в той же папке или на уровень выше?
 let publicPath = path.join(__dirname, 'public');
 if (!fs.existsSync(publicPath)) {
     publicPath = path.join(__dirname, '..', 'public');
@@ -112,15 +111,13 @@ io.on('connection', (socket) => {
     });
 });
 
-// Фолбэк для фронтенда и запрашиваемых HTML страниц
+// Фолбэк для фронтенда и HTML страниц
 app.get('*', (req, res) => {
-    // Если ищут файл .html (например /login.html)
     const requestedPath = path.join(publicPath, req.path);
     if (fs.existsSync(requestedPath) && fs.statSync(requestedPath).isFile()) {
         return res.sendFile(requestedPath);
     }
 
-    // По умолчанию отдаем index.html
     const indexPath = path.join(publicPath, 'index.html');
     if (fs.existsSync(indexPath)) {
         res.sendFile(indexPath);
@@ -129,7 +126,7 @@ app.get('*', (req, res) => {
     }
 });
 
-// Запуск сервера на порту от Render
+// Запуск сервера
 const PORT = process.env.PORT || 10000;
 const HOST = '0.0.0.0';
 
