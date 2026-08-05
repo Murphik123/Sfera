@@ -493,704 +493,350 @@
                 news_title_2: "TM Coin rising",
                 news_summary_2: "Price increased by 10%.",
                 news_title_3: "New banking services",
-                news_summary_3: "New credit options.",
+                news_summary_3: "New credit options available.",
                 news_title_4: "Video calls in messenger",
-                news_summary_4: "Now you can make video calls.",
-                delete_dialog: "Delete chat",
+                news_summary_4: "Video calling is now active.",
+                delete_dialog: "Delete dialog",
                 confirm_delete: "Are you sure?",
-                dialog_deleted: "Chat deleted.",
+                dialog_deleted: "Dialog deleted.",
                 no_messages: "No messages",
                 typing: "typing...",
                 theme_toggle: "🌙",
                 create_group: "➕ Group",
-                create_group_title: "Create group",
-                group_name: "Group name",
+                create_group_title: "Create Group",
+                group_name: "Group Name",
                 group_members: "Members",
                 create: "Create",
                 cancel: "Cancel",
-                search_chat: "🔍 Search",
-                export_chat: "📥 Export",
-                export_success: "Exported!",
+                search_chat: "🔍 Search Chat",
+                export_chat: "📥 Export Chat",
+                export_success: "Chat history exported!",
                 no_export: "No messages to export.",
                 favorite_add: "Added to favorites",
                 favorite_remove: "Removed from favorites"
             }
         };
 
-        // ============================================================
-        // УСТАНОВКА ЯЗЫКА
-        // ============================================================
-        let currentLang = localStorage.getItem('lang') || 'ru';
+        // State
+        let currentLang = 'ru';
+        let activeTab = 'chats';
+        let activeDialogId = null;
+        let messagesData = {};
+        let dialogsData = [];
 
-        function setLanguage(lang) {
-            if (!translations[lang]) return;
-            currentLang = lang;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
-                        el.placeholder = translations[lang][key];
-                    } else {
-                        el.textContent = translations[lang][key];
-                    }
-                }
-            });
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-                const key = el.getAttribute('data-i18n-placeholder');
-                if (translations[lang][key]) el.placeholder = translations[lang][key];
-            });
-            document.querySelectorAll('[data-i18n-title]').forEach(el => {
-                const key = el.getAttribute('data-i18n-title');
-                if (translations[lang][key]) el.title = translations[lang][key];
-            });
-            document.getElementById('langBtn').textContent = lang.toUpperCase();
-            localStorage.setItem('lang', lang);
-            updateUI();
-        }
+        const emojis = ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🤗','🤔','🤭','🤫','🤥','😶','😐','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😵','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👹','👺','🤡','💩','👻','💀','☠️','👽','👾','🤖','🎃','😺','😸','😹','😻','😼','😽','🙀','😿','😾','👋','🤚','🖐','✋','🖖','👌','🤏','✌️','🤞','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏','✍️','💅','🤳','💪'];
 
-        document.getElementById('langBtn').addEventListener('click', function() {
-            const cycle = ['ru', 'tm', 'en'];
-            let idx = cycle.indexOf(currentLang);
-            idx = (idx + 1) % cycle.length;
-            setLanguage(cycle[idx]);
-        });
-
-        // ============================================================
-        // АВТОРИЗАЦИЯ И НАВИГАЦИЯ
-        // ============================================================
-        const token = localStorage.getItem('token');
-        if (!token) window.location.href = 'login.html';
-
-        const user = JSON.parse(localStorage.getItem('user') || '{"username":"User","role":"user"}');
-        document.getElementById('username').textContent = user.username || 'User';
-
-        const backLink = document.getElementById('backLink');
-        if (user.role === 'admin') {
-            backLink.href = 'admin-dashboard.html';
-        } else {
-            backLink.href = 'user-dashboard.html';
-        }
-
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = 'login.html';
-        });
-
-        // ============================================================
-        // ЧАСТИЦЫ
-        // ============================================================
-        const particles = document.getElementById('particles');
-        if (particles && particles.children.length === 0) {
-            for (let i = 0; i < 60; i++) {
-                const p = document.createElement('span');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.top = Math.random() * 100 + '%';
-                p.style.animationDuration = (6 + Math.random() * 12) + 's';
-                p.style.animationDelay = Math.random() * 5 + 's';
-                particles.appendChild(p);
-            }
-        }
-
-        // ============================================================
-        // ОСНОВНАЯ ЛОГИКА МЕССЕНДЖЕРА
-        // ============================================================
-        let currentTab = 'chats';
-        let currentDialogId = null;
-        let dialogs = [];
-        let messages = {};
-        let searchQuery = '';
-
-        // Эмодзи
-        const emojis = ['😊', '😂', '❤️', '🔥', '👍', '👏', '🎉', '💪', '🤔', '😍', '🥳', '😎', '🙏', '💯', '✨', '🌟', '💬', '📌', '✅', '❌', '⚠️', '🔔', '📢', '💡', '🔑', '💰', '💎', '🚀', '⭐', '🌈'];
+        // DOM elements
+        const langBtn = document.getElementById('langBtn');
+        const themeToggle = document.getElementById('themeToggle');
+        const messengerContainer = document.getElementById('messengerContainer');
+        const searchInput = document.getElementById('searchInput');
+        const createGroupBtn = document.getElementById('createGroupBtn');
+        const groupModal = document.getElementById('groupModal');
+        const cancelGroupBtn = document.getElementById('cancelGroupBtn');
+        const groupForm = document.getElementById('groupForm');
+        const dialogsList = document.getElementById('dialogsList');
+        const newsFeed = document.getElementById('newsFeed');
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const emojiBtn = document.getElementById('emojiBtn');
+        const emojiPicker = document.getElementById('emojiPicker');
         const emojiGrid = document.getElementById('emojiGrid');
+        const fileBtn = document.getElementById('fileBtn');
+        const fileInput = document.getElementById('fileInput');
+        const exportChatBtn = document.getElementById('exportChatBtn');
+        const backBtn = document.getElementById('backBtn');
+        const dropbtn = document.getElementById('dropbtn');
+        const tabsDropdown = document.getElementById('tabsDropdown');
+        const dropdownContent = document.getElementById('dropdownContent');
+
+        // Init Emojis
         emojis.forEach(e => {
             const btn = document.createElement('button');
             btn.textContent = e;
-            btn.type = 'button';
-            btn.addEventListener('click', function() {
-                document.getElementById('messageInput').value += e;
-                document.getElementById('messageInput').focus();
-                document.getElementById('emojiPicker').classList.remove('active');
+            btn.addEventListener('click', () => {
+                messageInput.value += e;
+                emojiPicker.classList.remove('active');
             });
             emojiGrid.appendChild(btn);
         });
 
-        // Тема
-        let currentTheme = localStorage.getItem('messenger_theme') || 'dark';
-        const container = document.getElementById('messengerContainer');
-
-        function applyTheme(theme) {
-            currentTheme = theme;
-            container.classList.toggle('light-theme', theme === 'light');
-            document.getElementById('themeToggle').textContent = theme === 'light' ? '☀️' : '🌙';
-            localStorage.setItem('messenger_theme', theme);
-        }
-        document.getElementById('themeToggle').addEventListener('click', function() {
-            applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+        // Toggle Emoji Picker
+        emojiBtn.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            emojiPicker.classList.toggle('active');
         });
-        applyTheme(currentTheme);
 
-        // Вкладки
-        function switchTab(tab, updateLabel = true) {
-            currentTab = tab;
-            const dialogsList = document.getElementById('dialogsList');
-            const newsFeed = document.getElementById('newsFeed');
-            const searchInput = document.getElementById('searchInput');
-
-            dialogsList.style.display = 'none';
-            newsFeed.style.display = 'none';
-
-            if (tab === 'chats') {
-                dialogsList.style.display = 'block';
-                searchInput.placeholder = translations[currentLang].search_placeholder;
-                loadDialogs();
-            } else if (tab === 'news') {
-                newsFeed.style.display = 'block';
-                searchInput.placeholder = translations[currentLang].search_placeholder || 'Gözleg...';
-                renderNews();
-            } else if (tab === 'assistant') {
-                dialogsList.style.display = 'block';
-                searchInput.placeholder = translations[currentLang].search_placeholder;
-                const assistantId = 'assistant';
-                const assistantName = translations[currentLang].assistant_name;
-                let existing = dialogs.find(d => d.id === assistantId);
-                if (!existing) {
-                    dialogs.unshift({
-                        id: assistantId,
-                        name: assistantName,
-                        lastMessage: translations[currentLang].assistant_hello,
-                        time: new Date().toISOString(),
-                        unread: 1,
-                        isGroup: false
-                    });
-                    saveDialogs();
-                }
-                renderDialogs(dialogs);
-                openChat(assistantId, assistantName, 'assistant');
+        document.addEventListener('click', (e) => {
+            if (!emojiPicker.contains(e.target) && e.target !== emojiBtn) {
+                emojiPicker.classList.remove('active');
             }
+            if (!tabsDropdown.contains(e.target)) {
+                tabsDropdown.classList.remove('show');
+            }
+        });
 
-            document.querySelectorAll('#dropdownContent button').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.tab === tab);
+        // Language toggle
+        langBtn.addEventListener('click', () => {
+            currentLang = currentLang === 'ru' ? 'tm' : (currentLang === 'tm' ? 'en' : 'ru');
+            langBtn.textContent = currentLang.toUpperCase();
+            applyLanguage();
+        });
+
+        function applyLanguage() {
+            const dict = translations[currentLang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) el.textContent = dict[key];
             });
-            if (updateLabel) {
-                const tabKey = 'tab_' + tab;
-                document.getElementById('currentTabLabel').textContent = translations[currentLang][tabKey] || tab;
-            }
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (dict[key]) el.placeholder = dict[key];
+            });
+            document.querySelectorAll('[data-i18n-title]').forEach(el => {
+                const key = el.getAttribute('data-i18n-title');
+                if (dict[key]) el.title = dict[key];
+            });
         }
 
-        document.querySelectorAll('#dropdownContent button').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                document.getElementById('tabsDropdown').classList.remove('show');
-                switchTab(this.dataset.tab);
-            });
-        });
-        document.getElementById('dropbtn').addEventListener('click', function(e) {
-            e.stopPropagation();
-            document.getElementById('tabsDropdown').classList.toggle('show');
-        });
-        document.addEventListener('click', function() {
-            document.getElementById('tabsDropdown').classList.remove('show');
+        // Theme Toggle
+        themeToggle.addEventListener('click', () => {
+            messengerContainer.classList.toggle('light-theme');
+            themeToggle.textContent = messengerContainer.classList.contains('light-theme') ? '☀️' : '🌙';
         });
 
-        // Данные
-        function loadDialogs() {
-            const stored = localStorage.getItem('messenger_dialogs');
-            if (stored) {
-                try { dialogs = JSON.parse(stored); } catch(e) { dialogs = []; }
-            }
-            if (dialogs.length === 0) {
-                dialogs = [
-                    { id: '1', name: 'Aýdar', lastMessage: 'Salam!', time: new Date().toISOString(), unread: 2, isGroup: false },
-                    { id: '2', name: 'Meret', lastMessage: 'Nähili?', time: new Date(Date.now() - 3600000).toISOString(), unread: 0, isGroup: false },
-                    { id: '3', name: 'Gülşat', lastMessage: 'Gepleşeliň!', time: new Date(Date.now() - 7200000).toISOString(), unread: 5, isGroup: false },
-                    { id: '4', name: 'Saparmyrat', lastMessage: 'Habar bar', time: new Date(Date.now() - 86400000).toISOString(), unread: 0, isGroup: false }
-                ];
-                saveDialogs();
-            }
-            dialogs.forEach(d => {
-                const msgs = localStorage.getItem('messenger_messages_' + d.id);
-                if (msgs) {
-                    try { messages[d.id] = JSON.parse(msgs); } catch(e) { messages[d.id] = []; }
-                } else {
-                    messages[d.id] = [];
+        // Dropdown tabs
+        dropbtn.addEventListener('click', () => tabsDropdown.classList.toggle('show'));
+
+        dropdownContent.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                dropdownContent.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeTab = btn.getAttribute('data-tab');
+                document.getElementById('currentTabLabel').textContent = btn.textContent;
+                tabsDropdown.classList.remove('show');
+                
+                if (activeTab === 'chats') {
+                    dialogsList.style.display = 'block';
+                    newsFeed.style.display = 'none';
+                } else if (activeTab === 'news') {
+                    dialogsList.style.display = 'none';
+                    newsFeed.style.display = 'block';
+                    renderNews();
+                } else if (activeTab === 'assistant') {
+                    openAssistant();
                 }
             });
-            populateGroupMembers();
-            renderDialogs(dialogs);
-        }
+        });
 
-        function saveDialogs() {
-            localStorage.setItem('messenger_dialogs', JSON.stringify(dialogs));
-        }
-
-        function saveMessages(dialogId) {
-            if (messages[dialogId]) {
-                localStorage.setItem('messenger_messages_' + dialogId, JSON.stringify(messages[dialogId]));
-            }
-        }
-
-        function renderDialogs(dialogsList) {
-            const listEl = document.getElementById('dialogsList');
-            let filtered = dialogsList;
-            if (searchQuery) {
-                const q = searchQuery.toLowerCase();
-                filtered = dialogsList.filter(d => d.name.toLowerCase().includes(q));
-            }
-            if (!filtered || filtered.length === 0) {
-                listEl.innerHTML = `<div class="empty-state" style="padding:30px 20px; text-align:center; color:#9fb5c8;">📭 ${translations[currentLang].no_messages || 'Hiç hili söhbet ýok'}</div>`;
-                return;
-            }
-            listEl.innerHTML = filtered.map(d => {
-                const time = d.time ? new Date(d.time) : new Date();
-                const timeStr = time.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-                const isActive = currentDialogId === d.id;
-                const avatarClass = d.isGroup ? 'dialog-avatar group' : 'dialog-avatar';
-                const avatarText = d.isGroup ? '👥' : d.name.charAt(0).toUpperCase();
-                return `
-                    <div class="dialog-item ${isActive ? 'active' : ''}" data-id="${d.id}" data-name="${d.name}">
-                        <div class="${avatarClass}">${avatarText}</div>
-                        <div class="dialog-info">
-                            <div class="name">${d.name}</div>
-                            <div class="last-msg">${d.lastMessage || ''}</div>
-                        </div>
-                        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-                            <span class="dialog-time">${timeStr}</span>
-                            ${d.unread > 0 ? `<span class="unread-badge">${d.unread}</span>` : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            listEl.querySelectorAll('.dialog-item').forEach(el => {
-                el.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    const name = this.dataset.name;
-                    openChat(id, name, 'chats');
-                });
-                let timer;
-                el.addEventListener('mousedown', function(e) {
-                    timer = setTimeout(() => {
-                        const id = this.dataset.id;
-                        if (confirm(translations[currentLang].confirm_delete)) {
-                            deleteDialog(id);
-                        }
-                    }, 800);
-                });
-                el.addEventListener('mouseup', () => clearTimeout(timer));
-                el.addEventListener('mouseleave', () => clearTimeout(timer));
-            });
-        }
-
-        function deleteDialog(id) {
-            dialogs = dialogs.filter(d => d.id !== id);
-            delete messages[id];
-            localStorage.removeItem('messenger_messages_' + id);
-            saveDialogs();
-            if (currentDialogId === id) {
-                currentDialogId = null;
-                document.getElementById('chatMessages').innerHTML = `
-                    <div class="empty-chat">
-                        <div class="icon">💬</div>
-                        <h3>${translations[currentLang].select_chat}</h3>
-                        <p>${translations[currentLang].select_chat_desc}</p>
-                    </div>
-                `;
-                document.getElementById('chatName').textContent = translations[currentLang].select_chat;
-                document.getElementById('chatStatus').textContent = '';
-            }
-            renderDialogs(dialogs);
-            showToast(translations[currentLang].dialog_deleted, 'info');
-        }
-
-        function populateGroupMembers() {
+        // Group Modal
+        createGroupBtn.addEventListener('click', () => {
+            groupModal.classList.add('active');
             const select = document.getElementById('groupMembers');
-            const contacts = dialogs.filter(d => !d.isGroup && d.id !== 'assistant');
-            select.innerHTML = contacts.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
-        }
-
-        function openChat(id, name, type = 'chats') {
-            currentDialogId = id;
-            document.getElementById('chatName').textContent = name;
-            const avatar = document.getElementById('chatAvatar');
-            const dialog = dialogs.find(d => d.id === id);
-            if (dialog && dialog.isGroup) {
-                avatar.textContent = '👥';
-            } else {
-                avatar.textContent = name.charAt(0).toUpperCase();
-            }
-            document.getElementById('chatStatus').textContent = translations[currentLang].online;
-
-            if (dialog) {
-                dialog.unread = 0;
-                saveDialogs();
-            }
-            if (!messages[id]) messages[id] = [];
-            renderMessages(id);
-            renderDialogs(dialogs);
-        }
-
-        function renderMessages(dialogId) {
-            const container = document.getElementById('chatMessages');
-            const msgs = messages[dialogId] || [];
-            if (!msgs || msgs.length === 0) {
-                container.innerHTML = `<div class="empty-chat"><div class="icon">💬</div><h3>${translations[currentLang].no_messages}</h3></div>`;
-                return;
-            }
-            container.innerHTML = msgs.map(msg => {
-                const isSent = msg.from === 'user';
-                const senderName = isSent ? '' : `<div class="msg-username">${msg.from}</div>`;
-                const time = new Date(msg.time).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-                let fileHtml = '';
-                if (msg.file) {
-                    fileHtml = `<div class="file-attachment">📎 <a href="${msg.file}" target="_blank">${msg.fileName || 'Faýl'}</a></div>`;
+            select.innerHTML = '';
+            dialogsData.forEach(d => {
+                if (!d.isGroup && d.id !== 'assistant') {
+                    const opt = document.createElement('option');
+                    opt.value = d.id;
+                    opt.textContent = d.name;
+                    select.appendChild(opt);
                 }
-                return `
-                    <div class="message ${isSent ? 'sent' : 'received'}">
-                        ${senderName}
-                        ${msg.text}
-                        ${fileHtml}
-                        <div class="msg-time">${time}</div>
-                    </div>
-                `;
-            }).join('');
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const text = input.value.trim();
-            if (!text && pendingFiles.length === 0) return;
-            if (!currentDialogId) {
-                showToast('Ilki söhbeti saýlaň!', 'error');
-                return;
-            }
-
-            const msg = { from: 'user', text: text || '', time: new Date().toISOString() };
-            if (pendingFiles.length > 0) {
-                const fileNames = pendingFiles.map(f => f.name).join(', ');
-                msg.file = '#file-' + Date.now();
-                msg.fileName = fileNames;
-                pendingFiles = [];
-            }
-            if (!messages[currentDialogId]) messages[currentDialogId] = [];
-            messages[currentDialogId].push(msg);
-            saveMessages(currentDialogId);
-
-            const dialog = dialogs.find(d => d.id === currentDialogId);
-            if (dialog) {
-                dialog.lastMessage = text || 'Faýl iberildi';
-                dialog.time = new Date().toISOString();
-                saveDialogs();
-            }
-
-            renderMessages(currentDialogId);
-            input.value = '';
-            renderDialogs(dialogs);
-
-            if (currentDialogId !== 'assistant') {
-                showTyping();
-                setTimeout(() => {
-                    const reply = {
-                        from: dialog ? dialog.name : 'Aýdar',
-                        text: 'Gowy, men size kömek ederin. (' + new Date().toLocaleTimeString() + ')',
-                        time: new Date().toISOString()
-                    };
-                    messages[currentDialogId].push(reply);
-                    saveMessages(currentDialogId);
-                    if (dialog) {
-                        dialog.lastMessage = reply.text;
-                        dialog.time = new Date().toISOString();
-                        saveDialogs();
-                    }
-                    renderMessages(currentDialogId);
-                    renderDialogs(dialogs);
-                }, 1200 + Math.random() * 800);
-            } else {
-                setTimeout(() => {
-                    const reply = {
-                        from: translations[currentLang].assistant_name,
-                        text: translations[currentLang].assistant_hello,
-                        time: new Date().toISOString()
-                    };
-                    messages[currentDialogId].push(reply);
-                    saveMessages(currentDialogId);
-                    if (dialog) {
-                        dialog.lastMessage = reply.text;
-                        dialog.time = new Date().toISOString();
-                        saveDialogs();
-                    }
-                    renderMessages(currentDialogId);
-                    renderDialogs(dialogs);
-                }, 600);
-            }
-        }
-
-        document.getElementById('sendBtn').addEventListener('click', sendMessage);
-        document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') sendMessage();
+            });
         });
 
-        let pendingFiles = [];
-        document.getElementById('fileBtn').addEventListener('click', function() {
-            document.getElementById('fileInput').click();
-        });
-        document.getElementById('fileInput').addEventListener('change', function() {
-            const files = Array.from(this.files);
-            if (files.length) {
-                pendingFiles = files;
-                showToast(`${files.length} faýl goşuldy`, 'info');
-            }
-            this.value = '';
-        });
+        cancelGroupBtn.addEventListener('click', () => groupModal.classList.remove('active'));
 
-        document.getElementById('emojiBtn').addEventListener('click', function(e) {
-            e.stopPropagation();
-            document.getElementById('emojiPicker').classList.toggle('active');
-        });
-        document.addEventListener('click', function() {
-            document.getElementById('emojiPicker').classList.remove('active');
-        });
-
-        document.getElementById('audioCallBtn').addEventListener('click', function() {
-            showToast('📞 ' + translations[currentLang].audio_call + ' (simulýasiýa)', 'info');
-        });
-        document.getElementById('videoCallBtn').addEventListener('click', function() {
-            showToast('📹 ' + translations[currentLang].video_call + ' (simulýasiýa)', 'info');
-        });
-
-        let typingTimeout = null;
-        function showTyping() {
-            const container = document.getElementById('chatMessages');
-            const typingEl = document.createElement('div');
-            typingEl.className = 'typing-indicator';
-            typingEl.textContent = translations[currentLang].typing || 'печатает...';
-            typingEl.id = 'typingIndicator';
-            container.appendChild(typingEl);
-            container.scrollTop = container.scrollHeight;
-            clearTimeout(typingTimeout);
-            typingTimeout = setTimeout(() => {
-                const el = document.getElementById('typingIndicator');
-                if (el) el.remove();
-            }, 2000);
-        }
-
-        // Группы
-        document.getElementById('createGroupBtn').addEventListener('click', function() {
-            document.getElementById('groupModal').classList.add('active');
-            populateGroupMembers();
-        });
-        document.getElementById('cancelGroupBtn').addEventListener('click', function() {
-            document.getElementById('groupModal').classList.remove('active');
-        });
-        document.getElementById('groupModal').addEventListener('click', function(e) {
-            if (e.target === this) this.classList.remove('active');
-        });
-        document.getElementById('groupForm').addEventListener('submit', function(e) {
+        groupForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const name = document.getElementById('groupName').value.trim();
-            const selected = Array.from(document.getElementById('groupMembers').selectedOptions).map(opt => opt.text);
-            if (!name) {
-                showToast('Toparyň ady hökmany', 'error');
-                return;
-            }
+            if (!name) return;
+
             const newGroup = {
                 id: 'group_' + Date.now(),
                 name: name,
-                lastMessage: 'Topar döredildi!',
-                time: new Date().toISOString(),
+                lastMsg: 'Группа создана',
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
                 unread: 0,
-                isGroup: true,
-                members: selected
+                isGroup: true
             };
-            dialogs.push(newGroup);
-            messages[newGroup.id] = [];
-            saveDialogs();
-            renderDialogs(dialogs);
-            document.getElementById('groupModal').classList.remove('active');
-            showToast('Topar döredildi!', 'success');
+
+            dialogsData.unshift(newGroup);
+            messagesData[newGroup.id] = [];
+            renderDialogs();
+            groupModal.classList.remove('active');
+            groupForm.reset();
+            showToast('Группа создана!', 'success');
         });
 
-        // Новости
-        function renderNews() {
-            const feed = document.getElementById('newsFeed');
-            const newsItems = [
-                { title: translations[currentLang].news_title_1, summary: translations[currentLang].news_summary_1, image: '📢' },
-                { title: translations[currentLang].news_title_2, summary: translations[currentLang].news_summary_2, image: '📈' },
-                { title: translations[currentLang].news_title_3, summary: translations[currentLang].news_summary_3, image: '🏦' },
-                { title: translations[currentLang].news_title_4, summary: translations[currentLang].news_summary_4, image: '📹' }
-            ];
-            if (!newsItems.length) {
-                feed.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>${translations[currentLang].news_no_items}</p></div>`;
-                return;
-            }
-            feed.innerHTML = newsItems.map(item => `
-                <div class="news-item">
-                    <div class="title">${item.title}</div>
-                    <div class="summary">${item.summary}</div>
-                    <div class="image-placeholder">${item.image}</div>
-                    <div class="meta"><span>⏱ ${new Date().toLocaleDateString()}</span><span>❤️ 12</span></div>
-                </div>
-            `).join('');
-        }
-
-        // Поиск
-        document.getElementById('searchInput').addEventListener('input', function() {
-            searchQuery = this.value.trim();
-            if (currentTab === 'chats') {
-                renderDialogs(dialogs);
+        // File attachment dummy trigger
+        fileBtn.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0 && activeDialogId) {
+                Array.from(fileInput.files).forEach(f => {
+                    sendMessage(`📎 Файл: ${f.name}`);
+                });
+                fileInput.value = '';
             }
         });
 
-        // Поиск в чате
-        document.getElementById('searchInChatBtn').addEventListener('click', function() {
-            if (!currentDialogId) {
-                showToast('Ilki söhbeti saýlaň!', 'error');
-                return;
-            }
-            const msgs = messages[currentDialogId] || [];
-            if (msgs.length === 0) {
-                showToast('Hiç hili habar ýok', 'info');
-                return;
-            }
-            const keyword = prompt(translations[currentLang].search_chat + ':');
-            if (!keyword) return;
-            const results = msgs.filter(m => m.text.toLowerCase().includes(keyword.toLowerCase()));
-            if (results.length === 0) {
-                showToast('Hiç zat tapylmady', 'info');
-            } else {
-                showToast(`${results.length} habar tapyldy`, 'success');
-                const container = document.getElementById('chatMessages');
-                container.innerHTML = msgs.map(msg => {
-                    const isSent = msg.from === 'user';
-                    const highlight = msg.text.toLowerCase().includes(keyword.toLowerCase()) ? 'style="border:2px solid #00d4ff; padding:10px;"' : '';
-                    return `
-                        <div class="message ${isSent ? 'sent' : 'received'}" ${highlight}>
-                            ${isSent ? '' : `<div class="msg-username">${msg.from}</div>`}
-                            ${msg.text}
-                            <div class="msg-time">${new Date(msg.time).toLocaleTimeString()}</div>
-                        </div>
-                    `;
-                }).join('');
-                container.scrollTop = 0;
-                setTimeout(() => renderMessages(currentDialogId), 5000);
-            }
-        });
-
-        // Экспорт
-        document.getElementById('exportChatBtn').addEventListener('click', function() {
-            if (!currentDialogId) {
-                showToast('Ilki söhbeti saýlaň!', 'error');
-                return;
-            }
-            const msgs = messages[currentDialogId] || [];
-            if (msgs.length === 0) {
+        // Export Chat
+        exportChatBtn.addEventListener('click', () => {
+            if (!activeDialogId || !messagesData[activeDialogId] || messagesData[activeDialogId].length === 0) {
                 showToast(translations[currentLang].no_export, 'error');
                 return;
             }
-            const dialog = dialogs.find(d => d.id === currentDialogId);
-            let content = `Söhbet: ${dialog ? dialog.name : '???'}\n`;
-            content += `Eksport edilen: ${new Date().toLocaleString()}\n`;
-            content += '='.repeat(40) + '\n\n';
-            msgs.forEach(m => {
-                const time = new Date(m.time).toLocaleString();
-                content += `[${time}] ${m.from}: ${m.text}\n`;
-                if (m.fileName) content += `  (Faýl: ${m.fileName})\n`;
-            });
-            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `chat_${dialog ? dialog.name : 'export'}_${Date.now()}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(messagesData[activeDialogId], null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `chat_export_${activeDialogId}.json`);
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
             showToast(translations[currentLang].export_success, 'success');
         });
 
-        // Автообновление (ограничено 3 сообщениями)
-        let autoUpdateInterval = null;
-        let autoUpdateCount = 0;
-        const MAX_AUTO_MESSAGES = 3;
-
-        function startAutoUpdate() {
-            if (autoUpdateInterval) clearInterval(autoUpdateInterval);
-            autoUpdateInterval = setInterval(() => {
-                if (autoUpdateCount >= MAX_AUTO_MESSAGES) {
-                    clearInterval(autoUpdateInterval);
-                    autoUpdateInterval = null;
-                    return;
-                }
-                const contacts = dialogs.filter(d => !d.isGroup && d.id !== 'assistant');
-                if (contacts.length === 0) return;
-                const randomContact = contacts[Math.floor(Math.random() * contacts.length)];
-                const newMsg = {
-                    from: randomContact.name,
-                    text: 'Täze habar! (' + new Date().toLocaleTimeString() + ')',
-                    time: new Date().toISOString()
-                };
-                if (!messages[randomContact.id]) messages[randomContact.id] = [];
-                messages[randomContact.id].push(newMsg);
-                saveMessages(randomContact.id);
-                const dialog = dialogs.find(d => d.id === randomContact.id);
-                if (dialog) {
-                    dialog.lastMessage = newMsg.text;
-                    dialog.time = new Date().toISOString();
-                    dialog.unread = (dialog.unread || 0) + 1;
-                    saveDialogs();
-                }
-                if (currentDialogId === randomContact.id) {
-                    renderMessages(currentDialogId);
-                }
-                renderDialogs(dialogs);
-                showToast(`📩 ${translations[currentLang].online}: ${newMsg.text}`, 'info');
-                autoUpdateCount++;
-            }, 30000);
-        }
-
-        function showToast(message, type = 'info') {
-            const existing = document.querySelector('.toast');
-            if (existing) existing.remove();
+        // Toast Helper
+        function showToast(msg, type = 'info') {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            toast.textContent = message;
+            toast.textContent = msg;
             document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.5s';
-                setTimeout(() => toast.remove(), 500);
-            }, 3000);
+            setTimeout(() => toast.remove(), 3000);
         }
 
-        function updateUI() {
-            // Обновляем заголовки вкладок
-            document.querySelectorAll('#dropdownContent button').forEach(btn => {
-                const key = btn.dataset.i18n;
-                if (translations[currentLang][key]) btn.textContent = translations[currentLang][key];
+        // Dummy Data & Render logic
+        function initMockData() {
+            dialogsData = [
+                { id: '1', name: 'Сердар Аннаев', lastMsg: 'Привет, как успехи?', time: '10:42', unread: 2, online: true },
+                { id: '2', name: 'Мая Гараева', lastMsg: 'Документы отправлены', time: 'Вчера', unread: 0, online: false },
+                { id: '3', name: 'Разработчики Sfera', lastMsg: 'Обновление готово!', time: 'Пн', unread: 5, isGroup: true }
+            ];
+
+            messagesData = {
+                '1': [{ sender: 'Сердар Аннаев', text: 'Привет, как успехи?', time: '10:42', type: 'received' }],
+                '2': [{ sender: 'Мая Гараева', text: 'Документы отправлены', time: 'Вчера', type: 'received' }],
+                '3': [{ sender: 'Разработчики Sfera', text: 'Обновление готово!', time: 'Пн', type: 'received' }]
+            };
+
+            renderDialogs();
+        }
+
+        function renderDialogs() {
+            dialogsList.innerHTML = '';
+            dialogsData.forEach(d => {
+                const item = document.createElement('div');
+                item.className = `dialog-item ${activeDialogId === d.id ? 'active' : ''}`;
+                item.innerHTML = `
+                    <div class="dialog-avatar ${d.isGroup ? 'group' : ''}">
+                        ${d.isGroup ? '👥' : d.name.charAt(0)}
+                        ${d.online ? '<div class="online-dot"></div>' : ''}
+                    </div>
+                    <div class="dialog-info">
+                        <div class="name">${d.name}</div>
+                        <div class="last-msg">${d.lastMsg}</div>
+                    </div>
+                    <div class="dialog-time">${d.time}</div>
+                    ${d.unread > 0 ? `<div class="unread-badge">${d.unread}</div>` : ''}
+                `;
+                item.addEventListener('click', () => selectDialog(d.id));
+                dialogsList.appendChild(item);
             });
-            const tabKey = 'tab_' + currentTab;
-            document.getElementById('currentTabLabel').textContent = translations[currentLang][tabKey] || currentTab;
-            // Обновляем тему
-            const themeLabel = currentTheme === 'light' ? '☀️' : '🌙';
-            document.getElementById('themeToggle').textContent = themeLabel;
-            // Обновляем статус
-            if (currentDialogId) {
-                document.getElementById('chatStatus').textContent = translations[currentLang].online;
-            }
-            renderNews();
-            renderDialogs(dialogs);
         }
 
-        // Инициализация
-        loadDialogs();
-        setLanguage(currentLang);
-        switchTab('chats', true);
-        startAutoUpdate();
-        applyTheme(currentTheme);
-        console.log('✅ Messenger with full features loaded');
+        function selectDialog(id) {
+            activeDialogId = id;
+            const dialog = dialogsData.find(d => d.id === id);
+            if (dialog) dialog.unread = 0;
+            renderDialogs();
+            renderChat();
+        }
+
+        function renderChat() {
+            const dialog = dialogsData.find(d => d.id === activeDialogId);
+            if (!dialog) return;
+
+            document.getElementById('chatName').textContent = dialog.name;
+            document.getElementById('chatAvatar').textContent = dialog.isGroup ? '👥' : dialog.name.charAt(0);
+            document.getElementById('chatStatus').textContent = dialog.online ? translations[currentLang].online : translations[currentLang].offline;
+
+            chatMessages.innerHTML = '';
+            const msgs = messagesData[activeDialogId] || [];
+            msgs.forEach(m => {
+                const msgEl = document.createElement('div');
+                msgEl.className = `message ${m.type}`;
+                msgEl.innerHTML = `
+                    ${m.type === 'received' && dialog.isGroup ? `<div class="msg-username">${m.sender}</div>` : ''}
+                    <div>${m.text}</div>
+                    <div class="msg-time">${m.time}</div>
+                `;
+                chatMessages.appendChild(msgEl);
+            });
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendMessage(text) {
+            if (!activeDialogId || !text.trim()) return;
+            const now = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            if (!messagesData[activeDialogId]) messagesData[activeDialogId] = [];
+            messagesData[activeDialogId].push({ sender: 'Я', text: text, time: now, type: 'sent' });
+
+            const d = dialogsData.find(x => x.id === activeDialogId);
+            if (d) {
+                d.lastMsg = text;
+                d.time = now;
+            }
+
+            renderDialogs();
+            renderChat();
+            messageInput.value = '';
+        }
+
+        sendBtn.addEventListener('click', () => sendMessage(messageInput.value));
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage(messageInput.value);
+        });
+
+        function renderNews() {
+            newsFeed.innerHTML = `
+                <div class="news-item">
+                    <div class="title" data-i18n="news_title_1">${translations[currentLang].news_title_1}</div>
+                    <div class="summary" data-i18n="news_summary_1">${translations[currentLang].news_summary_1}</div>
+                    <div class="meta"><span>📅 Today</span><span>👁 1,230</span></div>
+                </div>
+                <div class="news-item">
+                    <div class="title" data-i18n="news_title_2">${translations[currentLang].news_title_2}</div>
+                    <div class="summary" data-i18n="news_summary_2">${translations[currentLang].news_summary_2}</div>
+                    <div class="meta"><span>📅 Yesterday</span><span>👁 3,410</span></div>
+                </div>
+            `;
+        }
+
+        function openAssistant() {
+            let ast = dialogsData.find(d => d.id === 'assistant');
+            if (!ast) {
+                ast = {
+                    id: 'assistant',
+                    name: translations[currentLang].assistant_name,
+                    lastMsg: translations[currentLang].assistant_hello,
+                    time: 'NOW',
+                    unread: 0,
+                    online: true
+                };
+                dialogsData.unshift(ast);
+                messagesData['assistant'] = [
+                    { sender: ast.name, text: translations[currentLang].assistant_hello, time: 'NOW', type: 'received' }
+                ];
+            }
+            dialogsList.style.display = 'block';
+            newsFeed.style.display = 'none';
+            selectDialog('assistant');
+        }
+
+        // Init App
+        initMockData();
+        applyLanguage();
     </script>
 </body>
 </html>
