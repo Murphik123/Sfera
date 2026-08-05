@@ -2,7 +2,7 @@
    SFERA PLATFORM — MAIN CLIENT SCRIPT (Full Architecture + WebRTC + Sockets)
    ========================================================================== */
 
-// --- Конфигурация WebRTC (STUN-серверы для обхода NAT) ---
+// --- Конфигурация WebRTC (STUN-серверы) ---
 const rtcConfiguration = {
     iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
@@ -19,7 +19,7 @@ let currentChatUserId = null;
 let currentUserId = localStorage.getItem('userId') || null;
 let currentLang = localStorage.getItem('sfera_lang') || 'ru';
 
-// --- Словарь локализации (RU / TM / EN) ---
+// --- Словарь локализации ---
 const translations = {
     ru: {
         messenger: "Мессенджер",
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   1. МУЛЬТИЯЗЫЧНОСТЬ И НАВИГАЦИЯ ВКТАДОК
+   1. МУЛЬТИЯЗЫЧНОСТЬ И НАВИГАЦИЯ
    ========================================================================== */
 
 function initLanguage() {
@@ -111,8 +111,7 @@ function setLanguage(lang) {
     });
 
     const t = translations[lang];
-    
-    // Обновление текстов интерфейса
+
     const navMessenger = document.querySelector('[data-tab="messenger"]');
     const navMarketplace = document.querySelector('[data-tab="marketplace"]');
     const navBanking = document.querySelector('[data-tab="banking"]');
@@ -164,17 +163,14 @@ function initSocketConnection(userId) {
 
     socket = io();
 
-    // Регистрация на сервере
     socket.emit('register_user', userId);
 
-    // Прием новых сообщений
     socket.on('receive_message', (data) => {
         if (data.senderId === currentChatUserId) {
             appendMessage(data.text, 'incoming');
         }
     });
 
-    // Обработка статуса пользователей (online/offline)
     socket.on('user_status_change', (data) => {
         const userElem = document.querySelector(`[data-user-id="${data.userId}"]`);
         if (userElem) {
@@ -186,20 +182,26 @@ function initSocketConnection(userId) {
     socket.on('incoming_call', async (data) => {
         activeCallUserId = data.from;
         const t = translations[currentLang];
-        
-        document.getElementById('callModal').style.display = 'flex';
-        document.getElementById('callStatusText').innerText = t.callStatusIncoming;
-        document.getElementById('acceptCallBtn').style.display = 'inline-block';
 
-        document.getElementById('acceptCallBtn').onclick = async () => {
-            await handleAcceptCall(data);
-        };
+        const modal = document.getElementById('callModal');
+        const statusText = document.getElementById('callStatusText');
+        const acceptBtn = document.getElementById('acceptCallBtn');
+
+        if (modal) modal.style.display = 'flex';
+        if (statusText) statusText.innerText = t.callStatusIncoming;
+        if (acceptBtn) {
+            acceptBtn.style.display = 'inline-block';
+            acceptBtn.onclick = async () => {
+                await handleAcceptCall(data);
+            };
+        }
     });
 
     socket.on('call_accepted', async (signal) => {
         if (peerConnection) {
             await peerConnection.setRemoteDescription(new RTCSessionDescription(signal));
-            document.getElementById('callStatusText').innerText = translations[currentLang].callStatusTalking;
+            const statusText = document.getElementById('callStatusText');
+            if (statusText) statusText.innerText = translations[currentLang].callStatusTalking;
         }
     });
 
@@ -253,11 +255,14 @@ async function loadUsers() {
 
 function selectUser(user) {
     currentChatUserId = user._id;
-    document.getElementById('chatTitle').innerText = user.name || user.username || user.email;
-    
-    document.getElementById('messageInput').disabled = false;
-    document.getElementById('sendBtn').disabled = false;
-    
+    const title = document.getElementById('chatTitle');
+    if (title) title.innerText = user.name || user.username || user.email;
+
+    const msgInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    if (msgInput) msgInput.disabled = false;
+    if (sendBtn) sendBtn.disabled = false;
+
     const audioBtn = document.getElementById('audioCallBtn');
     const videoBtn = document.getElementById('videoCallBtn');
     if (audioBtn) audioBtn.style.display = 'inline-block';
@@ -268,6 +273,7 @@ function selectUser(user) {
 
 async function loadMessages(recipientId) {
     const container = document.getElementById('messagesContainer');
+    if (!container) return;
     container.innerHTML = '';
     try {
         const res = await fetch(`/api/chat/history/${recipientId}`);
@@ -283,6 +289,7 @@ async function loadMessages(recipientId) {
 
 function sendMessage() {
     const input = document.getElementById('messageInput');
+    if (!input) return;
     const text = input.value.trim();
     if (!text || !currentChatUserId) return;
 
@@ -290,6 +297,7 @@ function sendMessage() {
 
     if (socket) {
         socket.emit('send_message', {
+            senderId: currentUserId,
             recipientId: currentChatUserId,
             text: text
         });
@@ -300,6 +308,7 @@ function sendMessage() {
 
 function appendMessage(text, type) {
     const container = document.getElementById('messagesContainer');
+    if (!container) return;
     const placeholder = container.querySelector('.placeholder-text');
     if (placeholder) placeholder.remove();
 
@@ -315,19 +324,25 @@ function appendMessage(text, type) {
    ========================================================================== */
 
 async function startCall(isVideo) {
-    if (!currentChatUserId) return;
+    if (!currentChatUserId || !currentUserId) return;
     activeCallUserId = currentChatUserId;
     const t = translations[currentLang];
 
-    document.getElementById('callModal').style.display = 'flex';
-    document.getElementById('callStatusText').innerText = t.callStatusCalling;
-    document.getElementById('acceptCallBtn').style.display = 'none';
+    const modal = document.getElementById('callModal');
+    const statusText = document.getElementById('callStatusText');
+    const acceptBtn = document.getElementById('acceptCallBtn');
+
+    if (modal) modal.style.display = 'flex';
+    if (statusText) statusText.innerText = t.callStatusCalling;
+    if (acceptBtn) acceptBtn.style.display = 'none';
 
     setupPeerConnection();
 
     try {
         localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideo });
-        document.getElementById('localVideo').srcObject = localStream;
+        const localVid = document.getElementById('localVideo');
+        if (localVid) localVid.srcObject = localStream;
+        
         localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
 
         const offer = await peerConnection.createOffer();
@@ -336,24 +351,30 @@ async function startCall(isVideo) {
         socket.emit('call_user', {
             userToCall: activeCallUserId,
             signalData: offer,
+            from: currentUserId,
             isVideo: isVideo
         });
     } catch (err) {
-        console.error('Доступ к медиаустройствам отклонен:', err);
+        console.error('Доступ к медиаустройствам отклонен или произошла ошибка:', err);
         closeCallUI();
     }
 }
 
 async function handleAcceptCall(data) {
     const t = translations[currentLang];
-    document.getElementById('acceptCallBtn').style.display = 'none';
-    document.getElementById('callStatusText').innerText = t.callStatusConnecting;
+    const acceptBtn = document.getElementById('acceptCallBtn');
+    const statusText = document.getElementById('callStatusText');
+
+    if (acceptBtn) acceptBtn.style.display = 'none';
+    if (statusText) statusText.innerText = t.callStatusConnecting;
 
     setupPeerConnection();
 
     try {
         localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: data.isVideo });
-        document.getElementById('localVideo').srcObject = localStream;
+        const localVid = document.getElementById('localVideo');
+        if (localVid) localVid.srcObject = localStream;
+
         localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
 
         await peerConnection.setRemoteDescription(new RTCSessionDescription(data.signal));
