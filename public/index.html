@@ -62,7 +62,7 @@
             100% { transform: translate(0,0); }
         }
 
-        /* Светящиеся плавающие точки */
+        /* Частицы */
         #particles {
             position: fixed;
             top: 0;
@@ -83,20 +83,10 @@
         }
 
         @keyframes floatParticle {
-            0% {
-                transform: translateY(100vh) scale(0);
-                opacity: 0;
-            }
-            20% {
-                opacity: 0.8;
-            }
-            80% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateY(-10vh) scale(1.2);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
         .container {
@@ -104,7 +94,7 @@
             margin: auto;
         }
 
-        /* HEADER */
+        /* HEADER & ВРАЩАЮЩИЙСЯ ЛОГОТИП СЛЕВА */
         header {
             position: fixed;
             top: 0;
@@ -128,22 +118,40 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             text-decoration: none;
             color: white;
-            transition: transform 0.3s ease;
         }
 
-        .logo:hover {
-            transform: translateY(-1px);
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
+        .logo-icon-wrap {
+            position: relative;
+            width: 46px;
+            height: 46px;
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+        .logo-spinner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px dashed var(--primary);
+            border-radius: 50%;
+            animation: rotateLogo 12s linear infinite;
+        }
+
+        @keyframes rotateLogo {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .logo-center-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--accent);
         }
 
         .logo-text h2 {
@@ -183,9 +191,7 @@
             color: var(--primary);
         }
 
-        .dropdown {
-            position: relative;
-        }
+        .dropdown { position: relative; }
 
         .submenu {
             display: none;
@@ -213,9 +219,7 @@
             color: var(--primary);
         }
 
-        .dropdown:hover .submenu {
-            display: block;
-        }
+        .dropdown:hover .submenu { display: block; }
 
         .header-buttons {
             display: flex;
@@ -347,7 +351,7 @@
             transform: translateY(-3px);
         }
 
-        /* CORE ANIMATION */
+        /* ЛОГОТИП СПРАВА В КРУГУ (БЕЗ ТЕКСТА) */
         .hero-visual {
             display: flex;
             justify-content: center;
@@ -356,8 +360,8 @@
 
         .core {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 320px;
+            height: 320px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -366,33 +370,46 @@
         .core-ring {
             position: absolute;
             border-radius: 50%;
-            border: 2px solid rgba(0,212,255,.3);
+            border: 2px dashed rgba(0,212,255,.35);
             animation: spinRing linear infinite;
         }
 
-        .ring-1 { width: 100%; height: 100%; animation-duration: 20s; }
-        .ring-2 { width: 120%; height: 120%; animation-duration: 15s; animation-direction: reverse; border-color: rgba(0,255,170,.2); }
-        .ring-3 { width: 140%; height: 140%; animation-duration: 25s; border-color: rgba(31,107,255,.2); }
+        .ring-1 { width: 100%; height: 100%; animation-duration: 20s; border-color: rgba(0, 212, 255, 0.4); }
+        .ring-2 { width: 125%; height: 125%; animation-duration: 14s; animation-direction: reverse; border-color: rgba(0, 255, 163, 0.3); }
+        .ring-3 { width: 150%; height: 150%; animation-duration: 26s; border-color: rgba(31, 107, 255, 0.3); }
 
         @keyframes spinRing { to { transform: rotate(360deg); } }
 
         .core-center {
-            width: 130px;
-            height: 130px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
-            background: radial-gradient(circle, #00d4ff, #004d80);
-            box-shadow: 0 0 70px rgba(0,212,255,.5);
+            background: radial-gradient(circle, #00d4ff 0%, #004d80 70%, #06111d 100%);
+            box-shadow: 0 0 60px rgba(0, 212, 255, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.4);
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
-        /* MODULES & SECTIONS */
-        .modules, .statistics, .news {
-            padding: 100px 7%;
+        .core-center-glow {
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 25px var(--accent);
+            animation: pulseGlow 2s ease-in-out infinite alternate;
         }
 
-        .modules h2, .news h2 {
+        @keyframes pulseGlow {
+            0% { transform: scale(0.8); opacity: 0.7; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* SECTIONS */
+        .modules, .statistics { padding: 100px 7%; }
+
+        .modules h2 {
             text-align: center;
             font-size: 42px;
             margin-bottom: 60px;
@@ -467,12 +484,11 @@
 
     <header>
         <div class="container">
+            <!-- ВРАЩАЮЩИЙСЯ ЛОГОТИП СЛЕВА -->
             <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="50" cy="50" r="40" stroke="#00d4ff" stroke-width="3" stroke-dasharray="1 6" />
-                        <circle cx="50" cy="50" r="8" fill="#00ffa3" />
-                    </svg>
+                <div class="logo-icon-wrap">
+                    <div class="logo-spinner"></div>
+                    <div class="logo-center-dot"></div>
                 </div>
                 <div class="logo-text">
                     <h2>SFERA</h2>
@@ -519,15 +535,14 @@
             </div>
         </div>
 
+        <!-- ЛОГОТИП СПРАВА В КРУГУ (БЕЗ ТЕКСТА) -->
         <div class="hero-visual">
             <div class="core">
                 <div class="core-ring ring-1"></div>
                 <div class="core-ring ring-2"></div>
                 <div class="core-ring ring-3"></div>
                 <div class="core-center">
-                    <svg viewBox="0 0 100 100" fill="none" width="60" height="60">
-                        <circle cx="50" cy="50" r="35" stroke="#ffffff" stroke-width="4" stroke-dasharray="1 8" />
-                    </svg>
+                    <div class="core-center-glow"></div>
                 </div>
             </div>
         </div>
@@ -570,26 +585,11 @@
     </section>
 
     <section class="statistics">
-        <div class="stat">
-            <h1 id="online">0</h1>
-            <p>Onlaýn</p>
-        </div>
-        <div class="stat">
-            <h1 id="users">0</h1>
-            <p>Ulanyjylar</p>
-        </div>
-        <div class="stat">
-            <h1 id="orders">0</h1>
-            <p>Söwdalar</p>
-        </div>
-        <div class="stat">
-            <h1 id="docs">0</h1>
-            <p>Resmiýetler</p>
-        </div>
-        <div class="stat">
-            <h1 id="coin">0</h1>
-            <p>TM Coin</p>
-        </div>
+        <div class="stat"><h1 id="online">0</h1><p>Onlaýn</p></div>
+        <div class="stat"><h1 id="users">0</h1><p>Ulanyjylar</p></div>
+        <div class="stat"><h1 id="orders">0</h1><p>Söwdalar</p></div>
+        <div class="stat"><h1 id="docs">0</h1><p>Resmiýetler</p></div>
+        <div class="stat"><h1 id="coin">0</h1><p>TM Coin</p></div>
     </section>
 
     <footer>
@@ -598,29 +598,23 @@
     </footer>
 
     <script>
-        // Генерация светящихся точек
         function createParticles() {
             const container = document.getElementById('particles');
             const particleCount = 45;
-
             for (let i = 0; i < particleCount; i++) {
                 const p = document.createElement('div');
                 p.classList.add('particle');
-                
-                const size = Math.random() * 4 + 2; // от 2px до 6px
+                const size = Math.random() * 4 + 2;
                 p.style.width = `${size}px`;
                 p.style.height = `${size}px`;
                 p.style.left = `${Math.random() * 100}vw`;
-                
-                const duration = Math.random() * 10 + 8; // от 8s до 18s
+                const duration = Math.random() * 10 + 8;
                 p.style.animationDuration = `${duration}s`;
                 p.style.animationDelay = `${Math.random() * 10}s`;
-
                 container.appendChild(p);
             }
         }
 
-        // Счетчик цифр
         (function animateCounters() {
             const counters = [
                 { id: "online", target: 234 },
