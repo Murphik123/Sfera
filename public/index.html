@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="tm">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SFERA — Ecosystem Platform</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>СФЕРА — Türkmenistanyň Ýeke Sanly Platformasy</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,7 +22,7 @@
             --white: #ffffff;
             --text: #dbe9ff;
             --shadow: 0 20px 60px rgba(0,0,0,.35);
-            --radius: 16px;
+            --radius: 22px;
         }
 
         * {
@@ -32,366 +32,631 @@
             font-family: "Inter", sans-serif;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
             color: var(--white);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0,212,255,.15), transparent 35%),
+                radial-gradient(circle at 80% 20%, rgba(0,255,170,.10), transparent 35%),
+                radial-gradient(circle at 60% 80%, rgba(32,108,255,.15), transparent 40%);
+            animation: bgmove 18s linear infinite;
+            z-index: -2;
+        }
+
+        @keyframes bgmove {
+            0% { transform: translate(0,0); }
+            50% { transform: translate(-8%,-5%); }
+            100% { transform: translate(0,0); }
+        }
+
+        /* Светящиеся плавающие точки */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
+            pointer-events: none;
+            z-index: -1;
             overflow: hidden;
         }
 
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.7);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.8), 0 0 20px rgba(0, 255, 163, 0.5);
+            animation: floatParticle linear infinite;
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.8;
+            }
+            80% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            width: min(1400px, 92%);
+            margin: auto;
+        }
+
         /* HEADER */
-        .app-header {
-            height: 70px;
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        header .container {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 0 30px;
-            z-index: 100;
+            align-items: center;
+            padding: 12px 0;
         }
 
-        .logo-container {
+        .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s ease;
         }
 
-        .logo-icon { font-size: 24px; }
-        .logo-text {
+        .logo:hover {
+            transform: translateY(-1px);
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-text h2 {
             font-size: 22px;
             font-weight: 800;
-            background: linear-gradient(to right, #fff, var(--primary));
+            margin: 0;
+            line-height: 1.1;
+            background: linear-gradient(to right, #fff, #b4d7ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .main-nav {
+        .logo-text p {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 2px;
+        }
+
+        /* NAV */
+        nav ul {
             display: flex;
-            gap: 12px;
+            list-style: none;
+            gap: 28px;
+            align-items: center;
         }
 
-        .nav-btn {
-            background: transparent;
-            border: 1px solid transparent;
-            color: var(--text);
-            padding: 8px 18px;
-            border-radius: 12px;
-            cursor: pointer;
+        nav a {
+            text-decoration: none;
+            color: white;
             font-weight: 500;
-            transition: 0.3s;
+            transition: .3s;
+            white-space: nowrap;
+            font-size: 15px;
         }
 
-        .nav-btn:hover, .nav-btn.active {
-            background: rgba(0, 212, 255, 0.15);
-            border-color: rgba(0, 212, 255, 0.4);
+        nav a:hover {
             color: var(--primary);
         }
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        .dropdown {
+            position: relative;
         }
 
-        .lang-selector {
-            display: flex;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 2px;
+        .submenu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(5,15,25,.95);
+            backdrop-filter: blur(12px);
             border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 0;
+            min-width: 200px;
+            box-shadow: var(--shadow);
+        }
+
+        .submenu a {
+            display: block;
+            padding: 8px 20px;
+            color: #dbe9ff;
+            font-weight: 400;
+        }
+
+        .submenu a:hover {
+            background: rgba(0,212,255,.1);
+            color: var(--primary);
+        }
+
+        .dropdown:hover .submenu {
+            display: block;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .header-buttons a, .header-buttons button {
+            padding: 10px 18px;
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: .3s;
+            text-decoration: none;
+            font-size: 14px;
         }
 
         .lang-btn {
-            background: transparent;
-            border: none;
-            color: var(--text);
-            padding: 4px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .lang-btn.active {
-            background: var(--primary);
-            color: #000;
-            font-weight: 700;
-        }
-
-        .user-badge {
-            background: rgba(0, 212, 255, 0.2);
-            border: 1px solid var(--primary);
-            padding: 6px 14px;
-            border-radius: 10px;
-            font-size: 14px;
-        }
-
-        /* MAIN CONTENT AREA */
-        .app-body {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .tab-content {
-            display: none;
-            height: 100%;
-            width: 100%;
-            padding: 20px;
-        }
-
-        .tab-content.active {
-            display: flex;
-        }
-
-        /* MESSENGER STYLES */
-        .messenger-container {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            background: rgba(13, 28, 41, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-
-        .sidebar {
-            width: 320px;
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            background: rgba(8, 19, 29, 0.4);
-        }
-
-        .sidebar-search {
-            padding: 15px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .sidebar-search input, .chat-input-area input, .transfer-card input {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            padding: 10px 14px;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             color: #fff;
-            outline: none;
         }
 
-        .sidebar-search input:focus, .chat-input-area input:focus {
+        .lang-btn:hover {
             border-color: var(--primary);
+            color: var(--primary);
         }
 
-        .users-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-        }
-
-        .chat-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: rgba(6, 17, 29, 0.2);
-        }
-
-        .chat-header {
-            height: 60px;
-            padding: 0 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255,255,255,0.02);
-        }
-
-        .messages-container {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .placeholder-text {
-            color: rgba(255,255,255,0.4);
-            font-size: 14px;
-        }
-
-        .chat-input-area {
-            padding: 15px 20px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 10px;
-            background: rgba(8, 19, 29, 0.4);
-        }
-
-        .btn-send, .btn-primary, .btn-secondary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none;
+        .login-btn {
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid rgba(0, 212, 255, 0.3);
             color: #fff;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
         }
 
-        .btn-send:disabled, .btn-primary:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
+        .login-btn:hover {
+            background: rgba(0, 212, 255, 0.25);
+            border-color: var(--primary);
+            color: var(--primary);
         }
 
-        /* OTHER SECTIONS */
-        .section-header {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-        }
-
-        .banking-grid, .listings-grid {
+        /* HERO */
+        .hero {
+            position: relative;
+            min-height: 100vh;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            width: 100%;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 140px 7% 80px;
+            gap: 60px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 30px;
+            background: rgba(0,212,255,.12);
+            border: 1px solid rgba(0,212,255,.3);
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .hero-content h1 {
+            font-size: 56px;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 22px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .hero-text {
+            font-size: 17px;
+            line-height: 1.7;
+            color: #bcd0e2;
+            margin-bottom: 35px;
+            max-width: 540px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .primary-btn {
+            padding: 16px 36px;
+            background: linear-gradient(135deg, #00d4ff, #008cff);
+            color: white;
+            border-radius: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 15px 35px rgba(0,212,255,.3);
+            transition: .3s;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 45px rgba(0,212,255,.5);
+        }
+
+        .glass-btn {
+            padding: 16px 36px;
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.25);
+            backdrop-filter: blur(10px);
+            color: white;
+            border-radius: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: .3s;
+        }
+
+        .glass-btn:hover {
+            background: rgba(255,255,255,.15);
+            transform: translateY(-3px);
+        }
+
+        /* CORE ANIMATION */
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .core {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .core-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(0,212,255,.3);
+            animation: spinRing linear infinite;
+        }
+
+        .ring-1 { width: 100%; height: 100%; animation-duration: 20s; }
+        .ring-2 { width: 120%; height: 120%; animation-duration: 15s; animation-direction: reverse; border-color: rgba(0,255,170,.2); }
+        .ring-3 { width: 140%; height: 140%; animation-duration: 25s; border-color: rgba(31,107,255,.2); }
+
+        @keyframes spinRing { to { transform: rotate(360deg); } }
+
+        .core-center {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #00d4ff, #004d80);
+            box-shadow: 0 0 70px rgba(0,212,255,.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* MODULES & SECTIONS */
+        .modules, .statistics, .news {
+            padding: 100px 7%;
+        }
+
+        .modules h2, .news h2 {
+            text-align: center;
+            font-size: 42px;
+            margin-bottom: 60px;
+            font-weight: 800;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 25px;
-            backdrop-filter: blur(15px);
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            transition: .35s;
         }
 
-        .balance-amount {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--accent);
-            margin: 15px 0;
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0,212,255,.15);
         }
 
-        .btn-icon {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
+        .icon { font-size: 48px; margin-bottom: 15px; }
+        .card h3 { font-size: 22px; margin-bottom: 10px; }
+        .card p { color: #bfd3e4; font-size: 15px; line-height: 1.6; }
+
+        .statistics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 25px;
+        }
+
+        .stat {
+            background: rgba(255,255,255,.04);
+            border-radius: 18px;
+            padding: 30px 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        .stat h1 {
+            font-size: 46px;
+            background: linear-gradient(#00d4ff, #00ffa3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        footer {
+            padding: 60px 20px;
+            text-align: center;
+            background: #08131d;
+            border-top: 1px solid rgba(255,255,255,.1);
+        }
+
+        @media(max-width: 1024px) {
+            .hero { grid-template-columns: 1fr; text-align: center; padding-top: 120px; }
+            .hero-text { margin: 0 auto 35px; }
+            .hero-buttons { justify-content: center; }
         }
     </style>
 </head>
 <body>
 
-    <header class="app-header">
-        <div class="logo-container">
-            <span class="logo-icon">🌐</span>
-            <h1 class="logo-text">SFERA</h1>
-        </div>
-        <nav class="main-nav">
-            <button class="nav-btn active" data-tab="messenger">Мессенджер</button>
-            <button class="nav-btn" data-tab="marketplace">Маркетплейс</button>
-            <button class="nav-btn" data-tab="banking">Банк & ТМ-Pay</button>
-            <button class="nav-btn" data-tab="docs">Документация</button>
-        </nav>
-        <div class="header-right">
-            <div class="lang-selector">
-                <button class="lang-btn active" data-lang="ru">RU</button>
-                <button class="lang-btn" data-lang="tm">TM</button>
-                <button class="lang-btn" data-lang="en">EN</button>
-            </div>
-            <div id="userProfileBadge" class="user-badge">
-                <span id="userNameDisplay">Гость</span>
+    <div id="particles"></div>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="40" stroke="#00d4ff" stroke-width="3" stroke-dasharray="1 6" />
+                        <circle cx="50" cy="50" r="8" fill="#00ffa3" />
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>SFERA</h2>
+                    <p>Milli Sanly Platforma</p>
+                </div>
+            </a>
+
+            <nav>
+                <ul>
+                    <li><a href="index.html">Baş sahypa</a></li>
+                    <li class="dropdown">
+                        <a href="#">Marketpleýs</a>
+                        <div class="submenu">
+                            <a href="#">Birža</a>
+                            <a href="#">Söwda meýdançasy</a>
+                        </div>
+                    </li>
+                    <li><a href="#">TM Pay</a></li>
+                    <li><a href="#">TM Coin</a></li>
+                    <li><a href="#">Bank</a></li>
+                    <li><a href="#">AI</a></li>
+                    <li><a href="#">Resmiýetler</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-buttons">
+                <button class="lang-btn" id="langBtn">TM</button>
+                <a href="app.html" class="login-btn">Girmek</a>
             </div>
         </div>
     </header>
 
-    <main class="app-body">
-        <!-- МЕССЕНДЖЕР -->
-        <section id="tab-messenger" class="tab-content active">
-            <div class="messenger-container">
-                <aside class="sidebar">
-                    <div class="sidebar-search">
-                        <input type="text" id="userSearchInput" placeholder="Поиск контактов...">
-                    </div>
-                    <div id="usersList" class="users-list"></div>
-                </aside>
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-tag">SFERA — SANLY PLATFORMA</span>
+            <h1>Türkmenistanyň Ýeke Sanly Platformasy</h1>
+            <p class="hero-subtitle">Söwda • AI • Töleg • Bank • Resmiýet</p>
+            <p class="hero-text">
+                Elektron söwda, intellektual analitika, maliýe hyzmatlary, resmiýet aýlymyny we sanly döwlet hyzmatlaryny birleşdirýän häzirki zaman döwlet sanly ekosistemasy.
+            </p>
+            <div class="hero-buttons">
+                <a href="app.html" class="primary-btn">Başlamak</a>
+                <a href="#modules" class="glass-btn">Gözden geçirmek</a>
+            </div>
+        </div>
 
-                <div class="chat-area">
-                    <div id="chatHeader" class="chat-header">
-                        <div class="chat-user-info">
-                            <span id="chatTitle">Выберите пользователя для общения</span>
-                            <span id="chatUserStatus" class="status-indicator"></span>
-                        </div>
-                        <div class="chat-actions">
-                            <button id="audioCallBtn" class="btn-icon" style="display:none;" title="Голосовой звонок">📞</button>
-                            <button id="videoCallBtn" class="btn-icon" style="display:none;" title="Видеозвонок">📹</button>
-                        </div>
-                    </div>
-
-                    <div id="messagesContainer" class="messages-container">
-                        <div class="placeholder-text">Выберите чат из списка слева, чтобы начать переписку.</div>
-                    </div>
-
-                    <div class="chat-input-area">
-                        <input type="text" id="messageInput" placeholder="Напишите сообщение..." disabled>
-                        <button id="sendBtn" class="btn-send" disabled>Отправить</button>
-                    </div>
+        <div class="hero-visual">
+            <div class="core">
+                <div class="core-ring ring-1"></div>
+                <div class="core-ring ring-2"></div>
+                <div class="core-ring ring-3"></div>
+                <div class="core-center">
+                    <svg viewBox="0 0 100 100" fill="none" width="60" height="60">
+                        <circle cx="50" cy="50" r="35" stroke="#ffffff" stroke-width="4" stroke-dasharray="1 8" />
+                    </svg>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- МАРКЕТПЛЕЙС -->
-        <section id="tab-marketplace" class="tab-content">
-            <div style="width: 100%;">
-                <div class="section-header">
-                    <h2>Маркетплейс товаров и услуг</h2>
-                    <button id="createListingBtn" class="btn-primary">+ Разместить объявление</button>
-                </div>
-                <div id="listingsGrid" class="listings-grid"></div>
+    <section class="modules" id="modules">
+        <h2>Platformanyň Esasy Modullary</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="icon">🛒</div>
+                <h3>Birža</h3>
+                <p>Elektron söwda meýdançasy</p>
             </div>
-        </section>
-
-        <!-- БАНК И TM-PAY -->
-        <section id="tab-banking" class="tab-content">
-            <div style="width: 100%;">
-                <div class="section-header">
-                    <h2>Финансы и Платежная система TM-Pay</h2>
-                </div>
-                <div class="banking-grid">
-                    <div class="card balance-card">
-                        <h3>Ваш Баланс</h3>
-                        <div class="balance-amount" id="userBalanceDisplay">0.00 TMT</div>
-                        <button class="btn-secondary" id="topUpBalanceBtn">Пополнить</button>
-                    </div>
-                    <div class="card transfer-card">
-                        <h3>Перевод средств</h3>
-                        <input type="text" id="transferRecipient" placeholder="ID или Email получателя" style="margin-bottom:10px;">
-                        <input type="number" id="transferAmount" placeholder="Сумма (TMT)" style="margin-bottom:15px;">
-                        <button class="btn-primary" id="sendTransferBtn">Перевести</button>
-                    </div>
-                </div>
+            <div class="card">
+                <div class="icon">💳</div>
+                <h3>TM Pay</h3>
+                <p>Milli töleg ulgamy</p>
             </div>
-        </section>
-
-        <!-- ДОКУМЕНТАЦИЯ -->
-        <section id="tab-docs" class="tab-content">
-            <div>
-                <div class="section-header">
-                    <h2>Документация платформы SFERA</h2>
-                </div>
-                <p>Добро пожаловать в единый центр документации SFERA API и сервисов платформы.</p>
+            <div class="card">
+                <div class="icon">₮</div>
+                <h3>TM Coin</h3>
+                <p>Sanly döwlet walýutasy</p>
             </div>
-        </section>
-    </main>
+            <div class="card">
+                <div class="icon">🏦</div>
+                <h3>TM Bank</h3>
+                <p>Sanly bank hyzmatlary</p>
+            </div>
+            <div class="card">
+                <div class="icon">🤖</div>
+                <h3>AI analitika</h3>
+                <p>TM Coin prognozlary, trendler</p>
+            </div>
+            <div class="card">
+                <div class="icon">📄</div>
+                <h3>Resmiýetler</h3>
+                <p>Awtomatik tassyklama</p>
+            </div>
+        </div>
+    </section>
 
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <script src="js/main.js"></script>
+    <section class="statistics">
+        <div class="stat">
+            <h1 id="online">0</h1>
+            <p>Onlaýn</p>
+        </div>
+        <div class="stat">
+            <h1 id="users">0</h1>
+            <p>Ulanyjylar</p>
+        </div>
+        <div class="stat">
+            <h1 id="orders">0</h1>
+            <p>Söwdalar</p>
+        </div>
+        <div class="stat">
+            <h1 id="docs">0</h1>
+            <p>Resmiýetler</p>
+        </div>
+        <div class="stat">
+            <h1 id="coin">0</h1>
+            <p>TM Coin</p>
+        </div>
+    </section>
+
+    <footer>
+        <h2>SFERA</h2>
+        <p>© 2026 — Milli sanly platforma</p>
+    </footer>
+
+    <script>
+        // Генерация светящихся точек
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 45;
+
+            for (let i = 0; i < particleCount; i++) {
+                const p = document.createElement('div');
+                p.classList.add('particle');
+                
+                const size = Math.random() * 4 + 2; // от 2px до 6px
+                p.style.width = `${size}px`;
+                p.style.height = `${size}px`;
+                p.style.left = `${Math.random() * 100}vw`;
+                
+                const duration = Math.random() * 10 + 8; // от 8s до 18s
+                p.style.animationDuration = `${duration}s`;
+                p.style.animationDelay = `${Math.random() * 10}s`;
+
+                container.appendChild(p);
+            }
+        }
+
+        // Счетчик цифр
+        (function animateCounters() {
+            const counters = [
+                { id: "online", target: 234 },
+                { id: "users", target: 2340000 },
+                { id: "orders", target: 18540291 },
+                { id: "docs", target: 11328901 },
+                { id: "coin", target: 21000000 }
+            ];
+
+            function formatNumber(num) {
+                return num.toLocaleString("ru-RU");
+            }
+
+            function startCounter(el, target) {
+                let current = 0;
+                const step = Math.max(1, Math.floor(target / 180));
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    el.textContent = formatNumber(current);
+                }, 16);
+            }
+
+            window.addEventListener("load", function() {
+                createParticles();
+                setTimeout(() => {
+                    counters.forEach(c => {
+                        const el = document.getElementById(c.id);
+                        if (el) startCounter(el, c.target);
+                    });
+                }, 300);
+            });
+        })();
+    </script>
 </body>
 </html>
