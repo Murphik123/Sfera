@@ -148,20 +148,41 @@ const translations = {
     }
 };
 
-let currentLang = localStorage.getItem('lang') || 'tm';
+// Безопасное получение языка из localStorage
+let currentLang = 'tm';
+try {
+    currentLang = localStorage.getItem('lang') || 'tm';
+} catch (e) {
+    console.warn('localStorage недоступен:', e);
+}
 
 function setLanguage(lang) {
     if (!translations[lang]) return;
     currentLang = lang;
-    localStorage.setItem('lang', lang);
+    
+    try {
+        localStorage.setItem('lang', lang);
+    } catch (e) {
+        console.warn('Не удалось сохранить язык в localStorage:', e);
+    }
+
+    // Дополнение: установка атрибута lang на тег <html> для системных шрифтов и SEO
+    document.documentElement.lang = lang;
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (translations[lang][key]) {
-            if (translations[lang][key].includes('<br')) {
-                el.innerHTML = translations[lang][key];
+        const translatedValue = translations[lang][key];
+
+        if (translatedValue !== undefined) {
+            // Дополнение: переводим атрибуты placeholder и title, если они есть
+            if (el.hasAttribute('placeholder')) {
+                el.setAttribute('placeholder', translatedValue);
+            } else if (el.hasAttribute('title')) {
+                el.setAttribute('title', translatedValue);
+            } else if (translatedValue.includes('<br')) {
+                el.innerHTML = translatedValue;
             } else {
-                el.textContent = translations[lang][key];
+                el.textContent = translatedValue;
             }
         }
     });
@@ -173,8 +194,10 @@ function setLanguage(lang) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Установка начального языка
     setLanguage(currentLang);
 
+    // Слушатель клика по кнопке переключения языка
     const langBtn = document.getElementById('langBtn');
     if (langBtn) {
         langBtn.addEventListener('click', () => {
@@ -188,6 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Анимация частиц
     const particlesContainer = document.getElementById('particles');
     if (particlesContainer && particlesContainer.children.length === 0) {
+        const fragment = document.createDocumentFragment();
         for (let i = 0; i < 50; i++) {
             const p = document.createElement('span');
             p.className = 'particle';
@@ -195,7 +219,8 @@ document.addEventListener('DOMContentLoaded', () => {
             p.style.top = Math.random() * 100 + '%';
             p.style.animationDuration = (6 + Math.random() * 10) + 's';
             p.style.animationDelay = Math.random() * 5 + 's';
-            particlesContainer.appendChild(p);
+            fragment.appendChild(p);
         }
+        particlesContainer.appendChild(fragment);
     }
 });
