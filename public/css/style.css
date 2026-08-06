@@ -1,5 +1,5 @@
 /* ============================================================
-   SFERA PLATFORM — GLOBAL STYLES
+   SFERA PLATFORM — GLOBAL STYLES (ORIGINAL)
    ============================================================ */
 
 :root {
@@ -32,6 +32,7 @@ body {
     background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
     color: var(--white);
     overflow-x: hidden;
+    min-height: 100vh;
 }
 
 body::before {
@@ -59,7 +60,7 @@ body::before {
 }
 
 /* ================= HEADER ================= */
-header {
+header, .app-header {
     position: fixed;
     top: 0;
     left: 0;
@@ -72,7 +73,7 @@ header {
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
 }
 
-header .container {
+header .container, .app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -136,22 +137,26 @@ header .container {
 }
 
 /* ================= NAV ================= */
-nav ul {
+nav ul, .main-nav {
     display: flex;
     list-style: none;
     gap: 32px;
     align-items: center;
 }
 
-nav a {
+nav a, .nav-btn {
     text-decoration: none;
     color: white;
     font-weight: 500;
     transition: 0.3s;
     white-space: nowrap;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
 }
 
-nav a:hover {
+nav a:hover, .nav-btn:hover {
     color: var(--primary);
 }
 
@@ -235,14 +240,16 @@ nav a:hover {
 }
 
 /* ================= HEADER BUTTONS ================= */
-.header-buttons {
+.header-buttons, .header-right {
     display: flex;
     gap: 12px;
     align-items: center;
 }
 
 .header-buttons a,
-.header-buttons button {
+.header-buttons button,
+.lang-btn,
+.user-badge {
     padding: 12px 20px;
     border: none;
     cursor: pointer;
@@ -254,7 +261,7 @@ nav a:hover {
     font-size: 14px;
 }
 
-.header-buttons .lang {
+.header-buttons .lang, .lang-btn {
     background: rgba(255, 255, 255, 0.08) !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
     color: #fff !important;
@@ -262,13 +269,13 @@ nav a:hover {
     transition: all 0.3s !important;
 }
 
-.header-buttons .lang:hover {
+.header-buttons .lang:hover, .lang-btn:hover, .lang-btn.active {
     background: rgba(255, 255, 255, 0.15) !important;
     border-color: #00d4ff !important;
     color: #00d4ff !important;
 }
 
-.header-buttons .login {
+.header-buttons .login, .user-badge {
     background: rgba(0, 212, 255, 0.15) !important;
     border: 1px solid rgba(0, 212, 255, 0.3) !important;
     color: #fff !important;
@@ -443,25 +450,25 @@ nav a:hover {
     transition: 0.35s;
 }
 
-.primary-btn {
+.primary-btn, .btn-primary {
     background: linear-gradient(135deg, #00d4ff, #008cff);
     color: white;
     box-shadow: 0 20px 45px rgba(0, 212, 255, 0.35);
 }
 
-.primary-btn:hover {
+.primary-btn:hover, .btn-primary:hover {
     transform: translateY(-5px);
     box-shadow: 0 30px 60px rgba(0, 212, 255, 0.5);
 }
 
-.glass-btn {
+.glass-btn, .btn-secondary {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.25);
     backdrop-filter: blur(10px);
     color: white;
 }
 
-.glass-btn:hover {
+.glass-btn:hover, .btn-secondary:hover {
     background: rgba(255, 255, 255, 0.15);
     transform: translateY(-5px);
 }
@@ -544,7 +551,7 @@ nav a:hover {
     font-weight: 800;
 }
 
-.grid {
+.grid, .banking-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 35px;
@@ -772,4 +779,32 @@ footer p {
     .primary-btn, .glass-btn { padding: 14px 28px; font-size: 16px; }
     .logo-text h2 { font-size: 18px; }
     .logo-icon { width: 44px; height: 44px; }
+}
+
+/* ================= INTEGRATION & TAB FIXES ================= */
+.app-body {
+    padding-top: 100px;
+    min-height: calc(100vh - 120px);
+}
+
+.tab-content {
+    display: none !important;
+}
+
+.tab-content.active {
+    display: block !important;
+}
+
+.nav-btn.active {
+    color: var(--primary) !important;
+    border-bottom: 2px solid var(--primary);
+}
+
+input, select {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 10px 16px;
+    outline: none;
 }
