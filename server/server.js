@@ -23,18 +23,24 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// --- ДИНАМИЧЕСКИЙ ПОИСК ПАПКИ PUBLIC ---
-let publicPath = path.join(__dirname, 'public');
+// --- ТОЧНЫЙ ПОИСК ПАПКИ PUBLIC ---
+// Так как server.js лежит в server/src/server.js, поднимаемся до корня проекта
+let publicPath = path.join(__dirname, '..', '..', 'public');
 if (!fs.existsSync(publicPath)) {
     publicPath = path.join(__dirname, '..', 'public');
 }
+if (!fs.existsSync(publicPath)) {
+    publicPath = path.join(__dirname, 'public');
+}
 
 console.log(`📂 Раздача статики из папки: ${publicPath}`);
+
+// Подключаем раздачу статики (CSS, JS, картинки) с явным указанием опций
 app.use(express.static(publicPath));
 
 // Автоматическое подключение маршрутов REST API
-const routesPath = path.join(__dirname, 'src', 'routes');
-const fallbackRoutesPath = path.join(__dirname, 'routes');
+const routesPath = path.join(__dirname, 'routes');
+const fallbackRoutesPath = path.join(__dirname, '..', 'routes');
 const actualRoutesPath = fs.existsSync(routesPath) ? routesPath : (fs.existsSync(fallbackRoutesPath) ? fallbackRoutesPath : null);
 
 if (actualRoutesPath) {
@@ -111,11 +117,12 @@ io.on('connection', (socket) => {
     });
 });
 
-// Фолбэк для фронтенда и HTML страниц
+// --- ПРАВИЛЬНЫЙ ФОЛЛБЭК ДЛЯ ROUTING / HTML ---
+// Игнорируем запросы к статики (css/js/png и т.д.), отдаем index.html только для обычных страниц
 app.get('*', (req, res) => {
-    const requestedPath = path.join(publicPath, req.path);
-    if (fs.existsSync(requestedPath) && fs.statSync(requestedPath).isFile()) {
-        return res.sendFile(requestedPath);
+    // Если запрос идёт к файлу (например style.css или main.js) и он не нашелся в express.static — отдаем 404, а не HTML!
+    if (req.path.includes('.')) {
+        return res.status(404).send('File not found');
     }
 
     const indexPath = path.join(publicPath, 'index.html');
