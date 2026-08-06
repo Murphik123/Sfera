@@ -17,13 +17,16 @@
             min-height: 100vh;
             background: #060913;
             color: #ffffff;
-            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
             position: relative;
         }
 
-        /* Анимированные плавающие частицы */
+        /* Частицы заднего фона */
         #particles {
-            position: fixed;
+            position: absolute;
             inset: 0;
             pointer-events: none;
             z-index: 1;
@@ -42,67 +45,74 @@
             100% { transform: translateY(-10vh) scale(1); opacity: 0; }
         }
 
-        /* Фоновые неоновые свечения (Glow) */
+        /* Фоновые неоновые пятна */
         .bg-glow {
-            position: fixed;
-            width: 600px;
-            height: 600px;
+            position: absolute;
+            width: 500px;
+            height: 500px;
             border-radius: 50%;
-            filter: blur(140px);
-            opacity: 0.2;
+            filter: blur(120px);
+            opacity: 0.25;
             z-index: 1;
             pointer-events: none;
         }
 
         .glow-1 {
-            top: -15%;
+            top: -10%;
             left: -10%;
             background: radial-gradient(circle, #00ffa3, #00d4ff);
         }
 
         .glow-2 {
-            bottom: -15%;
+            bottom: -10%;
             right: -10%;
             background: radial-gradient(circle, #1f6bff, #7928ca);
         }
 
-        /* Навигационная панель (Glassmorphism Header) */
-        .header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 40px;
+        /* Тот самый оригинальный стекловидный контейнер */
+        .auth-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 440px;
+            padding: 40px;
             background: rgba(13, 19, 33, 0.65);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            margin: 20px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 28px;
         }
 
         .logo-wrap {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 12px;
             text-decoration: none;
             color: inherit;
+            margin-bottom: 20px;
             cursor: pointer;
             user-select: none;
         }
 
         .logo-svg {
-            width: 42px;
-            height: 42px;
-            transition: transform 0.3s ease;
+            width: 44px;
+            height: 44px;
         }
 
-        .logo-wrap:hover .logo-svg {
-            transform: scale(1.05);
+        .logo-text {
+            text-align: left;
         }
 
         .logo-text h2 {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
             letter-spacing: 2px;
             background: linear-gradient(135deg, #00ffa3, #00d4ff, #1f6bff);
@@ -111,221 +121,102 @@
         }
 
         .logo-text p {
-            font-size: 10px;
+            font-size: 11px;
             color: rgba(255, 255, 255, 0.5);
             letter-spacing: 0.5px;
         }
 
-        /* Навигация */
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            list-style: none;
+        .auth-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 6px;
         }
 
-        .nav-links a {
-            color: rgba(255, 255, 255, 0.75);
+        .auth-subtitle {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Навигационные ссылки в стиле оригинальных кнопок формы */
+        .menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            color: #fff;
             text-decoration: none;
             font-size: 14px;
             font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #00d4ff;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        /* Выпадающее меню профиля в стиле Glassmorphism */
-        .profile-menu {
-            position: relative;
-        }
-
-        .profile-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 8px 16px;
-            border-radius: 12px;
-            color: #fff;
-            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .profile-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
+        .menu-link:hover {
+            background: rgba(255, 255, 255, 0.08);
             border-color: #00d4ff;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.25);
+            transform: translateY(-2px);
         }
 
-        .dropdown {
-            position: absolute;
-            right: 0;
-            top: calc(100% + 12px);
-            width: 200px;
-            background: rgba(13, 19, 33, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 8px 0;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            display: none;
-            flex-direction: column;
-            z-index: 101;
+        .menu-link .arrow {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+            transition: color 0.3s, transform 0.3s;
         }
 
-        .dropdown.show {
-            display: flex;
-        }
-
-        .dropdown a {
-            padding: 10px 20px;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            font-size: 13px;
-            transition: background 0.2s, color 0.2s;
-        }
-
-        .dropdown a:hover {
-            background: rgba(0, 212, 255, 0.15);
+        .menu-link:hover .arrow {
             color: #00d4ff;
+            transform: translateX(3px);
         }
 
-        /* Переключатель языков */
-        .lang-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 8px 14px;
+        /* Главная кнопка Входа */
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00d4ff, #1f6bff);
+            border: none;
             border-radius: 12px;
             color: #fff;
-            font-size: 13px;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
         }
 
-        .lang-btn:hover {
-            border-color: #00ffa3;
-            color: #00ffa3;
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 212, 255, 0.5);
         }
 
-        /* Кнопка гамбургер для мобильных устройств */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-
-        .hamburger span {
-            width: 24px;
-            height: 2px;
-            background: #fff;
-            transition: 0.3s;
-        }
-
-        /* Главный контент (Hero section) */
-        .hero {
-            position: relative;
-            z-index: 10;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 100px 20px 60px;
+        .auth-footer {
+            margin-top: 20px;
             text-align: center;
-        }
-
-        .hero-title {
-            font-size: 48px;
-            font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-subtitle {
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.6);
-            max-width: 600px;
-            margin: 0 auto 40px;
-            line-height: 1.6;
-        }
-
-        /* Модульные карточки (Glass Cards) */
-        .modules-grid {
-            position: relative;
-            z-index: 10;
-            max-width: 1200px;
-            margin: 0 auto 100px;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 24px;
-        }
-
-        .module-card {
-            background: rgba(13, 19, 33, 0.5);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 32px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            text-align: left;
-        }
-
-        .module-card:hover {
-            transform: translateY(-5px);
-            background: rgba(13, 19, 33, 0.7);
-            border-color: rgba(0, 212, 255, 0.4);
-            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.15);
-        }
-
-        .module-icon {
-            font-size: 36px;
-            margin-bottom: 16px;
-            display: inline-block;
-        }
-
-        .module-card h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .module-card p {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.6);
-            line-height: 1.5;
-        }
-
-        /* Подвал */
-        .footer {
-            position: relative;
-            z-index: 10;
-            text-align: center;
-            padding: 40px 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.6);
         }
 
-        @media (max-width: 768px) {
-            .header { padding: 16px 20px; }
-            .nav-links { display: none; }
-            .hamburger { display: flex; }
-            .hero-title { font-size: 32px; }
+        .auth-footer a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -335,144 +226,82 @@
     <div class="bg-glow glow-2"></div>
     <div id="particles"></div>
 
-    <!-- Шапка страницы -->
-    <header class="header">
-        <a href="index.html" class="logo-wrap" id="langToggle">
-            <!-- Двумерный оригинальный логотип SFERA -->
-            <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#00ffa3" />
-                        <stop offset="50%" stop-color="#00d4ff" />
-                        <stop offset="100%" stop-color="#1f6bff" />
-                    </linearGradient>
-                    <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
-                        <feGaussianBlur stdDeviation="4" result="blur" />
-                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                    </filter>
-                </defs>
-                <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
-                <g filter="url(#logoGlow)">
-                    <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
-                    <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
-                    <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
-                </g>
-            </svg>
-            <div class="logo-text">
-                <h2>SFERA</h2>
-                <p id="logoSubtitle">Milli Sanly Platforma</p>
-            </div>
-        </a>
-
-        <!-- Меню навигации -->
-        <nav>
-            <ul class="nav-links" id="mainNav">
-                <li><a href="marketplace.html" data-i18n="nav_marketplace">Marketplace</a></li>
-                <li><a href="exchange.html" data-i18n="nav_exchange">Exchange</a></li>
-                <li><a href="bank.html" data-i18n="nav_bank">Bank</a></li>
-                <li><a href="docs.html" data-i18n="nav_docs">Docs</a></li>
-                <li><a href="messenger.html" data-i18n="nav_messenger">Messenger</a></li>
-            </ul>
-        </nav>
-
-        <div class="header-actions">
-            <button class="lang-btn" id="langSwitchBtn">TM</button>
-            
-            <div class="profile-menu">
-                <button class="profile-btn" id="profileBtn">
-                    👤 <span data-i18n="profile">Профиль</span>
-                </button>
-                <div class="dropdown" id="profileDropdown">
-                    <a href="login.html" data-i18n="login">Вход / Регистрация</a>
-                    <a href="#" data-i18n="settings">Настройки</a>
+    <div class="auth-container">
+        <!-- Обычная шапка с вашим SVG-логотипом -->
+        <div class="auth-header">
+            <a href="index.html" class="logo-wrap" id="langToggle">
+                <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00ffa3" />
+                            <stop offset="50%" stop-color="#00d4ff" />
+                            <stop offset="100%" stop-color="#1f6bff" />
+                        </linearGradient>
+                        <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
+                            <feGaussianBlur stdDeviation="4" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                    </defs>
+                    <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
+                    <g filter="url(#logoGlow)">
+                        <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
+                        <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
+                        <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
+                    </g>
+                </svg>
+                <div class="logo-text">
+                    <h2>SFERA</h2>
+                    <p id="logoSubtitle">Milli Sanly Platforma</p>
                 </div>
-            </div>
-
-            <button class="hamburger" id="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
+            </a>
+            <h1 class="auth-title" id="pageTitle">SFERA</h1>
+            <p class="auth-subtitle" id="pageSubtitle">Единая цифровая платформа</p>
         </div>
-    </header>
 
-    <!-- Секция приветствия (Hero) -->
-    <section class="hero">
-        <h1 class="hero-title" data-i18n="hero_title">Единая Цифровая Платформа</h1>
-        <p class="hero-subtitle" data-i18n="hero_subtitle">
-            Все необходимые сервисы, финансовые инструменты и коммуникации в единой безопасной экосистеме SFERA.
-        </p>
-    </section>
+        <!-- Навигационные модули внутри карточки -->
+        <div class="menu-list">
+            <a href="marketplace.html" class="menu-link">
+                <span>🛒 Marketplace</span>
+                <span class="arrow">➔</span>
+            </a>
+            <a href="exchange.html" class="menu-link">
+                <span>💱 Exchange</span>
+                <span class="arrow">➔</span>
+            </a>
+            <a href="bank.html" class="menu-link">
+                <span>🏦 Bank</span>
+                <span class="arrow">➔</span>
+            </a>
+            <a href="docs.html" class="menu-link">
+                <span>📄 Docs</span>
+                <span class="arrow">➔</span>
+            </a>
+            <a href="messenger.html" class="menu-link">
+                <span>💬 Messenger</span>
+                <span class="arrow">➔</span>
+            </a>
+        </div>
 
-    <!-- Сеточный блок модулей -->
-    <section class="modules-grid">
-        <div class="module-card">
-            <span class="module-icon">🛒</span>
-            <h3>Marketplace</h3>
-            <p data-i18n="mod_market">Современный маркетплейс товаров и услуг с полной интеграцией платежей.</p>
-        </div>
-        <div class="module-card">
-            <span class="module-icon">💱</span>
-            <h3>Exchange</h3>
-            <p data-i18n="mod_exchange">Безопасная платформа для быстрого обмена валют и цифровых активов.</p>
-        </div>
-        <div class="module-card">
-            <span class="module-icon">🏦</span>
-            <h3>Banking</h3>
-            <p data-i18n="mod_bank">Управление счетами, мгновенные переводы и прозрачная история транзакций.</p>
-        </div>
-        <div class="module-card">
-            <span class="module-icon">💬</span>
-            <h3>Messenger</h3>
-            <p data-i18n="mod_messenger">Защищенный мессенджер для личной переписки и бизнес-коммуникаций.</p>
-        </div>
-    </section>
+        <!-- Кнопка перехода на авторизацию -->
+        <a href="login.html" class="btn-submit">Войти в систему</a>
 
-    <!-- Подвал -->
-    <footer class="footer">
-        <p>&copy; 2026 SFERA Platform. Milli Sanly Platforma.</p>
-    </footer>
-
-    <!-- Скрипт относительного подключения основного JS -->
-    <script src="js/main.js"></script>
+        <div class="auth-footer">
+            <span>© 2026 SFERA Platform</span>
+        </div>
+    </div>
 
     <script>
-        // Генерация анимированных плавающих частиц
+        // Частицы заднего фона
         const particlesContainer = document.getElementById('particles');
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < 20; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
             p.style.left = Math.random() * 100 + '%';
             p.style.width = Math.random() * 4 + 2 + 'px';
             p.style.height = p.style.width;
             p.style.animationDelay = Math.random() * 8 + 's';
-            p.style.animationDuration = Math.random() * 6 + 6 + 's';
+            p.style.animationDuration = Math.random() * 5 + 5 + 's';
             particlesContainer.appendChild(p);
-        }
-
-        // Логика выпадающего меню профиля
-        const profileBtn = document.getElementById('profileBtn');
-        const profileDropdown = document.getElementById('profileDropdown');
-
-        if (profileBtn && profileDropdown) {
-            profileBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                profileDropdown.classList.toggle('show');
-            });
-
-            document.addEventListener('click', () => {
-                profileDropdown.classList.remove('show');
-            });
-        }
-
-        // Переключение мобильного навигационного меню
-        const hamburger = document.getElementById('hamburger');
-        const mainNav = document.getElementById('mainNav');
-
-        if (hamburger && mainNav) {
-            hamburger.addEventListener('click', () => {
-                mainNav.classList.toggle('active');
-            });
         }
     </script>
 </body>
