@@ -4,12 +4,291 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SFERA — Ecosystem Platform</title>
-    <!-- ПРАВИЛЬНЫЙ ПУТЬ К СТИЛЯМ -->
-    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --secondary: #1f6bff;
+            --accent: #00ffa3;
+            --dark: #08131d;
+            --dark2: #0d1c29;
+            --dark3: #142738;
+            --glass: rgba(255,255,255,.08);
+            --border: rgba(255,255,255,.15);
+            --white: #ffffff;
+            --text: #dbe9ff;
+            --shadow: 0 20px 60px rgba(0,0,0,.35);
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
+            color: var(--white);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        .app-header {
+            height: 70px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon { font-size: 24px; }
+        .logo-text {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text);
+            padding: 8px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: rgba(0, 212, 255, 0.4);
+            color: var(--primary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .lang-selector {
+            display: flex;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 2px;
+            border: 1px solid var(--border);
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            padding: 4px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: #000;
+            font-weight: 700;
+        }
+
+        .user-badge {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid var(--primary);
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        /* MAIN CONTENT AREA */
+        .app-body {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-content {
+            display: none;
+            height: 100%;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        /* MESSENGER STYLES */
+        .messenger-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 28, 41, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 320px;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            background: rgba(8, 19, 29, 0.4);
+        }
+
+        .sidebar-search {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-search input, .chat-input-area input, .transfer-card input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #fff;
+            outline: none;
+        }
+
+        .sidebar-search input:focus, .chat-input-area input:focus {
+            border-color: var(--primary);
+        }
+
+        .users-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(6, 17, 29, 0.2);
+        }
+
+        .chat-header {
+            height: 60px;
+            padding: 0 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .placeholder-text {
+            color: rgba(255,255,255,0.4);
+            font-size: 14px;
+        }
+
+        .chat-input-area {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            background: rgba(8, 19, 29, 0.4);
+        }
+
+        .btn-send, .btn-primary, .btn-secondary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-send:disabled, .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* OTHER SECTIONS */
+        .section-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .banking-grid, .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 25px;
+            backdrop-filter: blur(15px);
+        }
+
+        .balance-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--accent);
+            margin: 15px 0;
+        }
+
+        .btn-icon {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Шапка платформы и Навигация -->
     <header class="app-header">
         <div class="logo-container">
             <span class="logo-icon">🌐</span>
@@ -22,7 +301,6 @@
             <button class="nav-btn" data-tab="docs">Документация</button>
         </nav>
         <div class="header-right">
-            <!-- Переключатель языков -->
             <div class="lang-selector">
                 <button class="lang-btn active" data-lang="ru">RU</button>
                 <button class="lang-btn" data-lang="tm">TM</button>
@@ -34,30 +312,23 @@
         </div>
     </header>
 
-    <!-- Основной контент-контейнер -->
     <main class="app-body">
-
-        <!-- СЕКЦИЯ 1: МЕССЕНДЖЕР -->
+        <!-- МЕССЕНДЖЕР -->
         <section id="tab-messenger" class="tab-content active">
             <div class="messenger-container">
-                <!-- Боковая панель списков -->
                 <aside class="sidebar">
                     <div class="sidebar-search">
                         <input type="text" id="userSearchInput" placeholder="Поиск контактов...">
                     </div>
-                    <div id="usersList" class="users-list">
-                        <!-- Динамический список контактов -->
-                    </div>
+                    <div id="usersList" class="users-list"></div>
                 </aside>
 
-                <!-- Окно чата -->
                 <div class="chat-area">
                     <div id="chatHeader" class="chat-header">
                         <div class="chat-user-info">
                             <span id="chatTitle">Выберите пользователя для общения</span>
                             <span id="chatUserStatus" class="status-indicator"></span>
                         </div>
-                        <!-- Кнопки WebRTC Звонков -->
                         <div class="chat-actions">
                             <button id="audioCallBtn" class="btn-icon" style="display:none;" title="Голосовой звонок">📞</button>
                             <button id="videoCallBtn" class="btn-icon" style="display:none;" title="Видеозвонок">📹</button>
@@ -76,71 +347,51 @@
             </div>
         </section>
 
-        <!-- СЕКЦИЯ 2: МАРКЕТПЛЕЙС -->
+        <!-- МАРКЕТПЛЕЙС -->
         <section id="tab-marketplace" class="tab-content">
-            <div class="section-header">
-                <h2>Маркетплейс товаров и услуг</h2>
-                <button id="createListingBtn" class="btn-primary">+ Разместить объявление</button>
-            </div>
-            <div id="listingsGrid" class="listings-grid">
-                <!-- Динамические карточки товаров -->
+            <div style="width: 100%;">
+                <div class="section-header">
+                    <h2>Маркетплейс товаров и услуг</h2>
+                    <button id="createListingBtn" class="btn-primary">+ Разместить объявление</button>
+                </div>
+                <div id="listingsGrid" class="listings-grid"></div>
             </div>
         </section>
 
-        <!-- СЕКЦИЯ 3: БАНК И TM-PAY -->
+        <!-- БАНК И TM-PAY -->
         <section id="tab-banking" class="tab-content">
-            <div class="section-header">
-                <h2>Финансы и Платежная система TM-Pay</h2>
-            </div>
-            <div class="banking-grid">
-                <div class="card balance-card">
-                    <h3>Ваш Баланс</h3>
-                    <div class="balance-amount" id="userBalanceDisplay">0.00 TMT</div>
-                    <button class="btn-secondary" id="topUpBalanceBtn">Пополнить</button>
+            <div style="width: 100%;">
+                <div class="section-header">
+                    <h2>Финансы и Платежная система TM-Pay</h2>
                 </div>
-                <div class="card transfer-card">
-                    <h3>Перевод средств</h3>
-                    <input type="text" id="transferRecipient" placeholder="ID или Email получателя">
-                    <input type="number" id="transferAmount" placeholder="Сумма (TMT)">
-                    <button class="btn-primary" id="sendTransferBtn">Перевести</button>
+                <div class="banking-grid">
+                    <div class="card balance-card">
+                        <h3>Ваш Баланс</h3>
+                        <div class="balance-amount" id="userBalanceDisplay">0.00 TMT</div>
+                        <button class="btn-secondary" id="topUpBalanceBtn">Пополнить</button>
+                    </div>
+                    <div class="card transfer-card">
+                        <h3>Перевод средств</h3>
+                        <input type="text" id="transferRecipient" placeholder="ID или Email получателя" style="margin-bottom:10px;">
+                        <input type="number" id="transferAmount" placeholder="Сумма (TMT)" style="margin-bottom:15px;">
+                        <button class="btn-primary" id="sendTransferBtn">Перевести</button>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- СЕКЦИЯ 4: ДОКУМЕНТАЦИЯ -->
+        <!-- ДОКУМЕНТАЦИЯ -->
         <section id="tab-docs" class="tab-content">
-            <div class="section-header">
-                <h2>Документация платформы SFERA</h2>
-            </div>
-            <div class="docs-container">
+            <div>
+                <div class="section-header">
+                    <h2>Документация платформы SFERA</h2>
+                </div>
                 <p>Добро пожаловать в единый центр документации SFERA API и сервисов платформы.</p>
             </div>
         </section>
-
     </main>
 
-    <!-- МОДАЛЬНОЕ ОКНО ЗВОНКА (WebRTC UI) -->
-    <div id="callModal" class="call-modal" style="display: none;">
-        <div class="call-overlay"></div>
-        <div class="call-content">
-            <div class="call-header">
-                <h3 id="callStatusText">Инициализация вызова...</h3>
-            </div>
-            <div class="video-container">
-                <video id="localVideo" autoplay playsinline muted></video>
-                <video id="remoteVideo" autoplay playsinline></video>
-            </div>
-            <div class="call-actions">
-                <button id="acceptCallBtn" class="btn-call-accept" style="display: none;">Ответить</button>
-                <button id="rejectCallBtn" class="btn-call-reject">Сбросить</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 1. Библиотека Socket.io -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    
-    <!-- 2. ПРАВИЛЬНЫЙ ПУТЬ К СКРИПТУ -->
     <script src="js/main.js"></script>
 </body>
 </html>
