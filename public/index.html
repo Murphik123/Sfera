@@ -1,171 +1,470 @@
 <!DOCTYPE html>
 <html lang="tm">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SFERA — Türkmenistanyň Ýeke Sanly Platformasy</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    
-    <!-- Подключение файла стилей из public/css/style.css -->
-    <link rel="stylesheet" href="css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SFERA - Вход</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #060913;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Частицы заднего фона */
+        #particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.4);
+            animation: float 8s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        /* Фоновые неоновые пятна */
+        .bg-glow {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.25;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .glow-1 {
+            top: -10%;
+            left: -10%;
+            background: radial-gradient(circle, #00ffa3, #00d4ff);
+        }
+
+        .glow-2 {
+            bottom: -10%;
+            right: -10%;
+            background: radial-gradient(circle, #1f6bff, #7928ca);
+        }
+
+        /* Стекловидная карточка (Glassmorphism) */
+        .auth-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 440px;
+            padding: 40px;
+            background: rgba(13, 19, 33, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            margin: 20px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            text-decoration: none;
+            color: inherit;
+            margin-bottom: 24px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* CSS Спиральная воронка в 3D */
+        .funnel-container {
+            width: 50px;
+            height: 50px;
+            position: relative;
+            perspective: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .funnel-stage {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(70deg) rotateY(-10deg);
+            animation: spinFunnel 4s linear infinite;
+        }
+
+        @keyframes spinFunnel {
+            0% { transform: rotateX(70deg) rotateY(-10deg) rotateZ(0deg); }
+            100% { transform: rotateX(70deg) rotateY(-10deg) rotateZ(360deg); }
+        }
+
+        /* Витки воронки */
+        .funnel-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 50%;
+            border: 2px dashed #00d4ff;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            transform-style: preserve-3d;
+        }
+
+        .ring-1 {
+            width: 48px;
+            height: 48px;
+            margin-top: -24px;
+            margin-left: -24px;
+            transform: translateZ(24px);
+            border-color: #00ffa3;
+            box-shadow: 0 0 12px rgba(0, 255, 163, 0.6);
+        }
+
+        .ring-2 {
+            width: 36px;
+            height: 36px;
+            margin-top: -18px;
+            margin-left: -18px;
+            transform: translateZ(14px);
+            border-color: #00d4ff;
+        }
+
+        .ring-3 {
+            width: 24px;
+            height: 24px;
+            margin-top: -12px;
+            margin-left: -12px;
+            transform: translateZ(4px);
+            border-color: #1f6bff;
+        }
+
+        .ring-4 {
+            width: 12px;
+            height: 12px;
+            margin-top: -6px;
+            margin-left: -6px;
+            transform: translateZ(-6px);
+            border-color: #7928ca;
+        }
+
+        /* Центральная нижняя точка воронки */
+        .funnel-tip {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            margin-top: -2.5px;
+            margin-left: -2.5px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffffff, 0 0 20px #00ffa3;
+            transform: translateZ(-16px);
+        }
+
+        .logo-text {
+            text-align: left;
+        }
+
+        .logo-text h2 {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #00ffa3, #00d4ff, #1f6bff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.5px;
+        }
+
+        .auth-title {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .auth-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Элементы формы */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #00d4ff;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.25);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+
+        .toggle-password:hover {
+            opacity: 1;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00d4ff, #1f6bff);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 212, 255, 0.5);
+        }
+
+        .hint-box {
+            margin-top: 24px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.6;
+        }
+
+        .auth-footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .auth-footer a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            display: none;
+        }
+
+        .message.error {
+            background: rgba(255, 77, 77, 0.15);
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            color: #ff6b6b;
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Контейнер для динамических частиц -->
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
     <div id="particles"></div>
 
-    <!-- Шапка с эффектом стекла -->
-    <header>
-        <div class="container">
-            <!-- Оригинальный SVG-логотип со спиралью (без подписи под SFERA) -->
-            <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <svg viewBox="0 0 100 100" fill="none" width="48" height="48" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M50 10 A40 40 0 0 1 90 50 A30 30 0 0 1 60 80 A20 20 0 0 1 40 60 A10 10 0 0 1 50 40" 
-                              stroke="url(#spiralGradient)" 
-                              stroke-width="3.5" 
-                              stroke-linecap="round" 
-                              class="spiral-path" />
-                        <circle cx="50" cy="50" r="4" fill="#00ffa3" class="spiral-core" />
-                        <defs>
-                            <linearGradient id="spiralGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00d4ff" />
-                                <stop offset="50%" stop-color="#1f6bff" />
-                                <stop offset="100%" stop-color="#00ffa3" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
+    <div class="auth-container">
+        <div class="auth-header">
+            <a href="#" class="logo-wrap" id="langToggle">
+                <!-- Воронка-спираль вместо плоского круга -->
+                <div class="funnel-container">
+                    <div class="funnel-stage">
+                        <div class="funnel-ring ring-1"></div>
+                        <div class="funnel-ring ring-2"></div>
+                        <div class="funnel-ring ring-3"></div>
+                        <div class="funnel-ring ring-4"></div>
+                        <div class="funnel-tip"></div>
+                    </div>
                 </div>
                 <div class="logo-text">
                     <h2>SFERA</h2>
+                    <p id="logoSubtitle">Milli Sanly Platforma</p>
                 </div>
             </a>
-
-            <!-- Навигация -->
-            <nav>
-                <ul>
-                    <li><a href="index.html" data-i18n="nav_home">Baş sahypa</a></li>
-                    <li class="dropdown">
-                        <a href="marketplace.html" data-i18n="nav_marketplace">Marketpleýs</a>
-                        <div class="submenu">
-                            <a href="marketplace.html" data-i18n="nav_exchange">Birža</a>
-                            <a href="marketplace.html" data-i18n="nav_trade">Söwda meýdançasy</a>
-                        </div>
-                    </li>
-                    <li><a href="tm-pay.html">TM Pay</a></li>
-                    <li><a href="tm-coin.html">TM Coin</a></li>
-                    <li><a href="bank.html" data-i18n="nav_bank">Bank</a></li>
-                    <li><a href="ai.html">AI</a></li>
-                    <li><a href="documents.html" data-i18n="nav_docs">Resmiýetler</a></li>
-                </ul>
-            </nav>
-
-            <!-- Кнопки управления -->
-            <div class="header-buttons">
-                <button class="lang-btn" id="langBtn" onclick="rotateLanguage()">TM</button>
-                <a href="login.html" class="login-btn" data-i18n="btn_login">Girmek</a>
-            </div>
-        </div>
-    </header>
-
-    <!-- Главный блок (Hero) -->
-    <section class="hero">
-        <div class="hero-content">
-            <span class="hero-tag" data-i18n="hero_tag">SFERA — SANLY PLATFORMA</span>
-            <h1 data-i18n="hero_title">Türkmenistanyň Ýeke Sanly Platformasy</h1>
-            <p class="hero-subtitle" data-i18n="hero_sub">Söwda • AI • Töleg • Bank • Resmiýet</p>
-            <p class="hero-text" data-i18n="hero_desc">
-                Elektron söwda, intellektual analitika, maliýe hyzmatlary, resmiýet aýlymyny we sanly döwlet hyzmatlaryny birleşdirýän häzirki zaman döwlet sanly ekosistemasy.
-            </p>
-            <div class="hero-buttons">
-                <a href="register.html" class="primary-btn" data-i18n="btn_start">Başlamak</a>
-                <a href="#modules" class="glass-btn" data-i18n="btn_explore">Gözden geçirmek</a>
-            </div>
+            <h1 class="auth-title" data-i18n="title">Вход</h1>
+            <p class="auth-subtitle" data-i18n="subtitle">Войдите в свою учётную запись</p>
         </div>
 
-        <!-- Визуальное ядро со спиралью -->
-        <div class="hero-visual">
-            <div class="core">
-                <div class="core-ring ring-1"></div>
-                <div class="core-ring ring-2"></div>
-                <div class="core-ring ring-3"></div>
-                <div class="core-center">
-                    <svg viewBox="0 0 100 100" fill="none" width="70" height="70">
-                        <path d="M50 10 A40 40 0 0 1 90 50 A30 30 0 0 1 60 80 A20 20 0 0 1 40 60 A10 10 0 0 1 50 40" 
-                              stroke="url(#heroSpiralGradient)" 
-                              stroke-width="4" 
-                              stroke-linecap="round" 
-                              class="spiral-path" />
-                        <circle cx="50" cy="50" r="5" fill="#00ffa3" class="spiral-core" />
-                        <defs>
-                            <linearGradient id="heroSpiralGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00d4ff" />
-                                <stop offset="50%" stop-color="#ffffff" />
-                                <stop offset="100%" stop-color="#00ffa3" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
+        <div id="message" class="message"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email" data-i18n="email">Email</label>
+                <div class="input-wrap">
+                    <input type="email" id="email" class="form-input" placeholder="admin@dtm.tm" required>
                 </div>
             </div>
+            <div class="form-group">
+                <label for="password" data-i18n="password">Пароль</label>
+                <div class="input-wrap">
+                    <input type="password" id="password" class="form-input" placeholder="••••••••" required>
+                    <span class="toggle-password" id="togglePassword">👁️</span>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit" id="loginBtn" data-i18n="button">Войти</button>
+        </form>
+
+        <div class="hint-box">
+            🔑 <strong>Админ:</strong> admin@dtm.tm / 99363645817<br>
+            👤 <strong>Пользователь:</strong> (любой email) / 99363645817
         </div>
-    </section>
 
-    <!-- Модули -->
-    <section class="modules" id="modules">
-        <h2 data-i18n="mod_title">Platformanyň Esasy Modullary</h2>
-        <div class="grid">
-            <a href="marketplace.html" class="card">
-                <div class="icon">🛒</div>
-                <h3 data-i18n="m1_t">Birža</h3>
-                <p data-i18n="m1_d">Elektron söwda meýdançasy</p>
-            </a>
-            <a href="tm-pay.html" class="card">
-                <div class="icon">💳</div>
-                <h3>TM Pay</h3>
-                <p data-i18n="m2_d">Milli töleg ulgamy</p>
-            </a>
-            <a href="tm-coin.html" class="card">
-                <div class="icon">₮</div>
-                <h3>TM Coin</h3>
-                <p data-i18n="m3_d">Sanly döwlet walýutasy</p>
-            </a>
-            <a href="bank.html" class="card">
-                <div class="icon">🏦</div>
-                <h3 data-i18n="m4_t">TM Bank</h3>
-                <p data-i18n="m4_d">Sanly bank hyzmatlary</p>
-            </a>
-            <a href="ai.html" class="card">
-                <div class="icon">🤖</div>
-                <h3 data-i18n="m5_t">AI analitika</h3>
-                <p data-i18n="m5_d">TM Coin prognozlary, trendler</p>
-            </a>
-            <a href="documents.html" class="card">
-                <div class="icon">📄</div>
-                <h3 data-i18n="m6_t">Resmiýetler</h3>
-                <p data-i18n="m6_d">Awtomatik tassyklama</p>
-            </a>
+        <div class="auth-footer">
+            <span data-i18n="no_account">Нет аккаунта?</span>
+            <a href="register.html" data-i18n="register">Зарегистрироваться</a>
         </div>
-    </section>
+    </div>
 
-    <!-- Статистика -->
-    <section class="statistics">
-        <div class="stat"><h1 id="online">0</h1><p data-i18n="st_online">Onlaýn</p></div>
-        <div class="stat"><h1 id="users">0</h1><p data-i18n="st_users">Ulanyjylar</p></div>
-        <div class="stat"><h1 id="orders">0</h1><p data-i18n="st_orders">Söwdalar</p></div>
-        <div class="stat"><h1 id="docs">0</h1><p data-i18n="st_docs">Resmiýetler</p></div>
-        <div class="stat"><h1 id="coin">0</h1><p>TM Coin</p></div>
-    </section>
+    <script>
+        // Генерация фоновых частиц
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.width = Math.random() * 4 + 2 + 'px';
+            p.style.height = p.style.width;
+            p.style.animationDelay = Math.random() * 8 + 's';
+            p.style.animationDuration = Math.random() * 5 + 5 + 's';
+            particlesContainer.appendChild(p);
+        }
 
-    <!-- Подвал -->
-    <footer>
-        <h2>SFERA</h2>
-        <p data-i18n="footer_copy">© 2026 — Milli sanly platforma</p>
-    </footer>
+        // Логика переключения видимости пароля
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
 
-    <!-- Подключение основного скрипта из public/js/main.js -->
-    <script src="js/main.js"></script>
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+        });
+
+        // Переключатель языков по клику на логотип
+        const langs = ['ru', 'tm', 'en'];
+        let currentLangIdx = 0;
+
+        const translations = {
+            ru: {
+                title: 'Вход',
+                subtitle: 'Войдите в свою учётную запись',
+                email: 'Email',
+                password: 'Пароль',
+                button: 'Войти',
+                no_account: 'Нет аккаунта?',
+                register: 'Зарегистрироваться',
+                subtitle_logo: 'Milli Sanly Platforma'
+            },
+            tm: {
+                title: 'Giriş',
+                subtitle: 'Hesabyňyza giriň',
+                email: 'E-poçta',
+                password: 'Aşarsöz',
+                button: 'Girmek',
+                no_account: 'Hesabyňyz ýokmy?',
+                register: 'Ýazylmak',
+                subtitle_logo: 'Milli Sanly Platforma'
+            },
+            en: {
+                title: 'Sign In',
+                subtitle: 'Sign in to your account',
+                email: 'Email',
+                password: 'Password',
+                button: 'Sign In',
+                no_account: "Don't have an account?",
+                register: 'Register',
+                subtitle_logo: 'National Digital Platform'
+            }
+        };
+
+        document.getElementById('langToggle').addEventListener('click', (e) => {
+            e.preventDefault();
+            currentLangIdx = (currentLangIdx + 1) % langs.length;
+            const lang = langs[currentLangIdx];
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            document.getElementById('logoSubtitle').textContent = translations[lang].subtitle_logo;
+        });
+    </script>
 </body>
 </html>
