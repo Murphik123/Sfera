@@ -30,14 +30,8 @@
 @import 'components/notifications.css';
 @import 'components/map.css';
 
-/* ---------- Pages ---------- */
-/* (опционально, если есть уникальные стили для страниц) */
-/* @import 'pages/home.css'; */
-/* @import 'pages/auth.css'; */
-/* @import 'pages/dashboard.css'; */
-
 /* ==========================================================
-   БАЗОВЫЕ УТИЛИТЫ (оставляем на всякий случай)
+   БАЗОВЫЕ УТИЛИТЫ
    ========================================================== */
 .hidden { display: none !important; }
 .invisible { visibility: hidden; }
@@ -46,3 +40,6 @@
 .text-center { text-align: center; }
 .text-left { text-align: left; }
 .text-right { text-align: right; }
+.text-muted { color: var(--text-muted); }
+.text-primary { color: var(--color-primary); }
+.text-accent { color: var(--color-accent); }
