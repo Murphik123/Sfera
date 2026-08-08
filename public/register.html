@@ -1,624 +1,67 @@
 <!DOCTYPE html>
-<html lang="tm">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>СФЕРА — Ýazylmak</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
-    <style>
-        :root {
-            --primary: #00d4ff;
-            --secondary: #1f6bff;
-            --accent: #00ffa3;
-            --border: rgba(255, 255, 255, 0.25);
-            --white: #ffffff;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Inter", sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
-            color: var(--white);
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        body::before {
-            content: "";
-            position: fixed;
-            width: 200%;
-            height: 200%;
-            background:
-                radial-gradient(circle at 20% 30%, rgba(0,212,255,.15), transparent 35%),
-                radial-gradient(circle at 80% 20%, rgba(0,255,170,.10), transparent 35%),
-                radial-gradient(circle at 60% 80%, rgba(32,108,255,.15), transparent 40%);
-            animation: bgmove 18s linear infinite;
-            z-index: -2;
-        }
-
-        @keyframes bgmove {
-            0% { transform: translate(0,0); }
-            50% { transform: translate(-8%,-5%); }
-            100% { transform: translate(0,0); }
-        }
-
-        .container {
-            width: min(1400px, 92%);
-            margin: auto;
-        }
-
-        /* ================= ШАПКА СКРЫТА ================= */
-        header {
-            display: none !important;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 999;
-            backdrop-filter: blur(20px);
-            background: rgba(255, 255, 255, 0.15);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: white;
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: translateY(-1px);
-        }
-
-        .logo-icon {
-            width: 42px;
-            height: 42px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .logo-svg {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
-
-        .logo-svg g {
-            transform-origin: center;
-            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .logo:hover .logo-svg g {
-            transform: rotate(45deg);
-        }
-
-        .logo-text h2 {
-            font-size: 20px;
-            font-weight: 800;
-            margin: 0;
-            background: linear-gradient(to right, #fff, #b4d7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .header-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .lang {
-            padding: 8px 14px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 13px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            cursor: pointer;
-            transition: .3s;
-        }
-
-        .lang:hover {
-            background: rgba(255, 255, 255, 0.25);
-            border-color: var(--primary);
-        }
-
-        /* ================= РЕГИСТРАЦИОННЫЙ БОКС ================= */
-        .register-page {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 100px 20px 50px;
-            position: relative;
-        }
-
-        .register-box {
-            background: rgba(255,255,255,.07);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255,255,255,.18);
-            border-radius: 24px;
-            padding: 40px 35px;
-            max-width: 440px;
-            width: 100%;
-            box-shadow: 0 25px 60px rgba(0,0,0,.4);
-            animation: fadeUp 0.8s ease;
-            position: relative;
-            z-index: 2;
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .logo-icon-small {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .logo-icon-small svg {
-            width: 60px;
-            height: 60px;
-        }
-
-        .register-box h2 {
-            text-align: center;
-            font-size: 30px;
-            margin-bottom: 8px;
-            font-weight: 800;
-            background: linear-gradient(to right, #fff, #b4d7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .register-box .subtitle {
-            text-align: center;
-            color: #9fb5c8;
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: #dbe9ff;
-            margin-bottom: 6px;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 13px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,.15);
-            background: rgba(255,255,255,.05);
-            color: white;
-            font-size: 15px;
-            transition: .3s;
-            outline: none;
-        }
-
-        .form-group select {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239fb5c8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 16px;
-            cursor: pointer;
-            padding-right: 42px;
-        }
-
-        .form-group select option {
-            background: #0b2035;
-            color: #ffffff;
-            padding: 10px;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0,212,255,.25);
-            background-color: rgba(255,255,255,.08);
-        }
-
-        .password-toggle {
-            position: relative;
-        }
-
-        .password-toggle input {
-            padding-right: 48px;
-        }
-
-        .toggle-eye {
-            position: absolute;
-            right: 14px;
-            top: 36px;
-            background: transparent;
-            border: none;
-            color: #9fb5c8;
-            cursor: pointer;
-            font-size: 18px;
-            padding: 4px;
-        }
-
-        .toggle-eye:hover {
-            color: white;
-        }
-
-        .reg-btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 14px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            background: linear-gradient(135deg, #00d4ff, #008cff);
-            color: white;
-            transition: .35s;
-            box-shadow: 0 15px 35px rgba(0,212,255,.3);
-            margin-top: 10px;
-        }
-
-        .reg-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 25px 50px rgba(0,212,255,.5);
-        }
-
-        .reg-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 22px;
-            color: #9fb5c8;
-            font-size: 14px;
-        }
-
-        .login-link a {
-            color: #00d4ff;
-            text-decoration: none;
-            font-weight: 600;
-            margin-left: 5px;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-
-        .message {
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            display: none;
-        }
-
-        .message.error {
-            display: block;
-            background: rgba(255,0,0,.15);
-            border: 1px solid rgba(255,0,0,.3);
-            color: #ff6b6b;
-        }
-
-        .message.success {
-            display: block;
-            background: rgba(0,255,170,.1);
-            border: 1px solid rgba(0,255,170,.3);
-            color: #00ffa3;
-        }
-
-        /* ================= СВЕТЯЩИЕСЯ ТОЧКИ СНИЗУ ВВЕРХ ================= */
-        #particles {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 0;
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background: #00d4ff;
-            box-shadow: 0 0 8px #00d4ff, 0 0 12px #00d4ff;
-            opacity: .5;
-            animation: float linear infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(100vh); opacity: 0; }
-            20% { opacity: .8; }
-            80% { opacity: .8; }
-            100% { transform: translateY(-10vh); opacity: 0; }
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация — Sfera</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="auth-page">
+    <!-- Фоновые визуальные эффекты и неоновые частицы -->
+    <div class="background-glow"></div>
+    <div id="particles-container"></div>
 
-    <div id="particles"></div>
-
-    <header>
-        <div class="container">
-            <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00ffa3" />
-                                <stop offset="50%" stop-color="#00d4ff" />
-                                <stop offset="100%" stop-color="#1f6bff" />
-                            </linearGradient>
-                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="4" result="blur" />
-                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                            </filter>
-                        </defs>
-                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
-                        <g filter="url(#logoGlow)">
-                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
-                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
-                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
-                        </g>
-                    </svg>
+    <!-- Основной контейнер авторизации (Glassmorphism) -->
+    <main class="auth-container">
+        <div class="auth-card glass-panel">
+            <div class="auth-header">
+                <div class="logo">
+                    <span class="logo-text">SFERA</span>
                 </div>
-                <div class="logo-text">
-                    <h2 data-i18n="logo_title">СФЕРА</h2>
-                </div>
-            </a>
-
-            <div class="header-buttons">
-                <button class="lang" id="langBtn">TM</button>
-            </div>
-        </div>
-    </header>
-
-    <section class="register-page">
-        <div class="register-box">
-            <div class="logo-icon-small">
-                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="smallGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#00ffa3" />
-                            <stop offset="50%" stop-color="#00d4ff" />
-                            <stop offset="100%" stop-color="#1f6bff" />
-                        </linearGradient>
-                    </defs>
-                    <circle cx="50" cy="50" r="30" fill="url(#smallGrad)" opacity="0.15" />
-                    <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#smallGrad)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="1 5" />
-                    <circle cx="48" cy="48" r="4" fill="#ffffff" />
-                </svg>
+                <h2>Создать аккаунт</h2>
+                <p class="auth-subtitle">Присоединяйтесь к экосистеме Sfera</p>
             </div>
 
-            <h2 data-i18n="register_title">Ýazylmak</h2>
-            <p class="subtitle" data-i18n="register_subtitle">Täze accounts dörediň</p>
+            <!-- Блок вывода ошибок -->
+            <div id="auth-error" class="auth-error-message" style="display: none;"></div>
 
-            <div id="message" class="message"></div>
-
-            <form id="registerForm" novalidate>
+            <!-- Форма регистрации -->
+            <form id="register-form" class="auth-form">
                 <div class="form-group">
-                    <label for="name" data-i18n="register_name_label">At we Familiýa</label>
-                    <input type="text" id="name" placeholder="Aman Amanow" required />
-                </div>
-
-                <div class="form-group">
-                    <label for="email" data-i18n="register_email_label">Email</label>
-                    <input type="email" id="email" placeholder="email@example.com" required />
-                </div>
-
-                <div class="form-group password-toggle">
-                    <label for="password" data-i18n="register_password_label">Parol</label>
-                    <input type="password" id="password" placeholder="••••••••" required />
-                    <button type="button" class="toggle-eye" id="togglePassword">👁️</button>
+                    <label for="username">Имя пользователя</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="username" name="username" placeholder="Введите имя пользователя" required autocomplete="username">
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="role" data-i18n="register_role_label">Roly</label>
-                    <select id="role" required>
-                        <option value="user" data-i18n="role_user">Ulanyjy</option>
-                        <option value="admin" data-i18n="role_admin">Administrator</option>
-                    </select>
+                    <label for="email">Электронная почта</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" name="email" placeholder="example@sfera.com" required autocomplete="email">
+                    </div>
                 </div>
 
-                <button type="submit" class="reg-btn" id="regBtn" data-i18n="register_button">Hasap döretmek</button>
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="new-password">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary auth-submit-btn">
+                    <span>Зарегистрироваться</span>
+                </button>
             </form>
 
-            <div class="login-link">
-                <span data-i18n="register_has_account">Eýýäm accounts bar?</span>
-                <a href="login.html" data-i18n="register_login_link">Girmek</a>
+            <div class="auth-footer">
+                <p>Уже есть аккаунт? <a href="/login.html" class="auth-link">Войти</a></p>
             </div>
         </div>
-    </section>
+    </main>
 
-    <script>
-        const translations = {
-            tm: {
-                logo_title: "SFERA",
-                register_title: "Ýazylmak",
-                register_subtitle: "Платформада täze accounts dörediň",
-                register_name_label: "At we Familiýa",
-                register_email_label: "Email",
-                register_password_label: "Parol",
-                register_role_label: "Roly",
-                role_user: "Ulanyjy",
-                role_admin: "Administrator",
-                register_button: "Hasap döretmek",
-                register_has_account: "Eýýäm accounts bar?",
-                register_login_link: "Girmek",
-                reg_success: "Hasap döredildi! Giriş sahypasyna geçilýär...",
-                reg_error: "Ýazylmakda säwlik ýüze çykdy"
-            },
-            ru: {
-                logo_title: "СФЕРА",
-                register_title: "Регистрация",
-                register_subtitle: "Создайте новый аккаунт на платформе",
-                register_name_label: "Имя и Фамилия",
-                register_email_label: "Email",
-                register_password_label: "Пароль",
-                register_role_label: "Роль",
-                role_user: "Пользователь",
-                role_admin: "Администратор",
-                register_button: "Зарегистрироваться",
-                register_has_account: "Уже есть аккаунт?",
-                register_login_link: "Войти",
-                reg_success: "Аккаунт создан! Переход на страницу входа...",
-                reg_error: "Ошибка при регистрации"
-            },
-            en: {
-                logo_title: "SFERA",
-                register_title: "Register",
-                register_subtitle: "Create a new account on the platform",
-                register_name_label: "Full Name",
-                register_email_label: "Email",
-                register_password_label: "Password",
-                register_role_label: "Role",
-                role_user: "User",
-                role_admin: "Administrator",
-                register_button: "Create Account",
-                register_has_account: "Already have an account?",
-                register_login_link: "Login",
-                reg_success: "Account created! Redirecting to login...",
-                reg_error: "Registration failed"
-            }
-        };
-
-        let currentLang = localStorage.getItem('lang') || 'tm';
-
-        function setLanguage(lang) {
-            if (!translations[lang]) return;
-            currentLang = lang;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) el.textContent = translations[lang][key];
-            });
-            const langBtn = document.getElementById('langBtn');
-            if (langBtn) langBtn.textContent = lang.toUpperCase();
-            localStorage.setItem('lang', lang);
-        }
-
-        const langBtn = document.getElementById('langBtn');
-        const langCycle = ['tm', 'ru', 'en'];
-        let langIndex = langCycle.indexOf(currentLang);
-
-        if (langBtn) {
-            langBtn.addEventListener('click', () => {
-                langIndex = (langIndex + 1) % langCycle.length;
-                setLanguage(langCycle[langIndex]);
-            });
-        }
-
-        document.getElementById('togglePassword').addEventListener('click', function() {
-            const input = document.getElementById('password');
-            const isPassword = input.type === 'password';
-            input.type = isPassword ? 'text' : 'password';
-            this.textContent = isPassword ? '🙈' : '👁️';
-        });
-
-        const messageEl = document.getElementById('message');
-        function showMessage(text, type) {
-            messageEl.textContent = text;
-            messageEl.className = 'message ' + type;
-            messageEl.style.display = 'block';
-            clearTimeout(window.messageTimeout);
-            window.messageTimeout = setTimeout(() => { messageEl.style.display = 'none'; }, 5000);
-        }
-
-        document.getElementById('registerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const role = document.getElementById('role').value;
-            const regBtn = document.getElementById('regBtn');
-
-            if (!name || !email || !password || !role) {
-                showMessage(translations[currentLang].reg_error, 'error');
-                return;
-            }
-
-            regBtn.disabled = true;
-
-            try {
-                const response = await fetch('https://sfera-1.onrender.com/api/auth/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, email, password, role })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    showMessage(translations[currentLang].reg_success, 'success');
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 1500);
-                } else {
-                    showMessage(data.message || translations[currentLang].reg_error, 'error');
-                    regBtn.disabled = false;
-                }
-            } catch (error) {
-                showMessage('Network error. Please try again.', 'error');
-                regBtn.disabled = false;
-            }
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            setLanguage(currentLang);
-            const particles = document.getElementById('particles');
-            if (particles) {
-                for (let i = 0; i < 60; i++) {
-                    const p = document.createElement('span');
-                    p.className = 'particle';
-                    p.style.left = Math.random() * 100 + '%';
-                    p.style.animationDuration = (6 + Math.random() * 12) + 's';
-                    p.style.animationDelay = Math.random() * 5 + 's';
-                    particles.appendChild(p);
-                }
-            }
-        });
-    </script>
-    <!-- API клиент и скрипт регистрации -->
+    <!-- Подключение API-клиента и контроллера авторизации -->
     <script src="/js/api.js"></script>
     <script src="/js/auth.js"></script>
-</body>
-</html>
 </body>
 </html>
