@@ -1,0 +1,155 @@
+/* ==========================================================
+   COMPONENT: Interactive Map
+   ========================================================== */
+
+#map-container {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    aspect-ratio: 1000 / 692;
+    background: transparent;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: default;
+}
+
+#map-container svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: filter var(--transition);
+}
+
+#map-container svg .region {
+    fill: rgba(0, 212, 255, 0.04);
+    stroke: rgba(0, 212, 255, 0.25);
+    stroke-width: 1.5;
+    transition: stroke var(--transition), fill var(--transition);
+}
+
+#map-container.hover svg .region {
+    stroke: rgba(0, 212, 255, 0.7);
+    fill: rgba(0, 212, 255, 0.08);
+}
+
+/* Точки городов */
+.city-point {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+    cursor: pointer;
+    transition: transform var(--transition), box-shadow var(--transition);
+    z-index: 5;
+}
+
+.city-point::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    animation: pulseRing 3s ease-in-out infinite;
+}
+
+.city-point.ashgabat {
+    background: radial-gradient(circle at 30% 30%, #47E3FF, #009FD1);
+    box-shadow: var(--glow-primary);
+    width: 16px;
+    height: 16px;
+}
+.city-point.arkadag {
+    background: radial-gradient(circle at 30% 30%, #5CFFB0, #00A86B);
+    box-shadow: var(--glow-accent);
+    width: 16px;
+    height: 16px;
+}
+.city-point.other {
+    background: radial-gradient(circle at 30% 30%, #b0c7e0, #6a7f99);
+    box-shadow: 0 0 8px rgba(255,255,255,0.2);
+    width: 10px;
+    height: 10px;
+    opacity: 0.5;
+    transition: opacity var(--transition), transform var(--transition);
+}
+.city-point.other::after {
+    display: none;
+}
+
+#map-container.hover .city-point.other {
+    opacity: 0.9;
+}
+#map-container.hover .city-point.other::after {
+    display: block;
+    border-color: rgba(255,255,255,0.3);
+}
+
+/* Линии связи (SVG) */
+.map-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+}
+.map-lines line {
+    stroke-linecap: round;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+#map-container.hover .map-lines line {
+    opacity: 0.55;
+}
+.map-lines .main-line {
+    stroke-width: 2.5;
+    stroke: url(#gradient-main-line);
+    filter: drop-shadow(0 0 6px rgba(0,212,255,0.5));
+}
+.map-lines .secondary-line {
+    stroke-width: 1.5;
+    stroke: rgba(0, 212, 255, 0.5);
+    filter: drop-shadow(0 0 3px rgba(0,212,255,0.2));
+}
+
+/* Тултип (стеклянная карточка) */
+.city-tooltip {
+    position: absolute;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--border-normal);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+    transition: opacity var(--transition), transform var(--transition);
+    z-index: 10;
+    min-width: 160px;
+    box-shadow: var(--glass-shadow);
+}
+.city-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+.city-tooltip .name {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+.city-tooltip .desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+@keyframes pulseRing {
+    0% { transform: scale(0.8); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
