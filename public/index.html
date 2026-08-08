@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/style.css" />
 
     <style>
+        /* ===== ОРИГИНАЛЬНЫЕ СТИЛИ (без изменений) ===== */
         .hero-grid {
             position: absolute;
             inset: 0;
@@ -347,20 +348,23 @@
 </head>
 <body>
 
+    <!-- ===== ЧАСТИЦЫ (ОРИГИНАЛЬНЫЙ КОД) ===== -->
     <div id="particles"></div>
 
+    <!-- ===== ХЕДЕР (ОРИГИНАЛЬНЫЙ ЛОГОТИП) ===== -->
     <header>
         <div class="container flex-between" style="height: var(--header-height);">
             <a href="/" class="logo-sfera">
                 <div class="logo-icon">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- ОРИГИНАЛЬНЫЙ SVG ЛОГОТИП -->
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                 <stop offset="0%" stop-color="#00ffa3"/>
                                 <stop offset="50%" stop-color="#00d4ff"/>
                                 <stop offset="100%" stop-color="#1f6bff"/>
                             </linearGradient>
-                            <filter id="logoGlow">
+                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
                                 <feGaussianBlur stdDeviation="4" result="blur"/>
                                 <feComposite in="SourceGraphic" in2="blur" operator="over"/>
                             </filter>
@@ -369,7 +373,7 @@
                         <g filter="url(#logoGlow)">
                             <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
                             <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
-                            <circle cx="48" cy="48" r="3.5" fill="#fff" filter="url(#logoGlow)"/>
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)"/>
                         </g>
                     </svg>
                 </div>
@@ -408,6 +412,7 @@
         </div>
     </header>
 
+    <!-- ===== HERO (ОРИГИНАЛ) ===== -->
     <section class="hero" style="position:relative; overflow:hidden; min-height:100vh; display:grid; grid-template-columns:1fr 1fr; align-items:center; padding:calc(var(--header-height) + var(--space-8)) 7% var(--space-8); gap: var(--space-8);">
         <div class="hero-grid"></div>
         <div class="hero-glow glow-left"></div>
@@ -448,6 +453,7 @@
         </div>
     </section>
 
+    <!-- ===== МОДУЛИ (ОРИГИНАЛ) ===== -->
     <section class="modules section">
         <div class="container">
             <h2 class="heading-2 text-gradient" data-i18n="modules_title">Platformanyň Esasy Modullary</h2>
@@ -486,6 +492,7 @@
         </div>
     </section>
 
+    <!-- ===== СТАТИСТИКА (с загрузкой с сервера) ===== -->
     <section class="section">
         <div class="container">
             <div class="statistics">
@@ -513,6 +520,7 @@
         </div>
     </section>
 
+    <!-- ===== НОВОСТИ (ОРИГИНАЛ) ===== -->
     <section class="section">
         <div class="container">
             <h2 class="heading-2 text-gradient text-center" data-i18n="news_title">Iň soňky habarlar</h2>
@@ -533,6 +541,7 @@
         </div>
     </section>
 
+    <!-- ===== FOOTER (ОРИГИНАЛ) ===== -->
     <footer class="footer-sfera">
         <div class="container">
             <h2 data-i18n="footer_title">SFERA</h2>
@@ -540,8 +549,10 @@
         </div>
     </footer>
 
+    <!-- ===== СКРИПТЫ (ОРИГИНАЛЬНАЯ ГЕНЕРАЦИЯ ЧАСТИЦ + API) ===== -->
     <script src="/js/particles.js"></script>
     <script>
+        // ОРИГИНАЛЬНАЯ ИНИЦИАЛИЗАЦИЯ ЧАСТИЦ
         (function initParticles() {
             const container = document.getElementById('particles');
             if (!container) return;
@@ -557,6 +568,7 @@
             }
         })();
 
+        // ОРИГИНАЛЬНЫЙ ГАМБУРГЕР
         const hamburger = document.getElementById('hamburger');
         const nav = document.getElementById('mainNav');
         if (hamburger && nav) {
@@ -566,11 +578,13 @@
             });
         }
 
+        // ОРИГИНАЛЬНАЯ АНИМАЦИЯ СЧЁТЧИКОВ (с загрузкой с сервера)
         function animateCounter(el, target, duration = 3000) {
-            let current = 0;
+            let start = 0;
             const stepTime = 16;
             const steps = duration / stepTime;
             const increment = target / steps;
+            let current = 0;
             const timer = setInterval(() => {
                 current += increment;
                 if (current >= target) {
@@ -581,6 +595,7 @@
             }, stepTime);
         }
 
+        // ЗАГРУЗКА СТАТИСТИКИ С СЕРВЕРА
         async function loadStats() {
             try {
                 const response = await fetch('/api/stats');
@@ -605,6 +620,7 @@
         window.addEventListener('load', loadStats);
     </script>
 
+    <!-- ===== ЛОКАЛИЗАЦИЯ (НОВЫЙ МОДУЛЬ) ===== -->
     <script type="module">
         import { initI18n, cycleLanguage } from '/js/i18n.js';
         (async function init() {
