@@ -1,0 +1,45 @@
+/* ==========================================================
+   EFFECT: Floating Particles
+   ========================================================== */
+
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: var(--z-background);
+    overflow: hidden;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(0, 212, 255, 0.7);
+    box-shadow: 0 0 10px rgba(0, 212, 255, 0.8), 0 0 20px rgba(0, 255, 163, 0.5);
+    animation: floatParticle linear infinite;
+    will-change: transform, opacity;
+}
+
+/* Разные размеры и задержки задаются через JS, но можно определить и классы */
+.particle.small {
+    width: 2px;
+    height: 2px;
+    opacity: 0.4;
+    animation-duration: 12s;
+}
+
+.particle.medium {
+    width: 4px;
+    height: 4px;
+    opacity: 0.6;
+    animation-duration: 9s;
+}
+
+.particle.large {
+    width: 6px;
+    height: 6px;
+    opacity: 0.8;
+    animation-duration: 7s;
+}
