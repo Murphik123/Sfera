@@ -1,308 +1,571 @@
 <!DOCTYPE html>
 <html lang="tm">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SFERA - Milli Sanly Platforma</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SFERA — Türkmenistanyň Ýeke Sanly Platformasy</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            background: #060913;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Частицы заднего фона */
-        #particles {
+        /* ===== УНИКАЛЬНЫЕ СТИЛИ ДЛЯ ГЛАВНОЙ ===== */
+        .hero-grid {
             position: absolute;
             inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, .03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, .03) 1px, transparent 1px);
+            background-size: 60px 60px;
             pointer-events: none;
-            z-index: 1;
+            z-index: 0;
+            animation: gridMove 20s linear infinite;
         }
 
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(0, 212, 255, 0.4);
-            animation: float 8s infinite linear;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            50% { opacity: 0.6; }
-            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-        }
-
-        /* Фоновые неоновые пятна */
-        .bg-glow {
+        .hero-glow {
             position: absolute;
             width: 500px;
             height: 500px;
             border-radius: 50%;
             filter: blur(120px);
-            opacity: 0.25;
-            z-index: 1;
             pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+            animation: pulseGlow 4s ease-in-out infinite alternate;
         }
-
-        .glow-1 {
+        .glow-left {
             top: -10%;
             left: -10%;
-            background: radial-gradient(circle, #00ffa3, #00d4ff);
+            background: rgba(0, 212, 255, .4);
         }
-
-        .glow-2 {
+        .glow-right {
             bottom: -10%;
             right: -10%;
-            background: radial-gradient(circle, #1f6bff, #7928ca);
+            background: rgba(0, 255, 170, .3);
+            animation-delay: 2s;
         }
 
-        /* Тот самый оригинальный стекловидный контейнер */
-        .auth-container {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            max-width: 440px;
-            padding: 40px;
-            background: rgba(13, 19, 33, 0.65);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            margin: 20px;
-        }
-
-        .auth-header {
-            text-align: center;
-            margin-bottom: 28px;
-        }
-
-        .logo-wrap {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: inherit;
-            margin-bottom: 20px;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .logo-svg {
-            width: 44px;
-            height: 44px;
-        }
-
-        .logo-text {
-            text-align: left;
-        }
-
-        .logo-text h2 {
-            font-size: 22px;
-            font-weight: 800;
+        .hero-tag {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: var(--radius-pill);
+            background: rgba(0, 212, 255, .12);
+            border: 1px solid rgba(0, 212, 255, .3);
+            font-size: 0.875rem;
             letter-spacing: 2px;
-            background: linear-gradient(135deg, #00ffa3, #00d4ff, #1f6bff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--color-primary);
+            margin-bottom: var(--space-5);
         }
 
-        .logo-text p {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.5);
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+        }
+        .hero-content h1 {
+            margin-bottom: var(--space-4);
+        }
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            margin-bottom: var(--space-4);
             letter-spacing: 0.5px;
         }
-
-        .auth-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 6px;
+        .hero-text {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            max-width: 550px;
+            margin-bottom: var(--space-7);
         }
-
-        .auth-subtitle {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        /* Навигационные ссылки в стиле оригинальных кнопок формы */
-        .menu-list {
+        .hero-buttons {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: var(--space-4);
+            flex-wrap: wrap;
         }
 
-        .menu-link {
+        .hero-visual {
+            position: relative;
+            z-index: 2;
             display: flex;
+            justify-content: center;
             align-items: center;
-            justify-content: space-between;
-            padding: 14px 18px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 12px;
-            color: #fff;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s ease;
         }
-
-        .menu-link:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: #00d4ff;
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.25);
-            transform: translateY(-2px);
+        .core {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-
-        .menu-link .arrow {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
-            transition: color 0.3s, transform 0.3s;
+        .core-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 212, 255, .3);
+            animation: spinRing linear infinite;
         }
-
-        .menu-link:hover .arrow {
-            color: #00d4ff;
-            transform: translateX(3px);
-        }
-
-        /* Главная кнопка Входа */
-        .btn-submit {
-            display: block;
+        .ring-1 {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #00d4ff, #1f6bff);
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 15px;
-            font-weight: 600;
+            height: 100%;
+            animation-duration: 20s;
+        }
+        .ring-2 {
+            width: 120%;
+            height: 120%;
+            animation-duration: 15s;
+            animation-direction: reverse;
+            border-color: rgba(0, 255, 170, .2);
+        }
+        .ring-3 {
+            width: 140%;
+            height: 140%;
+            animation-duration: 25s;
+            border-color: rgba(31, 107, 255, .2);
+        }
+        .core-center {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--color-primary), #004d80);
+            box-shadow: var(--glow-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: pulseCore 3s ease-in-out infinite alternate;
+        }
+        .core-center svg {
+            width: 80px;
+            height: 80px;
+            animation: spinRing 15s linear infinite;
+        }
+
+        .modules h2 {
             text-align: center;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+            margin-bottom: var(--space-9);
         }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(0, 212, 255, 0.5);
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-6);
         }
-
-        .auth-footer {
-            margin-top: 20px;
+        .card-module {
+            padding: var(--space-7) var(--space-5);
             text-align: center;
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .auth-footer a {
-            color: #00d4ff;
+            background: var(--glass-bg);
+            border: var(--border-normal);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-radius: var(--radius-lg);
+            transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
             text-decoration: none;
-            font-weight: 500;
-            margin-left: 5px;
+            color: var(--text-primary);
+        }
+        .card-module:hover {
+            transform: translateY(-8px);
+            border-color: var(--color-primary);
+            background: var(--glass-bg-hover);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, .15);
+        }
+        .card-module .icon {
+            font-size: 3.5rem;
+            margin-bottom: var(--space-3);
+        }
+        .card-module h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-2);
+        }
+        .card-module p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
-        .auth-footer a:hover {
-            text-decoration: underline;
+        .statistics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-6);
+        }
+        .stat-item {
+            background: var(--glass-bg);
+            border: var(--border-normal);
+            border-radius: var(--radius-lg);
+            padding: var(--space-7) var(--space-4);
+            text-align: center;
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            transition: transform var(--transition);
+        }
+        .stat-item:hover {
+            transform: scale(1.03);
+        }
+        .stat-item .number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(var(--color-primary), var(--color-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-2);
+        }
+        .stat-item .label {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+        }
+        .news-card {
+            padding: var(--space-7);
+            border-radius: var(--radius-lg);
+            background: var(--glass-bg);
+            border: var(--border-normal);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            transition: transform var(--transition), border-color var(--transition);
+        }
+        .news-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--color-primary);
+        }
+        .news-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--space-3);
+        }
+        .news-card p {
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .footer-sfera {
+            margin-top: var(--space-10);
+            padding: var(--space-9) var(--space-5);
+            text-align: center;
+            background: var(--bg-800);
+            border-top: var(--border-light);
+        }
+        .footer-sfera h2 {
+            font-size: 2.2rem;
+            margin-bottom: var(--space-2);
+        }
+        .footer-sfera p {
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 1200px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: calc(var(--header-height) + var(--space-8)) 5% var(--space-8);
+            }
+            .hero-content { max-width: 100%; }
+            .hero-text { max-width: 100%; margin: 0 auto; }
+            .hero-buttons { justify-content: center; }
+            .hero-visual { margin-top: var(--space-7); }
+            .core { width: 240px; height: 240px; }
+            .core-center { width: 100px; height: 100px; }
+            .core-center svg { width: 60px; height: 60px; }
+        }
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.2rem; }
+            .hero-subtitle { font-size: 1.2rem; }
+            .hero-text { font-size: 1rem; }
+            .modules h2 { font-size: 2rem; }
+            .core { width: 180px; height: 180px; }
+            .core-center { width: 80px; height: 80px; }
+            .core-center svg { width: 48px; height: 48px; }
+            .stat-item .number { font-size: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow glow-1"></div>
-    <div class="bg-glow glow-2"></div>
+    <!-- ===== ЧАСТИЦЫ ===== -->
     <div id="particles"></div>
 
-    <div class="auth-container">
-        <!-- Обычная шапка с вашим SVG-логотипом -->
-        <div class="auth-header">
-            <a href="index.html" class="logo-wrap" id="langToggle">
-                <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#00ffa3" />
-                            <stop offset="50%" stop-color="#00d4ff" />
-                            <stop offset="100%" stop-color="#1f6bff" />
-                        </linearGradient>
-                        <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
-                            <feGaussianBlur stdDeviation="4" result="blur" />
-                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                        </filter>
-                    </defs>
-                    <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
-                    <g filter="url(#logoGlow)">
-                        <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
-                        <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
-                        <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
-                    </g>
-                </svg>
+    <!-- ===== ХЕДЕР ===== -->
+    <header>
+        <div class="container flex-between" style="height: var(--header-height);">
+            <a href="/" class="logo-sfera">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3"/>
+                                <stop offset="50%" stop-color="#00d4ff"/>
+                                <stop offset="100%" stop-color="#1f6bff"/>
+                            </linearGradient>
+                            <filter id="logoGlow">
+                                <feGaussianBlur stdDeviation="4" result="blur"/>
+                                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                            </filter>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)"/>
+                        <g filter="url(#logoGlow)">
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
+                            <circle cx="48" cy="48" r="3.5" fill="#fff" filter="url(#logoGlow)"/>
+                        </g>
+                    </svg>
+                </div>
                 <div class="logo-text">
                     <h2>SFERA</h2>
-                    <p id="logoSubtitle">Milli Sanly Platforma</p>
+                    <p style="display:none;">Milli Sanly Platforma</p>
                 </div>
             </a>
-            <h1 class="auth-title" id="pageTitle">SFERA</h1>
-            <p class="auth-subtitle" id="pageSubtitle">Единая цифровая платформа</p>
+
+            <nav id="mainNav">
+                <ul class="flex" style="gap: var(--space-5); align-items: center;">
+                    <li><a href="#" data-i18n="nav_home">Baş sahypa</a></li>
+                    <li class="dropdown">
+                        <a href="#" data-i18n="nav_marketplace">Marketpleýs</a>
+                        <ul class="submenu">
+                            <li><a href="#" data-i18n="nav_exchange">Birža</a></li>
+                            <li><a href="#" data-i18n="nav_trading_platform">Söwda meýdançasy</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" data-i18n="nav_tm_pay">TM Pay</a></li>
+                    <li><a href="#" data-i18n="nav_tm_coin">TM Coin</a></li>
+                    <li><a href="#" data-i18n="nav_bank">Bank</a></li>
+                    <li><a href="#" data-i18n="nav_ai">AI</a></li>
+                    <li><a href="#" data-i18n="nav_docs">Resmiýetler</a></li>
+                    <li><a href="#" data-i18n="nav_contacts">Kontaktlar</a></li>
+                </ul>
+            </nav>
+
+            <div class="flex" style="gap: var(--space-3); align-items: center;">
+                <button class="lang-btn" id="langBtn">TM</button>
+                <a href="/login.html" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem;">Girmek</a>
+                <button class="hamburger" id="hamburger" aria-label="Menýu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" style="position:relative; overflow:hidden; min-height:100vh; display:grid; grid-template-columns:1fr 1fr; align-items:center; padding:calc(var(--header-height) + var(--space-8)) 7% var(--space-8); gap: var(--space-8);">
+        <div class="hero-grid"></div>
+        <div class="hero-glow glow-left"></div>
+        <div class="hero-glow glow-right"></div>
+
+        <div class="hero-content">
+            <span class="hero-tag" data-i18n="hero_tag">SFERA — SANLY PLATFORMA</span>
+            <h1 class="heading-1" data-i18n="hero_title">Türkmenistanyň Ýeke Sanly<br>Platformasy</h1>
+            <p class="hero-subtitle" data-i18n="hero_subtitle">Söwda • AI • Töleg • Bank • Resmiýet</p>
+            <p class="hero-text" data-i18n="hero_text">
+                Elektron söwda, intellektual analitika, maliýe hyzmatlary, resmiýet aýlymyny we sanly döwlet hyzmatlaryny birleşdirýän häzirki zaman döwlet sanly ekosistemasy.
+            </p>
+            <div class="hero-buttons">
+                <a href="/dashboard.html" class="btn btn-primary" data-i18n="hero_btn_start">Başlamak</a>
+                <a href="#" class="btn btn-secondary" data-i18n="hero_btn_demo">Demo</a>
+            </div>
         </div>
 
-        <!-- Навигационные модули внутри карточки -->
-        <div class="menu-list">
-            <a href="marketplace.html" class="menu-link">
-                <span>🛒 Marketplace</span>
-                <span class="arrow">➔</span>
-            </a>
-            <a href="exchange.html" class="menu-link">
-                <span>💱 Exchange</span>
-                <span class="arrow">➔</span>
-            </a>
-            <a href="bank.html" class="menu-link">
-                <span>🏦 Bank</span>
-                <span class="arrow">➔</span>
-            </a>
-            <a href="docs.html" class="menu-link">
-                <span>📄 Docs</span>
-                <span class="arrow">➔</span>
-            </a>
-            <a href="messenger.html" class="menu-link">
-                <span>💬 Messenger</span>
-                <span class="arrow">➔</span>
-            </a>
+        <div class="hero-visual">
+            <div class="core">
+                <div class="core-ring ring-1"></div>
+                <div class="core-ring ring-2"></div>
+                <div class="core-ring ring-3"></div>
+                <div class="core-center">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="heroCoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3"/>
+                                <stop offset="50%" stop-color="#00d4ff"/>
+                                <stop offset="100%" stop-color="#1f6bff"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#heroCoreGrad)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="1 6"/>
+                        <circle cx="48" cy="48" r="5.5" fill="#fff"/>
+                    </svg>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <!-- Кнопка перехода на авторизацию -->
-        <a href="login.html" class="btn-submit">Войти в систему</a>
-
-        <div class="auth-footer">
-            <span>© 2026 SFERA Platform</span>
+    <!-- ===== МОДУЛИ ===== -->
+    <section class="modules section">
+        <div class="container">
+            <h2 class="heading-2 text-gradient" data-i18n="modules_title">Platformanyň Esasy Modullary</h2>
+            <div class="grid-cards">
+                <a href="#" class="card-module">
+                    <div class="icon">🛒</div>
+                    <h3 data-i18n="module_exchange_title">Birža</h3>
+                    <p data-i18n="module_exchange_desc">Elektron söwda meýdançasy</p>
+                </a>
+                <a href="#" class="card-module">
+                    <div class="icon">💳</div>
+                    <h3 data-i18n="module_tmpay_title">TM Pay</h3>
+                    <p data-i18n="module_tmpay_desc">Milli töleg ulgamy</p>
+                </a>
+                <a href="#" class="card-module">
+                    <div class="icon">₮</div>
+                    <h3 data-i18n="module_tmcoin_title">TM Coin</h3>
+                    <p data-i18n="module_tmcoin_desc">Sanly döwlet walýutasy</p>
+                </a>
+                <a href="#" class="card-module">
+                    <div class="icon">🏦</div>
+                    <h3 data-i18n="module_bank_title">TM Bank</h3>
+                    <p data-i18n="module_bank_desc">Sanly bank hyzmatlary</p>
+                </a>
+                <a href="#" class="card-module">
+                    <div class="icon">🤖</div>
+                    <h3 data-i18n="module_ai_title">AI analitika</h3>
+                    <p data-i18n="module_ai_desc">TM Coin prokgnozlary, trendler</p>
+                </a>
+                <a href="#" class="card-module">
+                    <div class="icon">📄</div>
+                    <h3 data-i18n="module_docs_title">Resmiýetler</h3>
+                    <p data-i18n="module_docs_desc">Awtomatik tassyklama</p>
+                </a>
+            </div>
         </div>
-    </div>
+    </section>
 
+    <!-- ===== СТАТИСТИКА (с загрузкой с сервера) ===== -->
+    <section class="section">
+        <div class="container">
+            <div class="statistics">
+                <div class="stat-item">
+                    <div class="number" id="online">0</div>
+                    <div class="label" data-i18n="stat_online">Onlaýn</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number" id="users">0</div>
+                    <div class="label" data-i18n="stat_users">Ulanyjylar</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number" id="orders">0</div>
+                    <div class="label" data-i18n="stat_orders">Söwdalar</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number" id="docs">0</div>
+                    <div class="label" data-i18n="stat_docs">Resmiýetler</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number" id="coin">0</div>
+                    <div class="label" data-i18n="stat_coin">TM Coin</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== НОВОСТИ ===== -->
+    <section class="section">
+        <div class="container">
+            <h2 class="heading-2 text-gradient text-center" data-i18n="news_title">Iň soňky habarlar</h2>
+            <div class="news-grid">
+                <div class="news-card">
+                    <h3 data-i18n="news1_title">Platformanyň işe girizilmegi</h3>
+                    <p data-i18n="news1_text">Täze nesil sanly ekosistema.</p>
+                </div>
+                <div class="news-card">
+                    <h3 data-i18n="news2_title">AI moduly</h3>
+                    <p data-i18n="news2_text">Resmiýetleri awtomatik barlamak.</p>
+                </div>
+                <div class="news-card">
+                    <h3 data-i18n="news3_title">TM Pay</h3>
+                    <p data-i18n="news3_text">Milli çalt töleg ulgamy.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer-sfera">
+        <div class="container">
+            <h2 data-i18n="footer_title">SFERA</h2>
+            <p data-i18n="footer_copyright">© 2026 — Milli sanly platforma</p>
+        </div>
+    </footer>
+
+    <!-- ===== СКРИПТЫ ===== -->
+    <script src="/js/particles.js"></script>
     <script>
-        // Частицы заднего фона
-        const particlesContainer = document.getElementById('particles');
-        for (let i = 0; i < 20; i++) {
-            const p = document.createElement('div');
-            p.className = 'particle';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.width = Math.random() * 4 + 2 + 'px';
-            p.style.height = p.style.width;
-            p.style.animationDelay = Math.random() * 8 + 's';
-            p.style.animationDuration = Math.random() * 5 + 5 + 's';
-            particlesContainer.appendChild(p);
+        // Инициализация частиц
+        (function initParticles() {
+            const container = document.getElementById('particles');
+            if (!container) return;
+            if (container.children.length > 0) return;
+            for (let i = 0; i < 60; i++) {
+                const p = document.createElement('span');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDuration = (6 + Math.random() * 12) + 's';
+                p.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(p);
+            }
+        })();
+
+        // Гамбургер
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('mainNav');
+        if (hamburger && nav) {
+            hamburger.addEventListener('click', function() {
+                this.classList.toggle('active');
+                nav.classList.toggle('active');
+            });
         }
+
+        // Анимация счётчика
+        function animateCounter(el, target, duration = 3000) {
+            let start = 0;
+            const stepTime = 16;
+            const steps = duration / stepTime;
+            const increment = target / steps;
+            let current = 0;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                el.textContent = Math.floor(current).toLocaleString('ru-RU');
+            }, stepTime);
+        }
+
+        // Загрузка статистики с сервера
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/stats');
+                if (!response.ok) throw new Error('Статистика не загружена');
+                const stats = await response.json();
+                // stats = { online, users, orders, docs, coin }
+                animateCounter(document.getElementById('online'), stats.online || 0, 2000);
+                animateCounter(document.getElementById('users'), stats.users || 0, 4000);
+                animateCounter(document.getElementById('orders'), stats.orders || 0, 4000);
+                animateCounter(document.getElementById('docs'), stats.docs || 0, 4000);
+                animateCounter(document.getElementById('coin'), stats.coin || 0, 4000);
+            } catch (error) {
+                console.warn('Не удалось загрузить статистику, используем локальные данные');
+                // fallback (старые значения)
+                const fallback = { online: 1842, users: 2340000, orders: 18540291, docs: 11328901, coin: 21000000 };
+                animateCounter(document.getElementById('online'), fallback.online, 2000);
+                animateCounter(document.getElementById('users'), fallback.users, 4000);
+                animateCounter(document.getElementById('orders'), fallback.orders, 4000);
+                animateCounter(document.getElementById('docs'), fallback.docs, 4000);
+                animateCounter(document.getElementById('coin'), fallback.coin, 4000);
+            }
+        }
+
+        window.addEventListener('load', loadStats);
     </script>
+
+    <!-- ===== ЛОКАЛИЗАЦИЯ ===== -->
+    <script type="module">
+        import { initI18n, cycleLanguage } from '/js/i18n.js';
+        (async function init() {
+            await initI18n();
+            document.getElementById('langBtn')?.addEventListener('click', cycleLanguage);
+        })();
+    </script>
+
 </body>
 </html>
