@@ -1,0 +1,68 @@
+/* ==========================================================
+   COMPONENT: Dropdown
+   ========================================================== */
+
+/* Контейнер дропдауна */
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Само меню (появляется при наведении/клике) */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 200px;
+    background: rgba(8, 19, 29, 0.95);
+    backdrop-filter: blur(16px);
+    border: var(--border-normal);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2) 0;
+    box-shadow: var(--glass-shadow);
+    z-index: var(--z-dropdown);
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+/* Пункты меню */
+.dropdown-menu a,
+.dropdown-menu button {
+    display: block;
+    width: 100%;
+    padding: var(--space-2) var(--space-4);
+    color: var(--text-secondary);
+    background: transparent;
+    border: none;
+    text-align: left;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+    font-weight: 400;
+}
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--color-primary);
+}
+
+/* Разделитель */
+.dropdown-divider {
+    height: 1px;
+    background: var(--glass-border);
+    margin: var(--space-2) 0;
+}
+
+/* Дропдаун с иконкой */
+.dropdown-menu .icon {
+    margin-right: var(--space-2);
+}
+
+/* Выравнивание вправо */
+.dropdown-menu-right {
+    left: auto;
+    right: 0;
+}
