@@ -1,453 +1,84 @@
-:root {
-    --primary: #00d4ff;
-    --secondary: #1f6bff;
-    --accent: #00ffa3;
-    --dark: #08131d;
-    --dark2: #0d1c29;
-    --dark3: #142738;
-    --glass: rgba(255, 255, 255, 0.06);
-    --border: rgba(255, 255, 255, 0.12);
-    --white: #ffffff;
-    --text: #dbe9ff;
-    --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-    --radius: 22px;
-}
+/* ==========================================================
+   SFERA PLATFORM
+   Master Stylesheet
+   Version: 1.0
+   ========================================================== */
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Inter", sans-serif;
-}
+/* ---------- Core ---------- */
+@import 'core/variables.css';
+@import 'core/reset.css';
+@import 'core/theme.css';
+@import 'core/layout.css';
+@import 'core/typography.css';
 
-html {
-    scroll-behavior: smooth;
-}
+/* ---------- Effects (будут добавлены позже) ---------- */
+/* @import 'effects/glass.css'; */
+/* @import 'effects/glow.css'; */
+/* @import 'effects/animations.css'; */
+/* @import 'effects/background.css'; */
+/* @import 'effects/particles.css'; */
 
-body {
-    background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
-    color: var(--white);
-    overflow-x: hidden;
-    position: relative;
-    min-height: 100vh;
-}
+/* ---------- Components (будут добавлены позже) ---------- */
+/* @import 'components/buttons.css'; */
+/* @import 'components/cards.css'; */
+/* @import 'components/forms.css'; */
+/* @import 'components/navbar.css'; */
+/* @import 'components/footer.css'; */
 
-/* Динамический задний фон */
-body::before {
-    content: "";
-    position: fixed;
-    width: 200%;
-    height: 200%;
-    background:
-        radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.15), transparent 35%),
-        radial-gradient(circle at 80% 20%, rgba(0, 255, 170, 0.10), transparent 35%),
-        radial-gradient(circle at 60% 80%, rgba(32, 108, 255, 0.15), transparent 40%);
-    animation: bgmove 18s linear infinite;
-    z-index: -2;
-}
+/* ==========================================================
+   Базовый класс для страниц авторизации (временно)
+   ========================================================== */
 
-@keyframes bgmove {
-    0% { transform: translate(0, 0); }
-    50% { transform: translate(-8%, -5%); }
-    100% { transform: translate(0, 0); }
-}
-
-/* Частицы */
-#particles {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: -1;
-    overflow: hidden;
-}
-
-.particle {
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(0, 212, 255, 0.7);
-    box-shadow: 0 0 10px rgba(0, 212, 255, 0.8), 0 0 20px rgba(0, 255, 163, 0.5);
-    animation: floatParticle linear infinite;
-}
-
-@keyframes floatParticle {
-    0% { transform: translateY(100vh) scale(0); opacity: 0; }
-    20% { opacity: 0.8; }
-    80% { opacity: 0.8; }
-    100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
-}
-
-.container {
-    width: min(1400px, 92%);
-    margin: auto;
-}
-
-/* АНИМАЦИЯ СПИРАЛИ В ЛОГОТИПЕ */
-.spiral-path {
-    transform-origin: center;
-    animation: rotateSpiral 8s linear infinite;
-}
-
-.spiral-core {
-    animation: pulseCore 2s ease-in-out infinite alternate;
-}
-
-@keyframes rotateSpiral {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-@keyframes pulseCore {
-    0% { transform: scale(0.8); opacity: 0.6; }
-    100% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 12px var(--accent); }
-}
-
-/* HEADER GLASS */
-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 999;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
-}
-
-header .container {
+.auth-page {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
 }
 
-.logo {
+.auth-container {
+    width: 100%;
+    max-width: 440px;
+    background: var(--glass-bg);
+    border: var(--border-normal);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border-radius: var(--radius-lg);
+    padding: 40px 32px;
+    box-shadow: var(--glass-shadow);
+    position: relative;
+    z-index: 1;
+}
+
+/* ==========================================================
+   Логотип (только название "Сфера")
+   ========================================================== */
+
+.logo-sfera {
     display: flex;
     align-items: center;
     gap: 12px;
     text-decoration: none;
-    color: white;
+    color: var(--text-primary);
 }
 
-.logo-icon {
+.logo-sfera .logo-icon {
     width: 48px;
     height: 48px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
-.logo-text h2 {
+.logo-sfera .logo-text h2 {
     font-size: 24px;
     font-weight: 800;
     line-height: 1;
     background: linear-gradient(to right, #fff, #b4d7ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-/* NAV */
-nav ul {
-    display: flex;
-    list-style: none;
-    gap: 28px;
-    align-items: center;
-}
-
-nav a {
-    text-decoration: none;
-    color: white;
-    font-weight: 500;
-    transition: .3s;
-    white-space: nowrap;
-    font-size: 15px;
-}
-
-nav a:hover {
-    color: var(--primary);
-    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
-}
-
-.dropdown { position: relative; }
-
-.submenu {
+/* Убираем подзаголовок в логотипе */
+.logo-sfera .logo-text p {
     display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: rgba(8, 19, 29, 0.92);
-    backdrop-filter: blur(16px);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 10px 0;
-    min-width: 200px;
-    box-shadow: var(--shadow);
-}
-
-.submenu a {
-    display: block;
-    padding: 10px 20px;
-    color: var(--text);
-    font-weight: 400;
-}
-
-.submenu a:hover {
-    background: rgba(0, 212, 255, 0.12);
-    color: var(--primary);
-}
-
-.dropdown:hover .submenu { display: block; }
-
-.header-buttons {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-.lang-btn {
-    padding: 10px 18px;
-    border-radius: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: .3s;
-    font-size: 14px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: #fff;
-}
-
-.lang-btn:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
-}
-
-.login-btn {
-    padding: 10px 20px;
-    border-radius: 12px;
-    font-weight: 600;
-    transition: .3s;
-    font-size: 14px;
-    text-decoration: none;
-    background: rgba(0, 212, 255, 0.15);
-    border: 1px solid rgba(0, 212, 255, 0.3);
-    color: #fff;
-    display: inline-block;
-}
-
-.login-btn:hover {
-    background: rgba(0, 212, 255, 0.25);
-    border-color: var(--primary);
-    color: var(--primary);
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
-}
-
-/* HERO SECTION */
-.hero {
-    position: relative;
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    padding: 140px 7% 80px;
-    gap: 60px;
-}
-
-.hero-tag {
-    display: inline-block;
-    padding: 6px 16px;
-    border-radius: 30px;
-    background: rgba(0, 212, 255, 0.12);
-    border: 1px solid rgba(0, 212, 255, 0.3);
-    font-size: 13px;
-    letter-spacing: 1.5px;
-    color: var(--primary);
-    margin-bottom: 20px;
-}
-
-.hero-content h1 {
-    font-size: 56px;
-    font-weight: 900;
-    line-height: 1.15;
-    margin-bottom: 20px;
-    background: linear-gradient(to right, #fff, #b4d7ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.hero-subtitle {
-    font-size: 22px;
-    color: var(--primary);
-    margin-bottom: 20px;
-}
-
-.hero-text {
-    font-size: 17px;
-    line-height: 1.7;
-    color: #bcd0e2;
-    margin-bottom: 35px;
-    max-width: 540px;
-}
-
-.hero-buttons {
-    display: flex;
-    gap: 16px;
-}
-
-.primary-btn, .glass-btn {
-    padding: 16px 36px;
-    border-radius: 14px;
-    font-weight: 700;
-    text-decoration: none;
-    transition: .3s;
-    display: inline-block;
-    cursor: pointer;
-    border: none;
-    font-size: 15px;
-}
-
-.primary-btn {
-    background: linear-gradient(135deg, #00d4ff, #008cff);
-    color: white;
-    box-shadow: 0 15px 35px rgba(0, 212, 255, 0.3);
-}
-
-.primary-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 45px rgba(0, 212, 255, 0.5);
-}
-
-.glass-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    color: white;
-}
-
-.glass-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-3px);
-}
-
-/* HERO VISUAL */
-.hero-visual {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.core {
-    position: relative;
-    width: 320px;
-    height: 320px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.core-ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 2px solid rgba(0, 212, 255, 0.25);
-    animation: spinRing linear infinite;
-}
-
-.ring-1 { width: 100%; height: 100%; animation-duration: 20s; }
-.ring-2 { width: 125%; height: 125%; animation-duration: 15s; animation-direction: reverse; border-color: rgba(0, 255, 170, 0.2); }
-.ring-3 { width: 150%; height: 150%; animation-duration: 25s; border-color: rgba(31, 107, 255, 0.2); }
-
-@keyframes spinRing { to { transform: rotate(360deg); } }
-
-.core-center {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,212,255,0.2), rgba(8,19,29,0.8));
-    border: 1px solid rgba(0,212,255,0.4);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 60px rgba(0, 212, 255, 0.4);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* MODULES & CARDS */
-.modules, .statistics { padding: 100px 7%; }
-
-.modules h2 {
-    text-align: center;
-    font-size: 42px;
-    margin-bottom: 60px;
-    font-weight: 800;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 30px;
-}
-
-.card {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    padding: 35px 25px;
-    text-align: center;
-    transition: .35s;
-    text-decoration: none;
-    color: #fff;
-    display: block;
-}
-
-.card:hover {
-    transform: translateY(-8px);
-    border-color: var(--primary);
-    background: rgba(255, 255, 255, 0.07);
-    box-shadow: 0 20px 40px rgba(0, 212, 255, 0.15);
-}
-
-.icon { font-size: 48px; margin-bottom: 15px; }
-.card h3 { font-size: 22px; margin-bottom: 10px; color: #fff; }
-.card p { color: #bfd3e4; font-size: 15px; line-height: 1.6; }
-
-/* STATS */
-.statistics {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 25px;
-}
-
-.stat {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 18px;
-    padding: 30px 15px;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    backdrop-filter: blur(10px);
-}
-
-.stat h1 {
-    font-size: 44px;
-    background: linear-gradient(#00d4ff, #00ffa3);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 8px;
-}
-
-footer {
-    padding: 60px 20px;
-    text-align: center;
-    background: #060e17;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-@media(max-width: 1024px) {
-    .hero { grid-template-columns: 1fr; text-align: center; padding-top: 120px; }
-    .hero-text { margin: 0 auto 35px; }
-    .hero-buttons { justify-content: center; }
 }
