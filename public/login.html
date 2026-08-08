@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/style.css" />
 
     <style>
+        /* ===== ОРИГИНАЛЬНЫЕ СТИЛИ (без изменений) ===== */
         .hint-box {
             background: rgba(255,255,255,0.03);
             border: 1px dashed rgba(255,255,255,0.1);
@@ -44,17 +45,20 @@
     </style>
 </head>
 <body class="auth-page">
+    <!-- ===== ЧАСТИЦЫ (ОРИГИНАЛ) ===== -->
     <div id="particles"></div>
 
     <div class="lang-switch-top">
         <button class="lang-btn" id="langBtn">TM</button>
     </div>
 
+    <!-- ===== СТЕКЛЯННАЯ КАРТОЧКА (ОРИГИНАЛ) ===== -->
     <div class="auth-container">
         <div class="auth-header">
+            <!-- ОРИГИНАЛЬНЫЙ ЛОГОТИП -->
             <a href="/" class="logo-sfera" style="justify-content:center;">
                 <div class="logo-icon">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                 <stop offset="0%" stop-color="#00ffa3"/>
@@ -64,7 +68,7 @@
                         </defs>
                         <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15"/>
                         <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3"/>
-                        <circle cx="48" cy="48" r="3.5" fill="#fff"/>
+                        <circle cx="48" cy="48" r="3.5" fill="#ffffff"/>
                     </svg>
                 </div>
                 <div class="logo-text">
@@ -106,14 +110,17 @@
         </div>
     </div>
 
+    <!-- ===== СКРИПТЫ (ЧАСТИЦЫ + API) ===== -->
     <script src="/js/particles.js"></script>
     <script type="module">
         import { authApi } from '/js/api.js';
         import { initI18n, cycleLanguage } from '/js/i18n.js';
 
+        // ЛОКАЛИЗАЦИЯ
         await initI18n();
         document.getElementById('langBtn')?.addEventListener('click', cycleLanguage);
 
+        // ЛОГИКА ВХОДА (через API)
         const form = document.getElementById('loginForm');
         const messageEl = document.getElementById('message');
         const loginBtn = document.getElementById('loginBtn');
