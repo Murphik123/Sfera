@@ -1,0 +1,42 @@
+/* ==========================================================
+   EFFECT: Gradients
+   ========================================================== */
+
+/* Основной градиент (синий → фиолетовый → зелёный) */
+.bg-gradient-main {
+    background: var(--gradient-main);
+}
+
+/* Тёмный градиент (для фона секций) */
+.bg-gradient-dark {
+    background: var(--gradient-dark);
+}
+
+/* Градиент для стеклянных элементов (полупрозрачный) */
+.bg-gradient-glass {
+    background: var(--gradient-glass);
+}
+
+/* Текст с градиентом (используется в заголовках) */
+.text-gradient {
+    background: var(--gradient-main);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Градиент для текста от primary к accent */
+.text-gradient-primary-accent {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Градиент для текста от white к light-blue */
+.text-gradient-white {
+    background: linear-gradient(to right, #fff, #b4d7ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
