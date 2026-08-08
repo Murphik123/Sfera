@@ -1,0 +1,47 @@
+/* ==========================================================
+   EFFECT: Glassmorphism
+   ========================================================== */
+
+/* Базовый стеклянный элемент */
+.glass {
+    background: var(--glass-bg);
+    border: var(--border-normal);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    box-shadow: var(--glass-shadow);
+    transition: background var(--transition), border-color var(--transition);
+}
+
+.glass:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--glass-border-hover);
+}
+
+/* Стеклянная панель (для карточек, модалок, сайдбаров) */
+.glass-panel {
+    background: var(--glass-bg);
+    border: var(--border-normal);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow);
+}
+
+/* Стеклянная карточка с дополнительной внутренней тенью */
+.glass-card {
+    background: var(--glass-bg);
+    border: var(--border-normal);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border-radius: var(--radius-md);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,0.05);
+    padding: var(--space-5);
+}
+
+/* Стеклянный фон с более высокой прозрачностью */
+.glass-light {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
