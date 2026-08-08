@@ -11,74 +11,38 @@
 @import 'core/layout.css';
 @import 'core/typography.css';
 
-/* ---------- Effects (будут добавлены позже) ---------- */
-/* @import 'effects/glass.css'; */
-/* @import 'effects/glow.css'; */
-/* @import 'effects/animations.css'; */
-/* @import 'effects/background.css'; */
-/* @import 'effects/particles.css'; */
+/* ---------- Effects ---------- */
+@import 'effects/glass.css';
+@import 'effects/glow.css';
+@import 'effects/gradients.css';
+@import 'effects/background.css';
+@import 'effects/particles.css';
+@import 'effects/animations.css';
 
-/* ---------- Components (будут добавлены позже) ---------- */
-/* @import 'components/buttons.css'; */
-/* @import 'components/cards.css'; */
-/* @import 'components/forms.css'; */
-/* @import 'components/navbar.css'; */
-/* @import 'components/footer.css'; */
+/* ---------- Components ---------- */
+@import 'components/buttons.css';
+@import 'components/cards.css';
+@import 'components/forms.css';
+@import 'components/navbar.css';
+@import 'components/footer.css';
+@import 'components/modal.css';
+@import 'components/dropdown.css';
+@import 'components/notifications.css';
+@import 'components/map.css';
 
-/* ==========================================================
-   Базовый класс для страниц авторизации (временно)
-   ========================================================== */
-
-.auth-page {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-}
-
-.auth-container {
-    width: 100%;
-    max-width: 440px;
-    background: var(--glass-bg);
-    border: var(--border-normal);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-    border-radius: var(--radius-lg);
-    padding: 40px 32px;
-    box-shadow: var(--glass-shadow);
-    position: relative;
-    z-index: 1;
-}
+/* ---------- Pages ---------- */
+/* (опционально, если есть уникальные стили для страниц) */
+/* @import 'pages/home.css'; */
+/* @import 'pages/auth.css'; */
+/* @import 'pages/dashboard.css'; */
 
 /* ==========================================================
-   Логотип (только название "Сфера")
+   БАЗОВЫЕ УТИЛИТЫ (оставляем на всякий случай)
    ========================================================== */
-
-.logo-sfera {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    color: var(--text-primary);
-}
-
-.logo-sfera .logo-icon {
-    width: 48px;
-    height: 48px;
-}
-
-.logo-sfera .logo-text h2 {
-    font-size: 24px;
-    font-weight: 800;
-    line-height: 1;
-    background: linear-gradient(to right, #fff, #b4d7ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* Убираем подзаголовок в логотипе */
-.logo-sfera .logo-text p {
-    display: none;
-}
+.hidden { display: none !important; }
+.invisible { visibility: hidden; }
+.w-100 { width: 100%; }
+.h-100 { height: 100%; }
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
