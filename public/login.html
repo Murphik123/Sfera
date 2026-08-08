@@ -56,8 +56,9 @@
             margin: auto;
         }
 
-        /* ================= ТОЧНЫЙ РАЗМЕР ШАПКИ КАК В INDEX ================= */
+        /* ================= ШАПКА СКРЫТА ================= */
         header {
+            display: none !important;
             position: fixed;
             top: 0;
             left: 0;
@@ -484,7 +485,8 @@
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang][key]) el.textContent = translations[lang][key];
             });
-            document.getElementById('langBtn').textContent = lang.toUpperCase();
+            const langBtn = document.getElementById('langBtn');
+            if (langBtn) langBtn.textContent = lang.toUpperCase();
             localStorage.setItem('lang', lang);
         }
 
@@ -492,10 +494,12 @@
         const langCycle = ['tm', 'ru', 'en'];
         let langIndex = langCycle.indexOf(currentLang);
 
-        langBtn.addEventListener('click', () => {
-            langIndex = (langIndex + 1) % langCycle.length;
-            setLanguage(langCycle[langIndex]);
-        });
+        if (langBtn) {
+            langBtn.addEventListener('click', () => {
+                langIndex = (langIndex + 1) % langCycle.length;
+                setLanguage(langCycle[langIndex]);
+            });
+        }
 
         document.getElementById('togglePassword').addEventListener('click', function() {
             const input = document.getElementById('password');
