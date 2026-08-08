@@ -1,0 +1,110 @@
+/* ==========================================================
+   COMPONENT: Cards & Panels
+   ========================================================== */
+
+/* Базовая стеклянная карточка */
+.card {
+    background: var(--glass-bg);
+    border: var(--border-normal);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    transition: all var(--transition);
+    box-shadow: var(--glass-shadow);
+}
+
+.card:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--glass-border-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+/* Карточка без ховера (статичная) */
+.card-static {
+    background: var(--glass-bg);
+    border: var(--border-normal);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+/* Карточка с неоновой подсветкой по краю */
+.card-glow {
+    border-color: var(--color-primary);
+    box-shadow: var(--glow-primary);
+}
+
+/* Карточка с акцентной подсветкой (зелёной) */
+.card-glow-accent {
+    border-color: var(--color-accent);
+    box-shadow: var(--glow-accent);
+}
+
+/* Карточка-панель для админки, дашборда */
+.panel {
+    background: var(--glass-bg);
+    border: var(--border-normal);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
+/* Карточка с изображением (например, товара) */
+.card-image {
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+}
+.card-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+.card-image .card-body {
+    padding: var(--space-4);
+}
+
+/* Карточка в сетке (для маркетплейса) */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--space-5);
+}
+
+/* Карточка с заголовком и описанием */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-3);
+}
+.card-header .card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.card-header .card-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Карточка с действиями (кнопки внизу) */
+.card-actions {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+    justify-content: flex-end;
+}
+
+/* Карточка с иконкой (для модулей) */
+.card-icon {
+    text-align: center;
+}
+.card-icon .icon {
+    font-size: 3.5rem;
+    margin-bottom: var(--space-3);
+}
