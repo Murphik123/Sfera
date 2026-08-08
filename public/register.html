@@ -116,7 +116,6 @@
         const messageEl = document.getElementById('message');
         const registerBtn = document.getElementById('registerBtn');
 
-        // Переключение видимости пароля
         document.getElementById('togglePassword1').addEventListener('click', function() {
             const p = document.getElementById('password');
             p.type = p.type === 'password' ? 'text' : 'password';
@@ -153,7 +152,6 @@
 
             try {
                 const data = await authApi.register({ username, email, password });
-                // Если регистрация успешна, обычно возвращается { success: true, user }
                 showMessage('Hasap üstünlikli döredildi!', 'success');
                 registerBtn.disabled = false;
                 registerBtn.textContent = 'Hasap döret';
@@ -161,9 +159,8 @@
                     window.location.href = '/login.html';
                 }, 1500);
             } catch (error) {
-                // Если бекенд ещё не реализовал регистрацию, используем localStorage как fallback
+                // Fallback на localStorage, если эндпоинт регистрации ещё не реализован
                 if (error.message.includes('404') || error.message.includes('Not Found')) {
-                    // Временное решение – сохраняем в localStorage
                     let users = JSON.parse(localStorage.getItem('users') || '[]');
                     if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
                         showMessage('Bu email eýýäm hasapda bar', 'error');
