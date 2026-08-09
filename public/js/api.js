@@ -1,107 +1,53 @@
 /**
- * Sfera Core API Engine
- * Синхронизирован с Express routes и JWT/Redis авторизацией
+ * Sfera Platform - UI State & Data Synchronizer
+ * Автоматически обновляет UI-элементы профиля и баланса
  */
 
-const API_CONFIG = {
-    // Автоматический выбор между локальной разработкой и деплоем на Render
-    BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-        ? 'http://localhost:5000/api'
-        : '/api',
-    TOKEN_KEY: 'sfera_token',
-    USER_KEY: 'sfera_user'
-};
+document.addEventListener('DOMContentLoaded', async () => {
+    // Проверяем наличие API клиента
+    if (!window.api) return;
 
-class ApiService {
-    constructor() {
-        this.baseUrl = API_CONFIG.BASE_URL;
-    }
-
-    /**
-     * Формирование заголовков аутентификации JWT
-     */
-    getAuthHeaders() {
-        const token = localStorage.getItem(API_CONFIG.TOKEN_KEY);
-        return token ? { 'Authorization': `Bearer ${token}` } : {};
-    }
-
-    /**
-     * Универсальный метод отправки запросов
-     */
-    async request(endpoint, options = {}) {
-        const url = `${this.baseUrl}${endpoint}`;
-        
-        const headers = {
-            'Content-Type': 'application/json',
-            ...this.getAuthHeaders(),
-            ...options.headers
-        };
-
-        // Для FormData (загрузка файлов через Multer) Content-Type устанавливается автоматически
-        if (options.body instanceof FormData) {
-            delete headers['Content-Type'];
-        }
-
+    // Если пользователь авторизован, подгружаем актуальные данные
+    if (window.api.isAuthenticated()) {
         try {
-            const response = await fetch(url, { ...options, headers });
-            const data = await response.json();
+            // 1. Получаем профиль
+            const profileRes = await window.api.getProfile();
+            const user = profileRes.user || profileRes;
 
-            // Автоматический разлогин при 401 (недействительный токен или Redis-сессия)
-            if (response.status === 401) {
-                this.logout();
-                const isAuthPage = window.location.pathname.includes('login.html') || window.location.pathname.includes('register.html');
-                if (!isAuthPage) {
-                    window.location.href = '/login.html';
-                }
-                throw new Error(data.message || 'Сессия завершена');
+            // Обновляем отображение имени пользователя
+            const usernameEls = document.querySelectorAll('#user-display-name, .user-display-name');
+            usernameEls.forEach(el => {
+                if (el) el.textContent = user.username || 'Пользователь';
+            });
+
+            // Обновляем аватар
+            const avatarEls = document.querySelectorAll('#user-avatar-img, .user-avatar-img');
+            avatarEls.forEach(el => {
+                if (el && user.avatar) el.src = user.avatar;
+            });
+
+            // 2. Получаем данные кошелька/баланса
+            try {
+                const walletData = await window.api.request('/bank/balance');
+                
+                // Баланс TMT
+                const balanceEls = document.querySelectorAll('#user-balance-tmt, .user-balance-tmt');
+                balanceEls.forEach(el => {
+                    if (el) el.textContent = `${walletData.balance !== undefined ? walletData.balance : 0} TMT`;
+                });
+
+                // Баланс TM Coin
+                const tmCoinEls = document.querySelectorAll('#user-balance-tmcoin, .user-balance-tmcoin');
+                tmCoinEls.forEach(el => {
+                    if (el) el.textContent = `${walletData.tmCoinBalance !== undefined ? walletData.tmCoinBalance : 0} TMC`;
+                });
+
+            } catch (bankErr) {
+                console.warn('Информация о кошельке недоступна:', bankErr.message);
             }
 
-            if (!response.ok) {
-                throw new Error(data.message || 'Ошибка выполнения запроса');
-            }
-
-            return data;
         } catch (error) {
-            console.error(`[API Error] ${endpoint}:`, error.message);
-            throw error;
+            console.warn('Ошибка авто-синхронизации профиля:', error.message);
         }
     }
-
-    // ==========================================
-    // AUTHENTICATION MODULE (/api/auth)
-    // ==========================================
-
-    async login(email, password) {
-        const data = await this.request('/auth/login', {
-            method: 'POST',
-            body: JSON.stringify({ email, password })
-        });
-        
-        if (data.success && data.token) {
-            localStorage.setItem(API_CONFIG.TOKEN_KEY, data.token);
-            localStorage.setItem(API_CONFIG.USER_KEY, JSON.stringify(data.user));
-        }
-        return data;
-    }
-
-    async getProfile() {
-        return await this.request('/auth/me', { method: 'GET' });
-    }
-
-    logout() {
-        localStorage.removeItem(API_CONFIG.TOKEN_KEY);
-        localStorage.removeItem(API_CONFIG.USER_KEY);
-        window.location.href = '/login.html';
-    }
-
-    getCurrentUser() {
-        const user = localStorage.getItem(API_CONFIG.USER_KEY);
-        return user ? JSON.parse(user) : null;
-    }
-
-    isAuthenticated() {
-        return !!localStorage.getItem(API_CONFIG.TOKEN_KEY);
-    }
-}
-
-window.api = new ApiService();
+});
