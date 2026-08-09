@@ -46,8 +46,10 @@ if (actualRoutesPath) {
     console.log(`📁 Найдена папка маршрутов (routes): ${actualRoutesPath}`);
     fs.readdirSync(actualRoutesPath).forEach(file => {
         if (file.endsWith('.js')) {
-            const routeName = file.replace(/Routes\.js$|\.js$/, '');
+            // Корректно убираем суффикс Routes.js / .js, создавая чистое имя (authRoutes.js -> /api/auth)
+            let routeName = file.replace(/Routes\.js$/, '').replace(/\.js$/, '');
             let prefix = `/api/${routeName}`;
+            
             if (file === 'paymentRoutes.js') prefix = '/api/tmpay';
             
             const routeModule = require(path.join(actualRoutesPath, file));
@@ -118,7 +120,7 @@ io.on('connection', (socket) => {
 
 // --- ПРАВИЛЬНЫЙ ФОЛЛБЭК ДЛЯ ROUTING / HTML ---
 app.get('*', (req, res) => {
-    // Если запрос идёт к файлу (например style.css или app-init.js) и он не найден — отдаем 404, а не HTML!
+    // Если запрос идёт к статической точке (.js, .css, .png и т.д.) и файла нет — возвращаем 404
     if (path.extname(req.path)) {
         return res.status(404).type('text/plain').send('File not found');
     }
