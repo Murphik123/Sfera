@@ -9,7 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-    <link rel="stylesheet" href="/css/style.css" />
+    <!-- Исправленный относительный путь к CSS -->
+    <link rel="stylesheet" href="css/style.css" />
 
     <style>
         body {
@@ -102,49 +103,6 @@
             margin-bottom: 30px;
         }
 
-        /* Карточки статистики */
-        .admin-card {
-            background: rgba(255,255,255,0.04);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-            padding: 20px 24px;
-            margin-bottom: 30px;
-        }
-
-        .admin-card h3 {
-            font-size: 18px;
-            margin-bottom: 12px;
-            color: #dbe9ff;
-        }
-
-        .admin-card .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
-            margin-top: 12px;
-        }
-
-        .admin-card .stat-item {
-            background: rgba(0,0,0,0.2);
-            padding: 16px;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .admin-card .stat-item .number {
-            font-size: 28px;
-            font-weight: 700;
-            color: #00d4ff;
-        }
-
-        .admin-card .stat-item .label {
-            font-size: 13px;
-            color: #9fb5c8;
-            margin-top: 4px;
-        }
-
         /* Сетка Модулей */
         .modules-grid {
             display: grid;
@@ -188,7 +146,49 @@
             color: #bdd0df;
         }
 
-        /* Таблица */
+        /* Статистика и Таблицы */
+        .admin-card {
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 30px;
+        }
+
+        .admin-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #dbe9ff;
+        }
+
+        .admin-card .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .admin-card .stat-item {
+            background: rgba(0,0,0,0.2);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .admin-card .stat-item .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+
+        .admin-card .stat-item .label {
+            font-size: 13px;
+            color: #9fb5c8;
+            margin-top: 4px;
+        }
+
         .admin-table {
             width: 100%;
             border-collapse: collapse;
@@ -225,36 +225,6 @@
         .admin-table .badge.user {
             background: rgba(0,255,170,0.1);
             color: #00ffa3;
-        }
-
-        .admin-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .admin-actions button {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.15);
-            color: #bdd0df;
-            padding: 4px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: .2s;
-            font-size: 13px;
-        }
-
-        .admin-actions button:hover {
-            background: rgba(255,255,255,0.05);
-            color: white;
-        }
-
-        .admin-actions button.danger {
-            border-color: rgba(255,0,0,0.3);
-            color: #ff6b6b;
-        }
-
-        .admin-actions button.danger:hover {
-            background: rgba(255,0,0,0.1);
         }
 
         .logout-btn {
@@ -384,7 +354,7 @@
         </aside>
 
         <main class="admin-content" id="adminContent">
-            <!-- Раздел по умолчанию (Dashboard + Модули) -->
+            <!-- Динамический контент -->
         </main>
     </div>
 
@@ -397,110 +367,68 @@
             window.location.href = 'login.html';
         }
 
-        // Словарь переводов
-        const translations = {
+        // Встроенный резервный словарь на случай отсутствия ключа в JSON
+        const fallbackTranslations = {
             tm: {
-                logout: "Çykmak",
-                back: "← Yza",
-                welcome: "Hoş geldiňiz, Administrator!",
-                dashboard_welcome: "Platformanyň modullaryna giriş etmek üçin aşakdaky kartlardan saýlaň.",
-                menu_dashboard: "Umumy",
-                menu_users: "Ulanyjylar",
-                menu_transactions: "Tranzaksiýalar",
-                menu_listings: "Harytlar",
-                menu_mail: "Poçta",
-                menu_ai: "AI çaklamalar",
-                menu_settings: "Sazlamalar",
-                module_marketplace: "Marketpleýs",
-                module_marketplace_desc: "Birža we söwda meýdançasy",
-                module_bank: "TM Bank",
-                module_bank_desc: "Sanly bank hyzmatlary",
-                module_messenger: "Messenger",
-                module_messenger_desc: "Çalt habarlaşma",
-                module_mail: "TM Poçta",
-                module_mail_desc: "Içki poçta ulgamy",
-                module_ai: "AI analitika",
-                module_ai_desc: "TM Coin prokgnozlary, trendler",
-                module_docs: "Resmiýetler",
-                module_docs_desc: "Awtomatik tassyklama",
-                module_tmpay: "TM Pay",
-                module_tmpay_desc: "Milli töleg ulgamy",
-                module_tmcoin: "TM Coin",
-                module_tmcoin_desc: "Sanly döwlet walýutasy"
+                logout: "Çykmak", back: "← Yza", welcome: "Hoş geldiňiz, Administrator!", dashboard_welcome: "Platformanyň modullaryna giriş etmek üçin aşakdaky kartlardan saýlaň.",
+                menu_dashboard: "Umumy", menu_users: "Ulanyjylar", menu_transactions: "Tranzaksiýalar", menu_listings: "Harytlar", menu_mail: "Poçta", menu_ai: "AI çaklamalar", menu_settings: "Sazlamalar",
+                module_marketplace: "Marketpleýs", module_marketplace_desc: "Birža we söwda meýdançasy", module_bank: "TM Bank", module_bank_desc: "Sanly bank hyzmatlary",
+                module_messenger: "Messenger", module_messenger_desc: "Çalt habarlaşma", module_mail: "TM Poçta", module_mail_desc: "Içki poçta ulgamy",
+                module_ai: "AI analitika", module_ai_desc: "TM Coin prokgnozlary, trendler", module_docs: "Resmiýetler", module_docs_desc: "Awtomatik tassyklama",
+                module_tmpay: "TM Pay", module_tmpay_desc: "Milli töleg ulgamy", module_tmcoin: "TM Coin", module_tmcoin_desc: "Sanly döwlet walýutasy"
             },
             ru: {
-                logout: "Выйти",
-                back: "← Назад",
-                welcome: "Добро пожаловать, Администратор!",
-                dashboard_welcome: "Выберите модуль платформы для перехода.",
-                menu_dashboard: "Обзор",
-                menu_users: "Пользователи",
-                menu_transactions: "Транзакции",
-                menu_listings: "Объявления",
-                menu_mail: "Почта",
-                menu_ai: "AI прогнозы",
-                menu_settings: "Настройки",
-                module_marketplace: "Маркетплейс",
-                module_marketplace_desc: "Биржа и торговая площадка",
-                module_bank: "ТМ Банк",
-                module_bank_desc: "Цифровые банковские услуги",
-                module_messenger: "Мессенджер",
-                module_messenger_desc: "Быстрая связь",
-                module_mail: "TM Почта",
-                module_mail_desc: "Внутренняя почта",
-                module_ai: "ИИ-аналитика",
-                module_ai_desc: "Прогнозы TM Coin, тренды",
-                module_docs: "Документы",
-                module_docs_desc: "Автоматическая проверка",
-                module_tmpay: "TM Pay",
-                module_tmpay_desc: "Национальная платёжная система",
-                module_tmcoin: "TM Coin",
-                module_tmcoin_desc: "Цифровая государственная валюта"
+                logout: "Выйти", back: "← Назад", welcome: "Добро пожаловать, Администратор!", dashboard_welcome: "Выберите модуль платформы для перехода.",
+                menu_dashboard: "Обзор", menu_users: "Пользователи", menu_transactions: "Транзакции", menu_listings: "Объявления", menu_mail: "Почта", menu_ai: "AI прогнозы", menu_settings: "Настройки",
+                module_marketplace: "Маркетплейс", module_marketplace_desc: "Биржа и торговая площадка", module_bank: "ТМ Банк", module_bank_desc: "Цифровые банковские услуги",
+                module_messenger: "Мессенджер", module_messenger_desc: "Быстрая связь", module_mail: "TM Почта", module_mail_desc: "Внутренняя почта",
+                module_ai: "ИИ-аналитика", module_ai_desc: "Прогнозы TM Coin, тренды", module_docs: "Документы", module_docs_desc: "Автоматическая проверка",
+                module_tmpay: "TM Pay", module_tmpay_desc: "Национальная платёжная система", module_tmcoin: "TM Coin", module_tmcoin_desc: "Цифровая государственная валюта"
             },
             en: {
-                logout: "Logout",
-                back: "← Back",
-                welcome: "Welcome, Administrator!",
-                dashboard_welcome: "Select a platform module to navigate.",
-                menu_dashboard: "Dashboard",
-                menu_users: "Users",
-                menu_transactions: "Transactions",
-                menu_listings: "Listings",
-                menu_mail: "Mail",
-                menu_ai: "AI Predictions",
-                menu_settings: "Settings",
-                module_marketplace: "Marketplace",
-                module_marketplace_desc: "Exchange and trading platform",
-                module_bank: "TM Bank",
-                module_bank_desc: "Digital banking services",
-                module_messenger: "Messenger",
-                module_messenger_desc: "Instant messaging",
-                module_mail: "TM Mail",
-                module_mail_desc: "Internal mail system",
-                module_ai: "AI Analytics",
-                module_ai_desc: "TM Coin forecasts, trends",
-                module_docs: "Documents",
-                module_docs_desc: "Automatic verification",
-                module_tmpay: "TM Pay",
-                module_tmpay_desc: "National payment system",
-                module_tmcoin: "TM Coin",
-                module_tmcoin_desc: "Digital state currency"
+                logout: "Logout", back: "← Back", welcome: "Welcome, Administrator!", dashboard_welcome: "Select a platform module to navigate.",
+                menu_dashboard: "Dashboard", menu_users: "Users", menu_transactions: "Transactions", menu_listings: "Listings", menu_mail: "Mail", menu_ai: "AI Predictions", menu_settings: "Settings",
+                module_marketplace: "Marketplace", module_marketplace_desc: "Exchange and trading platform", module_bank: "TM Bank", module_bank_desc: "Digital banking services",
+                module_messenger: "Messenger", module_messenger_desc: "Instant messaging", module_mail: "TM Mail", module_mail_desc: "Internal mail system",
+                module_ai: "AI Analytics", module_ai_desc: "TM Coin forecasts, trends", module_docs: "Documents", module_docs_desc: "Automatic verification",
+                module_tmpay: "TM Pay", module_tmpay_desc: "National payment system", module_tmcoin: "TM Coin", module_tmcoin_desc: "Digital state currency"
             }
         };
 
         let currentLang = localStorage.getItem('lang') || 'tm';
+        let loadedTranslations = {};
 
-        function setLanguage(lang) {
-            if (!translations[lang]) return;
+        // Загрузка JSON файла из папки languages/
+        async function fetchLanguageFile(lang) {
+            try {
+                const res = await fetch(`languages/${lang}.json`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return await res.json();
+            } catch (err) {
+                console.warn(`Не удалось загрузить languages/${lang}.json, используется встроенный резерв.`, err);
+                return null;
+            }
+        }
+
+        async function setLanguage(lang) {
             currentLang = lang;
+            const externalData = await fetchLanguageFile(lang);
+            
+            // Объединяем полученный JSON с фоллбеком
+            loadedTranslations = Object.assign({}, fallbackTranslations[lang] || {}, externalData || {});
+
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    el.textContent = translations[lang][key];
+                if (loadedTranslations[key]) {
+                    el.textContent = loadedTranslations[key];
                 }
             });
+
             document.getElementById('langBtn').textContent = lang.toUpperCase();
             localStorage.setItem('lang', lang);
+
+            const activeLi = document.querySelector('#adminMenu li.active');
+            if (activeLi) renderSection(activeLi.dataset.section);
         }
 
         document.getElementById('langBtn').addEventListener('click', function() {
@@ -508,7 +436,6 @@
             let idx = cycle.indexOf(currentLang);
             idx = (idx + 1) % cycle.length;
             setLanguage(cycle[idx]);
-            renderSection(document.querySelector('#adminMenu li.active').dataset.section);
         });
 
         document.getElementById('adminName').textContent = userData.username || 'Admin';
@@ -519,34 +446,34 @@
             window.location.href = 'login.html';
         });
 
-        // Функция отрисовки раздела
+        // Отрисовка секций
         function renderSection(section) {
             const contentArea = document.getElementById('adminContent');
-            const t = translations[currentLang];
+            const t = loadedTranslations;
 
             if (section === 'dashboard') {
                 contentArea.innerHTML = `
-                    <h1>${t.welcome}</h1>
-                    <p class="welcome">${t.dashboard_welcome}</p>
+                    <h1>${t.welcome || 'Hoş geldiňiz!'}</h1>
+                    <p class="welcome">${t.dashboard_welcome || ''}</p>
                     
                     <div class="modules-grid">
-                        <a href="marketplace.html" class="module-card"><div class="icon">🛒</div><h3>${t.module_marketplace}</h3><p>${t.module_marketplace_desc}</p></a>
-                        <a href="bank.html" class="module-card"><div class="icon">🏦</div><h3>${t.module_bank}</h3><p>${t.module_bank_desc}</p></a>
-                        <a href="messenger.html" class="module-card"><div class="icon">💬</div><h3>${t.module_messenger}</h3><p>${t.module_messenger_desc}</p></a>
-                        <a href="mailtm.html" class="module-card"><div class="icon">✉️</div><h3>${t.module_mail}</h3><p>${t.module_mail_desc}</p></a>
-                        <a href="ai.html" class="module-card"><div class="icon">🤖</div><h3>${t.module_ai}</h3><p>${t.module_ai_desc}</p></a>
-                        <a href="documents.html" class="module-card"><div class="icon">📄</div><h3>${t.module_docs}</h3><p>${t.module_docs_desc}</p></a>
-                        <a href="tm-pay.html" class="module-card"><div class="icon">💳</div><h3>${t.module_tmpay}</h3><p>${t.module_tmpay_desc}</p></a>
-                        <a href="tm-coin.html" class="module-card"><div class="icon">₮</div><h3>${t.module_tmcoin}</h3><p>${t.module_tmcoin_desc}</p></a>
+                        <a href="marketplace.html" class="module-card"><div class="icon">🛒</div><h3>${t.module_marketplace || 'Marketplace'}</h3><p>${t.module_marketplace_desc || ''}</p></a>
+                        <a href="bank.html" class="module-card"><div class="icon">🏦</div><h3>${t.module_bank || 'TM Bank'}</h3><p>${t.module_bank_desc || ''}</p></a>
+                        <a href="messenger.html" class="module-card"><div class="icon">💬</div><h3>${t.module_messenger || 'Messenger'}</h3><p>${t.module_messenger_desc || ''}</p></a>
+                        <a href="mailtm.html" class="module-card"><div class="icon">✉️</div><h3>${t.module_mail || 'TM Mail'}</h3><p>${t.module_mail_desc || ''}</p></a>
+                        <a href="ai.html" class="module-card"><div class="icon">🤖</div><h3>${t.module_ai || 'AI Analytics'}</h3><p>${t.module_ai_desc || ''}</p></a>
+                        <a href="documents.html" class="module-card"><div class="icon">📄</div><h3>${t.module_docs || 'Documents'}</h3><p>${t.module_docs_desc || ''}</p></a>
+                        <a href="tm-pay.html" class="module-card"><div class="icon">💳</div><h3>${t.module_tmpay || 'TM Pay'}</h3><p>${t.module_tmpay_desc || ''}</p></a>
+                        <a href="tm-coin.html" class="module-card"><div class="icon">₮</div><h3>${t.module_tmcoin || 'TM Coin'}</h3><p>${t.module_tmcoin_desc || ''}</p></a>
                     </div>
 
                     <div class="admin-card">
                         <h3>Platformanyň ýagdaýy</h3>
                         <div class="stat-grid">
                             <div class="stat-item"><div class="number" id="statUsers">0</div><div class="label">Ulanyjylar</div></div>
-                            <div class="stat-item"><div class="number" id="statOrders">24</div><div class="label">Sargytlar</div></div>
-                            <div class="stat-item"><div class="number" id="statCoins">142</div><div class="label">TM Coin söwdalary</div></div>
-                            <div class="stat-item"><div class="number" id="statMails">8</div><div class="label">Hatlar</div></div>
+                            <div class="stat-item"><div class="number">24</div><div class="label">Sargytlar</div></div>
+                            <div class="stat-item"><div class="number">142</div><div class="label">TM Coin söwdalary</div></div>
+                            <div class="stat-item"><div class="number">8</div><div class="label">Hatlar</div></div>
                         </div>
                     </div>
 
@@ -561,7 +488,7 @@
                 loadStats();
             } else if (section === 'users') {
                 contentArea.innerHTML = `
-                    <h1>${t.menu_users}</h1>
+                    <h1>${t.menu_users || 'Ulanyjylar'}</h1>
                     <div class="admin-card">
                         <h3>Ulanyjylary dolandyrmak</h3>
                         <table class="admin-table">
@@ -577,7 +504,7 @@
             }
         }
 
-        // Переключение меню Sidebar
+        // Переключение меню
         const menuItems = document.querySelectorAll('#adminMenu li');
         menuItems.forEach(item => {
             item.addEventListener('click', function() {
@@ -587,7 +514,6 @@
             });
         });
 
-        // Загрузка статистики из LocalStorage
         function loadStats() {
             const users = JSON.parse(localStorage.getItem('users') || '[]');
             const statUsersEl = document.getElementById('statUsers');
@@ -606,7 +532,7 @@
             `).join('');
         }
 
-        // Генерация частиц
+        // Частицы
         document.addEventListener('DOMContentLoaded', () => {
             const particles = document.getElementById('particles');
             if (particles && particles.children.length === 0) {
@@ -620,7 +546,6 @@
                     particles.appendChild(p);
                 }
             }
-            renderSection('dashboard');
             setLanguage(currentLang);
         });
     </script>
