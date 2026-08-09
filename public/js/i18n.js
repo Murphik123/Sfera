@@ -1,6 +1,5 @@
 /**
  * SFERA Platform — i18n Module
- * Version: 1.0
  */
 
 const DEFAULT_LANG = 'tm';
@@ -11,7 +10,8 @@ let translations = {};
 
 async function loadLanguage(lang) {
     try {
-        const res = await fetch(`/languages/${lang}.json`);
+        // Относительный путь от корня public (languages/lang.json)
+        const res = await fetch(`languages/${lang}.json`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return await res.json();
     } catch (err) {
@@ -34,8 +34,6 @@ function applyTranslations(data) {
             } else {
                 el.textContent = val;
             }
-        } else {
-            console.warn(`[i18n] Missing key: ${key}`);
         }
     });
 }
@@ -49,8 +47,10 @@ async function setLanguage(lang) {
     applyTranslations(data);
     currentLang = lang;
     localStorage.setItem('sfera-lang', lang);
+    
     const btn = document.getElementById('langBtn');
     if (btn) btn.textContent = lang.toUpperCase();
+    
     document.documentElement.lang = lang;
     document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
 }
@@ -65,5 +65,14 @@ async function initI18n() {
     const saved = localStorage.getItem('sfera-lang') || DEFAULT_LANG;
     await setLanguage(saved);
 }
+
+// Автоматический запуск после загрузки страницы
+document.addEventListener('DOMContentLoaded', () => {
+    initI18n();
+    const btn = document.getElementById('langBtn');
+    if (btn) {
+        btn.addEventListener('click', cycleLanguage);
+    }
+});
 
 export { setLanguage, cycleLanguage, initI18n, currentLang, translations };
