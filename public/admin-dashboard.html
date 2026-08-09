@@ -1,17 +1,179 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>СФЕРА — Административная панель</title>
-    <!-- Подключаем общий CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-    <!-- Специфичные стили для админ-панели (только цвета и бейджи, размеры карточек берутся из .card) -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
     <style>
-        .admin-panel {
-            padding: 120px 7% 60px;
+        :root {
+            --primary: #00d4ff;
+            --secondary: #1f6bff;
+            --accent: #00ffa3;
+            --border: rgba(255, 255, 255, 0.25);
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
+            color: var(--white);
+            overflow-x: hidden;
             min-height: 100vh;
         }
+
+        /* Анимированный фоновый градиент первой страницы */
+        body::before {
+            content: "";
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0,212,255,.15), transparent 35%),
+                radial-gradient(circle at 80% 20%, rgba(0,255,170,.10), transparent 35%),
+                radial-gradient(circle at 60% 80%, rgba(32,108,255,.15), transparent 40%);
+            animation: bgmove 18s linear infinite;
+            z-index: -2;
+        }
+
+        @keyframes bgmove {
+            0% { transform: translate(0,0); }
+            50% { transform: translate(-8%,-5%); }
+            100% { transform: translate(0,0); }
+        }
+
+        .container {
+            width: min(1400px, 92%);
+            margin: auto;
+        }
+
+        /* ================= ШАПКА (Светлый стекломорфизм) ================= */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: translateY(-1px);
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .logo-svg g {
+            transform-origin: center;
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .logo:hover .logo-svg g {
+            transform: rotate(45deg);
+        }
+
+        .logo-text h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin: 0;
+            background: linear-gradient(to right, #fff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: #9fb5c8;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-info {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .role-badge {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .lang, .logout-btn {
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .lang:hover, .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: var(--primary);
+        }
+
+        /* ================= АДМИН ПАНЕЛЬ ================= */
+        .admin-panel {
+            padding: 120px 0 60px;
+            min-height: 100vh;
+            position: relative;
+            z-index: 2;
+        }
+
         .admin-panel h1 {
             font-size: 42px;
             font-weight: 800;
@@ -20,64 +182,111 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .admin-panel .subtitle {
             font-size: 18px;
             color: #bcd0e2;
             margin-bottom: 40px;
         }
+
         .admin-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 35px;
+            gap: 25px;
             margin-top: 20px;
         }
-        /* Карточки используют общий класс .card, но с админ-акцентами */
+
         .admin-card {
-            position: relative;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            padding: 30px 20px;
             text-align: center;
             text-decoration: none;
             color: white;
-            transition: .35s;
+            transition: all 0.35s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
         }
+
         .admin-card:hover {
             transform: translateY(-8px);
-            border-color: #00d4ff;
-            box-shadow: 0 25px 50px rgba(0,212,255,.2);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.25);
+            background: rgba(255, 255, 255, 0.1);
         }
+
+        .admin-card .icon {
+            font-size: 44px;
+            margin-bottom: 12px;
+        }
+
+        .admin-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .admin-card p {
+            font-size: 14px;
+            color: #9fb5c8;
+            margin-bottom: 15px;
+        }
+
         .admin-card .badge {
             display: inline-block;
-            background: rgba(0,212,255,.2);
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid rgba(0, 212, 255, 0.3);
             padding: 4px 14px;
             border-radius: 20px;
             font-size: 11px;
-            color: #00d4ff;
-            margin-top: 10px;
+            color: var(--primary);
             font-weight: 600;
         }
-        /* Шапка админки – стандартная */
-        header {
-            border-bottom: 1px solid rgba(255,255,255,.08);
+
+        /* ЧАСТИЦЫ */
+        #particles {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
         }
-        .logo-text h2 {
-            background: linear-gradient(135deg, #00ffa3, #00d4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #00d4ff;
+            opacity: .5;
+            animation: float linear infinite;
         }
-        .role-badge {
-            background: rgba(0,212,255,.15);
-            color: #00d4ff;
+
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 0; }
+            20% { opacity: .6; }
+            80% { opacity: .6; }
+            100% { transform: translateY(-120vh); opacity: 0; }
         }
+
         @media (max-width: 768px) {
             .admin-panel h1 { font-size: 28px; }
-            .admin-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+            .admin-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
         }
     </style>
 </head>
 <body>
-    <!-- Частицы -->
+
     <div id="particles"></div>
 
-    <!-- Шапка -->
     <header>
         <div class="container">
             <a href="index.html" class="logo">
@@ -113,64 +322,78 @@
                 <span class="role-badge" data-i18n="admin_role">👑 Администратор</span>
                 <button class="lang" id="langBtn">RU</button>
                 <button class="logout-btn" id="logoutBtn" data-i18n="logout">🚪 Çykmak</button>
-                <!-- Ссылка "Пользователь" удалена, чтобы избежать мерцания при переходе -->
             </div>
         </div>
     </header>
 
-    <!-- Админ-панель -->
     <section class="admin-panel">
         <div class="container">
             <h1 data-i18n="admin_title">👑 Administrasiýa paneli</h1>
             <p class="subtitle" data-i18n="admin_subtitle">Platformany dolandyrmak üçin aşakdaky bölümleri ulanyň.</p>
+            
             <div class="admin-grid">
-                <!-- Модули: ссылки ведут на существующие файлы -->
-                <a href="marketplace.html" class="card admin-card" data-i18n="card_marketplace">
-                    <div class="icon">🛒</div>
-                    <h3>Marketpleýs</h3>
-                    <p>Birža we söwda meýdançasy</p>
+                <a href="marketplace.html" class="admin-card">
+                    <div>
+                        <div class="icon">🛒</div>
+                        <h3 data-i18n="card_marketplace">Marketpleýs</h3>
+                        <p>Birža we söwda meýdançasy</p>
+                    </div>
                     <span class="badge">Işjeň</span>
                 </a>
-                <a href="bank.html" class="card admin-card" data-i18n="card_bank">
-                    <div class="icon">🏦</div>
-                    <h3>TM Bank</h3>
-                    <p>Sanly bank hyzmatlary</p>
+                <a href="bank.html" class="admin-card">
+                    <div>
+                        <div class="icon">🏦</div>
+                        <h3 data-i18n="card_bank">TM Bank</h3>
+                        <p>Sanly bank hyzmatlary</p>
+                    </div>
                     <span class="badge">Dolandyrmak</span>
                 </a>
-                <a href="messenger.html" class="card admin-card" data-i18n="card_messenger">
-                    <div class="icon">💬</div>
-                    <h3>Messenger</h3>
-                    <p>Çalt habarlaşma</p>
+                <a href="messenger.html" class="admin-card">
+                    <div>
+                        <div class="icon">💬</div>
+                        <h3 data-i18n="card_messenger">Messenger</h3>
+                        <p>Çalt habarlaşma</p>
+                    </div>
                     <span class="badge">Gözlem</span>
                 </a>
-                <a href="mailtm.html" class="card admin-card" data-i18n="card_mail">
-                    <div class="icon">✉️</div>
-                    <h3>TM Poçta</h3>
-                    <p>Içki poçta ulgamy</p>
+                <a href="mailtm.html" class="admin-card">
+                    <div>
+                        <div class="icon">✉️</div>
+                        <h3 data-i18n="card_mail">TM Poçta</h3>
+                        <p>Içki poçta ulgamy</p>
+                    </div>
                     <span class="badge">Dolandyrmak</span>
                 </a>
-                <a href="ai.html" class="card admin-card" data-i18n="card_ai">
-                    <div class="icon">🤖</div>
-                    <h3>AI analitika</h3>
-                    <p>TM Coin prokgnozlary, trendler</p>
+                <a href="ai.html" class="admin-card">
+                    <div>
+                        <div class="icon">🤖</div>
+                        <h3 data-i18n="card_ai">AI analitika</h3>
+                        <p>TM Coin prokgnozlary, trendler</p>
+                    </div>
                     <span class="badge">Konfigurasiýa</span>
                 </a>
-                <a href="documents.html" class="card admin-card" data-i18n="card_docs">
-                    <div class="icon">📄</div>
-                    <h3>Resmiýetler</h3>
-                    <p>Awtomatik tassyklama</p>
+                <a href="documents.html" class="admin-card">
+                    <div>
+                        <div class="icon">📄</div>
+                        <h3 data-i18n="card_docs">Resmiýetler</h3>
+                        <p>Awtomatik tassyklama</p>
+                    </div>
                     <span class="badge">Tassyklamak</span>
                 </a>
-                <a href="tm-pay.html" class="card admin-card" data-i18n="card_tmpay">
-                    <div class="icon">💳</div>
-                    <h3>TM Pay</h3>
-                    <p>Milli töleg ulgamy</p>
+                <a href="tm-pay.html" class="admin-card">
+                    <div>
+                        <div class="icon">💳</div>
+                        <h3 data-i18n="card_tmpay">TM Pay</h3>
+                        <p>Milli töleg ulgamy</p>
+                    </div>
                     <span class="badge">Emessiýa</span>
                 </a>
-                <a href="tm-coin.html" class="card admin-card" data-i18n="card_tmcoin">
-                    <div class="icon">₮</div>
-                    <h3>TM Coin</h3>
-                    <p>Sanly döwlet walýutasy</p>
+                <a href="tm-coin.html" class="admin-card">
+                    <div>
+                        <div class="icon">₮</div>
+                        <h3 data-i18n="card_tmcoin">TM Coin</h3>
+                        <p>Sanly döwlet walýutasy</p>
+                    </div>
                     <span class="badge">Dolandyrmak</span>
                 </a>
             </div>
@@ -178,63 +401,54 @@
     </section>
 
     <script>
-        // ============================================================
-        // ПЕРЕВОДЫ (ТМ, RU, EN) – полный набор для админ-панели
-        // ============================================================
         const translations = {
             ru: {
                 admin_logo_subtitle: "Административная панель",
                 admin_role: "👑 Администратор",
                 logout: "🚪 Выйти",
-                switch_to_user: "👤 Пользователь",
                 admin_title: "👑 Административная панель",
                 admin_subtitle: "Используйте разделы ниже для управления платформой.",
-                card_marketplace: "🛒 Marketpleýs",
-                card_bank: "🏦 TM Bank",
-                card_messenger: "💬 Messenger",
-                card_mail: "✉️ TM Poçta",
-                card_ai: "🤖 AI аналитика",
-                card_docs: "📄 Документы",
-                card_tmpay: "💳 TM Pay",
-                card_tmcoin: "₮ TM Coin"
+                card_marketplace: "Marketpleýs",
+                card_bank: "TM Bank",
+                card_messenger: "Messenger",
+                card_mail: "TM Poçta",
+                card_ai: "AI аналитика",
+                card_docs: "Документы",
+                card_tmpay: "TM Pay",
+                card_tmcoin: "TM Coin"
             },
             tm: {
                 admin_logo_subtitle: "Administrasiýa paneli",
                 admin_role: "👑 Administrator",
                 logout: "🚪 Çykmak",
-                switch_to_user: "👤 Ulanyjy",
                 admin_title: "👑 Administrasiýa paneli",
                 admin_subtitle: "Platformany dolandyrmak üçin aşakdaky bölümleri ulanyň.",
-                card_marketplace: "🛒 Marketpleýs",
-                card_bank: "🏦 TM Bank",
-                card_messenger: "💬 Messenger",
-                card_mail: "✉️ TM Poçta",
-                card_ai: "🤖 AI analitika",
-                card_docs: "📄 Resmiýetler",
-                card_tmpay: "💳 TM Pay",
-                card_tmcoin: "₮ TM Coin"
+                card_marketplace: "Marketpleýs",
+                card_bank: "TM Bank",
+                card_messenger: "Messenger",
+                card_mail: "TM Poçta",
+                card_ai: "AI analitika",
+                card_docs: "Resmiýetler",
+                card_tmpay: "TM Pay",
+                card_tmcoin: "TM Coin"
             },
             en: {
                 admin_logo_subtitle: "Admin Panel",
                 admin_role: "👑 Administrator",
                 logout: "🚪 Logout",
-                switch_to_user: "👤 User",
                 admin_title: "👑 Admin Panel",
                 admin_subtitle: "Use the sections below to manage the platform.",
-                card_marketplace: "🛒 Marketplace",
-                card_bank: "🏦 TM Bank",
-                card_messenger: "💬 Messenger",
-                card_mail: "✉️ TM Mail",
-                card_ai: "🤖 AI Analytics",
-                card_docs: "📄 Documents",
-                card_tmpay: "💳 TM Pay",
-                card_tmcoin: "₮ TM Coin"
+                card_marketplace: "Marketplace",
+                card_bank: "TM Bank",
+                card_messenger: "Messenger",
+                card_mail: "TM Mail",
+                card_ai: "AI Analytics",
+                card_docs: "Documents",
+                card_tmpay: "TM Pay",
+                card_tmcoin: "TM Coin"
             }
         };
 
-        // ============================================================
-        // УСТАНОВКА ЯЗЫКА
-        // ============================================================
         let currentLang = localStorage.getItem('lang') || 'ru';
 
         function setLanguage(lang) {
@@ -243,12 +457,7 @@
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang][key]) {
-                    // Для ссылок и кнопок меняем текст
-                    if (el.tagName === 'INPUT' && el.placeholder) {
-                        el.placeholder = translations[lang][key];
-                    } else {
-                        el.textContent = translations[lang][key];
-                    }
+                    el.textContent = translations[lang][key];
                 }
             });
             document.getElementById('langBtn').textContent = lang.toUpperCase();
@@ -262,9 +471,6 @@
             setLanguage(cycle[idx]);
         });
 
-        // ============================================================
-        // ПРОВЕРКА АВТОРИЗАЦИИ
-        // ============================================================
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         const token = localStorage.getItem('token');
 
@@ -280,12 +486,10 @@
             window.location.href = 'login.html';
         });
 
-        // ============================================================
-        // ЧАСТИЦЫ
-        // ============================================================
-        (function createParticles() {
-            const container = document.getElementById('particles');
-            if (container && container.children.length === 0) {
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage(currentLang);
+            const particles = document.getElementById('particles');
+            if (particles) {
                 for (let i = 0; i < 60; i++) {
                     const p = document.createElement('span');
                     p.className = 'particle';
@@ -293,16 +497,10 @@
                     p.style.top = Math.random() * 100 + '%';
                     p.style.animationDuration = (6 + Math.random() * 12) + 's';
                     p.style.animationDelay = Math.random() * 5 + 's';
-                    container.appendChild(p);
+                    particles.appendChild(p);
                 }
             }
-        })();
-
-        // ============================================================
-        // ИНИЦИАЛИЗАЦИЯ
-        // ============================================================
-        setLanguage(currentLang);
-        console.log('✅ Admin dashboard ready (modules open, unified design)');
+        });
     </script>
 </body>
 </html>
