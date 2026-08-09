@@ -117,13 +117,14 @@ p {
     padding-bottom: 60px;
 }
 
-/* Светлая тема с высоким качеством прозрачности */
+/* Светлая тема */
 body.light-theme {
     --color-bg-dark: #eef4f8;
     --color-bg-dark-alt: #e2ecf3;
     --glass-bg: rgba(255, 255, 255, 0.35);
     --glass-bg-hover: rgba(255, 255, 255, 0.5);
     --glass-border: rgba(255, 255, 255, 0.5);
+    --glass-border-glow: rgba(0, 212, 255, 0.4);
     --text-primary: #0b1a28;
     --text-secondary: #4a6175;
     --text-muted: #7e94a7;
@@ -211,7 +212,7 @@ body.light-theme #particles {
 .animate-pulse { animation: pulseGlow 3s infinite; }
 
 /* --------------------------------------------------------------------------
-   4. HEADER & NAVBAR (СТРОГО ПО ДИЗАЙНУ)
+   4. HEADER & NAVBAR
    -------------------------------------------------------------------------- */
 header {
     position: fixed;
@@ -228,13 +229,17 @@ header {
     align-items: center;
 }
 
+body.light-theme header {
+    background: rgba(238, 244, 248, 0.5) !important;
+}
+
 header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* Строгий логотип Sfera */
+/* Логотип */
 .logo {
     display: flex;
     align-items: center;
@@ -259,7 +264,6 @@ header .container {
     -webkit-text-fill-color: transparent;
 }
 
-/* Скрытие подзаголовка согласно каноническому правилу */
 .logo-text p {
     display: none !important;
 }
@@ -275,10 +279,11 @@ header .container {
 .header-right .btn-switch {
     background: rgba(255, 255, 255, 0.08) !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    color: #fff !important;
+    color: var(--text-primary) !important;
     padding: 8px 16px;
     border-radius: 20px;
     backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
     transition: var(--transition) !important;
     cursor: pointer;
     font-size: 14px;
@@ -297,7 +302,6 @@ header .container {
 /* --------------------------------------------------------------------------
    5. UI COMPONENTS (BUTTONS, CARDS, FORMS, MODALS)
    -------------------------------------------------------------------------- */
-/* Кнопки */
 .btn-primary {
     background: var(--grad-sfera-btn);
     color: #ffffff;
@@ -324,6 +328,7 @@ header .container {
     padding: 10px 20px;
     border-radius: 20px;
     backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
     transition: var(--transition);
     cursor: pointer;
 }
@@ -334,7 +339,6 @@ header .container {
     color: var(--color-accent-cyan);
 }
 
-/* Карточки */
 .card {
     background: var(--glass-bg);
     backdrop-filter: var(--glass-blur);
@@ -352,7 +356,6 @@ header .container {
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
 }
 
-/* Поля ввода и Формы */
 input[type="text"], 
 input[type="password"], 
 input[type="email"], 
@@ -379,7 +382,6 @@ input::placeholder, textarea::placeholder {
     color: var(--text-muted);
 }
 
-/* Dropdown */
 .dropdown-content {
     background: rgba(13, 28, 41, 0.92);
     backdrop-filter: blur(20px);
@@ -407,7 +409,6 @@ input::placeholder, textarea::placeholder {
     color: var(--color-accent-cyan);
 }
 
-/* Модальные окна */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -434,7 +435,6 @@ input::placeholder, textarea::placeholder {
     animation: fadeIn 0.3s ease;
 }
 
-/* Футер */
 footer {
     background: rgba(6, 17, 29, 0.4);
     backdrop-filter: blur(20px);
@@ -444,19 +444,23 @@ footer {
     margin-top: auto;
 }
 
+body.light-theme footer {
+    background: rgba(238, 244, 248, 0.5);
+}
+
 footer .footer-text {
     color: var(--text-muted);
     font-size: 14px;
     text-align: center;
 }
 
-/* Уведомления */
 .toast {
     position: fixed;
     bottom: 30px;
     right: 30px;
     background: rgba(13, 28, 41, 0.9);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--glass-border-glow);
     border-radius: var(--radius-sm);
     padding: 14px 24px;
@@ -469,7 +473,6 @@ footer .footer-text {
 .toast.success { border-left: 4px solid var(--color-accent-green); }
 .toast.error { border-left: 4px solid #ff4b2b; }
 
-/* Карта */
 .map-container {
     border-radius: var(--radius-lg);
     overflow: hidden;
