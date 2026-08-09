@@ -1,74 +1,14 @@
-/* ==========================================================
-   COMPONENT: Footer
-   ========================================================== */
+footer {
+    background: rgba(6, 17, 29, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--glass-border);
+    padding: 40px 0;
+    margin-top: auto;
+}
 
-.footer-sfera {
-    margin-top: var(--space-10);
-    padding: var(--space-9) var(--space-5);
+footer .footer-text {
+    color: var(--text-muted);
+    font-size: 14px;
     text-align: center;
-    background: var(--bg-800);
-    border-top: var(--border-light);
-    color: var(--text-muted);
-}
-
-.footer-sfera .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-3);
-}
-
-.footer-sfera h2 {
-    font-size: 2rem;
-    font-weight: 800;
-    background: linear-gradient(to right, #fff, #b4d7ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.footer-sfera p {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-}
-
-.footer-sfera .footer-links {
-    display: flex;
-    gap: var(--space-5);
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: var(--space-3);
-}
-
-.footer-sfera .footer-links a {
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color var(--transition);
-    font-size: 0.9rem;
-}
-.footer-sfera .footer-links a:hover {
-    color: var(--color-primary);
-}
-
-.footer-sfera .footer-social {
-    display: flex;
-    gap: var(--space-4);
-    margin-top: var(--space-4);
-}
-.footer-sfera .footer-social a {
-    color: var(--text-muted);
-    font-size: 1.6rem;
-    transition: color var(--transition);
-}
-.footer-sfera .footer-social a:hover {
-    color: var(--color-primary);
-}
-
-/* Адаптив */
-@media (max-width: 768px) {
-    .footer-sfera h2 {
-        font-size: 1.5rem;
-    }
-    .footer-sfera .footer-links {
-        gap: var(--space-3);
-    }
 }
