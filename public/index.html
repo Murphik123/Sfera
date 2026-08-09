@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<!-- lang="tk-TM" указывает браузерам и поисковикам туркменский язык (tk) и регион Туркменистан (TM) -->
-<html lang="tk-TM">
+<!-- lang="tk-TM" указывает туркменский язык и регион Туркменистан -->
+<!-- inline-стиль background и color-scheme убирают белую вспышку до загрузки CSS -->
+<html lang="tk-TM" style="background: #06111d; color-scheme: dark;">
 <head>
     <!-- Основная мета-информация страницы -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Название страницы с локализацией -->
+    
+    <!-- Мета-тег theme-color окрашивает интерфейс браузера (шапку на смартфонах) в темный цвет -->
+    <meta name="theme-color" content="#06111d">
+    
+    <!-- Название страницы -->
     <title data-i18n="logo_title">SFERA — Türkmenistanyň Birleşdirilen Sanly Platformasy</title>
 
     <!-- Подключение внешних шрифтов Google Fonts -->
@@ -15,7 +20,7 @@
 
     <!-- Блок стилей (Glassmorphism + Dark Futuristic Theme) -->
     <style>
-        /* CSS переменные для единого стилистического оформления */
+        /* Переменные цветовой палитры и базовых параметров */
         :root {
             --primary: #00d4ff;
             --secondary: #1f6bff;
@@ -31,7 +36,7 @@
             --radius: 22px;
         }
 
-        /* Общие сбросы отступов */
+        /* Базовый сброс отступов */
         * {
             margin: 0;
             padding: 0;
@@ -41,6 +46,7 @@
 
         html { 
             scroll-behavior: smooth; 
+            background: #06111d;
         }
 
         body {
@@ -49,7 +55,7 @@
             overflow-x: hidden;
         }
 
-        /* Плавная световая анимация заднего фона */
+        /* Анимированный фоновый градиент */
         body::before {
             content: "";
             position: fixed;
@@ -527,7 +533,7 @@
             color: #bfd3e4;
         }
 
-        /* ================= СТА ТИСТИЧЕСКАЯ СЕКЦИЯ ================= */
+        /* ================= СТАТИСТИЧЕСКАЯ СЕКЦИЯ ================= */
         .statistics {
             padding: 120px 7%;
             display: grid;
@@ -713,7 +719,7 @@
         }
     </style>
 </head>
-<body>
+<body style="background: #06111d;">
 
     <!-- Фоновые визуальные частицы -->
     <div id="particles"></div>
