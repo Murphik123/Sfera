@@ -1,22 +1,21 @@
-1: <!DOCTYPE html>
- 2: <html lang="ru">
- 3: <head>
- 4:     <meta charset="UTF-8">
- 5:     <meta name="viewport" content="width=device-width, initial-scale=1.0">
- 6:     <title data-i18n="logo_title">СФЕРА — Единая цифровая платформа Туркменистана</title>
- 7: 
- 8:     <link rel="preconnect" href="https://fonts.googleapis.com">
- 9:     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-10:     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-11: 
-12:     <!-- ВМЕСТО <style>...</style> ПОДКЛЮЧАЕМ ЕДИНЫЙ CSS -->
-13:     <link rel="stylesheet" href="css/style.css">
-14: </head>
-     
-        /* =====================================================
-           ВСЕ СТИЛИ (адаптированы под "СФЕРА")
-        ===================================================== */
+<!DOCTYPE html>
+<!-- lang="tk-TM" указывает браузерам и поисковикам туркменский язык (tk) и регион Туркменистан (TM) -->
+<html lang="tk-TM">
+<head>
+    <!-- Основная мета-информация страницы -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Название страницы с локализацией -->
+    <title data-i18n="logo_title">SFERA — Türkmenistanyň Birleşdirilen Sanly Platformasy</title>
 
+    <!-- Подключение внешних шрифтов Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Блок стилей (Glassmorphism + Dark Futuristic Theme) -->
+    <style>
+        /* CSS переменные для единого стилистического оформления */
         :root {
             --primary: #00d4ff;
             --secondary: #1f6bff;
@@ -24,14 +23,15 @@
             --dark: #08131d;
             --dark2: #0d1c29;
             --dark3: #142738;
-            --glass: rgba(255,255,255,.08);
-            --border: rgba(255,255,255,.15);
+            --glass: rgba(255, 255, 255, .08);
+            --border: rgba(255, 255, 255, .15);
             --white: #ffffff;
             --text: #dbe9ff;
             --shadow: 0 20px 60px rgba(0,0,0,.35);
             --radius: 22px;
         }
 
+        /* Общие сбросы отступов */
         * {
             margin: 0;
             padding: 0;
@@ -39,7 +39,9 @@
             font-family: "Inter", sans-serif;
         }
 
-        html { scroll-behavior: smooth; }
+        html { 
+            scroll-behavior: smooth; 
+        }
 
         body {
             background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
@@ -47,6 +49,7 @@
             overflow-x: hidden;
         }
 
+        /* Плавная световая анимация заднего фона */
         body::before {
             content: "";
             position: fixed;
@@ -71,7 +74,7 @@
             margin: auto;
         }
 
-        /* ================= HEADER & LOGO ================= */
+        /* ================= ХЕДЕР С СТЕКЛЯННЫМ ЭФФЕКТОМ ================= */
         header {
             position: fixed;
             top: 0;
@@ -92,6 +95,7 @@
             padding: 18px 0;
         }
 
+        /* Логотип со спиралью без текста под ним */
         .logo {
             display: flex;
             align-items: center;
@@ -120,7 +124,6 @@
             overflow: visible;
         }
 
-        /* Анимация вращения спиралей 3D-сферы в логотипе при наведении */
         .logo-svg g {
             transform-origin: center;
             transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
@@ -154,10 +157,11 @@
             white-space: nowrap;
         }
 
+        /* Главное меню навигации */
         nav ul {
             display: flex;
             list-style: none;
-            gap: 32px;
+            gap: 28px;
         }
 
         nav a {
@@ -205,7 +209,7 @@
             box-shadow: 0 15px 30px rgba(0,212,255,.35);
         }
 
-        /* ================= HERO ================= */
+        /* ================= ГЛАВНАЯ СЕКЦИЯ (HERO) ================= */
         .hero {
             position: relative;
             min-height: 100vh;
@@ -397,6 +401,7 @@
             align-items: center;
         }
 
+        /* Анимированное вращающееся ядро */
         .core {
             position: relative;
             width: 320px;
@@ -455,7 +460,7 @@
             100% { transform: scale(1.05); box-shadow: 0 0 120px rgba(0,212,255,.7); }
         }
 
-        /* ================= MODULES ================= */
+        /* ================= СЕКЦИЯ МОДУЛЕЙ ПЛАТФОРМЫ ================= */
         .modules {
             padding: 120px 7%;
         }
@@ -522,7 +527,7 @@
             color: #bfd3e4;
         }
 
-        /* ================= STATISTICS ================= */
+        /* ================= СТА ТИСТИЧЕСКАЯ СЕКЦИЯ ================= */
         .statistics {
             padding: 120px 7%;
             display: grid;
@@ -557,7 +562,7 @@
             color: #bdd0df;
         }
 
-        /* ================= NEWS ================= */
+        /* ================= НОВОСТНАЯ СЕКЦИЯ ================= */
         .news {
             padding: 120px 7%;
         }
@@ -598,7 +603,7 @@
             line-height: 1.7;
         }
 
-        /* ================= FOOTER ================= */
+        /* ================= ПОДВАЛ (FOOTER) ================= */
         footer {
             margin-top: 120px;
             backdrop-filter: blur(18px) saturate(180%);
@@ -639,7 +644,7 @@
             font-size: 14px;
         }
 
-        /* ================= SCROLLBAR ================= */
+        /* Кастомный скроллбар */
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -651,17 +656,7 @@
             background: #08131d;
         }
 
-        .hidden {
-            opacity: 0;
-            transform: translateY(60px);
-            transition: .8s;
-        }
-
-        .visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
+        /* Частицы фоновой анимации */
         #particles {
             position: fixed;
             left: 0;
@@ -690,7 +685,7 @@
             100% { transform: translateY(-120vh); opacity: 0; }
         }
 
-        /* ================= RESPONSIVE ================= */
+        /* Адаптивные стили под смартфоны и планшеты */
         @media(max-width: 1200px) {
             .hero {
                 grid-template-columns: 1fr;
@@ -720,10 +715,13 @@
 </head>
 <body>
 
+    <!-- Фоновые визуальные частицы -->
     <div id="particles"></div>
 
+    <!-- Шапка сайта -->
     <header>
         <div class="container">
+            <!-- Логотип со спиралью -->
             <a href="index.html" class="logo">
                 <div class="logo-icon">
                     <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -748,35 +746,41 @@
                     </svg>
                 </div>
                 <div class="logo-text">
-                    <h2>СФЕРА</h2>
-                    <p>Национальная Цифровая Платформа</p>
+                    <h2>SFERA</h2>
+                    <p>Milli Sanly Platforma</p>
                 </div>
             </a>
+
+            <!-- Навигационное меню на туркменском -->
             <nav>
                 <ul>
-                    <li><a href="#">Главная</a></li>
-                    <li><a href="#">Биржа</a></li>
+                    <li><a href="#">Baş sahypa</a></li>
+                    <li><a href="#">Birja</a></li>
                     <li><a href="#">TM Pay</a></li>
                     <li><a href="#">TM Coin</a></li>
-                    <li><a href="#">Банк</a></li>
-                    <li><a href="#">ИИ</a></li>
-                    <li><a href="#">Документы</a></li>
-                    <li><a href="#">Контакты</a></li>
+                    <li><a href="#">Bank</a></li>
+                    <li><a href="#">SÜ</a></li>
+                    <li><a href="#">Resminamalar</a></li>
+                    <li><a href="#">Habarlaşmak</a></li>
                 </ul>
             </nav>
+
+            <!-- Кнопки интерфейса -->
             <div class="header-buttons">
-                <button class="lang">RU</button>
-                <a href="login.html" class="login">Войти</a>
+                <button class="lang">TM</button>
+                <a href="login.html" class="login">Girmek</a>
             </div>
         </div>
     </header>
 
+    <!-- Главный баннер -->
     <section class="hero">
         <div class="hero-grid"></div>
         <canvas id="heroCanvas"></canvas>
         <div class="hero-glow glow-left"></div>
         <div class="hero-glow glow-right"></div>
 
+        <!-- Контур карты Туркменистана -->
         <div class="map-wrapper">
             <svg class="tm-map" viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
                 <defs>
@@ -790,19 +794,21 @@
             </svg>
         </div>
 
+        <!-- Контент с описанием на туркменском языке -->
         <div class="hero-content">
-            <span class="hero-tag">СФЕРА — ЦИФРОВАЯ ПЛАТФОРМА</span>
-            <h1>Единая цифровая<br>платформа Туркменистана</h1>
-            <p class="hero-subtitle">Торговля • ИИ • Платежи • Банк • Документооборот</p>
+            <span class="hero-tag">SFERA — SANLY PLATFORMA</span>
+            <h1>Türkmenistanyň Birleşdirilen<br>Sanly Platformasy</h1>
+            <p class="hero-subtitle">Söwda • SÜ • Tölegler • Bank • Resminama dolanyşygy</p>
             <p class="hero-text">
-                Современная государственная цифровая экосистема, объединяющая электронную торговлю, интеллектуальную аналитику, финансовые сервисы, документооборот и цифровые государственные услуги.
+                Elektron söwdany, emeli аňy, maliýe hyzmatlaryny, resminama dolanyşygyny we sanly döwlet hyzmatlaryny birleşdirýän döwrebap milli sanly ekosistema.
             </p>
             <div class="hero-buttons">
-                <a href="dashboard.html" class="primary-btn">Начать работу</a>
-                <a href="#" class="glass-btn">Демо</a>
+                <a href="dashboard.html" class="primary-btn">Işläp başlamak</a>
+                <a href="#" class="glass-btn">Demo</a>
             </div>
         </div>
 
+        <!-- Вращающееся центральное ядро -->
         <div class="hero-visual">
             <div class="core">
                 <div class="core-ring ring-1"></div>
@@ -826,34 +832,38 @@
         </div>
     </section>
 
+    <!-- Секция модулей экосистемы -->
     <section class="modules">
-        <h2>Основные модули платформы</h2>
+        <h2>Platformanyň esasy modullary</h2>
         <div class="grid">
-            <div class="card"><div class="icon">🛒</div><h3>Биржа</h3><p>Электронная торговая площадка</p></div>
-            <div class="card"><div class="icon">💳</div><h3>TM Pay</h3><p>Национальная платежная система</p></div>
-            <div class="card"><div class="icon">₮</div><h3>TM Coin</h3><p>Цифровая государственная валюта</p></div>
-            <div class="card"><div class="icon">🏦</div><h3>Банк</h3><p>Цифровой банк "Благо"</p></div>
-            <div class="card"><div class="icon">🤖</div><h3>ИИ</h3><p>Проверка документов, прогнозирование, аналитика</p></div>
-            <div class="card"><div class="icon">📄</div><h3>Документы</h3><p>Автоматическая верификация</p></div>
+            <div class="card"><div class="icon">🛒</div><h3>Birja</h3><p>Elektron söwda meýdançasy</p></div>
+            <div class="card"><div class="icon">💳</div><h3>TM Pay</h3><p>Milli töleg ulgamy</p></div>
+            <div class="card"><div class="icon">₮</div><h3>TM Coin</h3><p>Sanly döwlet pul birligi</p></div>
+            <div class="card"><div class="icon">🏦</div><h3>Bank</h3><p>"Blago" sanly banky</p></div>
+            <div class="card"><div class="icon">🤖</div><h3>SÜ</h3><p>Resminamalary barlamak, çaklama, analitika</p></div>
+            <div class="card"><div class="icon">📄</div><h3>Resminamalar</h3><p>Awtomatik barlag we tassyklama</p></div>
         </div>
     </section>
 
+    <!-- Секция динамических счетчиков -->
     <section class="statistics">
-        <div class="stat"><h1 id="users">0</h1><p>Пользователей</p></div>
-        <div class="stat"><h1 id="orders">0</h1><p>Сделок</p></div>
-        <div class="stat"><h1 id="docs">0</h1><p>Документов</p></div>
+        <div class="stat"><h1 id="users">0</h1><p>Ulanyjylar</p></div>
+        <div class="stat"><h1 id="orders">0</h1><p>Söwdalar</p></div>
+        <div class="stat"><h1 id="docs">0</h1><p>Resminamalar</p></div>
         <div class="stat"><h1 id="coin">0</h1><p>TM Coin</p></div>
     </section>
 
+    <!-- Секция новостей -->
     <section class="news">
-        <h2>Последние новости</h2>
+        <h2>Täzelikler</h2>
         <div class="news-grid">
-            <div class="news-card"><h3>Запуск платформы</h3><p>Современная цифровая экосистема нового поколения.</p></div>
-            <div class="news-card"><h3>ИИ модуль</h3><p>Автоматическая проверка документов.</p></div>
-            <div class="news-card"><h3>TM Pay</h3><p>Национальная система мгновенных платежей.</p></div>
+            <div class="news-card"><h3>Platformanyň işe girizilmegi</h3><p>Täze nesliň döwrebap sanly ekosistemasy.</p></div>
+            <div class="news-card"><h3>SÜ moduly</h3><p>Resminamalary awtomatlaşdyрыlan barlag ulgamy.</p></div>
+            <div class="news-card"><h3>TM Pay</h3><p>Derrew tölegleri geçirmek üçin milli ulgam.</p></div>
         </div>
     </section>
 
+    <!-- Подвал страницы -->
     <footer>
         <div class="container">
             <a href="index.html" class="logo">
@@ -880,16 +890,17 @@
                     </svg>
                 </div>
                 <div class="logo-text">
-                    <h2>СФЕРА</h2>
-                    <p>Национальная Цифровая Платформа</p>
+                    <h2>SFERA</h2>
+                    <p>Milli Sanly Platforma</p>
                 </div>
             </a>
-            <p>© 2026 — Единая цифровая платформа Туркменистана</p>
+            <p>© 2026 — Türkmenistanyň Birleşdirilen Sanly Platformasy</p>
         </div>
     </footer>
 
+    <!-- Клиентская логика скриптов -->
     <script>
-        // Canvas: линии данных
+        // Инициализация графики Canvas с точками данных
         document.addEventListener('DOMContentLoaded', function() {
             const canvas = document.getElementById('heroCanvas');
             if (!canvas) return;
@@ -949,7 +960,7 @@
             drawLines();
         });
 
-        // Анимированные счётчики
+        // Расчет значений счетчиков при прокрутке
         const counters = [
             { id: "users", target: 2340000 },
             { id: "orders", target: 18540291 },
@@ -966,110 +977,40 @@
                     value = target;
                     clearInterval(timer);
                 }
-                el.textContent = value.toLocaleString("ru-RU");
+                el.innerText = value.toLocaleString('tk-TM');
             }, 16);
         }
 
-        window.addEventListener("load", () => {
-            counters.forEach(c => {
-                const el = document.getElementById(c.id);
-                if (el) animateCounter(el, c.target);
-            });
-        });
-
-        // Intersection Observer
-        const observer = new IntersectionObserver(entries => {
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add("visible");
+                    counters.forEach(c => {
+                        const el = document.getElementById(c.id);
+                        if (el && !el.classList.contains('counted')) {
+                            el.classList.add('counted');
+                            animateCounter(el, c.target);
+                        }
+                    });
                 }
             });
-        }, { threshold: 0.15 });
+        }, { threshold: 0.3 });
 
-        document.querySelectorAll(".card, .news-card, .stat").forEach(el => {
-            el.classList.add("hidden");
-            observer.observe(el);
-        });
+        const statsSection = document.querySelector('.statistics');
+        if (statsSection) observer.observe(statsSection);
 
-        // Hover эффект на карточках
-        document.querySelectorAll(".card").forEach(card => {
-            card.addEventListener("mousemove", e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.background = `
-                    radial-gradient(circle at ${x}px ${y}px,
-                    rgba(0,212,255,.18),
-                    rgba(255,255,255,.05))
-                `;
-            });
-            card.addEventListener("mouseleave", () => {
-                card.style.background = "rgba(255,255,255,.06)";
-            });
-        });
-
-        // Липкий хедер
-        const header = document.querySelector("header");
-        window.addEventListener("scroll", () => {
-            if (window.scrollY > 50) {
-                header.style.background = "rgba(255, 255, 255, 0.22)";
-                header.style.boxShadow = "0 10px 35px rgba(0,0,0,.2)";
-            } else {
-                header.style.background = "rgba(255, 255, 255, 0.12)";
-                header.style.boxShadow = "0 8px 32px 0 rgba(0, 0, 0, 0.1)";
-            }
-        });
-
-        // Частицы
-        const particles = document.getElementById("particles");
-        if (particles) {
-            for (let i = 0; i < 60; i++) {
-                const p = document.createElement("span");
-                p.className = "particle";
-                p.style.left = Math.random() * 100 + "%";
-                p.style.top = Math.random() * 100 + "%";
-                p.style.animationDuration = (6 + Math.random() * 12) + "s";
-                p.style.animationDelay = Math.random() * 5 + "s";
-                particles.appendChild(p);
+        // Генерация фоновых частиц
+        const pContainer = document.getElementById('particles');
+        if (pContainer) {
+            for (let i = 0; i < 40; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.top = Math.random() * 100 + 'vh';
+                p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                p.style.animationDelay = (Math.random() * 5) + 's';
+                pContainer.appendChild(p);
             }
         }
-
-        // Кнопки
-        document.querySelectorAll("button").forEach(btn => {
-            btn.addEventListener("mouseenter", () => {
-                btn.style.transform = "translateY(-3px) scale(1.03)";
-            });
-            btn.addEventListener("mouseleave", () => {
-                btn.style.transform = "";
-            });
-        });
-
-        // Переключение языка (демо)
-        const langButton = document.querySelector(".lang");
-        const langs = ["RU", "TM", "EN"];
-        let langIndex = 0;
-        if (langButton) {
-            langButton.addEventListener("click", () => {
-                langIndex++;
-                if (langIndex >= langs.length) langIndex = 0;
-                langButton.textContent = langs[langIndex];
-            });
-        }
-
-        // Эффект пульсации сферы
-        const core = document.querySelector(".core-center");
-        if (core) {
-            setInterval(() => {
-                core.style.boxShadow = "0 0 " + (80 + Math.random() * 60) + "px rgba(0,212,255,.6)";
-            }, 1500);
-        }
-
-        console.log("СФЕРА ПЛАТФОРМА загружена");
     </script>
-   <!-- Исправленный блок подключения скриптов -->
-    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-    <script type="module" src="/js/main.js"></script>
-</body>
-</html>
 </body>
 </html>
