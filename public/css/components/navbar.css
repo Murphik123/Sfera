@@ -1,204 +1,80 @@
-/* ==========================================================
-   COMPONENT: Navbar / Header
-   ========================================================== */
-
-/* Основной хедер (уже есть в layout, но здесь детали) */
 header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: var(--header-height);
-    z-index: var(--z-header);
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: var(--border-light);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    height: 80px;
+    z-index: 1000;
+    background: rgba(6, 17, 29, 0.4) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+    display: flex;
+    align-items: center;
 }
 
 header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 100%;
 }
 
-/* Логотип */
-.logo-sfera {
+/* Строгий логотип Sfera */
+.logo {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
-    text-decoration: none;
-    color: var(--text-primary);
+    gap: 12px;
 }
-.logo-sfera .logo-icon {
+
+.logo-icon {
     width: 42px;
     height: 42px;
 }
-.logo-sfera .logo-text h2 {
-    font-size: 1.5rem;
-    font-weight: 800;
-    line-height: 1;
-    background: linear-gradient(to right, #fff, #b4d7ff);
+
+.logo-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.logo-text h2 {
+    font-size: 20px;
+    letter-spacing: 2px;
+    background: var(--grad-sfera);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
-.logo-sfera .logo-text p {
-    display: none; /* подзаголовок скрыт согласно ТЗ */
+
+/* Скрытие подзаголовка по каноническим правилам */
+.logo-text p {
+    display: none !important;
 }
 
-/* Навигационное меню */
-nav ul {
+.header-right {
     display: flex;
-    list-style: none;
-    gap: var(--space-5);
     align-items: center;
-    margin: 0;
-    padding: 0;
+    gap: 12px;
 }
 
-nav a {
-    text-decoration: none;
-    color: var(--text-primary);
-    font-weight: 500;
-    transition: color var(--transition), text-shadow var(--transition);
-    font-size: 0.95rem;
-}
-nav a:hover {
-    color: var(--color-primary);
-    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
-}
-
-/* Выпадающее меню */
-.dropdown {
-    position: relative;
-}
-.dropdown .submenu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: rgba(8, 19, 29, 0.92);
-    backdrop-filter: blur(16px);
-    border: var(--border-normal);
-    border-radius: var(--radius-sm);
-    padding: var(--space-2) 0;
-    min-width: 200px;
-    box-shadow: var(--glass-shadow);
-}
-.dropdown .submenu a {
-    display: block;
-    padding: var(--space-2) var(--space-4);
-    color: var(--text-secondary);
-    font-weight: 400;
-}
-.dropdown .submenu a:hover {
-    background: rgba(0, 212, 255, 0.1);
-    color: var(--color-primary);
-}
-.dropdown:hover .submenu {
-    display: block;
-}
-
-/* Кнопка переключения языка */
-.lang-btn {
+.header-right .lang, 
+.header-right .logout-btn, 
+.header-right .btn-switch {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #fff !important;
     padding: 8px 16px;
-    border-radius: var(--radius-sm);
-    background: rgba(255, 255, 255, 0.08);
-    border: var(--border-normal);
-    color: var(--text-primary);
-    font-weight: 600;
-    font-size: 0.85rem;
+    border-radius: 20px;
+    backdrop-filter: blur(4px) !important;
+    transition: var(--transition) !important;
     cursor: pointer;
-    transition: all var(--transition);
-}
-.lang-btn:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+    font-size: 14px;
+    font-weight: 500;
 }
 
-/* Кнопка входа в хедере (уже есть .btn-primary, но можно переопределить) */
-.header-login {
-    padding: 8px 20px;
-    font-size: 0.9rem;
-}
-
-/* Гамбургер-меню (мобильная версия) */
-.hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-}
-.hamburger span {
-    display: block;
-    width: 28px;
-    height: 2.5px;
-    background: var(--text-primary);
-    border-radius: 4px;
-    transition: all var(--transition);
-}
-.hamburger.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-}
-.hamburger.active span:nth-child(2) {
-    opacity: 0;
-}
-.hamburger.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(5px, -5px);
-}
-
-/* ===== АДАПТИВ ===== */
-@media (max-width: 1200px) {
-    .hamburger {
-        display: flex;
-    }
-    nav {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: rgba(5, 15, 25, 0.95);
-        backdrop-filter: blur(18px);
-        border-bottom: var(--border-normal);
-        padding: var(--space-4) 0;
-        flex-direction: column;
-        align-items: center;
-    }
-    nav.active {
-        display: flex;
-    }
-    nav ul {
-        flex-direction: column;
-        gap: var(--space-3);
-        width: 100%;
-        padding: 0 var(--space-4);
-    }
-    nav ul li {
-        width: 100%;
-        text-align: center;
-    }
-    .dropdown .submenu {
-        position: static;
-        background: transparent;
-        border: none;
-        box-shadow: none;
-        padding: var(--space-2) 0 0;
-        display: none;
-        flex-direction: column;
-        gap: var(--space-2);
-    }
-    .dropdown.open .submenu {
-        display: flex;
-    }
-    .dropdown .submenu a {
-        padding: 8px 0;
-        color: var(--text-muted);
-    }
+.header-right .lang:hover, 
+.header-right .logout-btn:hover, 
+.header-right .btn-switch:hover {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border-color: var(--color-accent-cyan) !important;
+    color: var(--color-accent-cyan) !important;
+    box-shadow: var(--glow-cyan);
 }
