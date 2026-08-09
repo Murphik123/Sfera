@@ -1,152 +1,35 @@
-/* ==========================================================
-   COMPONENT: Buttons
-   ========================================================== */
-
-/* Базовый класс для всех кнопок */
-.btn {
+.btn-primary {
+    background: var(--grad-sfera-btn);
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 24px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-2);
-    padding: 12px 28px;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all var(--transition);
-    text-decoration: none;
-    white-space: nowrap;
-    user-select: none;
-    position: relative;
-    overflow: hidden;
-    min-height: 48px;
+    gap: 8px;
 }
 
-/* Кнопка с градиентом (основная) */
-.btn-primary {
-    background: var(--gradient-main);
-    color: #fff;
-    box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3);
-}
 .btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(0, 212, 255, 0.45);
-}
-.btn-primary:active {
-    transform: translateY(0);
+    transform: translateY(-2px);
+    box-shadow: var(--glow-cyan);
 }
 
-/* Вторичная кнопка (прозрачная с границей) */
-.btn-secondary {
-    background: transparent;
-    color: var(--text-primary);
-    border: 1px solid var(--glass-border);
-    backdrop-filter: blur(4px);
-}
-.btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-}
-
-/* Стеклянная кнопка (как secondary, но с бекграундом) */
 .btn-glass {
     background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
     color: var(--text-primary);
-    border: var(--border-normal);
-    backdrop-filter: blur(var(--glass-blur));
+    padding: 10px 20px;
+    border-radius: 20px;
+    backdrop-filter: var(--glass-blur);
+    transition: var(--transition);
+    cursor: pointer;
 }
+
 .btn-glass:hover {
     background: var(--glass-bg-hover);
-    border-color: var(--color-primary);
-}
-
-/* Кнопка успеха (зелёная) */
-.btn-success {
-    background: linear-gradient(135deg, var(--color-accent), #00b894);
-    color: #08131d;
-    box-shadow: 0 8px 25px rgba(0, 255, 163, 0.3);
-}
-.btn-success:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(0, 255, 163, 0.45);
-}
-
-/* Кнопка опасности (красная) */
-.btn-danger {
-    background: rgba(255, 77, 77, 0.15);
-    color: var(--color-danger);
-    border: 1px solid rgba(255, 77, 77, 0.25);
-}
-.btn-danger:hover {
-    background: rgba(255, 77, 77, 0.25);
-    border-color: var(--color-danger);
-}
-
-/* Кнопка-ссылка (без фона) */
-.btn-link {
-    background: transparent;
-    color: var(--color-primary);
-    padding: 8px 12px;
-}
-.btn-link:hover {
-    text-decoration: underline;
-    color: var(--color-primary-light);
-}
-
-/* Маленькая кнопка */
-.btn-sm {
-    padding: 8px 16px;
-    font-size: 0.8rem;
-    min-height: 36px;
-}
-
-/* Большая кнопка */
-.btn-lg {
-    padding: 16px 36px;
-    font-size: 1.1rem;
-    min-height: 56px;
-}
-
-/* Кнопка с иконкой (без текста) */
-.btn-icon {
-    width: 48px;
-    height: 48px;
-    padding: 0;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.4rem;
-}
-
-/* Заблокированная кнопка */
-.btn:disabled,
-.btn.disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-/* Группа кнопок (горизонтальная) */
-.btn-group {
-    display: flex;
-    gap: var(--space-3);
-    flex-wrap: wrap;
-}
-
-/* Группа кнопок без отступов (прилегают друг к другу) */
-.btn-group-tight {
-    gap: 0;
-}
-.btn-group-tight .btn:not(:first-child) {
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-.btn-group-tight .btn:not(:last-child) {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-    border-right: none;
+    border-color: var(--color-accent-cyan);
+    color: var(--color-accent-cyan);
 }
