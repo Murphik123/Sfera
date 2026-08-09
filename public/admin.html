@@ -15,16 +15,25 @@
         /* Общие стили для админки */
         body {
             background: #0b1a2a;
+            color: #ffffff;
+            font-family: "Inter", sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
         }
+
         .admin-wrapper {
             display: flex;
             min-height: 100vh;
             padding-top: 80px; /* чтобы не перекрывать header */
         }
+
         .admin-sidebar {
             width: 240px;
             background: rgba(0,0,0,0.3);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-right: 1px solid rgba(255,255,255,0.08);
             padding: 24px 16px;
             flex-shrink: 0;
@@ -32,12 +41,15 @@
             position: sticky;
             top: 80px;
             overflow-y: auto;
+            z-index: 10;
         }
+
         .admin-sidebar ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
+
         .admin-sidebar li {
             padding: 12px 16px;
             border-radius: 12px;
@@ -50,25 +62,32 @@
             gap: 12px;
             font-weight: 500;
         }
+
         .admin-sidebar li:hover {
             background: rgba(255,255,255,0.05);
             color: white;
         }
+
         .admin-sidebar li.active {
             background: rgba(0,212,255,0.12);
             color: #00d4ff;
             font-weight: 600;
         }
+
         .admin-sidebar li .icon {
             font-size: 20px;
             width: 28px;
             text-align: center;
         }
+
         .admin-content {
             flex: 1;
             padding: 30px 40px;
             overflow-y: auto;
+            position: relative;
+            z-index: 2;
         }
+
         .admin-content h1 {
             font-size: 28px;
             font-weight: 700;
@@ -77,48 +96,59 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .admin-card {
             background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 16px;
             padding: 20px 24px;
             margin-bottom: 20px;
         }
+
         .admin-card h3 {
             font-size: 18px;
             margin-bottom: 12px;
             color: #dbe9ff;
         }
+
         .admin-card p {
             color: #9fb5c8;
         }
+
         .admin-card .stat-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 16px;
             margin-top: 12px;
         }
+
         .admin-card .stat-item {
             background: rgba(0,0,0,0.2);
             padding: 16px;
             border-radius: 12px;
             text-align: center;
         }
+
         .admin-card .stat-item .number {
             font-size: 28px;
             font-weight: 700;
             color: #00d4ff;
         }
+
         .admin-card .stat-item .label {
             font-size: 13px;
             color: #9fb5c8;
             margin-top: 4px;
         }
+
         .admin-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 12px;
         }
+
         .admin-table th {
             text-align: left;
             padding: 10px 12px;
@@ -126,11 +156,13 @@
             font-weight: 500;
             border-bottom: 1px solid rgba(255,255,255,0.06);
         }
+
         .admin-table td {
             padding: 10px 12px;
             border-bottom: 1px solid rgba(255,255,255,0.04);
             color: #dbe9ff;
         }
+
         .admin-table .badge {
             background: rgba(0,212,255,0.15);
             color: #00d4ff;
@@ -138,18 +170,22 @@
             border-radius: 20px;
             font-size: 12px;
         }
+
         .admin-table .badge.admin {
             background: rgba(255,200,0,0.15);
             color: #f5c542;
         }
+
         .admin-table .badge.user {
             background: rgba(0,255,170,0.1);
             color: #00ffa3;
         }
+
         .admin-actions {
             display: flex;
             gap: 8px;
         }
+
         .admin-actions button {
             background: transparent;
             border: 1px solid rgba(255,255,255,0.15);
@@ -160,17 +196,50 @@
             transition: .2s;
             font-size: 13px;
         }
+
         .admin-actions button:hover {
             background: rgba(255,255,255,0.05);
             color: white;
         }
+
         .admin-actions button.danger {
             border-color: rgba(255,0,0,0.3);
             color: #ff6b6b;
         }
+
         .admin-actions button.danger:hover {
             background: rgba(255,0,0,0.1);
         }
+
+        /* АНИМАЦИЯ ЧАСТИЦ */
+        #particles {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #00d4ff;
+            opacity: .5;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 0; }
+            20% { opacity: .6; }
+            80% { opacity: .6; }
+            100% { transform: translateY(-120vh); opacity: 0; }
+        }
+
         @media (max-width: 768px) {
             .admin-wrapper { flex-direction: column; }
             .admin-sidebar {
@@ -376,8 +445,6 @@
                 this.classList.add('active');
                 const section = this.dataset.section;
 
-                // Заглушка – для каждого раздела показываем разный контент
-                // В реальном проекте здесь загружаются данные через API
                 let html = '';
                 switch(section) {
                     case 'dashboard':
@@ -422,24 +489,26 @@
                         html = `<h1>${translations[currentLang].welcome}</h1>`;
                 }
                 contentArea.innerHTML = html;
-                // Перезапускаем переводы для нового контента (если есть элементы с data-i18n)
             });
         });
 
         // ============================================================
-        // ЗАГРУЗКА ДЕМО-СТАТИСТИКИ (можно заменить реальным API)
+        // ЗАГРУЗКА ДЕМО-СТАТИСТИКИ
         // ============================================================
         function loadStats() {
-            // Имитация загрузки данных из localStorage (или с сервера)
             const users = JSON.parse(localStorage.getItem('users') || '[]');
-            document.getElementById('statUsers').textContent = users.length;
+            const statUsersEl = document.getElementById('statUsers');
+            if (statUsersEl) statUsersEl.textContent = users.length;
 
-            // Другие статистики можно взять из других хранилищ или API
-            document.getElementById('statOrders').textContent = '24';
-            document.getElementById('statCoins').textContent = '142';
-            document.getElementById('statMails').textContent = '8';
+            const statOrdersEl = document.getElementById('statOrders');
+            if (statOrdersEl) statOrdersEl.textContent = '24';
+            
+            const statCoinsEl = document.getElementById('statCoins');
+            if (statCoinsEl) statCoinsEl.textContent = '142';
+            
+            const statMailsEl = document.getElementById('statMails');
+            if (statMailsEl) statMailsEl.textContent = '8';
 
-            // Заполним таблицу последних пользователей
             const tbody = document.getElementById('recentUsersBody');
             if (!tbody) return;
             const recent = users.slice(-5).reverse();
@@ -456,28 +525,26 @@
         // ============================================================
         // ЧАСТИЦЫ
         // ============================================================
-        const particles = document.getElementById('particles');
-        if (particles && particles.children.length === 0) {
-            for (let i = 0; i < 60; i++) {
-                const p = document.createElement('span');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.top = Math.random() * 100 + '%';
-                p.style.animationDuration = (6 + Math.random() * 12) + 's';
-                p.style.animationDelay = Math.random() * 5 + 's';
-                particles.appendChild(p);
+        document.addEventListener('DOMContentLoaded', () => {
+            const particles = document.getElementById('particles');
+            if (particles && particles.children.length === 0) {
+                for (let i = 0; i < 60; i++) {
+                    const p = document.createElement('span');
+                    p.className = 'particle';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.top = Math.random() * 100 + '%';
+                    p.style.animationDuration = (6 + Math.random() * 12) + 's';
+                    p.style.animationDelay = Math.random() * 5 + 's';
+                    particles.appendChild(p);
+                }
             }
-        }
-
-        // ============================================================
-        // ИНИЦИАЛИЗАЦИЯ
-        // ============================================================
-        setLanguage(currentLang);
-        loadStats();
-        // Активируем раздел "Обзор"
-        document.querySelector('#adminMenu li[data-section="dashboard"]').click();
-
-        console.log('Admin panel loaded');
+            
+            setLanguage(currentLang);
+            loadStats();
+            
+            const defaultMenu = document.querySelector('#adminMenu li[data-section="dashboard"]');
+            if (defaultMenu) defaultMenu.click();
+        });
     </script>
 </body>
 </html>
