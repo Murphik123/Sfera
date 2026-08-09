@@ -24,7 +24,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --- ТОЧНЫЙ ПОИСК ПАПКИ PUBLIC ---
-// Так как server.js лежит в server/src/server.js, поднимаемся до корня проекта
 let publicPath = path.join(__dirname, '..', '..', 'public');
 if (!fs.existsSync(publicPath)) {
     publicPath = path.join(__dirname, '..', 'public');
@@ -35,7 +34,7 @@ if (!fs.existsSync(publicPath)) {
 
 console.log(`📂 Раздача статики из папки: ${publicPath}`);
 
-// Подключаем раздачу статики (CSS, JS, картинки) с явным указанием опций
+// Подключаем раздачу статики (CSS, JS, картинки)
 app.use(express.static(publicPath));
 
 // Автоматическое подключение маршрутов REST API
@@ -118,11 +117,10 @@ io.on('connection', (socket) => {
 });
 
 // --- ПРАВИЛЬНЫЙ ФОЛЛБЭК ДЛЯ ROUTING / HTML ---
-// Игнорируем запросы к статики (css/js/png и т.д.), отдаем index.html только для обычных страниц
 app.get('*', (req, res) => {
-    // Если запрос идёт к файлу (например style.css или main.js) и он не нашелся в express.static — отдаем 404, а не HTML!
-    if (req.path.includes('.')) {
-        return res.status(404).send('File not found');
+    // Если запрос идёт к файлу (например style.css или app-init.js) и он не найден — отдаем 404, а не HTML!
+    if (path.extname(req.path)) {
+        return res.status(404).type('text/plain').send('File not found');
     }
 
     const indexPath = path.join(publicPath, 'index.html');
