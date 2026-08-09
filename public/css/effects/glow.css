@@ -1,33 +1,16 @@
-/* ==========================================================
-   EFFECT: Neon Glow
-   ========================================================== */
-
-/* Основное свечение (голубое) */
-.glow-primary {
-    box-shadow: var(--glow-primary);
+.glow-cyan {
+    box-shadow: var(--glow-cyan);
 }
 
-/* Акцентное свечение (зелёное) */
-.glow-accent {
-    box-shadow: var(--glow-accent);
+.glow-green {
+    box-shadow: var(--glow-green);
 }
 
-/* Универсальный класс для любой подсветки (использует переменную --glow) */
-.glow {
-    box-shadow: var(--glow-primary);
+.glow-hover {
+    transition: var(--transition);
 }
 
-/* Свечение для текста */
-.text-glow {
-    text-shadow: 0 0 8px rgba(0, 212, 255, 0.5), 0 0 20px rgba(0, 212, 255, 0.2);
-}
-
-/* Свечение для кнопок при наведении (добавляется через JS или :hover) */
-.btn-glow:hover {
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.4), 0 0 40px rgba(0, 212, 255, 0.2);
-}
-
-/* Свечение для карточек при наведении */
-.card-glow:hover {
-    box-shadow: 0 0 30px rgba(0, 212, 255, 0.2), 0 15px 40px rgba(0, 0, 0, 0.3);
+.glow-hover:hover {
+    box-shadow: var(--glow-cyan);
+    border-color: var(--color-accent-cyan);
 }
