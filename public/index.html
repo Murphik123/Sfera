@@ -9,6 +9,102 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* Гарантированное исправление Flex/Grid структуры */
+        header .container {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+            max-width: 1400px !important;
+            margin: 0 auto !important;
+            padding: 0 20px !important;
+        }
+
+        nav ul {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            gap: 20px !important;
+            list-style: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        nav ul li a {
+            white-space: nowrap !important;
+        }
+
+        .header-buttons {
+            display: flex !important;
+            align-items: center !important;
+            gap: 15px !important;
+        }
+
+        /* Исправление Hero секции и карты */
+        .hero {
+            position: relative !important;
+            min-height: auto !important;
+            padding: 120px 20px 60px 20px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            overflow: hidden !important;
+        }
+
+        .map-wrapper {
+            position: relative !important;
+            width: 100% !important;
+            max-width: 900px !important;
+            height: auto !important;
+            margin: 0 auto 40px auto !important;
+        }
+
+        .tm-map {
+            width: 100% !important;
+            height: auto !important;
+            max-height: 400px !important;
+            display: block !important;
+        }
+
+        /* Исправление сетки модулей */
+        .modules {
+            max-width: 1400px !important;
+            margin: 0 auto !important;
+            padding: 60px 20px !important;
+        }
+
+        .modules .grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+            gap: 24px !important;
+            width: 100% !important;
+        }
+
+        .card {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Исправление блока статистики */
+        .statistics {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+            gap: 20px !important;
+            max-width: 1400px !important;
+            margin: 0 auto !important;
+            padding: 40px 20px !important;
+        }
+
+        .news-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+            gap: 24px !important;
+        }
+    </style>
 </head>
 <body>
 
