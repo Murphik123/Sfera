@@ -1,31 +1,12 @@
-/* ==========================================================
-   EFFECT: Animated Background
-   ========================================================== */
-
-/* Основной фон страницы (body) уже задан в theme.css,
-   но здесь мы добавляем анимированный слой поверх */
-body::before {
-    content: "";
+.bg-glow-spot {
     position: fixed;
-    inset: 0;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
     pointer-events: none;
-    z-index: var(--z-background);
-    background:
-        radial-gradient(700px 700px at 15% 10%, rgba(0, 212, 255, 0.06), transparent 70%),
-        radial-gradient(900px 900px at 90% 0%, rgba(0, 255, 163, 0.04), transparent 70%),
-        radial-gradient(1000px 1000px at 50% 100%, rgba(31, 107, 255, 0.05), transparent 70%);
-    animation: bgmove 18s linear infinite;
-    will-change: transform;
+    z-index: 0;
 }
 
-/* Дополнительный слой с шумом (опционально) */
-.bg-noise {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: var(--z-background);
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 256px 256px;
-}
+.bg-spot-1 { top: -200px; left: -100px; }
+.bg-spot-2 { bottom: -200px; right: -100px; background: radial-gradient(circle, rgba(0, 255, 163, 0.08) 0%, rgba(0, 0, 0, 0) 70%); }
