@@ -23,43 +23,60 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// --- ТОЧНЫЙ ПОИСК ПАПКИ PUBLIC ---
-let publicPath = path.join(__dirname, '..', '..', 'public');
-if (!fs.existsSync(publicPath)) {
-    publicPath = path.join(__dirname, '..', 'public');
-}
-if (!fs.existsSync(publicPath)) {
-    publicPath = path.join(__dirname, 'public');
-}
+// --- 1. ТОЧНЫЙ ПОИСК ПАПКИ PUBLIC ---
+const possiblePublicPaths = [
+    path.join(__dirname, '..', '..', 'public'),
+    path.join(__dirname, '..', 'public'),
+    path.join(__dirname, 'public'),
+    path.join(process.cwd(), 'public'),
+    path.join(process.cwd(), 'src', 'public')
+];
 
+let publicPath = possiblePublicPaths.find(p => fs.existsSync(p)) || path.join(process.cwd(), 'public');
 console.log(`📂 Раздача статики из папки: ${publicPath}`);
 
 // Подключаем раздачу статики (CSS, JS, картинки)
 app.use(express.static(publicPath));
 
-// Автоматическое подключение маршрутов REST API
-const routesPath = path.join(__dirname, 'routes');
-const fallbackRoutesPath = path.join(__dirname, '..', 'routes');
-const actualRoutesPath = fs.existsSync(routesPath) ? routesPath : (fs.existsSync(fallbackRoutesPath) ? fallbackRoutesPath : null);
+// --- 2. УНИВЕРСАЛЬНЫЙ ПОИСК И ПОДКЛЮЧЕНИЕ МАРШРУТОВ REST API ---
+const possibleRoutesPaths = [
+    path.join(__dirname, 'routes'),
+    path.join(__dirname, '..', 'routes'),
+    path.join(__dirname, '..', '..', 'routes'),
+    path.join(process.cwd(), 'routes'),
+    path.join(process.cwd(), 'src', 'routes'),
+    path.join(process.cwd(), 'server', 'routes'),
+    path.join(process.cwd(), 'server', 'src', 'routes')
+];
+
+let actualRoutesPath = possibleRoutesPaths.find(p => fs.existsSync(p));
 
 if (actualRoutesPath) {
     console.log(`📁 Найдена папка маршрутов (routes): ${actualRoutesPath}`);
-    fs.readdirSync(actualRoutesPath).forEach(file => {
+    const files = fs.readdirSync(actualRoutesPath);
+    
+    files.forEach(file => {
         if (file.endsWith('.js')) {
-            // Корректно убираем суффикс Routes.js / .js, создавая чистое имя (authRoutes.js -> /api/auth)
-            let routeName = file.replace(/Routes\.js$/, '').replace(/\.js$/, '');
+            // Корректное формирование префикса: authRoutes.js -> /api/auth
+            let routeName = file.replace(/Routes\.js$/i, '').replace(/\.js$/i, '');
             let prefix = `/api/${routeName}`;
             
-            if (file === 'paymentRoutes.js') prefix = '/api/tmpay';
+            if (file.toLowerCase() === 'paymentroutes.js') prefix = '/api/tmpay';
             
-            const routeModule = require(path.join(actualRoutesPath, file));
-            app.use(prefix, routeModule);
-            console.log(`✅ Маршрут подключен: ${prefix} -> ${file}`);
+            try {
+                const routeModule = require(path.join(actualRoutesPath, file));
+                app.use(prefix, routeModule);
+                console.log(`✅ Маршрут подключен: ${prefix} -> ${file}`);
+            } catch (err) {
+                console.error(`❌ Ошибка загрузки маршрута ${file}:`, err.message);
+            }
         }
     });
+} else {
+    console.error('⚠️ ВНИМАНИЕ: Папка с маршрутами (routes) не найдена ни по одному из путей!');
 }
 
-// --- WebSocket & WebRTC Signaling Logic ---
+// --- 3. WebSocket & WebRTC Signaling Logic ---
 const activeUsers = new Map(); // userId -> socketId
 
 io.on('connection', (socket) => {
@@ -118,9 +135,9 @@ io.on('connection', (socket) => {
     });
 });
 
-// --- ПРАВИЛЬНЫЙ ФОЛЛБЭК ДЛЯ ROUTING / HTML ---
+// --- 4. ПРАВИЛЬНЫЙ ФОЛЛБЭК ДЛЯ ROUTING / HTML ---
 app.get('*', (req, res) => {
-    // Если запрос идёт к статической точке (.js, .css, .png и т.д.) и файла нет — возвращаем 404
+    // Если запрос идёт к файлу (.js, .css, .png и т.д.), но он отсутствует в express.static, отдаем 404
     if (path.extname(req.path)) {
         return res.status(404).type('text/plain').send('File not found');
     }
