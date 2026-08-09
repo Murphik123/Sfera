@@ -1,26 +1,27 @@
 <!DOCTYPE html>
-<!-- lang="tk-TM" указывает туркменский язык и регион Туркменистан -->
-<!-- inline-стиль background и color-scheme убирают белую вспышку до загрузки CSS -->
-<html lang="tk-TM" style="background: #06111d; color-scheme: dark;">
+<html lang="tk" style="background: #06111d; color-scheme: dark;">
 <head>
-    <!-- Основная мета-информация страницы -->
+    <!-- 1. Мгновенная установка темного фона ДО внешних ресурсов (убирает белую вспышку) -->
+    <style>
+        html, body {
+            background: #06111d !important;
+            background-color: #06111d !important;
+            color-scheme: dark;
+        }
+    </style>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Мета-тег theme-color окрашивает интерфейс браузера (шапку на смартфонах) в темный цвет -->
     <meta name="theme-color" content="#06111d">
     
-    <!-- Название страницы -->
-    <title data-i18n="logo_title">SFERA — Türkmenistanyň Birleşdirilen Sanly Platformasy</title>
+    <title data-i18n="title">SFERA — Türkmenistanyň Birleşdirilen Sanly Platformasy</title>
 
-    <!-- Подключение внешних шрифтов Google Fonts -->
+    <!-- Google Fonts с font-display: swap -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Блок стилей (Glassmorphism + Dark Futuristic Theme) -->
     <style>
-        /* Переменные цветовой палитры и базовых параметров */
         :root {
             --primary: #00d4ff;
             --secondary: #1f6bff;
@@ -36,7 +37,6 @@
             --radius: 22px;
         }
 
-        /* Базовый сброс отступов */
         * {
             margin: 0;
             padding: 0;
@@ -53,9 +53,9 @@
             background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
             color: var(--white);
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* Анимированный фоновый градиент */
         body::before {
             content: "";
             position: fixed;
@@ -80,7 +80,7 @@
             margin: auto;
         }
 
-        /* ================= ХЕДЕР С СТЕКЛЯННЫМ ЭФФЕКТОМ ================= */
+        /* ХЕДЕР */
         header {
             position: fixed;
             top: 0;
@@ -101,7 +101,6 @@
             padding: 18px 0;
         }
 
-        /* Логотип со спиралью без текста под ним */
         .logo {
             display: flex;
             align-items: center;
@@ -163,7 +162,6 @@
             white-space: nowrap;
         }
 
-        /* Главное меню навигации */
         nav ul {
             display: flex;
             list-style: none;
@@ -184,13 +182,32 @@
         .header-buttons {
             display: flex;
             gap: 12px;
+            align-items: center;
         }
 
-        .header-buttons a,
-        .header-buttons button {
-            padding: 12px 20px;
-            border: none;
+        /* Выпадающий список / кнопка переключателя языков */
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 600;
             cursor: pointer;
+            transition: 0.3s;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: var(--primary);
+        }
+
+        .login {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 22px;
             border-radius: 12px;
             font-weight: 600;
             transition: .3s;
@@ -199,23 +216,12 @@
             font-size: 14px;
         }
 
-        .lang {
-            background: transparent;
-            border: 1px solid var(--border) !important;
-            color: white;
-        }
-
-        .login {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-        }
-
         .login:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 15px 30px rgba(0,212,255,.35);
         }
 
-        /* ================= ГЛАВНАЯ СЕКЦИЯ (HERO) ================= */
+        /* HERO */
         .hero {
             position: relative;
             min-height: 100vh;
@@ -229,10 +235,8 @@
 
         .hero-grid {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background-image:
                 linear-gradient(rgba(0,212,255,.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0,212,255,.03) 1px, transparent 1px);
@@ -249,10 +253,8 @@
 
         #heroCanvas {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             pointer-events: none;
             z-index: 1;
             opacity: 0.5;
@@ -260,8 +262,7 @@
 
         .hero-glow {
             position: absolute;
-            width: 500px;
-            height: 500px;
+            width: 500px; height: 500px;
             border-radius: 50%;
             filter: blur(120px);
             pointer-events: none;
@@ -270,18 +271,8 @@
             animation: pulseGlow 4s ease-in-out infinite alternate;
         }
 
-        .glow-left {
-            top: -10%;
-            left: -10%;
-            background: rgba(0,212,255,.4);
-        }
-
-        .glow-right {
-            bottom: -10%;
-            right: -10%;
-            background: rgba(0,255,170,.3);
-            animation-delay: 2s;
-        }
+        .glow-left { top: -10%; left: -10%; background: rgba(0,212,255,.4); }
+        .glow-right { bottom: -10%; right: -10%; background: rgba(0,255,170,.3); animation-delay: 2s; }
 
         @keyframes pulseGlow {
             0% { transform: scale(1); opacity: 0.2; }
@@ -290,20 +281,15 @@
 
         .map-wrapper {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 80%;
-            height: 80%;
+            width: 80%; height: 80%;
             pointer-events: none;
             z-index: 0;
             opacity: 0.15;
         }
 
-        .tm-map {
-            width: 100%;
-            height: 100%;
-        }
+        .tm-map { width: 100%; height: 100%; }
 
         .map-outline {
             stroke-dasharray: 1000;
@@ -311,15 +297,9 @@
             animation: drawMap 8s ease forwards;
         }
 
-        @keyframes drawMap {
-            to { stroke-dashoffset: 0; }
-        }
+        @keyframes drawMap { to { stroke-dashoffset: 0; } }
 
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 700px;
-        }
+        .hero-content { position: relative; z-index: 2; max-width: 700px; }
 
         .hero-tag {
             display: inline-block;
@@ -358,21 +338,14 @@
             margin-bottom: 40px;
         }
 
-        .hero-buttons {
-            display: flex;
-            gap: 20px;
-        }
+        .hero-buttons { display: flex; gap: 20px; }
 
-        .hero-buttons a,
-        .hero-buttons button {
+        .hero-buttons a {
             padding: 18px 40px;
-            border: none;
             border-radius: 16px;
             font-size: 18px;
             font-weight: 700;
-            cursor: pointer;
             text-decoration: none;
-            display: inline-block;
             transition: .35s;
         }
 
@@ -407,11 +380,10 @@
             align-items: center;
         }
 
-        /* Анимированное вращающееся ядро */
+        /* ЯДРО */
         .core {
             position: relative;
-            width: 320px;
-            height: 320px;
+            width: 320px; height: 320px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -424,34 +396,14 @@
             animation: spinRing linear infinite;
         }
 
-        .ring-1 {
-            width: 100%;
-            height: 100%;
-            animation-duration: 20s;
-        }
+        .ring-1 { width: 100%; height: 100%; animation-duration: 20s; }
+        .ring-2 { width: 120%; height: 120%; animation-duration: 15s; animation-direction: reverse; border-color: rgba(0,255,170,.2); }
+        .ring-3 { width: 140%; height: 140%; animation-duration: 25s; border-color: rgba(31,107,255,.2); }
 
-        .ring-2 {
-            width: 120%;
-            height: 120%;
-            animation-duration: 15s;
-            animation-direction: reverse;
-            border-color: rgba(0,255,170,.2);
-        }
-
-        .ring-3 {
-            width: 140%;
-            height: 140%;
-            animation-duration: 25s;
-            border-color: rgba(31,107,255,.2);
-        }
-
-        @keyframes spinRing {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spinRing { to { transform: rotate(360deg); } }
 
         .core-center {
-            width: 140px;
-            height: 140px;
+            width: 140px; height: 140px;
             border-radius: 50%;
             background: radial-gradient(circle, #00d4ff, #004d80);
             box-shadow: 0 0 80px rgba(0,212,255,.4);
@@ -466,23 +418,10 @@
             100% { transform: scale(1.05); box-shadow: 0 0 120px rgba(0,212,255,.7); }
         }
 
-        /* ================= СЕКЦИЯ МОДУЛЕЙ ПЛАТФОРМЫ ================= */
-        .modules {
-            padding: 120px 7%;
-        }
-
-        .modules h2 {
-            text-align: center;
-            font-size: 48px;
-            margin-bottom: 70px;
-            font-weight: 800;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 35px;
-        }
+        /* МОДУЛИ */
+        .modules { padding: 120px 7%; }
+        .modules h2 { text-align: center; font-size: 48px; margin-bottom: 70px; font-weight: 800; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; }
 
         .card {
             position: relative;
@@ -496,44 +435,17 @@
             box-shadow: 0 25px 45px rgba(0,0,0,.25);
         }
 
-        .card::before {
-            content: "";
-            position: absolute;
-            top: -100%;
-            left: -100%;
-            width: 220%;
-            height: 220%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,.08), transparent);
-            transition: .7s;
-        }
-
-        .card:hover::before {
-            top: 0;
-            left: 0;
-        }
-
         .card:hover {
             transform: translateY(-12px);
             border-color: #00d4ff;
             box-shadow: 0 35px 70px rgba(0,212,255,.25);
         }
 
-        .icon {
-            font-size: 60px;
-            margin-bottom: 25px;
-        }
+        .icon { font-size: 60px; margin-bottom: 25px; }
+        .card h3 { font-size: 30px; margin-bottom: 18px; }
+        .card p { line-height: 1.8; color: #bfd3e4; }
 
-        .card h3 {
-            font-size: 30px;
-            margin-bottom: 18px;
-        }
-
-        .card p {
-            line-height: 1.8;
-            color: #bfd3e4;
-        }
-
-        /* ================= СТАТИСТИЧЕСКАЯ СЕКЦИЯ ================= */
+        /* СТАИСТИКА */
         .statistics {
             padding: 120px 7%;
             display: grid;
@@ -551,10 +463,6 @@
             transition: .35s;
         }
 
-        .stat:hover {
-            transform: scale(1.05);
-        }
-
         .stat h1 {
             font-size: 60px;
             background: linear-gradient(#00d4ff, #00ffa3);
@@ -563,112 +471,28 @@
             margin-bottom: 12px;
         }
 
-        .stat p {
-            font-size: 18px;
-            color: #bdd0df;
-        }
+        .stat p { font-size: 18px; color: #bdd0df; }
 
-        /* ================= НОВОСТНАЯ СЕКЦИЯ ================= */
-        .news {
-            padding: 120px 7%;
-        }
-
-        .news h2 {
-            text-align: center;
-            font-size: 48px;
-            margin-bottom: 60px;
-        }
-
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 35px;
-        }
-
-        .news-card {
-            padding: 35px;
-            border-radius: 22px;
-            background: rgba(255,255,255,.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,.08);
-            transition: .35s;
-        }
-
-        .news-card:hover {
-            transform: translateY(-10px);
-            border-color: #00d4ff;
-        }
-
-        .news-card h3 {
-            margin-bottom: 20px;
-            font-size: 28px;
-        }
-
-        .news-card p {
-            color: #bdd0df;
-            line-height: 1.7;
-        }
-
-        /* ================= ПОДВАЛ (FOOTER) ================= */
+        /* FOOTER */
         footer {
             margin-top: 120px;
             backdrop-filter: blur(18px) saturate(180%);
             -webkit-backdrop-filter: blur(18px) saturate(180%);
             background: rgba(255, 255, 255, 0.12);
             border-top: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
         }
 
         footer .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 0;
+            padding: 24px 0;
         }
 
-        footer .logo-text h2 {
-            font-size: 22px;
-            font-weight: 800;
-            margin: 0;
-            line-height: 1.1;
-            background: linear-gradient(to right, #fff, #b4d7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        footer .logo-text p {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            margin: 4px 0 0 0;
-            color: #9fb5c8;
-            white-space: nowrap;
-        }
-
-        footer p {
-            color: #c0d8f0;
-            font-size: 14px;
-        }
-
-        /* Кастомный скроллбар */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #00d4ff;
-            border-radius: 20px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #08131d;
-        }
-
-        /* Частицы фоновой анимации */
         #particles {
             position: fixed;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
             pointer-events: none;
             overflow: hidden;
             z-index: -1;
@@ -676,8 +500,7 @@
 
         .particle {
             position: absolute;
-            width: 4px;
-            height: 4px;
+            width: 4px; height: 4px;
             border-radius: 50%;
             background: #00d4ff;
             opacity: .5;
@@ -691,43 +514,20 @@
             100% { transform: translateY(-120vh); opacity: 0; }
         }
 
-        /* Адаптивные стили под смартфоны и планшеты */
         @media(max-width: 1200px) {
-            .hero {
-                grid-template-columns: 1fr;
-                text-align: center;
-                padding: 120px 5% 60px;
-            }
-            .hero-content { max-width: 100%; }
-            .hero-text { max-width: 100%; margin: 0 auto 40px; }
+            .hero { grid-template-columns: 1fr; text-align: center; padding-top: 140px; }
             .hero-buttons { justify-content: center; }
-            .hero-visual { margin-top: 40px; }
-            .core { width: 240px; height: 240px; }
-            .core-center { width: 100px; height: 100px; font-size: 28px; }
-            .hero-content h1 { font-size: 44px; }
             nav { display: none; }
-        }
-
-        @media(max-width: 768px) {
-            .hero-content h1 { font-size: 32px; }
-            .hero-subtitle { font-size: 18px; }
-            .hero-text { font-size: 16px; }
-            .modules h2, .news h2 { font-size: 34px; }
-            .core { width: 180px; height: 180px; }
-            .core-center { width: 80px; height: 80px; font-size: 22px; }
-            .primary-btn, .glass-btn { padding: 14px 28px; font-size: 16px; }
         }
     </style>
 </head>
 <body style="background: #06111d;">
 
-    <!-- Фоновые визуальные частицы -->
     <div id="particles"></div>
 
-    <!-- Шапка сайта -->
+    <!-- ХЕДЕР -->
     <header>
         <div class="container">
-            <!-- Логотип со спиралью -->
             <a href="index.html" class="logo">
                 <div class="logo-icon">
                     <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -753,40 +553,38 @@
                 </div>
                 <div class="logo-text">
                     <h2>SFERA</h2>
-                    <p>Milli Sanly Platforma</p>
+                    <p data-i18n="logo_subtitle">Milli Sanly Platforma</p>
                 </div>
             </a>
 
-            <!-- Навигационное меню на туркменском -->
             <nav>
                 <ul>
-                    <li><a href="#">Baş sahypa</a></li>
-                    <li><a href="#">Birja</a></li>
-                    <li><a href="#">TM Pay</a></li>
-                    <li><a href="#">TM Coin</a></li>
-                    <li><a href="#">Bank</a></li>
-                    <li><a href="#">SÜ</a></li>
-                    <li><a href="#">Resminamalar</a></li>
-                    <li><a href="#">Habarlaşmak</a></li>
+                    <li><a href="#" data-i18n="nav_home">Baş sahypa</a></li>
+                    <li><a href="#" data-i18n="nav_market">Birja</a></li>
+                    <li><a href="#" data-i18n="nav_pay">TM Pay</a></li>
+                    <li><a href="#" data-i18n="nav_coin">TM Coin</a></li>
+                    <li><a href="#" data-i18n="nav_bank">Bank</a></li>
+                    <li><a href="#" data-i18n="nav_ai">SÜ</a></li>
+                    <li><a href="#" data-i18n="nav_docs">Resminamalar</a></li>
+                    <li><a href="#" data-i18n="nav_contact">Habarlaşmak</a></li>
                 </ul>
             </nav>
 
-            <!-- Кнопки интерфейса -->
             <div class="header-buttons">
-                <button class="lang">TM</button>
-                <a href="login.html" class="login">Girmek</a>
+                <!-- Переключатель языка: поддерживается клик-переключение и работа со словарем локализации -->
+                <button class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">TM</button>
+                <a href="login.html" class="login" data-i18n="btn_login">Girmek</a>
             </div>
         </div>
     </header>
 
-    <!-- Главный баннер -->
+    <!-- HERO -->
     <section class="hero">
         <div class="hero-grid"></div>
         <canvas id="heroCanvas"></canvas>
         <div class="hero-glow glow-left"></div>
         <div class="hero-glow glow-right"></div>
 
-        <!-- Контур карты Туркменистана -->
         <div class="map-wrapper">
             <svg class="tm-map" viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
                 <defs>
@@ -800,21 +598,19 @@
             </svg>
         </div>
 
-        <!-- Контент с описанием на туркменском языке -->
         <div class="hero-content">
-            <span class="hero-tag">SFERA — SANLY PLATFORMA</span>
-            <h1>Türkmenistanyň Birleşdirilen<br>Sanly Platformasy</h1>
-            <p class="hero-subtitle">Söwda • SÜ • Tölegler • Bank • Resminama dolanyşygy</p>
-            <p class="hero-text">
+            <span class="hero-tag" data-i18n="hero_tag">SFERA — SANLY PLATFORMA</span>
+            <h1 data-i18n="hero_title">Türkmenistanyň Birleşdirilen<br>Sanly Platformasy</h1>
+            <p class="hero-subtitle" data-i18n="hero_sub">Söwda • SÜ • Tölegler • Bank • Resminama dolanyşygy</p>
+            <p class="hero-text" data-i18n="hero_desc">
                 Elektron söwdany, emeli аňy, maliýe hyzmatlaryny, resminama dolanyşygyny we sanly döwlet hyzmatlaryny birleşdirýän döwrebap milli sanly ekosistema.
             </p>
             <div class="hero-buttons">
-                <a href="dashboard.html" class="primary-btn">Işläp başlamak</a>
-                <a href="#" class="glass-btn">Demo</a>
+                <a href="dashboard.html" class="primary-btn" data-i18n="btn_start">Işläp başlamak</a>
+                <a href="#" class="glass-btn" data-i18n="btn_demo">Demo</a>
             </div>
         </div>
 
-        <!-- Вращающееся центральное ядро -->
         <div class="hero-visual">
             <div class="core">
                 <div class="core-ring ring-1"></div>
@@ -838,78 +634,159 @@
         </div>
     </section>
 
-    <!-- Секция модулей экосистемы -->
+    <!-- МОДУЛИ -->
     <section class="modules">
-        <h2>Platformanyň esasy modullary</h2>
+        <h2 data-i18n="modules_title">Platformanyň esasy modullary</h2>
         <div class="grid">
-            <div class="card"><div class="icon">🛒</div><h3>Birja</h3><p>Elektron söwda meýdançasy</p></div>
-            <div class="card"><div class="icon">💳</div><h3>TM Pay</h3><p>Milli töleg ulgamy</p></div>
-            <div class="card"><div class="icon">₮</div><h3>TM Coin</h3><p>Sanly döwlet pul birligi</p></div>
-            <div class="card"><div class="icon">🏦</div><h3>Bank</h3><p>"Blago" sanly banky</p></div>
-            <div class="card"><div class="icon">🤖</div><h3>SÜ</h3><p>Resminamalary barlamak, çaklama, analitika</p></div>
-            <div class="card"><div class="icon">📄</div><h3>Resminamalar</h3><p>Awtomatik barlag we tassyklama</p></div>
+            <div class="card"><div class="icon">🛒</div><h3 data-i18n="mod_1_title">Birja</h3><p data-i18n="mod_1_desc">Elektron söwda meýdançasy</p></div>
+            <div class="card"><div class="icon">💳</div><h3 data-i18n="mod_2_title">TM Pay</h3><p data-i18n="mod_2_desc">Milli töleg ulgamy</p></div>
+            <div class="card"><div class="icon">₮</div><h3 data-i18n="mod_3_title">TM Coin</h3><p data-i18n="mod_3_desc">Sanly döwlet pul birligi</p></div>
+            <div class="card"><div class="icon">🏦</div><h3 data-i18n="mod_4_title">Bank</h3><p data-i18n="mod_4_desc">"Blago" sanly banky</p></div>
+            <div class="card"><div class="icon">🤖</div><h3 data-i18n="mod_5_title">SÜ</h3><p data-i18n="mod_5_desc">Resminamalary barlamak, çaklama, analitika</p></div>
+            <div class="card"><div class="icon">📄</div><h3 data-i18n="mod_6_title">Resminamalar</h3><p data-i18n="mod_6_desc">Awtomatik barlag we tassyklama</p></div>
         </div>
     </section>
 
-    <!-- Секция динамических счетчиков -->
+    <!-- СТАТИСТИКА -->
     <section class="statistics">
-        <div class="stat"><h1 id="users">0</h1><p>Ulanyjylar</p></div>
-        <div class="stat"><h1 id="orders">0</h1><p>Söwdalar</p></div>
-        <div class="stat"><h1 id="docs">0</h1><p>Resminamalar</p></div>
-        <div class="stat"><h1 id="coin">0</h1><p>TM Coin</p></div>
+        <div class="stat"><h1 id="users">0</h1><p data-i18n="stat_users">Ulanyjylar</p></div>
+        <div class="stat"><h1 id="orders">0</h1><p data-i18n="stat_orders">Söwdalar</p></div>
+        <div class="stat"><h1 id="docs">0</h1><p data-i18n="stat_docs">Resminamalar</p></div>
+        <div class="stat"><h1 id="coin">0</h1><p data-i18n="stat_coin">TM Coin</p></div>
     </section>
 
-    <!-- Секция новостей -->
-    <section class="news">
-        <h2>Täzelikler</h2>
-        <div class="news-grid">
-            <div class="news-card"><h3>Platformanyň işe girizilmegi</h3><p>Täze nesliň döwrebap sanly ekosistemasy.</p></div>
-            <div class="news-card"><h3>SÜ moduly</h3><p>Resminamalary awtomatlaşdyрыlan barlag ulgamy.</p></div>
-            <div class="news-card"><h3>TM Pay</h3><p>Derrew tölegleri geçirmek üçin milli ulgam.</p></div>
-        </div>
-    </section>
-
-    <!-- Подвал страницы -->
+    <!-- FOOTER -->
     <footer>
         <div class="container">
             <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="footerLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00ffa3"/>
-                                <stop offset="50%" stop-color="#00d4ff"/>
-                                <stop offset="100%" stop-color="#1f6bff"/>
-                            </linearGradient>
-                            <filter id="footerLogoGlow" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="4" result="blur"/>
-                                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-                            </filter>
-                        </defs>
-                        <circle cx="50" cy="50" r="28" fill="url(#footerLogoGrad)" opacity="0.15" filter="url(#footerLogoGlow)"/>
-                        <g filter="url(#footerLogoGlow)">
-                            <circle cx="50" cy="50" r="40" stroke="url(#footerLogoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
-                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" 
-                                  stroke="url(#footerLogoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
-                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#footerLogoGlow)"/>
-                        </g>
-                    </svg>
-                </div>
                 <div class="logo-text">
                     <h2>SFERA</h2>
-                    <p>Milli Sanly Platforma</p>
+                    <p data-i18n="logo_subtitle">Milli Sanly Platforma</p>
                 </div>
             </a>
             <p>© 2026 — Türkmenistanyň Birleşdirilen Sanly Platformasy</p>
         </div>
     </footer>
 
-    <!-- Клиентская логика скриптов -->
+    <!-- СКРИПТЫ И ЯЗЫКОВАЯ ЛОГИКА -->
     <script>
-        // Инициализация графики Canvas с точками данных
-        document.addEventListener('DOMContentLoaded', function() {
-            const canvas = document.getElementById('heroCanvas');
-            if (!canvas) return;
+        // 1. Словарь языков (TM / RU / EN)
+        const i18nData = {
+            tm: {
+                title: "SFERA — Türkmenistanyň Birleşdirilen Sanly Platformasy",
+                logo_subtitle: "Milli Sanly Platforma",
+                nav_home: "Baş sahypa",
+                nav_market: "Birja",
+                nav_pay: "TM Pay",
+                nav_coin: "TM Coin",
+                nav_bank: "Bank",
+                nav_ai: "SÜ",
+                nav_docs: "Resminamalar",
+                nav_contact: "Habarlaşmak",
+                btn_login: "Girmek",
+                hero_tag: "SFERA — SANLY PLATFORMA",
+                hero_title: "Türkmenistanyň Birleşdirilen<br>Sanly Platformasy",
+                hero_sub: "Söwda • SÜ • Tölegler • Bank • Resminama dolanyşygy",
+                hero_desc: "Elektron söwdany, emeli аňy, maliýe hyzmatlaryny, resminama dolanyşygyny we sanly döwlet hyzmatlaryny birleşdirýän döwrebap milli sanly ekosistema.",
+                btn_start: "Işläp başlamak",
+                btn_demo: "Demo",
+                modules_title: "Platformanyň esasy modullary",
+                mod_1_title: "Birja", mod_1_desc: "Elektron söwda meýdançasy",
+                mod_2_title: "TM Pay", mod_2_desc: "Milli töleg ulgamy",
+                mod_3_title: "TM Coin", mod_3_desc: "Sanly döwlet pul birligi",
+                mod_4_title: "Bank", mod_4_desc: '"Blago" sanly banky',
+                mod_5_title: "SÜ", mod_5_desc: "Resminamalary barlamak, çaklama, analitika",
+                mod_6_title: "Resminamalar", mod_6_desc: "Awtomatik barlag we tassyklama",
+                stat_users: "Ulanyjylar", stat_orders: "Söwdalar", stat_docs: "Resminamalar", stat_coin: "TM Coin"
+            },
+            ru: {
+                title: "SFERA — Единая Цифровая Платформа Туркменистана",
+                logo_subtitle: "Национальная Цифровая Платформа",
+                nav_home: "Главная",
+                nav_market: "Биржа",
+                nav_pay: "TM Pay",
+                nav_coin: "TM Coin",
+                nav_bank: "Банк",
+                nav_ai: "ИИ",
+                nav_docs: "Документы",
+                nav_contact: "Контакты",
+                btn_login: "Войти",
+                hero_tag: "SFERA — ЦИФРОВАЯ ПЛАТФОРМА",
+                hero_title: "Единая Цифровая Платформа<br>Туркменистана",
+                hero_sub: "Торговля • ИИ • Платежи • Банк • Документооборот",
+                hero_desc: "Современная национальная цифровая экосистема, объединяющая электронную торговлю, искусственный интеллект, финансовые услуги и государственный документооборот.",
+                btn_start: "Начать работу",
+                btn_demo: "Демо",
+                modules_title: "Основные модули платформы",
+                mod_1_title: "Биржа", mod_1_desc: "Площадка электронной торговли",
+                mod_2_title: "TM Pay", mod_2_desc: "Национальная платежная система",
+                mod_3_title: "TM Coin", mod_3_desc: "Цифровая государственная валюта",
+                mod_4_title: "Банк", mod_4_desc: 'Цифровой банк "Blago"',
+                mod_5_title: "ИИ", mod_5_desc: "Проверка документов, прогнозирование, аналитика",
+                mod_6_title: "Документы", mod_6_desc: "Автоматическая проверка и утверждение",
+                stat_users: "Пользователи", stat_orders: "Сделки", stat_docs: "Документы", stat_coin: "TM Coin"
+            },
+            en: {
+                title: "SFERA — Unified Digital Platform of Turkmenistan",
+                logo_subtitle: "National Digital Platform",
+                nav_home: "Home",
+                nav_market: "Exchange",
+                nav_pay: "TM Pay",
+                nav_coin: "TM Coin",
+                nav_bank: "Bank",
+                nav_ai: "AI",
+                nav_docs: "Documents",
+                nav_contact: "Contacts",
+                btn_login: "Sign In",
+                hero_tag: "SFERA — DIGITAL PLATFORM",
+                hero_title: "Unified Digital Platform<br>of Turkmenistan",
+                hero_sub: "Trade • AI • Payments • Bank • Document Flow",
+                hero_desc: "Modern national digital ecosystem combining e-commerce, artificial intelligence, financial services, and digital government document management.",
+                btn_start: "Get Started",
+                btn_demo: "Demo",
+                modules_title: "Core Platform Modules",
+                mod_1_title: "Exchange", mod_1_desc: "E-commerce marketplace",
+                mod_2_title: "TM Pay", mod_2_desc: "National payment system",
+                mod_3_title: "TM Coin", mod_3_desc: "Digital state currency",
+                mod_4_title: "Bank", mod_4_desc: '"Blago" digital bank',
+                mod_5_title: "AI", mod_5_desc: "Document verification, forecasting, analytics",
+                mod_6_title: "Documents", mod_6_desc: "Automated verification & approval",
+                stat_users: "Users", stat_orders: "Transactions", stat_docs: "Documents", stat_coin: "TM Coin"
+            }
+        };
+
+        const languages = ['tm', 'ru', 'en'];
+        let currentLangIdx = localStorage.getItem('sfera_lang_idx') ? parseInt(localStorage.getItem('sfera_lang_idx')) : 0;
+
+        function applyLanguage(lang) {
+            const data = i18nData[lang];
+            if (!data) return;
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (data[key]) {
+                    el.innerHTML = data[key];
+                }
+            });
+
+            const btn = document.getElementById('langToggleBtn');
+            if (btn) btn.innerText = lang.toUpperCase();
+            document.documentElement.lang = lang === 'tm' ? 'tk' : lang;
+            localStorage.setItem('sfera_lang_idx', currentLangIdx);
+        }
+
+        function toggleLanguage() {
+            currentLangIdx = (currentLangIdx + 1) % languages.length;
+            applyLanguage(languages[currentLangIdx]);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyLanguage(languages[currentLangIdx]);
+        });
+
+        // 2. Анимация Canvas
+        const canvas = document.getElementById('heroCanvas');
+        if (canvas) {
             const ctx = canvas.getContext('2d');
             let w, h;
 
@@ -964,9 +841,9 @@
                 requestAnimationFrame(drawLines);
             }
             drawLines();
-        });
+        }
 
-        // Расчет значений счетчиков при прокрутке
+        // 3. Анимация чисел
         const counters = [
             { id: "users", target: 2340000 },
             { id: "orders", target: 18540291 },
@@ -983,7 +860,7 @@
                     value = target;
                     clearInterval(timer);
                 }
-                el.innerText = value.toLocaleString('tk-TM');
+                el.innerText = value.toLocaleString();
             }, 16);
         }
 
@@ -1004,7 +881,7 @@
         const statsSection = document.querySelector('.statistics');
         if (statsSection) observer.observe(statsSection);
 
-        // Генерация фоновых частиц
+        // 4. Частицы
         const pContainer = document.getElementById('particles');
         if (pContainer) {
             for (let i = 0; i < 40; i++) {
