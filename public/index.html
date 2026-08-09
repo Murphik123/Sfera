@@ -1,26 +1,27 @@
 <!DOCTYPE html>
-<html lang="tk" style="background: #06111d; color-scheme: dark;">
+<html lang="tk" style="background: #08131d; color-scheme: dark;">
 <head>
-    <!-- 1. Мгновенная установка темного фона ДО внешних ресурсов (убирает белую вспышку) -->
+    <!-- Мгновенное гашение белой вспышки до загрузки внешних стилей -->
     <style>
         html, body {
-            background: #06111d !important;
-            background-color: #06111d !important;
+            background: #08131d !important;
+            background-color: #08131d !important;
             color-scheme: dark;
         }
     </style>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#06111d">
+    <meta name="theme-color" content="#08131d">
     
     <title data-i18n="title">SFERA — Türkmenistanyň Birleşdirilen Sanly Platformasy</title>
 
-    <!-- Google Fonts с font-display: swap -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
+    <!-- Оригинальный дизайн Sfera (Glassmorphism + Neon Glow) -->
     <style>
         :root {
             --primary: #00d4ff;
@@ -46,32 +47,38 @@
 
         html { 
             scroll-behavior: smooth; 
-            background: #06111d;
+            background: #08131d;
         }
 
         body {
-            background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
+            background: #08131d;
             color: var(--white);
             overflow-x: hidden;
             min-height: 100vh;
+            position: relative;
         }
 
+        /* Яркий анимированный фоновый градиент и свечения */
         body::before {
             content: "";
             position: fixed;
+            top: 0;
+            left: 0;
             width: 200%;
             height: 200%;
             background:
-                radial-gradient(circle at 20% 30%, rgba(0,212,255,.15), transparent 35%),
-                radial-gradient(circle at 80% 20%, rgba(0,255,170,.10), transparent 35%),
-                radial-gradient(circle at 60% 80%, rgba(32,108,255,.15), transparent 40%);
+                radial-gradient(circle at 20% 30%, rgba(0,212,255,.25), transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(0,255,163,.18), transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(31,107,255,.25), transparent 45%),
+                radial-gradient(circle at 70% 60%, rgba(0,212,255,.15), transparent 35%);
             animation: bgmove 18s linear infinite;
             z-index: -2;
+            pointer-events: none;
         }
 
         @keyframes bgmove {
             0% { transform: translate(0,0); }
-            50% { transform: translate(-8%,-5%); }
+            50% { transform: translate(-6%,-4%); }
             100% { transform: translate(0,0); }
         }
 
@@ -80,31 +87,32 @@
             margin: auto;
         }
 
-        /* ХЕДЕР */
+        /* ================= HEADER (GLASSMORPHISM) ================= */
         header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             z-index: 999;
-            backdrop-filter: blur(18px) saturate(180%);
-            -webkit-backdrop-filter: blur(18px) saturate(180%);
-            background: rgba(255, 255, 255, 0.12);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px) saturate(190%);
+            -webkit-backdrop-filter: blur(20px) saturate(190%);
+            background: rgba(255, 255, 255, 0.07);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         header .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 18px 0;
+            padding: 16px 0;
         }
 
+        /* Логотип со спиралью БЕЗ текста снизу */
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             text-decoration: none;
             color: white;
             transition: transform 0.3s ease;
@@ -115,8 +123,8 @@
         }
 
         .logo-icon {
-            width: 58px;
-            height: 58px;
+            width: 52px;
+            height: 52px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -135,7 +143,7 @@
         }
 
         .logo:hover .logo-svg g {
-            transform: rotate(45deg);
+            transform: rotate(60deg);
         }
 
         .logo-text {
@@ -144,39 +152,34 @@
         }
 
         .logo-text h2 {
-            font-size: 22px;
-            font-weight: 800;
+            font-size: 24px;
+            font-weight: 900;
             margin: 0;
-            line-height: 1.1;
-            background: linear-gradient(to right, #fff, #b4d7ff);
+            line-height: 1;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #ffffff, #88cfff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .logo-text p {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            margin: 4px 0 0 0;
-            color: #9fb5c8;
-            white-space: nowrap;
-        }
-
+        /* Навигация */
         nav ul {
             display: flex;
             list-style: none;
-            gap: 28px;
+            gap: 26px;
         }
 
         nav a {
             text-decoration: none;
-            color: white;
+            color: #dbe9ff;
             font-weight: 500;
+            font-size: 15px;
             transition: .3s;
         }
 
         nav a:hover {
             color: var(--primary);
+            text-shadow: 0 0 12px rgba(0,212,255,.6);
         }
 
         .header-buttons {
@@ -185,51 +188,54 @@
             align-items: center;
         }
 
-        /* Выпадающий список / кнопка переключателя языков */
+        /* Переключатель языка */
         .lang-btn {
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid var(--border);
             color: white;
-            padding: 10px 16px;
+            padding: 10px 18px;
             border-radius: 12px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: 0.3s;
             outline: none;
             font-size: 14px;
+            backdrop-filter: blur(10px);
         }
 
         .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.2);
             border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(0,212,255,.4);
         }
 
         .login {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 12px 22px;
+            padding: 11px 24px;
             border-radius: 12px;
-            font-weight: 600;
+            font-weight: 700;
             transition: .3s;
             text-decoration: none;
             display: inline-block;
             font-size: 14px;
+            box-shadow: 0 8px 25px rgba(0,212,255,.3);
         }
 
         .login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(0,212,255,.35);
+            box-shadow: 0 12px 35px rgba(0,212,255,.5);
         }
 
-        /* HERO */
+        /* ================= HERO SECTION ================= */
         .hero {
             position: relative;
             min-height: 100vh;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.1fr 0.9fr;
             align-items: center;
-            padding: 120px 7% 80px;
-            gap: 60px;
+            padding: 140px 7% 100px;
+            gap: 40px;
             overflow: hidden;
         }
 
@@ -238,17 +244,17 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             background-image:
-                linear-gradient(rgba(0,212,255,.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,212,255,.03) 1px, transparent 1px);
-            background-size: 60px 60px;
+                linear-gradient(rgba(0,212,255,.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,212,255,.05) 1px, transparent 1px);
+            background-size: 50px 50px;
             pointer-events: none;
             z-index: 0;
-            animation: gridMove 20s linear infinite;
+            animation: gridMove 25s linear infinite;
         }
 
         @keyframes gridMove {
             0% { transform: translate(0,0); }
-            100% { transform: translate(60px, 60px); }
+            100% { transform: translate(50px, 50px); }
         }
 
         #heroCanvas {
@@ -257,36 +263,36 @@
             width: 100%; height: 100%;
             pointer-events: none;
             z-index: 1;
-            opacity: 0.5;
+            opacity: 0.75;
         }
 
         .hero-glow {
             position: absolute;
-            width: 500px; height: 500px;
+            width: 550px; height: 550px;
             border-radius: 50%;
-            filter: blur(120px);
+            filter: blur(140px);
             pointer-events: none;
             z-index: 0;
-            opacity: 0.3;
-            animation: pulseGlow 4s ease-in-out infinite alternate;
+            opacity: 0.45;
+            animation: pulseGlow 5s ease-in-out infinite alternate;
         }
 
-        .glow-left { top: -10%; left: -10%; background: rgba(0,212,255,.4); }
-        .glow-right { bottom: -10%; right: -10%; background: rgba(0,255,170,.3); animation-delay: 2s; }
+        .glow-left { top: -5%; left: -5%; background: rgba(0,212,255,.5); }
+        .glow-right { bottom: -5%; right: -5%; background: rgba(0,255,163,.4); animation-delay: 2.5s; }
 
         @keyframes pulseGlow {
-            0% { transform: scale(1); opacity: 0.2; }
-            100% { transform: scale(1.2); opacity: 0.5; }
+            0% { transform: scale(1); opacity: 0.35; }
+            100% { transform: scale(1.25); opacity: 0.6; }
         }
 
         .map-wrapper {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 80%; height: 80%;
+            width: 85%; height: 85%;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.15;
+            opacity: 0.22;
         }
 
         .tm-map { width: 100%; height: 100%; }
@@ -294,82 +300,90 @@
         .map-outline {
             stroke-dasharray: 1000;
             stroke-dashoffset: 1000;
-            animation: drawMap 8s ease forwards;
+            animation: drawMap 7s ease forwards;
         }
 
         @keyframes drawMap { to { stroke-dashoffset: 0; } }
 
-        .hero-content { position: relative; z-index: 2; max-width: 700px; }
+        .hero-content { position: relative; z-index: 2; max-width: 720px; }
 
         .hero-tag {
             display: inline-block;
-            padding: 8px 20px;
+            padding: 8px 22px;
             border-radius: 30px;
-            background: rgba(0,212,255,.12);
-            border: 1px solid rgba(0,212,255,.3);
-            font-size: 14px;
+            background: rgba(0,212,255,.15);
+            border: 1px solid rgba(0,212,255,.4);
+            font-size: 13px;
+            font-weight: 700;
             letter-spacing: 2px;
             color: var(--primary);
             margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(0,212,255,.2);
         }
 
         .hero-content h1 {
-            font-size: 64px;
+            font-size: 62px;
             font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            background: linear-gradient(to right, #fff, #b4d7ff);
+            line-height: 1.12;
+            margin-bottom: 22px;
+            background: linear-gradient(to right, #ffffff, #a2d8ff, #ffffff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .hero-subtitle {
-            font-size: 24px;
+            font-size: 22px;
+            font-weight: 600;
             color: var(--primary);
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             letter-spacing: 1px;
+            text-shadow: 0 0 15px rgba(0,212,255,.3);
         }
 
         .hero-text {
             font-size: 18px;
             line-height: 1.8;
-            color: #bcd0e2;
-            max-width: 550px;
+            color: #cde1f8;
+            max-width: 580px;
             margin-bottom: 40px;
         }
 
         .hero-buttons { display: flex; gap: 20px; }
 
         .hero-buttons a {
-            padding: 18px 40px;
+            padding: 18px 42px;
             border-radius: 16px;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
             text-decoration: none;
             transition: .35s;
+            display: inline-block;
         }
 
         .primary-btn {
-            background: linear-gradient(135deg, #00d4ff, #008cff);
+            background: linear-gradient(135deg, #00d4ff, #0077ff);
             color: white;
-            box-shadow: 0 20px 45px rgba(0,212,255,.35);
+            box-shadow: 0 15px 35px rgba(0,212,255,.4);
         }
 
         .primary-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 30px 60px rgba(0,212,255,.5);
+            transform: translateY(-4px);
+            box-shadow: 0 22px 50px rgba(0,212,255,.6);
         }
 
         .glass-btn {
-            background: rgba(255,255,255,.05);
+            background: rgba(255,255,255,.08);
             border: 1px solid rgba(255,255,255,.25);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             color: white;
         }
 
         .glass-btn:hover {
-            background: rgba(255,255,255,.15);
-            transform: translateY(-5px);
+            background: rgba(255,255,255,.18);
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(255,255,255,.1);
         }
 
         .hero-visual {
@@ -380,10 +394,10 @@
             align-items: center;
         }
 
-        /* ЯДРО */
+        /* Анимированное Вращающееся Ядро */
         .core {
             position: relative;
-            width: 320px; height: 320px;
+            width: 340px; height: 340px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -392,142 +406,187 @@
         .core-ring {
             position: absolute;
             border-radius: 50%;
-            border: 2px solid rgba(0,212,255,.3);
+            border: 2px solid rgba(0,212,255,.35);
             animation: spinRing linear infinite;
         }
 
-        .ring-1 { width: 100%; height: 100%; animation-duration: 20s; }
-        .ring-2 { width: 120%; height: 120%; animation-duration: 15s; animation-direction: reverse; border-color: rgba(0,255,170,.2); }
-        .ring-3 { width: 140%; height: 140%; animation-duration: 25s; border-color: rgba(31,107,255,.2); }
+        .ring-1 { width: 100%; height: 100%; animation-duration: 22s; }
+        .ring-2 { width: 122%; height: 122%; animation-duration: 16s; animation-direction: reverse; border-color: rgba(0,255,163,.25); }
+        .ring-3 { width: 144%; height: 144%; animation-duration: 28s; border-color: rgba(31,107,255,.25); }
 
         @keyframes spinRing { to { transform: rotate(360deg); } }
 
         .core-center {
-            width: 140px; height: 140px;
+            width: 145px; height: 145px;
             border-radius: 50%;
-            background: radial-gradient(circle, #00d4ff, #004d80);
-            box-shadow: 0 0 80px rgba(0,212,255,.4);
+            background: radial-gradient(circle, #00d4ff 0%, #005599 70%, #08131d 100%);
+            box-shadow: 0 0 90px rgba(0,212,255,.6);
             display: flex;
             justify-content: center;
             align-items: center;
-            animation: pulseCore 3s ease-in-out infinite alternate;
+            animation: pulseCore 3.5s ease-in-out infinite alternate;
         }
 
         @keyframes pulseCore {
-            0% { transform: scale(1); box-shadow: 0 0 80px rgba(0,212,255,.4); }
-            100% { transform: scale(1.05); box-shadow: 0 0 120px rgba(0,212,255,.7); }
+            0% { transform: scale(1); box-shadow: 0 0 70px rgba(0,212,255,.5); }
+            100% { transform: scale(1.08); box-shadow: 0 0 130px rgba(0,212,255,.85); }
         }
 
-        /* МОДУЛИ */
-        .modules { padding: 120px 7%; }
-        .modules h2 { text-align: center; font-size: 48px; margin-bottom: 70px; font-weight: 800; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; }
+        /* ================= МОДУЛИ ПЛАТФОРМЫ ================= */
+        .modules { 
+            padding: 120px 7% 80px; 
+            position: relative;
+            z-index: 2;
+        }
 
+        .modules h2 { 
+            text-align: center; 
+            font-size: 46px; 
+            margin-bottom: 60px; 
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #a0d5ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 32px; 
+        }
+
+        /* Glassmorphism Карточки */
         .card {
             position: relative;
-            background: rgba(255,255,255,.06);
-            border: 1px solid rgba(255,255,255,.12);
-            backdrop-filter: blur(25px);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
             border-radius: 24px;
-            padding: 45px;
+            padding: 42px;
             overflow: hidden;
-            transition: .45s;
-            box-shadow: 0 25px 45px rgba(0,0,0,.25);
+            transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
         }
 
         .card:hover {
-            transform: translateY(-12px);
-            border-color: #00d4ff;
-            box-shadow: 0 35px 70px rgba(0,212,255,.25);
+            transform: translateY(-10px);
+            border-color: rgba(0, 212, 255, 0.6);
+            box-shadow: 0 30px 70px rgba(0, 212, 255, 0.25);
+            background: rgba(255, 255, 255, 0.08);
         }
 
-        .icon { font-size: 60px; margin-bottom: 25px; }
-        .card h3 { font-size: 30px; margin-bottom: 18px; }
-        .card p { line-height: 1.8; color: #bfd3e4; }
+        .icon { font-size: 55px; margin-bottom: 22px; }
+        .card h3 { font-size: 26px; margin-bottom: 14px; font-weight: 700; }
+        .card p { line-height: 1.7; color: #c0d6ee; font-size: 15px; }
 
-        /* СТАИСТИКА */
+        /* ================= СТАТИСТИКА ================= */
         .statistics {
-            padding: 120px 7%;
+            padding: 80px 7% 120px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 35px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 30px;
+            position: relative;
+            z-index: 2;
         }
 
         .stat {
-            background: rgba(255,255,255,.05);
+            background: rgba(255, 255, 255, 0.04);
             border-radius: 22px;
-            padding: 45px;
+            padding: 40px 25px;
             text-align: center;
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,.10);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             transition: .35s;
         }
 
-        .stat h1 {
-            font-size: 60px;
-            background: linear-gradient(#00d4ff, #00ffa3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 12px;
+        .stat:hover {
+            transform: scale(1.04);
+            border-color: rgba(0, 255, 163, 0.4);
+            box-shadow: 0 15px 40px rgba(0, 255, 163, 0.15);
         }
 
-        .stat p { font-size: 18px; color: #bdd0df; }
+        .stat h1 {
+            font-size: 54px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00d4ff, #00ffa3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
 
-        /* FOOTER */
+        .stat p { font-size: 17px; color: #b8cee6; font-weight: 500; }
+
+        /* ================= FOOTER (ФИКСИРОВАННЫЙ СТРОГО ВНИЗУ) ================= */
         footer {
-            margin-top: 120px;
-            backdrop-filter: blur(18px) saturate(180%);
-            -webkit-backdrop-filter: blur(18px) saturate(180%);
-            background: rgba(255, 255, 255, 0.12);
-            border-top: 1px solid rgba(255, 255, 255, 0.25);
+            width: 100%;
+            margin-top: 60px;
+            padding: 30px 0;
+            backdrop-filter: blur(20px) saturate(190%);
+            -webkit-backdrop-filter: blur(20px) saturate(190%);
+            background: rgba(255, 255, 255, 0.06);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            z-index: 10;
         }
 
         footer .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 24px 0;
         }
 
+        footer p {
+            color: #9bbcdb;
+            font-size: 14px;
+        }
+
+        /* Светящиеся плавающие точки (Particles) */
         #particles {
             position: fixed;
             left: 0; top: 0;
             width: 100%; height: 100%;
             pointer-events: none;
             overflow: hidden;
-            z-index: -1;
+            z-index: 0;
         }
 
         .particle {
             position: absolute;
-            width: 4px; height: 4px;
+            width: 5px; height: 5px;
             border-radius: 50%;
             background: #00d4ff;
-            opacity: .5;
+            box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff;
+            opacity: .6;
             animation: float linear infinite;
         }
 
         @keyframes float {
-            0% { transform: translateY(0); opacity: 0; }
-            20% { opacity: .6; }
-            80% { opacity: .6; }
-            100% { transform: translateY(-120vh); opacity: 0; }
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: .8; }
+            80% { opacity: .8; }
+            100% { transform: translateY(-120vh) scale(0.5); opacity: 0; }
         }
 
         @media(max-width: 1200px) {
-            .hero { grid-template-columns: 1fr; text-align: center; padding-top: 140px; }
+            .hero { grid-template-columns: 1fr; text-align: center; padding-top: 130px; }
+            .hero-content { max-width: 100%; }
+            .hero-text { max-width: 100%; margin: 0 auto 35px; }
             .hero-buttons { justify-content: center; }
             nav { display: none; }
         }
     </style>
 </head>
-<body style="background: #06111d;">
+<body>
 
+    <!-- Плавающие яркие точки -->
     <div id="particles"></div>
 
-    <!-- ХЕДЕР -->
+    <!-- HEADER -->
     <header>
         <div class="container">
+            <!-- Вращающаяся спираль без текста снизу -->
             <a href="index.html" class="logo">
                 <div class="logo-icon">
                     <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -542,9 +601,9 @@
                                 <feComposite in="SourceGraphic" in2="blur" operator="over"/>
                             </filter>
                         </defs>
-                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)"/>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.2" filter="url(#logoGlow)"/>
                         <g filter="url(#logoGlow)">
-                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.5"/>
                             <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" 
                                   stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
                             <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)"/>
@@ -553,10 +612,10 @@
                 </div>
                 <div class="logo-text">
                     <h2>SFERA</h2>
-                    <p data-i18n="logo_subtitle">Milli Sanly Platforma</p>
                 </div>
             </a>
 
+            <!-- Главное навигационное меню -->
             <nav>
                 <ul>
                     <li><a href="#" data-i18n="nav_home">Baş sahypa</a></li>
@@ -570,15 +629,15 @@
                 </ul>
             </nav>
 
+            <!-- Переключатель языка и логин -->
             <div class="header-buttons">
-                <!-- Переключатель языка: поддерживается клик-переключение и работа со словарем локализации -->
                 <button class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">TM</button>
                 <a href="login.html" class="login" data-i18n="btn_login">Girmek</a>
             </div>
         </div>
     </header>
 
-    <!-- HERO -->
+    <!-- HERO SECTION -->
     <section class="hero">
         <div class="hero-grid"></div>
         <canvas id="heroCanvas"></canvas>
@@ -594,7 +653,7 @@
                     </linearGradient>
                 </defs>
                 <path d="M92 270 L150 210 L280 170 L420 120 L580 140 L710 160 L790 210 L760 290 L640 340 L540 370 L360 360 L220 330 L120 300 Z"
-                      fill="rgba(0,212,255,.08)" stroke="url(#mapGradient)" stroke-width="3" class="map-outline"/>
+                      fill="rgba(0,212,255,.1)" stroke="url(#mapGradient)" stroke-width="3" class="map-outline"/>
             </svg>
         </div>
 
@@ -611,13 +670,14 @@
             </div>
         </div>
 
+        <!-- Центральное Ядро -->
         <div class="hero-visual">
             <div class="core">
                 <div class="core-ring ring-1"></div>
                 <div class="core-ring ring-2"></div>
                 <div class="core-ring ring-3"></div>
                 <div class="core-center">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 80px; height: 80px; animation: spinRing 15s linear infinite; overflow: visible;">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 85px; height: 85px; animation: spinRing 15s linear infinite; overflow: visible;">
                         <defs>
                             <linearGradient id="heroCoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                                 <stop offset="0%" stop-color="#00ffa3"/>
@@ -634,7 +694,7 @@
         </div>
     </section>
 
-    <!-- МОДУЛИ -->
+    <!-- МОДУЛИ ПЛАТФОРМЫ -->
     <section class="modules">
         <h2 data-i18n="modules_title">Platformanyň esasy modullary</h2>
         <div class="grid">
@@ -661,35 +721,24 @@
             <a href="index.html" class="logo">
                 <div class="logo-text">
                     <h2>SFERA</h2>
-                    <p data-i18n="logo_subtitle">Milli Sanly Platforma</p>
                 </div>
             </a>
             <p>© 2026 — Türkmenistanyň Birleşdirilen Sanly Platformasy</p>
         </div>
     </footer>
 
-    <!-- СКРИПТЫ И ЯЗЫКОВАЯ ЛОГИКА -->
+    <!-- JS СКРИПТЫ -->
     <script>
-        // 1. Словарь языков (TM / RU / EN)
+        // 1. Встроенная локализация (TM, RU, EN) без поломки стилей
         const i18nData = {
             tm: {
                 title: "SFERA — Türkmenistanyň Birleşdirilen Sanly Platformasy",
-                logo_subtitle: "Milli Sanly Platforma",
-                nav_home: "Baş sahypa",
-                nav_market: "Birja",
-                nav_pay: "TM Pay",
-                nav_coin: "TM Coin",
-                nav_bank: "Bank",
-                nav_ai: "SÜ",
-                nav_docs: "Resminamalar",
-                nav_contact: "Habarlaşmak",
-                btn_login: "Girmek",
-                hero_tag: "SFERA — SANLY PLATFORMA",
+                nav_home: "Baş sahypa", nav_market: "Birja", nav_pay: "TM Pay", nav_coin: "TM Coin", nav_bank: "Bank", nav_ai: "SÜ", nav_docs: "Resminamalar", nav_contact: "Habarlaşmak",
+                btn_login: "Girmek", hero_tag: "SFERA — SANLY PLATFORMA",
                 hero_title: "Türkmenistanyň Birleşdirilen<br>Sanly Platformasy",
                 hero_sub: "Söwda • SÜ • Tölegler • Bank • Resminama dolanyşygy",
                 hero_desc: "Elektron söwdany, emeli аňy, maliýe hyzmatlaryny, resminama dolanyşygyny we sanly döwlet hyzmatlaryny birleşdirýän döwrebap milli sanly ekosistema.",
-                btn_start: "Işläp başlamak",
-                btn_demo: "Demo",
+                btn_start: "Işläp başlamak", btn_demo: "Demo",
                 modules_title: "Platformanyň esasy modullary",
                 mod_1_title: "Birja", mod_1_desc: "Elektron söwda meýdançasy",
                 mod_2_title: "TM Pay", mod_2_desc: "Milli töleg ulgamy",
@@ -701,22 +750,12 @@
             },
             ru: {
                 title: "SFERA — Единая Цифровая Платформа Туркменистана",
-                logo_subtitle: "Национальная Цифровая Платформа",
-                nav_home: "Главная",
-                nav_market: "Биржа",
-                nav_pay: "TM Pay",
-                nav_coin: "TM Coin",
-                nav_bank: "Банк",
-                nav_ai: "ИИ",
-                nav_docs: "Документы",
-                nav_contact: "Контакты",
-                btn_login: "Войти",
-                hero_tag: "SFERA — ЦИФРОВАЯ ПЛАТФОРМА",
+                nav_home: "Главная", nav_market: "Биржа", nav_pay: "TM Pay", nav_coin: "TM Coin", nav_bank: "Банк", nav_ai: "ИИ", nav_docs: "Документы", nav_contact: "Контакты",
+                btn_login: "Войти", hero_tag: "SFERA — ЦИФРОВАЯ ПЛАТФОРМА",
                 hero_title: "Единая Цифровая Платформа<br>Туркменистана",
                 hero_sub: "Торговля • ИИ • Платежи • Банк • Документооборот",
                 hero_desc: "Современная национальная цифровая экосистема, объединяющая электронную торговлю, искусственный интеллект, финансовые услуги и государственный документооборот.",
-                btn_start: "Начать работу",
-                btn_demo: "Демо",
+                btn_start: "Начать работу", btn_demo: "Демо",
                 modules_title: "Основные модули платформы",
                 mod_1_title: "Биржа", mod_1_desc: "Площадка электронной торговли",
                 mod_2_title: "TM Pay", mod_2_desc: "Национальная платежная система",
@@ -728,22 +767,12 @@
             },
             en: {
                 title: "SFERA — Unified Digital Platform of Turkmenistan",
-                logo_subtitle: "National Digital Platform",
-                nav_home: "Home",
-                nav_market: "Exchange",
-                nav_pay: "TM Pay",
-                nav_coin: "TM Coin",
-                nav_bank: "Bank",
-                nav_ai: "AI",
-                nav_docs: "Documents",
-                nav_contact: "Contacts",
-                btn_login: "Sign In",
-                hero_tag: "SFERA — DIGITAL PLATFORM",
+                nav_home: "Home", nav_market: "Exchange", nav_pay: "TM Pay", nav_coin: "TM Coin", nav_bank: "Bank", nav_ai: "AI", nav_docs: "Documents", nav_contact: "Contacts",
+                btn_login: "Sign In", hero_tag: "SFERA — DIGITAL PLATFORM",
                 hero_title: "Unified Digital Platform<br>of Turkmenistan",
                 hero_sub: "Trade • AI • Payments • Bank • Document Flow",
                 hero_desc: "Modern national digital ecosystem combining e-commerce, artificial intelligence, financial services, and digital government document management.",
-                btn_start: "Get Started",
-                btn_demo: "Demo",
+                btn_start: "Get Started", btn_demo: "Demo",
                 modules_title: "Core Platform Modules",
                 mod_1_title: "Exchange", mod_1_desc: "E-commerce marketplace",
                 mod_2_title: "TM Pay", mod_2_desc: "National payment system",
@@ -764,9 +793,7 @@
 
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (data[key]) {
-                    el.innerHTML = data[key];
-                }
+                if (data[key]) el.innerHTML = data[key];
             });
 
             const btn = document.getElementById('langToggleBtn');
@@ -784,7 +811,7 @@
             applyLanguage(languages[currentLangIdx]);
         });
 
-        // 2. Анимация Canvas
+        // 2. Интерактивная сеть линий на Canvas
         const canvas = document.getElementById('heroCanvas');
         if (canvas) {
             const ctx = canvas.getContext('2d');
@@ -801,12 +828,12 @@
             window.addEventListener('resize', resize);
 
             const points = [];
-            for (let i = 0; i < 30; i++) {
+            for (let i = 0; i < 35; i++) {
                 points.push({
                     x: Math.random() * w,
                     y: Math.random() * h,
-                    vx: (Math.random() - 0.5) * 0.6,
-                    vy: (Math.random() - 0.5) * 0.6,
+                    vx: (Math.random() - 0.5) * 0.7,
+                    vy: (Math.random() - 0.5) * 0.7,
                 });
             }
 
@@ -823,19 +850,19 @@
                         const dx = points[i].x - points[j].x;
                         const dy = points[i].y - points[j].y;
                         const dist = Math.sqrt(dx*dx + dy*dy);
-                        if (dist < 150) {
+                        if (dist < 160) {
                             ctx.beginPath();
                             ctx.moveTo(points[i].x, points[i].y);
                             ctx.lineTo(points[j].x, points[j].y);
-                            ctx.strokeStyle = `rgba(0,212,255,${0.15 * (1 - dist/150)})`;
+                            ctx.strokeStyle = `rgba(0,212,255,${0.2 * (1 - dist/160)})`;
                             ctx.stroke();
                         }
                     }
                 }
                 points.forEach(p => {
                     ctx.beginPath();
-                    ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(0,212,255,0.5)';
+                    ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(0,212,255,0.7)';
                     ctx.fill();
                 });
                 requestAnimationFrame(drawLines);
@@ -843,7 +870,7 @@
             drawLines();
         }
 
-        // 3. Анимация чисел
+        // 3. Счетчики статистики
         const counters = [
             { id: "users", target: 2340000 },
             { id: "orders", target: 18540291 },
@@ -853,7 +880,7 @@
 
         function animateCounter(el, target) {
             let value = 0;
-            const step = Math.max(1, Math.floor(target / 180));
+            const step = Math.max(1, Math.floor(target / 160));
             const timer = setInterval(() => {
                 value += step;
                 if (value >= target) {
@@ -876,20 +903,20 @@
                     });
                 }
             });
-        }, { threshold: 0.3 });
+        }, { threshold: 0.2 });
 
         const statsSection = document.querySelector('.statistics');
         if (statsSection) observer.observe(statsSection);
 
-        // 4. Частицы
+        // 4. Генерация светящихся частичек
         const pContainer = document.getElementById('particles');
         if (pContainer) {
-            for (let i = 0; i < 40; i++) {
+            for (let i = 0; i < 50; i++) {
                 const p = document.createElement('div');
                 p.className = 'particle';
                 p.style.left = Math.random() * 100 + 'vw';
                 p.style.top = Math.random() * 100 + 'vh';
-                p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                p.style.animationDuration = (Math.random() * 8 + 8) + 's';
                 p.style.animationDelay = (Math.random() * 5) + 's';
                 pContainer.appendChild(p);
             }
