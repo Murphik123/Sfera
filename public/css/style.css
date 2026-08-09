@@ -1,45 +1,478 @@
-/* ==========================================================
-   SFERA PLATFORM
-   Master Stylesheet
-   Version: 1.0
-   ========================================================== */
+/* ==========================================================================
+   SFERA PLATFORM — COMPLETE UNIFIED STYLESHEET (style.css)
+   ========================================================================== */
 
-/* ---------- Core ---------- */
-@import 'core/variables.css';
-@import 'core/reset.css';
-@import 'core/theme.css';
-@import 'core/layout.css';
-@import 'core/typography.css';
+/* --------------------------------------------------------------------------
+   1. CORE: VARIABLES & RESET
+   -------------------------------------------------------------------------- */
+:root {
+    /* Фирменная палитра Sfera */
+    --color-bg-dark: #06111d;
+    --color-bg-dark-alt: #08131d;
+    --color-accent-green: #00ffa3;
+    --color-accent-cyan: #00d4ff;
+    --color-accent-blue: #1f6bff;
+    
+    /* Градиенты */
+    --grad-sfera: linear-gradient(135deg, var(--color-accent-green) 0%, var(--color-accent-cyan) 50%, var(--color-accent-blue) 100%);
+    --grad-sfera-btn: linear-gradient(135deg, var(--color-accent-cyan), #008cff);
+    
+    /* Glassmorphism */
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-bg-hover: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-border-glow: rgba(0, 212, 255, 0.3);
+    --glass-blur: blur(16px);
+    
+    /* Неоновое свечение */
+    --glow-cyan: 0 0 25px rgba(0, 212, 255, 0.35);
+    --glow-green: 0 0 25px rgba(0, 255, 163, 0.35);
+    
+    /* Типографика и цвета текста */
+    --text-primary: #ffffff;
+    --text-secondary: #9fb5c8;
+    --text-muted: #6b7f94;
+    
+    /* Переходы и скругления */
+    --radius-sm: 12px;
+    --radius-md: 18px;
+    --radius-lg: 24px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-/* ---------- Effects ---------- */
-@import 'effects/glass.css';
-@import 'effects/glow.css';
-@import 'effects/gradients.css';
-@import 'effects/background.css';
-@import 'effects/particles.css';
-@import 'effects/animations.css';
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-/* ---------- Components ---------- */
-@import 'components/buttons.css';
-@import 'components/cards.css';
-@import 'components/forms.css';
-@import 'components/navbar.css';
-@import 'components/footer.css';
-@import 'components/modal.css';
-@import 'components/dropdown.css';
-@import 'components/notifications.css';
-@import 'components/map.css';
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--color-bg-dark);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
 
-/* ==========================================================
-   БАЗОВЫЕ УТИЛИТЫ
-   ========================================================== */
-.hidden { display: none !important; }
-.invisible { visibility: hidden; }
-.w-100 { width: 100%; }
-.h-100 { height: 100%; }
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
-.text-muted { color: var(--text-muted); }
-.text-primary { color: var(--color-primary); }
-.text-accent { color: var(--color-accent); }
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+/* --------------------------------------------------------------------------
+   2. TYPOGRAPHY & LAYOUT
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-primary);
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 1.875rem; }
+h3 { font-size: 1.25rem; }
+
+p {
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.text-gradient {
+    background: var(--grad-sfera);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.page-wrapper {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+    padding-top: 120px;
+    padding-bottom: 60px;
+}
+
+/* Светлая тема с высоким качеством прозрачности */
+body.light-theme {
+    --color-bg-dark: #eef4f8;
+    --color-bg-dark-alt: #e2ecf3;
+    --glass-bg: rgba(255, 255, 255, 0.35);
+    --glass-bg-hover: rgba(255, 255, 255, 0.5);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --text-primary: #0b1a28;
+    --text-secondary: #4a6175;
+    --text-muted: #7e94a7;
+}
+
+body.light-theme #particles {
+    opacity: 0.4;
+}
+
+/* --------------------------------------------------------------------------
+   3. VISUAL EFFECTS & ANIMATIONS
+   -------------------------------------------------------------------------- */
+.glass-panel, .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    transition: var(--transition);
+}
+
+.glass-panel:hover, .glass-card:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--glass-border-glow);
+}
+
+.glow-cyan { box-shadow: var(--glow-cyan); }
+.glow-green { box-shadow: var(--glow-green); }
+
+.glow-hover {
+    transition: var(--transition);
+}
+
+.glow-hover:hover {
+    box-shadow: var(--glow-cyan);
+    border-color: var(--color-accent-cyan);
+}
+
+.bg-gradient-sfera {
+    background: var(--grad-sfera);
+}
+
+.border-gradient {
+    border: 1px solid transparent;
+    background-image: linear-gradient(var(--color-bg-dark), var(--color-bg-dark)), var(--grad-sfera);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+}
+
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.bg-glow-spot {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bg-spot-1 { top: -200px; left: -100px; }
+.bg-spot-2 { bottom: -200px; right: -100px; background: radial-gradient(circle, rgba(0, 255, 163, 0.08) 0%, rgba(0, 0, 0, 0) 70%); }
+
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 15px rgba(0, 212, 255, 0.2); }
+    50% { box-shadow: 0 0 30px rgba(0, 212, 255, 0.6); }
+    100% { box-shadow: 0 0 15px rgba(0, 212, 255, 0.2); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.animate-pulse { animation: pulseGlow 3s infinite; }
+
+/* --------------------------------------------------------------------------
+   4. HEADER & NAVBAR (СТРОГО ПО ДИЗАЙНУ)
+   -------------------------------------------------------------------------- */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    z-index: 1000;
+    background: rgba(6, 17, 29, 0.4) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+    display: flex;
+    align-items: center;
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Строгий логотип Sfera */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+}
+
+.logo-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.logo-text h2 {
+    font-size: 20px;
+    letter-spacing: 2px;
+    background: var(--grad-sfera);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Скрытие подзаголовка согласно каноническому правилу */
+.logo-text p {
+    display: none !important;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-right .lang, 
+.header-right .logout-btn, 
+.header-right .btn-switch {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #fff !important;
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px) !important;
+    transition: var(--transition) !important;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.header-right .lang:hover, 
+.header-right .logout-btn:hover, 
+.header-right .btn-switch:hover {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border-color: var(--color-accent-cyan) !important;
+    color: var(--color-accent-cyan) !important;
+    box-shadow: var(--glow-cyan);
+}
+
+/* --------------------------------------------------------------------------
+   5. UI COMPONENTS (BUTTONS, CARDS, FORMS, MODALS)
+   -------------------------------------------------------------------------- */
+/* Кнопки */
+.btn-primary {
+    background: var(--grad-sfera-btn);
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 24px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glow-cyan);
+}
+
+.btn-glass {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 10px 20px;
+    border-radius: 20px;
+    backdrop-filter: var(--glass-blur);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.btn-glass:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--color-accent-cyan);
+    color: var(--color-accent-cyan);
+}
+
+/* Карточки */
+.card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    transition: var(--transition);
+}
+
+.card:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--glass-border-glow);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Поля ввода и Формы */
+input[type="text"], 
+input[type="password"], 
+input[type="email"], 
+input[type="number"], 
+select, 
+textarea {
+    width: 100%;
+    padding: 12px 18px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: var(--transition);
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--color-accent-cyan);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+input::placeholder, textarea::placeholder {
+    color: var(--text-muted);
+}
+
+/* Dropdown */
+.dropdown-content {
+    background: rgba(13, 28, 41, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border-glow);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    padding: 8px 0;
+    overflow: hidden;
+}
+
+.dropdown-content button, 
+.dropdown-content a {
+    display: block;
+    width: 100%;
+    padding: 10px 20px;
+    color: var(--text-secondary);
+    transition: var(--transition);
+    text-align: left;
+}
+
+.dropdown-content button:hover, 
+.dropdown-content a:hover {
+    background: rgba(0, 212, 255, 0.1);
+    color: var(--color-accent-cyan);
+}
+
+/* Модальные окна */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(6, 17, 29, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-window {
+    background: rgba(20, 32, 50, 0.85);
+    border: 1px solid var(--glass-border-glow);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 30px 80px rgba(0, 212, 255, 0.15);
+    animation: fadeIn 0.3s ease;
+}
+
+/* Футер */
+footer {
+    background: rgba(6, 17, 29, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--glass-border);
+    padding: 40px 0;
+    margin-top: auto;
+}
+
+footer .footer-text {
+    color: var(--text-muted);
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Уведомления */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: rgba(13, 28, 41, 0.9);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border-glow);
+    border-radius: var(--radius-sm);
+    padding: 14px 24px;
+    color: var(--text-primary);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    z-index: 3000;
+    animation: fadeIn 0.3s ease;
+}
+
+.toast.success { border-left: 4px solid var(--color-accent-green); }
+.toast.error { border-left: 4px solid #ff4b2b; }
+
+/* Карта */
+.map-container {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glow-cyan);
+}
