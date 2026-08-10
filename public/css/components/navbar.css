@@ -3,78 +3,118 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    height: 80px;
-    z-index: 1000;
-    background: rgba(6, 17, 29, 0.4) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    border-bottom: 1px solid var(--glass-border) !important;
-    display: flex;
-    align-items: center;
+    z-index: 999;
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    background: rgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 18px 0;
 }
 
-/* Строгий логотип Sfera */
 .logo {
     display: flex;
     align-items: center;
     gap: 12px;
+    text-decoration: none;
+    color: var(--text-primary, #ffffff);
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: translateY(-1px);
 }
 
 .logo-icon {
-    width: 42px;
-    height: 42px;
+    width: 58px;
+    height: 58px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
 
 .logo-svg {
     width: 100%;
     height: 100%;
+    overflow: visible;
+}
+
+.logo-svg g {
+    transform-origin: center;
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.logo:hover .logo-svg g {
+    transform: rotate(45deg);
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
 }
 
 .logo-text h2 {
-    font-size: 20px;
-    letter-spacing: 2px;
-    background: var(--grad-sfera);
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.1;
+    background: linear-gradient(to right, #ffffff, #b4d7ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-/* Скрытие подзаголовка по каноническим правилам */
 .logo-text p {
-    display: none !important;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin: 4px 0 0 0;
+    color: var(--text-secondary, #9fb5c8);
+    white-space: nowrap;
 }
 
-.header-right {
+nav ul {
     display: flex;
-    align-items: center;
+    list-style: none;
+    gap: 32px;
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--text-primary, #ffffff);
+    font-weight: 500;
+    transition: var(--transition, 0.3s);
+}
+
+nav a:hover {
+    color: var(--color-accent-cyan, #00d4ff);
+}
+
+.header-buttons {
+    display: flex;
     gap: 12px;
 }
 
-.header-right .lang, 
-.header-right .logout-btn, 
-.header-right .btn-switch {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    color: #fff !important;
-    padding: 8px 16px;
-    border-radius: 20px;
-    backdrop-filter: blur(4px) !important;
-    transition: var(--transition) !important;
+.header-buttons a,
+.header-buttons button {
+    padding: 12px 20px;
+    border: none;
     cursor: pointer;
+    border-radius: var(--radius-sm, 12px);
+    font-weight: 600;
+    transition: var(--transition, 0.3s);
+    text-decoration: none;
+    display: inline-block;
     font-size: 14px;
-    font-weight: 500;
 }
 
-.header-right .lang:hover, 
-.header-right .logout-btn:hover, 
-.header-right .btn-switch:hover {
-    background: rgba(255, 255, 255, 0.18) !important;
-    border-color: var(--color-accent-cyan) !important;
-    color: var(--color-accent-cyan) !important;
-    box-shadow: var(--glow-cyan);
+@media(max-width: 1200px) {
+    nav { display: none; }
 }
