@@ -2,24 +2,20 @@
     position: relative;
     min-height: 100vh;
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
+    grid-template-columns: 1.1fr 0.9fr;
     align-items: center;
     padding: 140px 7% 80px;
     gap: 40px;
-    overflow: hidden;
+    background: var(--bg-dark);
     box-sizing: border-box;
-    background: radial-gradient(circle at 50% 20%, #0d1f38 0%, #050b14 100%);
 }
 
 .hero-grid {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background-image:
-        linear-gradient(rgba(0, 212, 255, 0.12) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 212, 255, 0.12) 1px, transparent 1px);
+        linear-gradient(rgba(0, 212, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.08) 1px, transparent 1px);
     background-size: 50px 50px;
     pointer-events: none;
     z-index: 0;
@@ -27,33 +23,27 @@
 
 .hero-glow {
     position: absolute;
-    width: 500px;
-    height: 500px;
+    width: 600px;
+    height: 600px;
     border-radius: 50%;
-    filter: blur(100px);
+    filter: blur(140px);
     pointer-events: none;
     z-index: 0;
 }
 
-.glow-left { 
-    top: 5%; 
-    left: -5%; 
-    background: rgba(0, 212, 255, 0.35); 
-}
-
-.glow-right { 
-    top: 20%; 
-    right: -5%; 
-    background: rgba(0, 255, 163, 0.25); 
-}
+.glow-left { top: 0; left: -10%; background: rgba(0, 212, 255, 0.25); }
+.glow-right { top: 20%; right: -10%; background: rgba(0, 255, 163, 0.18); }
 
 #heroCanvas {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
     z-index: 1;
-    opacity: 0.85;
+}
+
+.hero-content, .hero-visual {
+    position: relative;
+    z-index: 2;
 }
