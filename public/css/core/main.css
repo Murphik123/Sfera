@@ -1,0 +1,56 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+html { 
+    scroll-behavior: smooth; 
+}
+
+body {
+    background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
+    color: var(--white);
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    width: 200%;
+    height: 200%;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(0,212,255,.15), transparent 35%),
+        radial-gradient(circle at 80% 20%, rgba(0,255,170,.10), transparent 35%),
+        radial-gradient(circle at 60% 80%, rgba(32,108,255,.15), transparent 40%);
+    animation: bgmove 18s linear infinite;
+    z-index: -2;
+}
+
+.container {
+    width: min(1400px, 92%);
+    margin: auto;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #00d4ff;
+    border-radius: 20px;
+}
+::-webkit-scrollbar-track {
+    background: #08131d;
+}
+
+.hidden {
+    opacity: 0;
+    transform: translateY(60px);
+    transition: .8s;
+}
+
+.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
