@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>СФЕРА — Messenger</title>
 
+    <!-- Подключение единого скрипта проверки авторизации и ролей -->
+    <script src="js/auth-check.js"></script>
+
     <link rel="stylesheet" href="/css/style.css" />
     <!-- Socket.io клиент для бэкенда -->
     <script src="/socket.io/socket.io.js"></script>
@@ -60,13 +63,7 @@
         .dialog-time { font-size: 11px; color: #6b7f94; flex-shrink: 0; }
         .unread-badge { background: #00d4ff; color: #08131d; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; min-width: 20px; text-align: center; }
 
-        .news-item { padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,.06); cursor: pointer; transition: .15s; }
-        .news-item:hover { background: rgba(255,255,255,.03); }
-        .news-item .title { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
-        .news-item .summary { font-size: 14px; color: #bdd0df; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .news-item .meta { font-size: 12px; color: #9fb5c8; margin-top: 6px; display: flex; gap: 12px; }
-
-        .messenger-chat { flex: 1; display: flex; flex-direction: column; background: rgba(0,0,0,.1); }
+        .messenger-chat { flex: 1; display: flex; flex-direction: column; background: rgba(0,0,0,.1); position: relative; }
         .chat-header { padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,.08); display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,.15); min-height: 70px; flex-wrap: wrap; }
         .chat-header .back-btn { display: none; background: transparent; border: none; color: white; font-size: 20px; cursor: pointer; }
         .chat-header .chat-avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(0,212,255,.2); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 600; color: #00d4ff; }
@@ -122,7 +119,7 @@
             border: 1px solid rgba(0, 212, 255, 0.3);
             border-radius: 32px;
             padding: 40px;
-            width: 360px;
+            width: 380px;
             text-align: center;
             box-shadow: 0 30px 80px rgba(0, 212, 255, 0.2);
             position: relative;
@@ -136,13 +133,15 @@
             font-size: 42px; color: #06111d; font-weight: 800;
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
             animation: avatarPulse 2s infinite;
+            overflow: hidden;
         }
+        .call-avatar video { width: 100%; height: 100%; object-fit: cover; }
         @keyframes avatarPulse {
             0% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.5); }
             70% { box-shadow: 0 0 0 20px rgba(0, 212, 255, 0); }
             100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
         }
-        .call-user-name { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+        .call-user-name { font-size: 22px; font-weight: 700; margin-bottom: 6px; color: #fff; }
         .call-status-text { font-size: 14px; color: #00ffa3; margin-bottom: 25px; }
         .call-actions { display: flex; justify-content: center; gap: 18px; }
         .call-action-btn {
@@ -154,6 +153,7 @@
             transition: 0.3s;
         }
         .call-action-btn:hover { background: rgba(255,255,255,0.2); }
+        .call-action-btn.muted { background: rgba(255, 0, 0, 0.3); border-color: #ff4b2b; }
         .end-call-btn {
             background: linear-gradient(135deg, #ff416c, #ff4b2b) !important;
             border: none !important;
@@ -188,7 +188,7 @@
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
         header { background: rgba(255, 255, 255, 0.06) !important; backdrop-filter: blur(20px) !important; border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important; }
-        .header-right .lang, .header-right .logout-btn, .header-right .btn-switch { background: rgba(255, 255, 255, 0.08) !important; border: 1px solid rgba(255, 255, 255, 0.15) !important; color: #fff !important; backdrop-filter: blur(4px) !important; transition: all 0.3s !important; }
+        .header-right .lang, .header-right .logout-btn, .header-right .btn-switch { background: rgba(255, 255, 255, 0.08) !important; border: 1px solid rgba(255, 255, 255, 0.15) !important; color: #fff !important; backdrop-filter: blur(4px) !important; transition: all 0.3s !important; cursor: pointer; }
         .header-right .lang:hover, .header-right .logout-btn:hover, .header-right .btn-switch:hover { background: rgba(255, 255, 255, 0.15) !important; border-color: #00d4ff !important; color: #00d4ff !important; }
         .logo-text p { display: none !important; }
     </style>
@@ -331,7 +331,8 @@
                 select_chat: "Выберите чат", select_chat_desc: "Выберите собеседника или начните новый чат.",
                 type_message: "Введите сообщение...", send: "Отправить", online: "онлайн", offline: "офлайн",
                 create_group: "➕ Группа", create_group_title: "Создать группу", group_name: "Название группы",
-                group_members: "Участники", create: "Создать", cancel: "Отмена", calling: "Вызов...", call_connected: "Разговор..."
+                group_members: "Участники", create: "Создать", cancel: "Отмена", calling: "Вызов...", call_connected: "Разговор...",
+                select_to_call: "Выберите чат для звонка", call_ended: "Звонок завершен", mic_access_error: "Ошибка доступа к микрофону/камере"
             },
             tm: {
                 logo_subtitle: "Milli Sanly Platforma", logout: "🚪 Çykmak", back: "← Yza", messenger_title: "Söhbet",
@@ -339,7 +340,8 @@
                 select_chat: "Söhbeti saýlaň", select_chat_desc: "Çatdaşlaryňyzdan birini saýlaň.",
                 type_message: "Habaryňyzy ýazyň...", send: "Iber", online: "onlaýn", offline: "offlaýn",
                 create_group: "➕ Topar", create_group_title: "Täze topar döret", group_name: "Toparyň ady",
-                group_members: "Agzalar", create: "Döret", cancel: "Ýatyr", calling: "Jaň edilýär...", call_connected: "Söhbetdeşlik..."
+                group_members: "Agzalar", create: "Döret", cancel: "Ýatyr", calling: "Jaň edilýär...", call_connected: "Söhbetdeşlik...",
+                select_to_call: "Jaň etmek üçin söhbet saýlaň", call_ended: "Jaň tamamlandy", mic_access_error: "Mikrofon/kamera rugsat ýalňyşlygy"
             },
             en: {
                 logo_subtitle: "National Digital Platform", logout: "🚪 Logout", back: "← Back", messenger_title: "Messenger",
@@ -347,26 +349,75 @@
                 select_chat: "Select a chat", select_chat_desc: "Select a contact or start a new chat.",
                 type_message: "Type your message...", send: "Send", online: "online", offline: "offline",
                 create_group: "➕ Group", create_group_title: "Create Group", group_name: "Group Name",
-                group_members: "Members", create: "Create", cancel: "Cancel", calling: "Calling...", call_connected: "Connected..."
+                group_members: "Members", create: "Create", cancel: "Cancel", calling: "Calling...", call_connected: "Connected...",
+                select_to_call: "Select a chat to call", call_ended: "Call ended", mic_access_error: "Microphone/camera access error"
             }
         };
 
-        let currentLang = localStorage.getItem('lang') || 'ru';
+        let currentLang = localStorage.getItem('lang') || localStorage.getItem('sfera_lang') || 'ru';
         let activeDialogId = null;
         let messagesData = {};
         let dialogsData = [];
         let socket = null;
         let callTimer = null;
         let secondsElapsed = 0;
+        let localStream = null;
+        let isMicMuted = false;
+        let isCamOff = false;
 
         // Элементы управления
         const audioCallBtn = document.getElementById('audioCallBtn');
         const videoCallBtn = document.getElementById('videoCallBtn');
         const callModal = document.getElementById('callModal');
         const endCallBtn = document.getElementById('endCallBtn');
+        const toggleMicBtn = document.getElementById('toggleMicBtn');
+        const toggleCamBtn = document.getElementById('toggleCamBtn');
         const callUserName = document.getElementById('callUserName');
         const callStatusText = document.getElementById('callStatusText');
         const callAvatar = document.getElementById('callAvatar');
+        const langBtn = document.getElementById('langBtn');
+
+        // Система локализации
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            localStorage.setItem('sfera_lang', lang);
+
+            if (langBtn) langBtn.textContent = lang.toUpperCase();
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[lang][key]) el.placeholder = translations[lang][key];
+            });
+
+            if (activeDialogId) renderChat();
+        }
+
+        const langCycle = ['ru', 'tm', 'en'];
+        if (langBtn) {
+            langBtn.addEventListener('click', () => {
+                let nextIdx = (langCycle.indexOf(currentLang) + 1) % langCycle.length;
+                setLanguage(langCycle[nextIdx]);
+            });
+        }
+
+        // Выход из аккаунта
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('token');
+                localStorage.removeItem('sfera_token');
+                localStorage.removeItem('user');
+                localStorage.removeItem('sfera_role');
+                window.location.href = 'login.html';
+            });
+        }
 
         // Подключение Socket.io
         try {
@@ -381,15 +432,34 @@
             console.log('Socket server running in local/standalone mode');
         }
 
-        // Вызов и работа звонков
-        function startCall(isVideo = false) {
+        // Звонки: WebRTC и захват микрофона/видео
+        async function startCall(isVideo = false) {
             const dialog = dialogsData.find(d => d.id === activeDialogId);
             if (!dialog) {
-                showToast('Выберите чат для звонка', 'error');
+                showToast(translations[currentLang].select_to_call, 'error');
                 return;
             }
+
+            try {
+                localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideo });
+            } catch (err) {
+                console.warn('Microphone/Camera access error:', err);
+                showToast(translations[currentLang].mic_access_error, 'error');
+            }
+
             callUserName.textContent = dialog.name;
-            callAvatar.textContent = dialog.isGroup ? '👥' : dialog.name.charAt(0);
+            callAvatar.innerHTML = '';
+
+            if (isVideo && localStream) {
+                const videoEl = document.createElement('video');
+                videoEl.autoplay = true;
+                videoEl.muted = true;
+                videoEl.srcObject = localStream;
+                callAvatar.appendChild(videoEl);
+            } else {
+                callAvatar.textContent = dialog.isGroup ? '👥' : dialog.name.charAt(0);
+            }
+
             callStatusText.textContent = translations[currentLang].calling;
             callModal.classList.add('active');
 
@@ -407,9 +477,33 @@
 
         function endCall() {
             clearInterval(callTimer);
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+                localStream = null;
+            }
             callModal.classList.remove('active');
-            showToast('Звонок завершен', 'info');
+            isMicMuted = false;
+            isCamOff = false;
+            toggleMicBtn.classList.remove('muted');
+            toggleCamBtn.classList.remove('muted');
+            showToast(translations[currentLang].call_ended, 'info');
         }
+
+        toggleMicBtn.addEventListener('click', () => {
+            if (localStream && localStream.getAudioTracks().length > 0) {
+                isMicMuted = !isMicMuted;
+                localStream.getAudioTracks()[0].enabled = !isMicMuted;
+                toggleMicBtn.classList.toggle('muted', isMicMuted);
+            }
+        });
+
+        toggleCamBtn.addEventListener('click', () => {
+            if (localStream && localStream.getVideoTracks().length > 0) {
+                isCamOff = !isCamOff;
+                localStream.getVideoTracks()[0].enabled = !isCamOff;
+                toggleCamBtn.classList.toggle('muted', isCamOff);
+            }
+        });
 
         audioCallBtn.addEventListener('click', () => startCall(false));
         videoCallBtn.addEventListener('click', () => startCall(true));
@@ -418,12 +512,12 @@
         // Интеграция с Backend API
         async function fetchDialogs() {
             try {
-                const res = await fetch('/api/messenger/dialogs');
+                const res = await fetch('https://sfera-1.onrender.com/api/messenger/dialogs');
                 if (res.ok) {
                     dialogsData = await res.json();
                 } else { throw new Error(); }
             } catch (e) {
-                // Fallback / Моковые данные
+                // Моковые данные для оффлайн работы
                 dialogsData = [
                     { id: '1', name: 'Сердар Аннаев', lastMsg: 'Привет, как успехи?', time: '10:42', unread: 2, online: true },
                     { id: '2', name: 'Мая Гараева', lastMsg: 'Документы отправлены', time: 'Вчера', unread: 0, online: false },
@@ -523,9 +617,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            setLanguage(currentLang);
             fetchDialogs();
             const user = JSON.parse(localStorage.getItem('user') || '{}');
-            document.getElementById('username').textContent = user.username || 'User';
+            document.getElementById('username').textContent = user.username || user.email || 'User';
         });
     </script>
 </body>
