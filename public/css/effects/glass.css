@@ -1,16 +1,17 @@
 .card, .news-card, .stat {
-    background: rgba(13, 25, 48, 0.55) !important;
-    backdrop-filter: blur(25px) saturate(200%) !important;
-    -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
-    border: 1px solid rgba(0, 212, 255, 0.25) !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 
-                inset 0 0 15px rgba(0, 212, 255, 0.1) !important;
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    background: var(--bg-card) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 
+                inset 0 1px 1px rgba(255, 255, 255, 0.1) !important;
+    border-radius: 20px !important;
+    position: relative !important;
+    z-index: 2 !important;
 }
 
 .card:hover, .news-card:hover {
-    border-color: rgba(0, 255, 163, 0.6) !important;
-    box-shadow: 0 12px 40px rgba(0, 212, 255, 0.3), 
-                inset 0 0 25px rgba(0, 255, 163, 0.2) !important;
-    transform: translateY(-6px);
+    border-color: var(--border-hover) !important;
+    box-shadow: 0 15px 35px rgba(0, 212, 255, 0.25), 
+                inset 0 0 15px rgba(0, 255, 163, 0.15) !important;
 }
