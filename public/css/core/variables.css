@@ -1,34 +1,10 @@
 :root {
-    /* Фирменная палитра Sfera */
-    --color-bg-dark: #06111d;
-    --color-bg-dark-alt: #08131d;
-    --color-accent-green: #00ffa3;
-    --color-accent-cyan: #00d4ff;
-    --color-accent-blue: #1f6bff;
-    
-    /* Единый фирменный градиент */
-    --grad-sfera: linear-gradient(135deg, var(--color-accent-green) 0%, var(--color-accent-cyan) 50%, var(--color-accent-blue) 100%);
-    --grad-sfera-btn: linear-gradient(135deg, var(--color-accent-cyan), #008cff);
-    
-    /* Параметры Glassmorphism */
-    --glass-bg: rgba(255, 255, 255, 0.04);
-    --glass-bg-hover: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-border-glow: rgba(0, 212, 255, 0.3);
-    --glass-blur: blur(16px);
-    
-    /* Неоновое свечение */
-    --glow-cyan: 0 0 25px rgba(0, 212, 255, 0.35);
-    --glow-green: 0 0 25px rgba(0, 255, 163, 0.35);
-    
-    /* Текст */
-    --text-primary: #ffffff;
-    --text-secondary: #9fb5c8;
-    --text-muted: #6b7f94;
-    
-    /* Переходы и скругления */
-    --radius-sm: 12px;
-    --radius-md: 18px;
-    --radius-lg: 24px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --bg-dark: #060c15;
+    --bg-card: rgba(12, 23, 42, 0.65);
+    --border-color: rgba(0, 212, 255, 0.2);
+    --border-hover: rgba(0, 255, 163, 0.5);
+    --cyan-accent: #00d4ff;
+    --green-accent: #00ffa3;
+    --text-main: #ffffff;
+    --text-muted: #8e9aab;
 }
