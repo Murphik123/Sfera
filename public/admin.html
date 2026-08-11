@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="tm">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>СФЕРА — Administrasiýa paneli</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Исправленный относительный путь к CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <style>
+        body {
+            background: #0b1a2a;
+            color: #ffffff;
+            font-family: "Inter", sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .admin-wrapper {
+            display: flex;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .admin-sidebar {
+            width: 240px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-right: 1px solid rgba(255,255,255,0.08);
+            padding: 24px 16px;
+            flex-shrink: 0;
+            height: calc(100vh - 80px);
+            position: sticky;
+            top: 80px;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .admin-sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .admin-sidebar li {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            color: #bdd0df;
+            transition: .2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .admin-sidebar li:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+
+        .admin-sidebar li.active {
+            background: rgba(0,212,255,0.12);
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .admin-sidebar li .icon {
+            font-size: 20px;
+            width: 28px;
+            text-align: center;
+        }
+
+        .admin-content {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .admin-content h1 {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin-content .welcome {
+            font-size: 16px;
+            color: #bcd0e2;
+            margin-bottom: 30px;
+        }
+
+        /* Сетка Модулей */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .module-card {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.12);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 18px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: .35s;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+
+        .module-card:hover {
+            transform: translateY(-8px);
+            border-color: #00d4ff;
+            box-shadow: 0 25px 50px rgba(0,212,255,.2);
+        }
+
+        .module-card .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .module-card h3 {
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+
+        .module-card p {
+            font-size: 14px;
+            color: #bdd0df;
+        }
+
+        /* Статистика и Таблицы */
+        .admin-card {
+            background: rgba(255,255,255,0.04);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 30px;
+        }
+
+        .admin-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #dbe9ff;
+        }
+
+        .admin-card .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .admin-card .stat-item {
+            background: rgba(0,0,0,0.2);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .admin-card .stat-item .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+
+        .admin-card .stat-item .label {
+            font-size: 13px;
+            color: #9fb5c8;
+            margin-top: 4px;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        .admin-table th {
+            text-align: left;
+            padding: 10px 12px;
+            color: #9fb5c8;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .admin-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: #dbe9ff;
+        }
+
+        .admin-table .badge {
+            background: rgba(0,212,255,0.15);
+            color: #00d4ff;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .admin-table .badge.admin {
+            background: rgba(255,200,0,0.15);
+            color: #f5c542;
+        }
+
+        .admin-table .badge.user {
+            background: rgba(0,255,170,0.1);
+            color: #00ffa3;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,.08);
+            border: 1px solid rgba(255,255,255,.15);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: .3s;
+            font-weight: 600;
+            margin-left: 12px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,0,0,.15);
+            border-color: rgba(255,0,0,.3);
+        }
+
+        /* АНИМАЦИЯ ЧАСТИЦ */
+        #particles {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #00d4ff;
+            opacity: .5;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 0; }
+            20% { opacity: .6; }
+            80% { opacity: .6; }
+            100% { transform: translateY(-120vh); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .admin-wrapper { flex-direction: column; }
+            .admin-sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                top: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
+                padding: 12px 16px;
+            }
+            .admin-sidebar ul {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+            .admin-sidebar li {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+            .admin-content { padding: 20px; }
+            .modules-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles"></div>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3" />
+                                <stop offset="50%" stop-color="#00d4ff" />
+                                <stop offset="100%" stop-color="#1f6bff" />
+                            </linearGradient>
+                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="4" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)" />
+                        <g filter="url(#logoGlow)">
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4" />
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6" />
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>SFERA</h2>
+                    <p>Administrasiýa paneli</p>
+                </div>
+            </a>
+
+            <div class="header-right" style="display:flex; align-items:center; gap:12px;">
+                <span class="user-info">👑 <strong id="adminName">Admin</strong></span>
+                <a href="index.html" class="btn btn-outline" data-i18n="back" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Yza</a>
+                <button class="lang" id="langBtn">TM</button>
+                <button class="logout-btn" id="logoutBtn" data-i18n="logout">Çykmak</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="admin-wrapper">
+        <aside class="admin-sidebar">
+            <ul id="adminMenu">
+                <li class="active" data-section="dashboard"><span class="icon">📊</span> <span data-i18n="menu_dashboard">Umumy</span></li>
+                <li data-section="users"><span class="icon">👥</span> <span data-i18n="menu_users">Ulanyjylar</span></li>
+                <li data-section="transactions"><span class="icon">💰</span> <span data-i18n="menu_transactions">Tranzaksiýalar</span></li>
+                <li data-section="listings"><span class="icon">🛒</span> <span data-i18n="menu_listings">Harytlar</span></li>
+                <li data-section="mail"><span class="icon">📬</span> <span data-i18n="menu_mail">Poçta</span></li>
+                <li data-section="ai"><span class="icon">🤖</span> <span data-i18n="menu_ai">AI çaklamalar</span></li>
+                <li data-section="settings"><span class="icon">⚙️</span> <span data-i18n="menu_settings">Sazlamalar</span></li>
+            </ul>
+        </aside>
+
+        <main class="admin-content" id="adminContent">
+            <!-- Динамический контент -->
+        </main>
+    </div>
+
+    <script>
+        // Проверка авторизации
+        const token = localStorage.getItem('token');
+        const userData = JSON.parse(localStorage.getItem('user') || '{}');
+
+        if (!token || userData.role !== 'admin') {
+            window.location.href = 'login.html';
+        }
+
+        // Встроенный резервный словарь на случай отсутствия ключа в JSON
+        const fallbackTranslations = {
+            tm: {
+                logout: "Çykmak", back: "← Yza", welcome: "Hoş geldiňiz, Administrator!", dashboard_welcome: "Platformanyň modullaryna giriş etmek üçin aşakdaky kartlardan saýlaň.",
+                menu_dashboard: "Umumy", menu_users: "Ulanyjylar", menu_transactions: "Tranzaksiýalar", menu_listings: "Harytlar", menu_mail: "Poçta", menu_ai: "AI çaklamalar", menu_settings: "Sazlamalar",
+                module_marketplace: "Marketpleýs", module_marketplace_desc: "Birža we söwda meýdançasy", module_bank: "TM Bank", module_bank_desc: "Sanly bank hyzmatlary",
+                module_messenger: "Messenger", module_messenger_desc: "Çalt habarlaşma", module_mail: "TM Poçta", module_mail_desc: "Içki poçta ulgamy",
+                module_ai: "AI analitika", module_ai_desc: "TM Coin prokgnozlary, trendler", module_docs: "Resmiýetler", module_docs_desc: "Awtomatik tassyklama",
+                module_tmpay: "TM Pay", module_tmpay_desc: "Milli töleg ulgamy", module_tmcoin: "TM Coin", module_tmcoin_desc: "Sanly döwlet walýutasy"
+            },
+            ru: {
+                logout: "Выйти", back: "← Назад", welcome: "Добро пожаловать, Администратор!", dashboard_welcome: "Выберите модуль платформы для перехода.",
+                menu_dashboard: "Обзор", menu_users: "Пользователи", menu_transactions: "Транзакции", menu_listings: "Объявления", menu_mail: "Почта", menu_ai: "AI прогнозы", menu_settings: "Настройки",
+                module_marketplace: "Маркетплейс", module_marketplace_desc: "Биржа и торговая площадка", module_bank: "ТМ Банк", module_bank_desc: "Цифровые банковские услуги",
+                module_messenger: "Мессенджер", module_messenger_desc: "Быстрая связь", module_mail: "TM Почта", module_mail_desc: "Внутренняя почта",
+                module_ai: "ИИ-аналитика", module_ai_desc: "Прогнозы TM Coin, тренды", module_docs: "Документы", module_docs_desc: "Автоматическая проверка",
+                module_tmpay: "TM Pay", module_tmpay_desc: "Национальная платёжная система", module_tmcoin: "TM Coin", module_tmcoin_desc: "Цифровая государственная валюта"
+            },
+            en: {
+                logout: "Logout", back: "← Back", welcome: "Welcome, Administrator!", dashboard_welcome: "Select a platform module to navigate.",
+                menu_dashboard: "Dashboard", menu_users: "Users", menu_transactions: "Transactions", menu_listings: "Listings", menu_mail: "Mail", menu_ai: "AI Predictions", menu_settings: "Settings",
+                module_marketplace: "Marketplace", module_marketplace_desc: "Exchange and trading platform", module_bank: "TM Bank", module_bank_desc: "Digital banking services",
+                module_messenger: "Messenger", module_messenger_desc: "Instant messaging", module_mail: "TM Mail", module_mail_desc: "Internal mail system",
+                module_ai: "AI Analytics", module_ai_desc: "TM Coin forecasts, trends", module_docs: "Documents", module_docs_desc: "Automatic verification",
+                module_tmpay: "TM Pay", module_tmpay_desc: "National payment system", module_tmcoin: "TM Coin", module_tmcoin_desc: "Digital state currency"
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'tm';
+        let loadedTranslations = {};
+
+        // Загрузка JSON файла из папки languages/
+        async function fetchLanguageFile(lang) {
+            try {
+                const res = await fetch(`languages/${lang}.json`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return await res.json();
+            } catch (err) {
+                console.warn(`Не удалось загрузить languages/${lang}.json, используется встроенный резерв.`, err);
+                return null;
+            }
+        }
+
+        async function setLanguage(lang) {
+            currentLang = lang;
+            const externalData = await fetchLanguageFile(lang);
+            
+            // Объединяем полученный JSON с фоллбеком
+            loadedTranslations = Object.assign({}, fallbackTranslations[lang] || {}, externalData || {});
+
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (loadedTranslations[key]) {
+                    el.textContent = loadedTranslations[key];
+                }
+            });
+
+            document.getElementById('langBtn').textContent = lang.toUpperCase();
+            localStorage.setItem('lang', lang);
+
+            const activeLi = document.querySelector('#adminMenu li.active');
+            if (activeLi) renderSection(activeLi.dataset.section);
+        }
+
+        document.getElementById('langBtn').addEventListener('click', function() {
+            const cycle = ['tm', 'ru', 'en'];
+            let idx = cycle.indexOf(currentLang);
+            idx = (idx + 1) % cycle.length;
+            setLanguage(cycle[idx]);
+        });
+
+        document.getElementById('adminName').textContent = userData.username || 'Admin';
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        // Отрисовка секций
+        function renderSection(section) {
+            const contentArea = document.getElementById('adminContent');
+            const t = loadedTranslations;
+
+            if (section === 'dashboard') {
+                contentArea.innerHTML = `
+                    <h1>${t.welcome || 'Hoş geldiňiz!'}</h1>
+                    <p class="welcome">${t.dashboard_welcome || ''}</p>
+                    
+                    <div class="modules-grid">
+                        <a href="marketplace.html" class="module-card"><div class="icon">🛒</div><h3>${t.module_marketplace || 'Marketplace'}</h3><p>${t.module_marketplace_desc || ''}</p></a>
+                        <a href="bank.html" class="module-card"><div class="icon">🏦</div><h3>${t.module_bank || 'TM Bank'}</h3><p>${t.module_bank_desc || ''}</p></a>
+                        <a href="messenger.html" class="module-card"><div class="icon">💬</div><h3>${t.module_messenger || 'Messenger'}</h3><p>${t.module_messenger_desc || ''}</p></a>
+                        <a href="mailtm.html" class="module-card"><div class="icon">✉️</div><h3>${t.module_mail || 'TM Mail'}</h3><p>${t.module_mail_desc || ''}</p></a>
+                        <a href="ai.html" class="module-card"><div class="icon">🤖</div><h3>${t.module_ai || 'AI Analytics'}</h3><p>${t.module_ai_desc || ''}</p></a>
+                        <a href="documents.html" class="module-card"><div class="icon">📄</div><h3>${t.module_docs || 'Documents'}</h3><p>${t.module_docs_desc || ''}</p></a>
+                        <a href="tm-pay.html" class="module-card"><div class="icon">💳</div><h3>${t.module_tmpay || 'TM Pay'}</h3><p>${t.module_tmpay_desc || ''}</p></a>
+                        <a href="tm-coin.html" class="module-card"><div class="icon">₮</div><h3>${t.module_tmcoin || 'TM Coin'}</h3><p>${t.module_tmcoin_desc || ''}</p></a>
+                    </div>
+
+                    <div class="admin-card">
+                        <h3>Platformanyň ýagdaýy</h3>
+                        <div class="stat-grid">
+                            <div class="stat-item"><div class="number" id="statUsers">0</div><div class="label">Ulanyjylar</div></div>
+                            <div class="stat-item"><div class="number">24</div><div class="label">Sargytlar</div></div>
+                            <div class="stat-item"><div class="number">142</div><div class="label">TM Coin söwdalary</div></div>
+                            <div class="stat-item"><div class="number">8</div><div class="label">Hatlar</div></div>
+                        </div>
+                    </div>
+
+                    <div class="admin-card">
+                        <h3>Iň soňky ulanyjylar</h3>
+                        <table class="admin-table">
+                            <thead><tr><th>Ulanyjy</th><th>Email</th><th>Rol</th><th>Döredilen</th></tr></thead>
+                            <tbody id="recentUsersBody"></tbody>
+                        </table>
+                    </div>
+                `;
+                loadStats();
+            } else if (section === 'users') {
+                contentArea.innerHTML = `
+                    <h1>${t.menu_users || 'Ulanyjylar'}</h1>
+                    <div class="admin-card">
+                        <h3>Ulanyjylary dolandyrmak</h3>
+                        <table class="admin-table">
+                            <thead><tr><th>Ulanyjy</th><th>Email</th><th>Rol</th><th>Hereket</th></tr></thead>
+                            <tbody>
+                                <tr><td>admin</td><td>admin@sfera.tm</td><td><span class="badge admin">admin</span></td><td><div class="admin-actions"><button class="danger">Poz</button></div></td></tr>
+                                <tr><td>user1</td><td>user1@sfera.tm</td><td><span class="badge user">user</span></td><td><div class="admin-actions"><button>Üýtget</button><button class="danger">Poz</button></div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>`;
+            } else {
+                contentArea.innerHTML = `<h1>${t['menu_' + section] || section}</h1><div class="admin-card"><p>Bölüm taýýarlanýar...</p></div>`;
+            }
+        }
+
+        // Переключение меню
+        const menuItems = document.querySelectorAll('#adminMenu li');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                renderSection(this.dataset.section);
+            });
+        });
+
+        function loadStats() {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const statUsersEl = document.getElementById('statUsers');
+            if (statUsersEl) statUsersEl.textContent = users.length;
+
+            const tbody = document.getElementById('recentUsersBody');
+            if (!tbody) return;
+            const recent = users.slice(-5).reverse();
+            tbody.innerHTML = recent.map(u => `
+                <tr>
+                    <td>${u.username || 'N/A'}</td>
+                    <td>${u.email || ''}</td>
+                    <td><span class="badge ${u.role === 'admin' ? 'admin' : 'user'}">${u.role || 'user'}</span></td>
+                    <td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : ''}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Частицы
+        document.addEventListener('DOMContentLoaded', () => {
+            const particles = document.getElementById('particles');
+            if (particles && particles.children.length === 0) {
+                for (let i = 0; i < 60; i++) {
+                    const p = document.createElement('span');
+                    p.className = 'particle';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.top = Math.random() * 100 + '%';
+                    p.style.animationDuration = (6 + Math.random() * 12) + 's';
+                    p.style.animationDelay = Math.random() * 5 + 's';
+                    particles.appendChild(p);
+                }
+            }
+            setLanguage(currentLang);
+        });
+    </script>
+</body>
+</html>

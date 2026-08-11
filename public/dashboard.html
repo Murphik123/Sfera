@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>СФЕРА — Пользовательский дашборд</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --secondary: #1f6bff;
+            --accent: #00ffa3;
+            --border: rgba(255, 255, 255, 0.25);
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
+            color: var(--white);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Анимированный неоновый фон первой страницы */
+        body::before {
+            content: "";
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0,212,255,.15), transparent 35%),
+                radial-gradient(circle at 80% 20%, rgba(0,255,170,.10), transparent 35%),
+                radial-gradient(circle at 60% 80%, rgba(32,108,255,.15), transparent 40%);
+            animation: bgmove 18s linear infinite;
+            z-index: -2;
+        }
+
+        @keyframes bgmove {
+            0% { transform: translate(0,0); }
+            50% { transform: translate(-8%,-5%); }
+            100% { transform: translate(0,0); }
+        }
+
+        .container {
+            width: min(1400px, 92%);
+            margin: auto;
+        }
+
+        /* ================= ШАПКА (Светлое прозрачное стекло) ================= */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2) !important;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: translateY(-1px);
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .logo-svg g {
+            transform-origin: center;
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .logo:hover .logo-svg g {
+            transform: rotate(45deg);
+        }
+
+        .logo-text h2 {
+            font-size: 20px;
+            font-weight: 800;
+            margin: 0;
+            background: linear-gradient(to right, #fff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: #bcd0e2;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-info {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .lang, .logout-btn {
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .lang:hover, .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* ================= ДАШБОРД ================= */
+        .dashboard {
+            padding: 130px 0 60px;
+            min-height: 100vh;
+            position: relative;
+            z-index: 2;
+        }
+
+        .dashboard h1 {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #fff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .dashboard .welcome {
+            font-size: 18px;
+            color: #bcd0e2;
+            margin-bottom: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            transition: all 0.35s ease;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.25);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .card .icon {
+            font-size: 46px;
+            margin-bottom: 12px;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #bcd0e2;
+        }
+
+        /* ЧАСТИЦЫ */
+        #particles {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #00d4ff;
+            opacity: .5;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); opacity: 0; }
+            20% { opacity: .6; }
+            80% { opacity: .6; }
+            100% { transform: translateY(-120vh); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard h1 { font-size: 28px; }
+            .grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="particles"></div>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3"/>
+                                <stop offset="50%" stop-color="#00d4ff"/>
+                                <stop offset="100%" stop-color="#1f6bff"/>
+                            </linearGradient>
+                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="4" result="blur"/>
+                                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                            </filter>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)"/>
+                        <g filter="url(#logoGlow)">
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>SFERA</h2>
+                    <p id="logoSubtitle" data-i18n="logo_subtitle">Milli Sanly Platforma</p>
+                </div>
+            </a>
+
+            <div class="header-right">
+                <span class="user-info">👤 <strong id="username">User</strong></span>
+                <button class="lang" id="langBtn">RU</button>
+                <button class="logout-btn" id="logoutBtn" data-i18n="logout">🚪 Çykmak</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="dashboard">
+        <div class="container">
+            <h1><span data-i18n="welcome_title">👋 Hoş geldiňiz</span>, <span id="greetingUser">User</span>!</h1>
+            <p class="welcome" data-i18n="welcome_subtitle">Platformanyň modullaryna giriş etmek üçin aşakdaky kartlardan saýlaň.</p>
+            
+            <div class="grid">
+                <a href="marketplace.html" class="card">
+                    <div class="icon">🛒</div>
+                    <h3 data-i18n="card_marketplace">Marketpleýs</h3>
+                    <p data-i18n="desc_marketplace">Birža we söwda meýdançasy</p>
+                </a>
+                <a href="bank.html" class="card">
+                    <div class="icon">🏦</div>
+                    <h3 data-i18n="card_bank">TM Bank</h3>
+                    <p data-i18n="desc_bank">Sanly bank hyzmatlary</p>
+                </a>
+                <a href="messenger.html" class="card">
+                    <div class="icon">💬</div>
+                    <h3 data-i18n="card_messenger">Messenger</h3>
+                    <p data-i18n="desc_messenger">Çalt habarlaşma</p>
+                </a>
+                <a href="mailtm.html" class="card">
+                    <div class="icon">✉️</div>
+                    <h3 data-i18n="card_mail">TM Poçta</h3>
+                    <p data-i18n="desc_mail">Içki poçta ulgamy</p>
+                </a>
+                <a href="ai.html" class="card">
+                    <div class="icon">🤖</div>
+                    <h3 data-i18n="card_ai">AI analitika</h3>
+                    <p data-i18n="desc_ai">TM Coin prokgnozlary, trendler</p>
+                </a>
+                <a href="documents.html" class="card">
+                    <div class="icon">📄</div>
+                    <h3 data-i18n="card_docs">Resmiýetler</h3>
+                    <p data-i18n="desc_docs">Awtomatik tassyklama</p>
+                </a>
+                <a href="tm-pay.html" class="card">
+                    <div class="icon">💳</div>
+                    <h3 data-i18n="card_tmpay">TM Pay</h3>
+                    <p data-i18n="desc_tmpay">Milli töleg ulgamy</p>
+                </a>
+                <a href="tm-coin.html" class="card">
+                    <div class="icon">₮</div>
+                    <h3 data-i18n="card_tmcoin">TM Coin</h3>
+                    <p data-i18n="desc_tmcoin">Sanly döwlet walýutasy</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const translations = {
+            ru: {
+                logo_subtitle: "Национальная цифровая платформа",
+                logout: "🚪 Выйти",
+                welcome_title: "👋 Добро пожаловать",
+                welcome_subtitle: "Выберите раздел ниже для работы с модулями платформы.",
+                card_marketplace: "Маркетплейс",
+                desc_marketplace: "Биржа и торговая площадка",
+                card_bank: "TM Bank",
+                desc_bank: "Цифровые банковские услуги",
+                card_messenger: "Мессенджер",
+                desc_messenger: "Быстрый обмен сообщениями",
+                card_mail: "TM Почта",
+                desc_mail: "Внутренняя почтовая система",
+                card_ai: "AI Аналитика",
+                desc_ai: "Прогнозы TM Coin, тренды",
+                card_docs: "Документы",
+                desc_docs: "Автоматическое утверждение",
+                card_tmpay: "TM Pay",
+                desc_tmpay: "Национальная платежная система",
+                card_tmcoin: "TM Coin",
+                desc_tmcoin: "Цифровая государственная валюта"
+            },
+            tm: {
+                logo_subtitle: "Milli Sanly Platforma",
+                logout: "🚪 Çykmak",
+                welcome_title: "👋 Hoş geldiňiz",
+                welcome_subtitle: "Platformanyň modullaryna giriş etmek üçin aşakdaky kartlardan saýlaň.",
+                card_marketplace: "Marketpleýs",
+                desc_marketplace: "Birža we söwda meýdançasy",
+                card_bank: "TM Bank",
+                desc_bank: "Sanly bank hyzmatlary",
+                card_messenger: "Messenger",
+                desc_messenger: "Çalt habarlaşma",
+                card_mail: "TM Poçta",
+                desc_mail: "Içki poçta ulgamy",
+                card_ai: "AI analitika",
+                desc_ai: "TM Coin prokgnozlary, trendler",
+                card_docs: "Resmiýetler",
+                desc_docs: "Awtomatik tassyklama",
+                card_tmpay: "TM Pay",
+                desc_tmpay: "Milli töleg ulgamy",
+                card_tmcoin: "TM Coin",
+                desc_tmcoin: "Sanly döwlet walýutasy"
+            },
+            en: {
+                logo_subtitle: "National Digital Platform",
+                logout: "🚪 Logout",
+                welcome_title: "👋 Welcome",
+                welcome_subtitle: "Select a module below to access platform features.",
+                card_marketplace: "Marketplace",
+                desc_marketplace: "Exchange and trading platform",
+                card_bank: "TM Bank",
+                desc_bank: "Digital banking services",
+                card_messenger: "Messenger",
+                desc_messenger: "Instant messaging",
+                card_mail: "TM Mail",
+                desc_mail: "Internal mail system",
+                card_ai: "AI Analytics",
+                desc_ai: "TM Coin forecasts & trends",
+                card_docs: "Documents",
+                desc_docs: "Automated verification",
+                card_tmpay: "TM Pay",
+                desc_tmpay: "National payment system",
+                card_tmcoin: "TM Coin",
+                desc_tmcoin: "Digital state currency"
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'ru';
+
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            document.getElementById('langBtn').textContent = lang.toUpperCase();
+            localStorage.setItem('lang', lang);
+        }
+
+        document.getElementById('langBtn').addEventListener('click', function() {
+            const cycle = ['ru', 'tm', 'en'];
+            let idx = cycle.indexOf(currentLang);
+            idx = (idx + 1) % cycle.length;
+            setLanguage(cycle[idx]);
+        });
+
+        // Проверка авторизации
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const token = localStorage.getItem('token');
+
+        if (!token || !user) {
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('username').textContent = user.username || 'User';
+        document.getElementById('greetingUser').textContent = user.username || 'User';
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage(currentLang);
+            const particles = document.getElementById('particles');
+            if (particles) {
+                for (let i = 0; i < 60; i++) {
+                    const p = document.createElement('span');
+                    p.className = 'particle';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.top = Math.random() * 100 + '%';
+                    p.style.animationDuration = (6 + Math.random() * 12) + 's';
+                    p.style.animationDelay = Math.random() * 5 + 's';
+                    particles.appendChild(p);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

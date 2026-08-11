@@ -1,0 +1,6 @@
+@import 'core/variables.css';
+@import 'core/main.css';
+@import 'components/header.css';
+@import 'components/hero.css';
+@import 'components/cards.css';
+@import 'components/glass-effects.css';
