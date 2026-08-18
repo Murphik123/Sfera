@@ -7,7 +7,10 @@ const http = require('http');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const { Server } = require('socket.io');
+const { errorHandler, notFoundHandler } = require('./src/middleware/errorHandler');
+const { AppError } = require('./src/utils/errors');
 
 const app = express();
 const server = http.createServer(app);
@@ -51,6 +54,10 @@ const possibleRoutesPaths = [
 
 let actualRoutesPath = possibleRoutesPaths.find(p => fs.existsSync(p));
 
+// Маршруты, которые не удалось загрузить: их префиксы должны честно отвечать 503,
+// а не превращаться в HTML главной страницы через SPA-фоллбэк.
+const failedRoutes = [];
+
 if (actualRoutesPath) {
     console.log(`📁 Найдена папка маршрутов (routes): ${actualRoutesPath}`);
     const files = fs.readdirSync(actualRoutesPath);
@@ -68,7 +75,8 @@ if (actualRoutesPath) {
                 app.use(prefix, routeModule);
                 console.log(`✅ Маршрут подключен: ${prefix} -> ${file}`);
             } catch (err) {
-                console.error(`❌ Ошибка загрузки маршрута ${file}:`, err.message);
+                console.error(`❌ Ошибка загрузки маршрута ${file} (${prefix}):`, err.stack || err);
+                failedRoutes.push({ prefix, file, error: err });
             }
         }
     });
@@ -76,10 +84,24 @@ if (actualRoutesPath) {
     console.error('⚠️ ВНИМАНИЕ: Папка с маршрутами (routes) не найдена ни по одному из путей!');
 }
 
+failedRoutes.forEach(({ prefix, file }) => {
+    app.use(prefix, (req, res, next) => {
+        next(new AppError(`Модуль ${file} не загружен, endpoint недоступен`, 503));
+    });
+});
+
 // --- 3. WebSocket & WebRTC Signaling Logic ---
 const activeUsers = new Map(); // userId -> socketId
 
+io.engine.on('connection_error', (err) => {
+    console.error('❌ Ошибка установки WebSocket-соединения:', err.code, err.message);
+});
+
 io.on('connection', (socket) => {
+    socket.on('error', (err) => {
+        console.error(`❌ Ошибка сокета ${socket.id}:`, err.stack || err);
+    });
+
     socket.on('register_user', (userId) => {
         activeUsers.set(userId, socket.id);
         io.emit('user_status_change', { userId, online: true });
@@ -136,6 +158,8 @@ io.on('connection', (socket) => {
 });
 
 // --- 4. ПРАВИЛЬНЫЙ ФОЛЛБЭК ДЛЯ ROUTING / HTML ---
+app.use('/api', notFoundHandler);
+
 app.get('*', (req, res) => {
     // Если запрос идёт к файлу (.js, .css, .png и т.д.), но он отсутствует в express.static, отдаем 404
     if (path.extname(req.path)) {
@@ -150,11 +174,50 @@ app.get('*', (req, res) => {
     }
 });
 
+// Централизованная обработка ошибок должна стоять последней
+app.use(errorHandler);
+
 // Запуск сервера
 const PORT = process.env.PORT || 10000;
 const HOST = '0.0.0.0';
 
+server.on('error', (err) => {
+    console.error(`❌ Не удалось запустить сервер на ${HOST}:${PORT}:`, err.stack || err);
+    process.exit(1);
+});
+
 server.listen(PORT, HOST, () => {
     console.log(`🚀 Server running on http://${HOST}:${PORT}`);
     console.log(`🔌 WebSocket готов`);
+
+    // Без подключения к MongoDB запросы к моделям только копятся в буфере и падают
+    // по таймауту — предупреждаем об этом сразу, а не через первый 503 от клиента.
+    if (mongoose.connection.readyState === 0) {
+        console.error('⚠️ MongoDB не подключена: запросы к базе будут отклоняться со статусом 503');
+    }
+});
+
+// --- 5. ОБРАБОТКА НЕПЕРЕХВАЧЕННЫХ ОШИБОК ПРОЦЕССА ---
+let shuttingDown = false;
+
+const shutdown = (reason, error) => {
+    console.error(`💥 ${reason}:`, error && error.stack ? error.stack : error);
+
+    if (shuttingDown) return;
+    shuttingDown = true;
+
+    // Даём серверу закрыть активные соединения, затем выходим с ненулевым кодом,
+    // чтобы супервизор (Render/PM2) перезапустил процесс в известном состоянии.
+    const forceExit = setTimeout(() => process.exit(1), 10000);
+    forceExit.unref();
+
+    server.close(() => process.exit(1));
+};
+
+process.on('unhandledRejection', (reason) => {
+    shutdown('Необработанное отклонение промиса', reason);
+});
+
+process.on('uncaughtException', (err) => {
+    shutdown('Непойманное исключение', err);
 });

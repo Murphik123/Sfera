@@ -14,8 +14,24 @@ const connectDB = async () => {
     const conn = await mongoose.connect(mongoURI);
 
     console.log(`✅ MongoDB connected: ${conn.connection.host}`);
+
+    // Ошибки и обрывы после успешного подключения раньше нигде не видны были:
+    // запросы просто начинали падать по таймауту без внятной причины.
+    mongoose.connection.on('error', (error) => {
+      console.error('❌ MongoDB connection error:', error.stack || error);
+    });
+
+    mongoose.connection.on('disconnected', () => {
+      console.warn('⚠️ MongoDB disconnected — запросы будут буферизованы до восстановления');
+    });
+
+    mongoose.connection.on('reconnected', () => {
+      console.log('✅ MongoDB reconnected');
+    });
+
+    return conn;
   } catch (error) {
-    console.error(`❌ MongoDB connection error: ${error.message}`);
+    console.error('❌ MongoDB connection error:', error.stack || error);
     process.exit(1);
   }
 };

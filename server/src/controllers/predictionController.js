@@ -1,7 +1,7 @@
 // src/controllers/predictionController.js
 
 // Пример функции получения предсказаний/аналитики
-exports.getPredictions = async (req, res) => {
+exports.getPredictions = async (req, res, next) => {
   try {
     // Здесь будет твоя бизнес-логика (ML-модель, алгоритмы или агрегации)
     const predictionsData = {
@@ -15,7 +15,6 @@ exports.getPredictions = async (req, res) => {
 
     return res.status(200).json(predictionsData);
   } catch (error) {
-    console.error("Ошибка при генерации предсказаний:", error);
-    return res.status(500).json({ message: "Ошибка сервера при расчете прогноза" });
+    return next(error);
   }
 };

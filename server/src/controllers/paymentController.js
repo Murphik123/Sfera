@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 const Wallet = require('../models/Wallet');
 const Transaction = require('../models/Transaction');
+const { logSuppressedError } = require('../utils/errors');
 
 // Получение или создание кошелька
-exports.getWallet = async (req, res) => {
+exports.getWallet = async (req, res, next) => {
     try {
         let wallet = await Wallet.findOne({ userId: req.user._id });
         
@@ -13,12 +14,12 @@ exports.getWallet = async (req, res) => {
         
         res.json(wallet);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
 // Безопасный перевод средств (TMT или TM Coin)
-exports.transfer = async (req, res) => {
+exports.transfer = async (req, res, next) => {
     const session = await mongoose.startSession();
     session.startTransaction();
 
@@ -80,14 +81,21 @@ exports.transfer = async (req, res) => {
 
         res.json({ message: 'Перевод успешно выполнен', transaction });
     } catch (err) {
-        await session.abortTransaction();
-        session.endSession();
-        res.status(500).json({ message: err.message });
+        // Откат сам может упасть — такая ошибка раньше затирала исходную причину
+        // и улетала в unhandledRejection.
+        try {
+            await session.abortTransaction();
+        } catch (abortErr) {
+            logSuppressedError('Не удалось откатить транзакцию перевода', abortErr);
+        } finally {
+            session.endSession();
+        }
+        return next(err);
     }
 };
 
 // Пополнение баланса (Депозит)
-exports.deposit = async (req, res) => {
+exports.deposit = async (req, res, next) => {
     try {
         const { amount, currency = 'TMT' } = req.body;
         const depositAmount = Number(amount);
@@ -118,12 +126,12 @@ exports.deposit = async (req, res) => {
 
         res.json({ message: 'Баланс успешно пополнен', wallet, transaction });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
 // История транзакций пользователя
-exports.getMyTransactions = async (req, res) => {
+exports.getMyTransactions = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 20;
@@ -146,6 +154,6 @@ exports.getMyTransactions = async (req, res) => {
 
         res.json({ transactions, total, page, pages: Math.ceil(total / limit) });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };

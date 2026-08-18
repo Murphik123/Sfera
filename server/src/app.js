@@ -4,7 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
 const { authMiddleware } = require('./middleware/auth');
-const errorHandler = require('./middleware/errorHandler');
+const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
 
 const authRoutes = require('./routes/authRoutes');
 const chatRoutes = require('./routes/chatRoutes');
@@ -58,19 +58,28 @@ app.use('/api/mail', authMiddleware, mailRoutes);
 app.use('/api/bank', authMiddleware, bankRoutes);
 app.use('/api/ai', authMiddleware, aiRoutes);
 
-// 3. Fallback для SPA (безопасный поиск index.html по двум путям)
-app.get('*', (req, res) => {
+// 3. Неизвестные API-маршруты отдают JSON 404, а не HTML главной страницы
+app.use('/api', notFoundHandler);
+
+// 4. Fallback для SPA (безопасный поиск index.html по двум путям)
+app.get('*', (req, res, next) => {
   const primaryIndex = path.join(publicPath1, 'index.html');
   const fallbackIndex = path.join(publicPath2, 'index.html');
 
   res.sendFile(primaryIndex, (err) => {
-    if (err) {
-      res.sendFile(fallbackIndex, (fallbackErr) => {
-        if (fallbackErr) {
-          res.status(404).send('Index page not found. Check public folder structure.');
-        }
-      });
-    }
+    if (!err) return;
+
+    // Только отсутствие файла оправдывает переход к альтернативному пути;
+    // остальные ошибки (права доступа, обрыв соединения) нужно пробросить.
+    if (err.code !== 'ENOENT') return next(err);
+
+    res.sendFile(fallbackIndex, (fallbackErr) => {
+      if (!fallbackErr) return;
+      if (fallbackErr.code !== 'ENOENT') return next(fallbackErr);
+
+      console.error(`❌ index.html не найден ни в ${publicPath1}, ни в ${publicPath2}`);
+      res.status(404).send('Index page not found. Check public folder structure.');
+    });
   });
 });
 

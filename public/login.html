@@ -367,7 +367,9 @@
 
         // Автоматический "разогрев" сервера Render при открытии страницы
         function wakeupServer() {
-            fetch('https://sfera-1.onrender.com/api/stats', { method: 'GET' }).catch(() => {});
+            fetch('https://sfera-1.onrender.com/api/stats', { method: 'GET' }).catch((err) => {
+                console.warn('[login] Разогрев сервера не удался:', err);
+            });
         }
 
         // Обработка формы входа

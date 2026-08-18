@@ -73,7 +73,9 @@ async function setLanguage(lang) {
 function cycleLanguage() {
     const idx = SUPPORTED_LANGS.indexOf(currentLang);
     const next = (idx + 1) % SUPPORTED_LANGS.length;
-    setLanguage(SUPPORTED_LANGS[next]);
+    setLanguage(SUPPORTED_LANGS[next]).catch((err) => {
+        console.error('[i18n] Не удалось переключить язык', err);
+    });
 }
 
 async function initI18n() {
@@ -83,7 +85,9 @@ async function initI18n() {
 
 // Автоматический запуск после загрузки страницы
 document.addEventListener('DOMContentLoaded', () => {
-    initI18n();
+    initI18n().catch((err) => {
+        console.error('[i18n] Не удалось инициализировать переводы', err);
+    });
     const btn = document.getElementById('langBtn');
     if (btn) {
         btn.addEventListener('click', cycleLanguage);
@@ -96,7 +100,9 @@ window.addEventListener('storage', (ev) => {
     if (STORAGE_KEYS.includes(ev.key)) {
         const newLang = readStoredLang() || DEFAULT_LANG;
         if (newLang && newLang !== currentLang) {
-            setLanguage(newLang).catch(() => {});
+            setLanguage(newLang).catch((err) => {
+                console.error(`[i18n] Не удалось синхронизировать язык ${newLang}`, err);
+            });
         }
     }
 });

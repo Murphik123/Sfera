@@ -1,15 +1,15 @@
 const Prediction = require('../models/Prediction');
 
-exports.getPredictions = async (req, res) => {
+exports.getPredictions = async (req, res, next) => {
   try {
     const predictions = await Prediction.find().sort({ date: -1 }).limit(30);
     res.json(predictions);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return next(error);
   }
 };
 
-exports.createPrediction = async (req, res) => {
+exports.createPrediction = async (req, res, next) => {
   try {
     const { predictedPrice, confidence, date } = req.body;
     const prediction = new Prediction({
@@ -20,6 +20,6 @@ exports.createPrediction = async (req, res) => {
     await prediction.save();
     res.status(201).json(prediction);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return next(error);
   }
 };

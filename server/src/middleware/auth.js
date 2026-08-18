@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 const redisClient = require('../config/redis');
 const User = require('../models/User');
+const { logSuppressedError } = require('../utils/errors');
+
+const TOKEN_ERRORS = ['JsonWebTokenError', 'TokenExpiredError', 'NotBeforeError'];
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -23,7 +26,9 @@ const authMiddleware = async (req, res, next) => {
           return res.status(401).json({ message: 'Invalid session' });
         }
       } catch (redisErr) {
-        console.warn('Redis check warning:', redisErr.message);
+        // Проверка сессии не критична для аутентификации, но её отказ нельзя
+        // терять: без логов невозможно заметить, что инвалидация сессий не работает.
+        logSuppressedError('Не удалось проверить сессию в Redis', redisErr);
       }
     }
 
@@ -38,7 +43,12 @@ const authMiddleware = async (req, res, next) => {
 
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Unauthorized', error: error.message });
+    // 401 только для реальных проблем с токеном. Сбои БД/инфраструктуры
+    // раньше маскировались под «Unauthorized» и не логировались вообще.
+    if (TOKEN_ERRORS.includes(error.name)) {
+      return res.status(401).json({ message: 'Unauthorized', error: error.message });
+    }
+    return next(error);
   }
 };
 

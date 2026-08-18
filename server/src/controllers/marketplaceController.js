@@ -1,24 +1,54 @@
 const Listing = require('../models/Listing');
 const Order = require('../models/Order');
 const redisClient = require('../config/redis');
+const { logSuppressedError } = require('../utils/errors');
 
-exports.getListings = async (req, res) => {
+const CACHE_KEY = 'listings:all';
+
+// Кеш — оптимизация, а не источник истины: его сбои логируются,
+// но не ломают запрос и не теряются молча.
+const readCache = async (key) => {
   try {
-    const cacheKey = 'listings:all';
-    const cached = await redisClient.get(cacheKey);
-    if (cached) {
-      return res.json(JSON.parse(cached));
-    }
-
-    const listings = await Listing.find({ status: 'active' }).populate('seller', 'username avatar');
-    await redisClient.set(cacheKey, JSON.stringify(listings), 'EX', 60 * 5); // 5 min
-    res.json(listings);
+    const cached = await redisClient.get(key);
+    return cached ? JSON.parse(cached) : null;
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    logSuppressedError(`Не удалось прочитать кеш ${key}`, error);
+    return null;
   }
 };
 
-exports.createListing = async (req, res) => {
+const writeCache = async (key, value, ttlSeconds) => {
+  try {
+    await redisClient.set(key, JSON.stringify(value), 'EX', ttlSeconds);
+  } catch (error) {
+    logSuppressedError(`Не удалось записать кеш ${key}`, error);
+  }
+};
+
+const dropCache = async (key) => {
+  try {
+    await redisClient.del(key);
+  } catch (error) {
+    logSuppressedError(`Не удалось сбросить кеш ${key}`, error);
+  }
+};
+
+exports.getListings = async (req, res, next) => {
+  try {
+    const cached = await readCache(CACHE_KEY);
+    if (cached) {
+      return res.json(cached);
+    }
+
+    const listings = await Listing.find({ status: 'active' }).populate('seller', 'username avatar');
+    await writeCache(CACHE_KEY, listings, 60 * 5); // 5 min
+    res.json(listings);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+exports.createListing = async (req, res, next) => {
   try {
     const { title, description, price, category, images } = req.body;
     const listing = new Listing({
@@ -32,14 +62,14 @@ exports.createListing = async (req, res) => {
     await listing.save();
 
     // Очищаем кеш
-    await redisClient.del('listings:all');
+    await dropCache(CACHE_KEY);
     res.status(201).json(listing);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return next(error);
   }
 };
 
-exports.createOrder = async (req, res) => {
+exports.createOrder = async (req, res, next) => {
   try {
     const { listingId } = req.body;
     const listing = await Listing.findById(listingId);
@@ -62,10 +92,10 @@ exports.createOrder = async (req, res) => {
     await listing.save();
 
     // Очищаем кеш
-    await redisClient.del('listings:all');
+    await dropCache(CACHE_KEY);
 
     res.status(201).json(order);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return next(error);
   }
 };

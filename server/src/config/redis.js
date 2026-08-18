@@ -2,19 +2,45 @@
 class RedisMock {
   constructor() {
     this.store = new Map();
+    this.expirations = new Map();
   }
 
   async get(key) {
+    const expiresAt = this.expirations.get(key);
+    if (expiresAt !== undefined && expiresAt <= Date.now()) {
+      this.store.delete(key);
+      this.expirations.delete(key);
+      return null;
+    }
     return this.store.get(key) || null;
   }
 
   async set(key, value, mode, duration) {
     this.store.set(key, value);
+    this.expirations.delete(key);
+
+    // Раньше TTL молча игнорировался, и кеш жил до перезапуска процесса.
+    if (mode) {
+      const normalized = String(mode).toUpperCase();
+      const ttlMs = normalized === 'EX' ? Number(duration) * 1000
+        : normalized === 'PX' ? Number(duration)
+          : null;
+
+      if (ttlMs === null) {
+        console.warn(`⚠️ Redis mock: режим SET «${mode}» не поддерживается и будет проигнорирован`);
+      } else if (!Number.isFinite(ttlMs) || ttlMs <= 0) {
+        throw new Error(`Redis mock: некорректный TTL для ключа ${key}: ${duration}`);
+      } else {
+        this.expirations.set(key, Date.now() + ttlMs);
+      }
+    }
+
     return 'OK';
   }
 
   async del(key) {
     this.store.delete(key);
+    this.expirations.delete(key);
     return 1;
   }
 
@@ -46,7 +72,10 @@ class RedisMock {
       // Симулируем успешное подключение
       setTimeout(callback, 10);
     }
-    // Для эвента 'error' ничего не делаем, так как это Mock
+    // У mock-а нет сетевых ошибок, но подписка не должна исчезать беззвучно.
+    if (event === 'error') {
+      console.warn('⚠️ Redis mock: обработчик error зарегистрирован, но события не генерируются');
+    }
     return this;
   }
 

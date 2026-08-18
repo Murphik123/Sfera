@@ -12,6 +12,10 @@ module.exports = (server) => {
     },
   });
 
+  io.engine.on('connection_error', (err) => {
+    console.error('❌ Ошибка установки WebSocket-соединения:', err.code, err.message);
+  });
+
   // Авторизация сокет-соединения через JWT
   io.use((socket, next) => {
     const token = socket.handshake.auth?.token || socket.handshake.headers?.authorization?.split(' ')[1];
@@ -20,7 +24,15 @@ module.exports = (server) => {
       return next(new Error('Authentication error: Token missing'));
     }
 
-    const decoded = verifyToken(token);
+    let decoded;
+    try {
+      decoded = verifyToken(token);
+    } catch (error) {
+      // Неожиданный сбой верификации не должен превращаться в обычный «invalid token».
+      console.error('❌ Ошибка проверки токена в WebSocket-рукопожатии:', error.stack || error);
+      return next(new Error('Authentication error: Token verification failed'));
+    }
+
     if (!decoded || !decoded.userId) {
       return next(new Error('Authentication error: Invalid token'));
     }
@@ -35,12 +47,32 @@ module.exports = (server) => {
     // Подключаем пользователя к собственной личной комнате (для адресных уведомлений)
     socket.join(socket.userId);
 
-    // Обработка отправки сообщения через сокет
-    socket.on('send_message', async (data) => {
-      try {
-        const { to, text, attachments } = data;
+    socket.on('error', (err) => {
+      console.error(`❌ Ошибка сокета ${socket.id} (user ${socket.userId}):`, err.stack || err);
+    });
 
-        if (!to || !text) return;
+    // Обработка отправки сообщения через сокет
+    socket.on('send_message', async (data, ack) => {
+      // Ответ отправителю: раньше любая ошибка оставалась только в логах сервера,
+      // а клиент считал сообщение доставленным.
+      const fail = (message, error) => {
+        if (error) {
+          console.error(`❌ Socket send_message error (user ${socket.userId}):`, error.stack || error);
+        } else {
+          console.warn(`⚠️ Socket send_message отклонён (user ${socket.userId}): ${message}`);
+        }
+
+        const payload = { ok: false, message };
+        if (typeof ack === 'function') ack(payload);
+        socket.emit('message_error', payload);
+      };
+
+      try {
+        const { to, text, attachments } = data || {};
+
+        if (!to || !text) {
+          return fail('Укажите получателя и текст сообщения');
+        }
 
         const message = new Message({
           from: socket.userId,
@@ -59,8 +91,9 @@ module.exports = (server) => {
         io.to(to.toString()).emit('new_message', populatedMessage);
         io.to(socket.userId).emit('new_message', populatedMessage);
 
+        if (typeof ack === 'function') ack({ ok: true, message: populatedMessage });
       } catch (err) {
-        console.error('❌ Socket send_message error:', err.message);
+        fail('Не удалось отправить сообщение', err);
       }
     });
 

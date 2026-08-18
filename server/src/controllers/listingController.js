@@ -1,6 +1,7 @@
 const Listing = require('../models/Listing');
+const { AppError } = require('../utils/errors');
 
-exports.getListings = async (req, res) => {
+exports.getListings = async (req, res, next) => {
   try {
     const { page = 1, limit = 10, category, search, minPrice, maxPrice, status = 'active' } = req.query;
     const query = { status };
@@ -30,11 +31,11 @@ exports.getListings = async (req, res) => {
       data: listings
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return next(error);
   }
 };
 
-exports.getListingById = async (req, res) => {
+exports.getListingById = async (req, res, next) => {
   try {
     const listing = await Listing.findByIdAndUpdate(
       req.params.id,
@@ -48,11 +49,11 @@ exports.getListingById = async (req, res) => {
 
     res.status(200).json({ success: true, data: listing });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return next(error);
   }
 };
 
-exports.createListing = async (req, res) => {
+exports.createListing = async (req, res, next) => {
   try {
     const { title, description, price, currency, category, location } = req.body;
 
@@ -61,7 +62,8 @@ exports.createListing = async (req, res) => {
       try {
         parsedLocation = JSON.parse(location);
       } catch (e) {
-        parsedLocation = {};
+        // Молчаливое превращение битого location в {} скрывало ошибку клиента.
+        return next(new AppError('Поле location должно быть корректным JSON', 400, { cause: e }));
       }
     }
 
@@ -90,11 +92,11 @@ exports.createListing = async (req, res) => {
 
     res.status(201).json({ success: true, data: listing });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    return next(error);
   }
 };
 
-exports.updateListing = async (req, res) => {
+exports.updateListing = async (req, res, next) => {
   try {
     let listing = await Listing.findById(req.params.id);
 
@@ -123,11 +125,11 @@ exports.updateListing = async (req, res) => {
 
     res.status(200).json({ success: true, data: listing });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    return next(error);
   }
 };
 
-exports.deleteListing = async (req, res) => {
+exports.deleteListing = async (req, res, next) => {
   try {
     const listing = await Listing.findById(req.params.id);
 
@@ -143,6 +145,6 @@ exports.deleteListing = async (req, res) => {
 
     res.status(200).json({ success: true, message: 'Объявление удалено' });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    return next(error);
   }
 };
