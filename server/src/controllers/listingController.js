@@ -1,148 +1,96 @@
 const Listing = require('../models/Listing');
 
-exports.getListings = async (req, res) => {
-  try {
-    const { page = 1, limit = 10, category, search, minPrice, maxPrice, status = 'active' } = req.query;
+const asyncHandler = require('../utils/asyncHandler');
+const { assertFound } = require('../utils/apiError');
+const { getPaginationParams } = require('../utils/pagination');
+const { assertOwnerOrAdmin } = require('../utils/validation');
+const { collectUploadedImages, parseJsonField } = require('../utils/requestData');
+
+const NOT_FOUND = 'Объявление не найдено';
+
+exports.getListings = asyncHandler(async (req, res) => {
+    const { category, search, minPrice, maxPrice, status = 'active' } = req.query;
+    const { page, limit, skip } = getPaginationParams(req.query, { defaultLimit: 10 });
     const query = { status };
 
     if (category) query.category = category;
     if (minPrice || maxPrice) {
-      query.price = {};
-      if (minPrice) query.price.$gte = Number(minPrice);
-      if (maxPrice) query.price.$lte = Number(maxPrice);
+        query.price = {};
+        if (minPrice) query.price.$gte = Number(minPrice);
+        if (maxPrice) query.price.$lte = Number(maxPrice);
     }
     if (search) query.$text = { $search: search };
 
     const listings = await Listing.find(query)
-      .populate('seller', 'name email avatar')
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * limit)
-      .limit(Number(limit));
+        .populate('seller', 'name email avatar')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
 
     const total = await Listing.countDocuments(query);
 
     res.status(200).json({
-      success: true,
-      count: listings.length,
-      total,
-      totalPages: Math.ceil(total / limit),
-      currentPage: Number(page),
-      data: listings
+        success: true,
+        count: listings.length,
+        total,
+        totalPages: Math.ceil(total / limit),
+        currentPage: page,
+        data: listings
     });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
+}, { format: 'success' });
 
-exports.getListingById = async (req, res) => {
-  try {
-    const listing = await Listing.findByIdAndUpdate(
-      req.params.id,
-      { $inc: { viewsCount: 1 } },
-      { new: true }
-    ).populate('seller', 'name email avatar phone');
-
-    if (!listing) {
-      return res.status(404).json({ success: false, message: 'Объявление не найдено' });
-    }
+exports.getListingById = asyncHandler(async (req, res) => {
+    const listing = assertFound(
+        await Listing.findByIdAndUpdate(
+            req.params.id,
+            { $inc: { viewsCount: 1 } },
+            { new: true }
+        ).populate('seller', 'name email avatar phone'),
+        NOT_FOUND
+    );
 
     res.status(200).json({ success: true, data: listing });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
+}, { format: 'success' });
 
-exports.createListing = async (req, res) => {
-  try {
+exports.createListing = asyncHandler(async (req, res) => {
     const { title, description, price, currency, category, location } = req.body;
 
-    let parsedLocation = location;
-    if (typeof location === 'string') {
-      try {
-        parsedLocation = JSON.parse(location);
-      } catch (e) {
-        parsedLocation = {};
-      }
-    }
-
-    // Собираем ссылки на загруженные локально картинки
-    let images = [];
-    if (req.files && req.files.length > 0) {
-      const protocol = req.headers['x-forwarded-proto'] || req.protocol;
-      const host = req.get('host');
-      
-      images = req.files.map((file) => ({
-        url: `${protocol}://${host}/uploads/${file.filename}`,
-        public_id: file.filename
-      }));
-    }
-
     const listing = await Listing.create({
-      title,
-      description,
-      price,
-      currency,
-      category,
-      images,
-      location: parsedLocation,
-      seller: req.user._id
+        title,
+        description,
+        price,
+        currency,
+        category,
+        images: collectUploadedImages(req),
+        location: parseJsonField(location, {}),
+        seller: req.user._id
     });
 
     res.status(201).json({ success: true, data: listing });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
-  }
-};
+}, { format: 'success', status: 400 });
 
-exports.updateListing = async (req, res) => {
-  try {
-    let listing = await Listing.findById(req.params.id);
+exports.updateListing = asyncHandler(async (req, res) => {
+    const listing = assertFound(await Listing.findById(req.params.id), NOT_FOUND);
+    assertOwnerOrAdmin(listing.seller, req.user, 'Нет прав на редактирование');
 
-    if (!listing) {
-      return res.status(404).json({ success: false, message: 'Объявление не найдено' });
+    const uploadedImages = collectUploadedImages(req);
+    if (uploadedImages.length > 0) {
+        req.body.images = [...listing.images, ...uploadedImages];
     }
 
-    if (listing.seller.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
-      return res.status(403).json({ success: false, message: 'Нет прав на редактирование' });
-    }
-
-    if (req.files && req.files.length > 0) {
-      const protocol = req.headers['x-forwarded-proto'] || req.protocol;
-      const host = req.get('host');
-      const newImages = req.files.map((file) => ({
-        url: `${protocol}://${host}/uploads/${file.filename}`,
-        public_id: file.filename
-      }));
-      req.body.images = [...listing.images, ...newImages];
-    }
-
-    listing = await Listing.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
+    const updated = await Listing.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true
     });
 
-    res.status(200).json({ success: true, data: listing });
-  } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
-  }
-};
+    res.status(200).json({ success: true, data: updated });
+}, { format: 'success', status: 400 });
 
-exports.deleteListing = async (req, res) => {
-  try {
-    const listing = await Listing.findById(req.params.id);
-
-    if (!listing) {
-      return res.status(404).json({ success: false, message: 'Объявление не найдено' });
-    }
-
-    if (listing.seller.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
-      return res.status(403).json({ success: false, message: 'Нет прав на удаление' });
-    }
+exports.deleteListing = asyncHandler(async (req, res) => {
+    const listing = assertFound(await Listing.findById(req.params.id), NOT_FOUND);
+    assertOwnerOrAdmin(listing.seller, req.user, 'Нет прав на удаление');
 
     await listing.deleteOne();
 
     res.status(200).json({ success: true, message: 'Объявление удалено' });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
+}, { format: 'success' });

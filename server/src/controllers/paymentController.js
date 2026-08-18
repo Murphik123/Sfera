@@ -1,59 +1,40 @@
-const mongoose = require('mongoose');
 const Wallet = require('../models/Wallet');
 const Transaction = require('../models/Transaction');
 
+const asyncHandler = require('../utils/asyncHandler');
+const withTransaction = require('../utils/withTransaction');
+const { ApiError } = require('../utils/apiError');
+const { paginate, paginatedResponse } = require('../utils/pagination');
+const { parsePositiveAmount } = require('../utils/validation');
+const { resolveBalanceField, getOrCreateWallet } = require('../utils/balances');
+
 // Получение или создание кошелька
-exports.getWallet = async (req, res) => {
-    try {
-        let wallet = await Wallet.findOne({ userId: req.user._id });
-        
-        if (!wallet) {
-            wallet = await Wallet.create({ userId: req.user._id });
-        }
-        
-        res.json(wallet);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
+exports.getWallet = asyncHandler(async (req, res) => {
+    const wallet = await getOrCreateWallet(req.user._id);
+    res.json(wallet);
+});
 
 // Безопасный перевод средств (TMT или TM Coin)
-exports.transfer = async (req, res) => {
-    const session = await mongoose.startSession();
-    session.startTransaction();
+exports.transfer = asyncHandler(async (req, res) => {
+    const { recipientId, amount, currency = 'TMT', description } = req.body;
+    const senderId = req.user._id;
 
-    try {
-        const { recipientId, amount, currency = 'TMT', description } = req.body;
-        const senderId = req.user._id;
+    if (senderId.toString() === recipientId) {
+        throw ApiError.badRequest('Нельзя перевести средства самому себе');
+    }
 
-        if (senderId.toString() === recipientId) {
-            await session.abortTransaction();
-            session.endSession();
-            return res.status(400).json({ message: 'Нельзя перевести средства самому себе' });
-        }
+    const transferAmount = parsePositiveAmount(amount, 'Сумма перевода должна быть больше 0');
+    const balanceField = resolveBalanceField(currency);
 
-        const transferAmount = Number(amount);
-        if (isNaN(transferAmount) || transferAmount <= 0) {
-            await session.abortTransaction();
-            session.endSession();
-            return res.status(400).json({ message: 'Сумма перевода должна быть больше 0' });
-        }
-
-        const balanceField = currency === 'TM_COIN' ? 'tmCoinBalance' : 'balance';
-
+    const transaction = await withTransaction(async (session) => {
         // 1. Проверяем баланс отправителя
         const senderWallet = await Wallet.findOne({ userId: senderId }).session(session);
         if (!senderWallet || senderWallet[balanceField] < transferAmount) {
-            await session.abortTransaction();
-            session.endSession();
-            return res.status(400).json({ message: 'Недостаточно средств на балансе' });
+            throw ApiError.badRequest('Недостаточно средств на балансе');
         }
 
         // 2. Получаем/создаем кошелек получателя
-        let recipientWallet = await Wallet.findOne({ userId: recipientId }).session(session);
-        if (!recipientWallet) {
-            recipientWallet = new Wallet({ userId: recipientId });
-        }
+        const recipientWallet = await getOrCreateWallet(recipientId, { session, persist: false });
 
         // 3. Обновляем балансы
         senderWallet[balanceField] -= transferAmount;
@@ -63,7 +44,7 @@ exports.transfer = async (req, res) => {
         await recipientWallet.save({ session });
 
         // 4. Фиксируем транзакцию
-        const transaction = new Transaction({
+        const record = new Transaction({
             sender: senderId,
             recipient: recipientId,
             amount: transferAmount,
@@ -73,79 +54,49 @@ exports.transfer = async (req, res) => {
             description: description || 'Внутренний перевод'
         });
 
-        await transaction.save({ session });
+        await record.save({ session });
+        return record;
+    });
 
-        await session.commitTransaction();
-        session.endSession();
-
-        res.json({ message: 'Перевод успешно выполнен', transaction });
-    } catch (err) {
-        await session.abortTransaction();
-        session.endSession();
-        res.status(500).json({ message: err.message });
-    }
-};
+    res.json({ message: 'Перевод успешно выполнен', transaction });
+});
 
 // Пополнение баланса (Депозит)
-exports.deposit = async (req, res) => {
-    try {
-        const { amount, currency = 'TMT' } = req.body;
-        const depositAmount = Number(amount);
+exports.deposit = asyncHandler(async (req, res) => {
+    const { amount, currency = 'TMT' } = req.body;
+    const depositAmount = parsePositiveAmount(amount, 'Сумма пополнения должна быть больше 0');
+    const balanceField = resolveBalanceField(currency);
 
-        if (isNaN(depositAmount) || depositAmount <= 0) {
-            return res.status(400).json({ message: 'Сумма пополнения должна быть больше 0' });
-        }
+    const wallet = await getOrCreateWallet(req.user._id, { persist: false });
+    wallet[balanceField] += depositAmount;
+    await wallet.save();
 
-        const balanceField = currency === 'TM_COIN' ? 'tmCoinBalance' : 'balance';
+    const transaction = await Transaction.create({
+        sender: null,
+        recipient: req.user._id,
+        amount: depositAmount,
+        currency,
+        type: 'deposit',
+        status: 'completed',
+        description: 'Пополнение баланса TM Pay'
+    });
 
-        let wallet = await Wallet.findOne({ userId: req.user._id });
-        if (!wallet) {
-            wallet = new Wallet({ userId: req.user._id });
-        }
-
-        wallet[balanceField] += depositAmount;
-        await wallet.save();
-
-        const transaction = await Transaction.create({
-            sender: null,
-            recipient: req.user._id,
-            amount: depositAmount,
-            currency,
-            type: 'deposit',
-            status: 'completed',
-            description: 'Пополнение баланса TM Pay'
-        });
-
-        res.json({ message: 'Баланс успешно пополнен', wallet, transaction });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
+    res.json({ message: 'Баланс успешно пополнен', wallet, transaction });
+});
 
 // История транзакций пользователя
-exports.getMyTransactions = async (req, res) => {
-    try {
-        const page = parseInt(req.query.page, 10) || 1;
-        const limit = parseInt(req.query.limit, 10) || 20;
+exports.getMyTransactions = asyncHandler(async (req, res) => {
+    const filter = {
+        $or: [
+            { sender: req.user._id },
+            { recipient: req.user._id }
+        ]
+    };
 
-        const query = {
-            $or: [
-                { sender: req.user._id },
-                { recipient: req.user._id }
-            ]
-        };
+    const result = await paginate(Transaction, filter, {
+        query: req.query,
+        populate: [['sender', 'username email'], ['recipient', 'username email']]
+    });
 
-        const transactions = await Transaction.find(query)
-            .populate('sender', 'username email')
-            .populate('recipient', 'username email')
-            .skip((page - 1) * limit)
-            .limit(limit)
-            .sort({ createdAt: -1 });
-
-        const total = await Transaction.countDocuments(query);
-
-        res.json({ transactions, total, page, pages: Math.ceil(total / limit) });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
+    res.json(paginatedResponse('transactions', result));
+});

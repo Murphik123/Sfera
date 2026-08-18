@@ -8,6 +8,7 @@ const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
 const { Server } = require('socket.io');
+const { createUserRegistry, registerRealtimeHandlers } = require('./src/utils/realtime');
 
 const app = express();
 const server = http.createServer(app);
@@ -76,63 +77,11 @@ if (actualRoutesPath) {
     console.error('⚠️ ВНИМАНИЕ: Папка с маршрутами (routes) не найдена ни по одному из путей!');
 }
 
-// --- 3. WebSocket & WebRTC Signaling Logic ---
-const activeUsers = new Map(); // userId -> socketId
+// --- 3. WebSocket & WebRTC Signaling Logic (общие обработчики из src/utils/realtime.js) ---
+const userRegistry = createUserRegistry(io);
 
 io.on('connection', (socket) => {
-    socket.on('register_user', (userId) => {
-        activeUsers.set(userId, socket.id);
-        io.emit('user_status_change', { userId, online: true });
-    });
-
-    socket.on('send_message', (data) => {
-        const recipientSocketId = activeUsers.get(data.recipientId);
-        if (recipientSocketId) {
-            io.to(recipientSocketId).emit('receive_message', data);
-        }
-    });
-
-    socket.on('call_user', (data) => {
-        const recipientSocketId = activeUsers.get(data.userToCall);
-        if (recipientSocketId) {
-            io.to(recipientSocketId).emit('incoming_call', {
-                signal: data.signalData,
-                from: data.from,
-                isVideo: data.isVideo
-            });
-        }
-    });
-
-    socket.on('answer_call', (data) => {
-        const callerSocketId = activeUsers.get(data.to);
-        if (callerSocketId) {
-            io.to(callerSocketId).emit('call_accepted', data.signal);
-        }
-    });
-
-    socket.on('ice_candidate', (data) => {
-        const recipientSocketId = activeUsers.get(data.to);
-        if (recipientSocketId) {
-            io.to(recipientSocketId).emit('ice_candidate', { candidate: data.candidate });
-        }
-    });
-
-    socket.on('end_call', (data) => {
-        const recipientSocketId = activeUsers.get(data.to);
-        if (recipientSocketId) {
-            io.to(recipientSocketId).emit('call_ended');
-        }
-    });
-
-    socket.on('disconnect', () => {
-        for (let [userId, socketId] of activeUsers.entries()) {
-            if (socketId === socket.id) {
-                activeUsers.delete(userId);
-                io.emit('user_status_change', { userId, online: false });
-                break;
-            }
-        }
-    });
+    registerRealtimeHandlers(socket, userRegistry);
 });
 
 // --- 4. ПРАВИЛЬНЫЙ ФОЛЛБЭК ДЛЯ ROUTING / HTML ---

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const redisClient = require('../config/redis');
 const User = require('../models/User');
+const { getSessionToken } = require('../utils/session');
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -16,15 +16,9 @@ const authMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
 
     // Проверка Redis сессии (если клиент активен)
-    if (redisClient && redisClient.isOpen) {
-      try {
-        const sessionToken = await redisClient.get(`session:${decoded.userId}`);
-        if (sessionToken && sessionToken !== token) {
-          return res.status(401).json({ message: 'Invalid session' });
-        }
-      } catch (redisErr) {
-        console.warn('Redis check warning:', redisErr.message);
-      }
+    const sessionToken = await getSessionToken(decoded.userId);
+    if (sessionToken && sessionToken !== token) {
+      return res.status(401).json({ message: 'Invalid session' });
     }
 
     // Загружаем пользователя из БД

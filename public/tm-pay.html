@@ -329,6 +329,7 @@
             .chart-container { height: 140px; }
         }
     </style>
+    <script src="js/sfera-common.js"></script>
 </head>
 <body>
     <div id="particles"></div>
@@ -662,30 +663,13 @@
         // ============================================================
         // УСТАНОВКА ЯЗЫКА
         // ============================================================
-        let currentLang = localStorage.getItem('lang') || 'ru';
+        let currentLang = Sfera.getStoredLang(Object.keys(translations));
 
         function setLanguage(lang) {
             if (!translations[lang]) return;
             currentLang = lang;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
-                        el.placeholder = translations[lang][key];
-                    } else if (el.tagName === 'SELECT' && el.querySelectorAll('option').length) {
-                        // обновим опции отдельно
-                    } else {
-                        el.textContent = translations[lang][key];
-                    }
-                }
-            });
-            // Обновляем опции select
-            document.querySelectorAll('select option[data-i18n]').forEach(opt => {
-                const key = opt.getAttribute('data-i18n');
-                if (translations[lang][key]) opt.textContent = translations[lang][key];
-            });
-            document.getElementById('langBtn').textContent = lang.toUpperCase();
-            localStorage.setItem('lang', lang);
+            Sfera.applyTranslations(translations[lang]);
+            Sfera.setLangLabel(lang);
             updateUI();
         }
 
@@ -701,34 +685,17 @@
             updateQR();
         }
 
-        document.getElementById('langBtn').addEventListener('click', function() {
-            const cycle = ['ru', 'tm', 'en'];
-            let idx = cycle.indexOf(currentLang);
-            idx = (idx + 1) % cycle.length;
-            setLanguage(cycle[idx]);
-        });
+        Sfera.bindLanguageCycle('langBtn', () => currentLang, setLanguage);
 
         // ============================================================
         // АВТОРИЗАЦИЯ И НАВИГАЦИЯ
         // ============================================================
-        const token = localStorage.getItem('token');
-        if (!token) window.location.href = 'login.html';
+        const user = Sfera.requireAuth({ fallbackUser: {'username':'User','role':'user'} }) || {};
+        Sfera.showUserName(user);
 
-        const user = JSON.parse(localStorage.getItem('user') || '{"username":"User","role":"user"}');
-        document.getElementById('username').textContent = user.username || 'User';
+        Sfera.applyRoleBackLink(user, 'backLink');
 
-        const backLink = document.getElementById('backLink');
-        if (user.role === 'admin') {
-            backLink.href = 'admin-dashboard.html';
-        } else {
-            backLink.href = 'user-dashboard.html';
-        }
-
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = 'login.html';
-        });
+        Sfera.bindLogout('logoutBtn');
 
         // ============================================================
         // ДАННЫЕ (localStorage)
@@ -1136,18 +1103,7 @@
         // ============================================================
         // ЧАСТИЦЫ
         // ============================================================
-        const particles = document.getElementById('particles');
-        if (particles && particles.children.length === 0) {
-            for (let i = 0; i < 60; i++) {
-                const p = document.createElement('span');
-                p.className = 'particle';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.top = Math.random() * 100 + '%';
-                p.style.animationDuration = (6 + Math.random() * 12) + 's';
-                p.style.animationDelay = Math.random() * 5 + 's';
-                particles.appendChild(p);
-            }
-        }
+        Sfera.initParticles('particles');
 
         // ============================================================
         // ИНИЦИАЛИЗАЦИЯ
