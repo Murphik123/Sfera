@@ -1,7 +1,7 @@
 // src/controllers/mailController.js
 const { Resend } = require('resend');
 
-exports.sendMail = async (req, res) => {
+exports.sendMail = async (req, res, next) => {
   try {
     const { to, subject, html, text } = req.body;
     const apiKey = process.env.RESEND_API_KEY;
@@ -35,7 +35,6 @@ exports.sendMail = async (req, res) => {
 
     return res.status(200).json({ success: true, message: 'Email sent successfully.', id: response?.data?.id || null });
   } catch (error) {
-    console.error('Ошибка при отправке почты:', error);
-    return res.status(500).json({ success: false, message: 'Failed to send email.', error: error.message });
+    return next(error);
   }
 };

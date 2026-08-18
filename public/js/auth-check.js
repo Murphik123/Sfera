@@ -7,6 +7,10 @@
     try {
         user = userRaw ? JSON.parse(userRaw) : null;
     } catch (e) {
+        // Битые данные в localStorage раньше просто игнорировались, из-за чего
+        // пользователь молча терял роль и уходил в guest-режим.
+        console.error('[auth] Не удалось разобрать сохранённого пользователя, сессия сброшена', e);
+        localStorage.removeItem('user');
         user = null;
     }
 

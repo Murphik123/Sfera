@@ -3,11 +3,12 @@ const User = require('../models/User');
 const Account = require('../models/Account');
 const { generateToken } = require('../utils/jwt');
 const redisClient = require('../config/redis');
+const { logSuppressedError } = require('../utils/errors');
 
 // ============================================================
 // РЕГИСТРАЦИЯ
 // ============================================================
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
     try {
         const { username, email, password, role } = req.body;
 
@@ -46,7 +47,9 @@ exports.register = async (req, res) => {
             await account.save();
             console.log('✅ Account created for user:', user._id);
         } catch (accountError) {
-            console.log('⚠️ Account creation skipped:', accountError.message);
+            // Пользователь без счёта — рассогласованное состояние данных, а не штатный
+            // «skipped»: счёт создаётся лениво в bankController, но сбой должен быть виден в логах.
+            logSuppressedError(`Не удалось создать счёт для пользователя ${user._id}`, accountError);
         }
 
         const token = generateToken(user._id);
@@ -63,15 +66,14 @@ exports.register = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Registration error:', error);
-        res.status(500).json({ message: 'Ошибка при регистрации', error: error.message });
+        return next(error);
     }
 };
 
 // ============================================================
 // ЛОГИН
 // ============================================================
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
@@ -105,7 +107,7 @@ exports.login = async (req, res) => {
             await redisClient.set(`session:${user._id}`, token);
             console.log('✅ Redis session saved');
         } catch (redisError) {
-            console.log('⚠️ Redis session save skipped:', redisError.message);
+            logSuppressedError(`Не удалось сохранить сессию в Redis для ${user._id}`, redisError);
         }
 
         res.json({
@@ -120,15 +122,14 @@ exports.login = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('❌ Login error:', error);
-        res.status(500).json({ message: 'Ошибка при входе', error: error.message });
+        return next(error);
     }
 };
 
 // ============================================================
 // ВЫХОД
 // ============================================================
-exports.logout = async (req, res) => {
+exports.logout = async (req, res, next) => {
     try {
         const userId = req.userId;
         if (userId) {
@@ -136,14 +137,14 @@ exports.logout = async (req, res) => {
         }
         res.json({ message: 'Успешный выход из системы' });
     } catch (error) {
-        res.status(500).json({ message: 'Ошибка при выходе', error: error.message });
+        return next(error);
     }
 };
 
 // ============================================================
 // ПОЛУЧЕНИЕ ПРОФИЛЯ ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ (/me)
 // ============================================================
-exports.getMe = async (req, res) => {
+exports.getMe = async (req, res, next) => {
     try {
         res.json({
             user: {
@@ -155,6 +156,6 @@ exports.getMe = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ message: 'Ошибка при получении профиля', error: error.message });
+        return next(error);
     }
 };

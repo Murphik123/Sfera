@@ -5,7 +5,7 @@ const User = require('../models/User');
 // ============================================================
 // ОТПРАВКА СООБЩЕНИЯ
 // ============================================================
-exports.sendMessage = async (req, res) => {
+exports.sendMessage = async (req, res, next) => {
   try {
     const { to, text, attachments } = req.body;
     const from = req.userId;
@@ -30,14 +30,14 @@ exports.sendMessage = async (req, res) => {
 
     res.status(201).json(populatedMessage);
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка при отправке сообщения', error: error.message });
+    return next(error);
   }
 };
 
 // ============================================================
 // ПОЛУЧЕНИЕ ПЕРЕПИСКИ С ПОЛЬЗОВАТЕЛЕМ
 // ============================================================
-exports.getMessages = async (req, res) => {
+exports.getMessages = async (req, res, next) => {
   try {
     const { userId } = req.params;
     const messages = await Message.find({
@@ -52,14 +52,14 @@ exports.getMessages = async (req, res) => {
 
     res.json(messages);
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка при получении сообщений', error: error.message });
+    return next(error);
   }
 };
 
 // ============================================================
 // СПИСОК ДИАЛОГОВ ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ
 // ============================================================
-exports.getDialogs = async (req, res) => {
+exports.getDialogs = async (req, res, next) => {
   try {
     const currentUserId = req.userId;
 
@@ -94,14 +94,14 @@ exports.getDialogs = async (req, res) => {
 
     res.json(Array.from(dialogsMap.values()));
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка при получении списка диалогов', error: error.message });
+    return next(error);
   }
 };
 
 // ============================================================
 // ОТМЕТКА СООБЩЕНИЯ КАК ПРОЧИТАННОГО
 // ============================================================
-exports.markAsRead = async (req, res) => {
+exports.markAsRead = async (req, res, next) => {
   try {
     const { messageId } = req.params;
     const message = await Message.findById(messageId);
@@ -116,6 +116,6 @@ exports.markAsRead = async (req, res) => {
     await message.save();
     res.json({ message: 'Сообщение отмечено как прочитанное' });
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка при обновлении статуса', error: error.message });
+    return next(error);
   }
 };

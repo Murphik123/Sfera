@@ -5,7 +5,7 @@ const Transaction = require('../models/Transaction');
 // ============================================================
 // ПОЛУЧЕНИЕ БАЛАНСА (с авто-созданием, если счета нет)
 // ============================================================
-exports.getBalance = async (req, res) => {
+exports.getBalance = async (req, res, next) => {
   try {
     let account = await Account.findOne({ userId: req.userId });
     
@@ -16,14 +16,14 @@ exports.getBalance = async (req, res) => {
 
     res.json({ balance: account.balance, currency: account.currency });
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка получения баланса', error: error.message });
+    return next(error);
   }
 };
 
 // ============================================================
 // ПЕРЕВОД СРЕДСТВ (Атомарный безопасный вариант)
 // ============================================================
-exports.transfer = async (req, res) => {
+exports.transfer = async (req, res, next) => {
   try {
     const { toUserId, amount, description } = req.body;
     const transferAmount = Number(amount);
@@ -81,15 +81,14 @@ exports.transfer = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Transfer error:', error);
-    res.status(500).json({ message: 'Ошибка при выполнении перевода', error: error.message });
+    return next(error);
   }
 };
 
 // ============================================================
 // ИСТОРИЯ ТРАНЗАКЦИЙ
 // ============================================================
-exports.getTransactions = async (req, res) => {
+exports.getTransactions = async (req, res, next) => {
   try {
     let account = await Account.findOne({ userId: req.userId });
     if (!account) {
@@ -111,6 +110,6 @@ exports.getTransactions = async (req, res) => {
 
     res.json(transactions);
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка получения историй транзакций', error: error.message });
+    return next(error);
   }
 };

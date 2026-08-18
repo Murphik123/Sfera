@@ -9,7 +9,7 @@ const Prediction = require('../models/Prediction');
 const escapeRegex = (text) => text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 
 // ---------- СТАТИСТИКА ----------
-exports.getStats = async (req, res) => {
+exports.getStats = async (req, res, next) => {
     try {
         const [users, transactions, listings, mails, predictions] = await Promise.all([
             User.countDocuments(),
@@ -20,12 +20,12 @@ exports.getStats = async (req, res) => {
         ]);
         res.json({ users, transactions, listings, mails, predictions });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
 // ---------- ПОЛЬЗОВАТЕЛИ ----------
-exports.getUsers = async (req, res) => {
+exports.getUsers = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 20;
@@ -49,11 +49,11 @@ exports.getUsers = async (req, res) => {
         const total = await User.countDocuments(query);
         res.json({ users, total, page, pages: Math.ceil(total / limit) });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
-exports.getUser = async (req, res) => {
+exports.getUser = async (req, res, next) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ message: 'Invalid User ID' });
@@ -62,11 +62,11 @@ exports.getUser = async (req, res) => {
         if (!user) return res.status(404).json({ message: 'User not found' });
         res.json(user);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
-exports.updateUser = async (req, res) => {
+exports.updateUser = async (req, res, next) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ message: 'Invalid User ID' });
@@ -83,11 +83,11 @@ exports.updateUser = async (req, res) => {
         await user.save();
         res.json({ message: 'User updated', user: user.toObject({ getters: true, versionKey: false }) });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
-exports.deleteUser = async (req, res) => {
+exports.deleteUser = async (req, res, next) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ message: 'Invalid User ID' });
@@ -96,12 +96,12 @@ exports.deleteUser = async (req, res) => {
         if (!user) return res.status(404).json({ message: 'User not found' });
         res.json({ message: 'User deleted' });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
 // ---------- ТРАНЗАКЦИИ ----------
-exports.getTransactions = async (req, res) => {
+exports.getTransactions = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 20;
@@ -115,12 +115,12 @@ exports.getTransactions = async (req, res) => {
         const total = await Transaction.countDocuments();
         res.json({ transactions, total, page, pages: Math.ceil(total / limit) });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
 // ---------- ОБЪЯВЛЕНИЯ ----------
-exports.getListings = async (req, res) => {
+exports.getListings = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 20;
@@ -136,11 +136,11 @@ exports.getListings = async (req, res) => {
         const total = await Listing.countDocuments(filter);
         res.json({ listings, total, page, pages: Math.ceil(total / limit) });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
-exports.updateListing = async (req, res) => {
+exports.updateListing = async (req, res, next) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ message: 'Invalid Listing ID' });
@@ -153,11 +153,11 @@ exports.updateListing = async (req, res) => {
         await listing.save();
         res.json({ message: 'Listing updated', listing });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
-exports.deleteListing = async (req, res) => {
+exports.deleteListing = async (req, res, next) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ message: 'Invalid Listing ID' });
@@ -166,12 +166,12 @@ exports.deleteListing = async (req, res) => {
         if (!listing) return res.status(404).json({ message: 'Listing not found' });
         res.json({ message: 'Listing deleted' });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
 // ---------- ПОЧТА ----------
-exports.getMails = async (req, res) => {
+exports.getMails = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 20;
@@ -186,11 +186,11 @@ exports.getMails = async (req, res) => {
         const total = await Mail.countDocuments();
         res.json({ mails, total, page, pages: Math.ceil(total / limit) });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
-exports.deleteMail = async (req, res) => {
+exports.deleteMail = async (req, res, next) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ message: 'Invalid Mail ID' });
@@ -199,12 +199,12 @@ exports.deleteMail = async (req, res) => {
         if (!mail) return res.status(404).json({ message: 'Mail not found' });
         res.json({ message: 'Mail deleted' });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
 // ---------- AI ПРОГНОЗЫ ----------
-exports.getPredictions = async (req, res) => {
+exports.getPredictions = async (req, res, next) => {
     try {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 20;
@@ -217,22 +217,22 @@ exports.getPredictions = async (req, res) => {
         const total = await Prediction.countDocuments();
         res.json({ predictions, total, page, pages: Math.ceil(total / limit) });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
-exports.createPrediction = async (req, res) => {
+exports.createPrediction = async (req, res, next) => {
     try {
         const { coin, predictedPrice, confidence, notes } = req.body;
         const prediction = new Prediction({ coin, predictedPrice, confidence, notes });
         await prediction.save();
         res.status(201).json(prediction);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };
 
-exports.deletePrediction = async (req, res) => {
+exports.deletePrediction = async (req, res, next) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ message: 'Invalid Prediction ID' });
@@ -241,6 +241,6 @@ exports.deletePrediction = async (req, res) => {
         if (!prediction) return res.status(404).json({ message: 'Prediction not found' });
         res.json({ message: 'Prediction deleted' });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        return next(err);
     }
 };

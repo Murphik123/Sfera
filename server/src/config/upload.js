@@ -4,8 +4,12 @@ const fs = require('fs');
 
 // Создаем папку uploads в корне проекта, если её нет
 const uploadDir = path.join(__dirname, '../../uploads');
-if (!fs.existsSync(uploadDir)) {
+try {
   fs.mkdirSync(uploadDir, { recursive: true });
+} catch (error) {
+  // Падение на этапе require() без контекста выглядит как «маршрут не загрузился»,
+  // поэтому обогащаем ошибку путём и причиной.
+  throw new Error(`Не удалось создать папку для загрузок ${uploadDir}: ${error.message}`);
 }
 
 const storage = multer.diskStorage({
@@ -23,5 +27,7 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 } // Ограничение 5 МБ
 });
+
+// MulterError классифицируется в middleware/errorHandler.js (400/413 вместо 500).
 
 module.exports = { upload };

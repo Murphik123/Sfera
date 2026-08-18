@@ -1340,7 +1340,12 @@
                                 renderMails();
                             }
                         }
-                    } catch (e) {}
+                    } catch (e) {
+                        console.error('[mail] Не удалось разобрать mail_data при автообновлении', e);
+                        clearInterval(autoRefreshInterval);
+                        autoRefreshInterval = null;
+                        showToast('Hatlary ýükläp bolmady', 'error');
+                    }
                 }
             }, 30000);
         }
@@ -1386,7 +1391,12 @@
             if (stored) {
                 try {
                     mails = JSON.parse(stored);
-                } catch (e) {}
+                } catch (e) {
+                    console.error('[mail] Не удалось разобрать mail_data', e);
+                    renderMails();
+                    showToast('Hatlary ýükläp bolmady', 'error');
+                    return;
+                }
             }
             renderMails();
             showToast('Täzelendi!', 'success');
