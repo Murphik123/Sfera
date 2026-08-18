@@ -2,12 +2,15 @@
    SFERA PLATFORM — MAIN SERVER (Node.js + Express + Socket.io)
    ========================================================================== */
 
+require('dotenv').config();
+
 const express = require('express');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
 const { Server } = require('socket.io');
+const { checkQdrantConnection } = require('./src/services/qdrant.service');
 
 const app = express();
 const server = http.createServer(app);
@@ -157,4 +160,5 @@ const HOST = '0.0.0.0';
 server.listen(PORT, HOST, () => {
     console.log(`🚀 Server running on http://${HOST}:${PORT}`);
     console.log(`🔌 WebSocket готов`);
+    checkQdrantConnection();
 });
