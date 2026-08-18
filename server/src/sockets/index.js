@@ -2,6 +2,7 @@
 const { Server } = require('socket.io');
 const { verifyToken } = require('../utils/jwt');
 const Message = require('../models/Message');
+const { emitToUsers } = require('../utils/realtime');
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -56,8 +57,7 @@ module.exports = (server) => {
           .populate('to', 'username avatar online');
 
         // Отправляем только адресату и самому себе
-        io.to(to.toString()).emit('new_message', populatedMessage);
-        io.to(socket.userId).emit('new_message', populatedMessage);
+        emitToUsers(io, [to, socket.userId], 'new_message', populatedMessage);
 
       } catch (err) {
         console.error('❌ Socket send_message error:', err.message);

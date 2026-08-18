@@ -297,6 +297,7 @@
             .modules-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
         }
     </style>
+    <script src="js/sfera-common.js"></script>
 </head>
 <body>
     <div id="particles"></div>
@@ -360,12 +361,7 @@
 
     <script>
         // Проверка авторизации
-        const token = localStorage.getItem('token');
-        const userData = JSON.parse(localStorage.getItem('user') || '{}');
-
-        if (!token || userData.role !== 'admin') {
-            window.location.href = 'login.html';
-        }
+        const userData = Sfera.requireAuth({ role: 'admin' }) || {};
 
         // Встроенный резервный словарь на случай отсутствия ключа в JSON
         const fallbackTranslations = {
@@ -395,56 +391,29 @@
             }
         };
 
-        let currentLang = localStorage.getItem('lang') || 'tm';
+        let currentLang = Sfera.getStoredLang(Object.keys(fallbackTranslations));
         let loadedTranslations = {};
-
-        // Загрузка JSON файла из папки languages/
-        async function fetchLanguageFile(lang) {
-            try {
-                const res = await fetch(`languages/${lang}.json`);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return await res.json();
-            } catch (err) {
-                console.warn(`Не удалось загрузить languages/${lang}.json, используется встроенный резерв.`, err);
-                return null;
-            }
-        }
 
         async function setLanguage(lang) {
             currentLang = lang;
-            const externalData = await fetchLanguageFile(lang);
-            
-            // Объединяем полученный JSON с фоллбеком
+
+            // Объединяем словарь из languages/<lang>.json с встроенным резервом
+            const externalData = await Sfera.loadLanguageFile(lang);
             loadedTranslations = Object.assign({}, fallbackTranslations[lang] || {}, externalData || {});
 
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (loadedTranslations[key]) {
-                    el.textContent = loadedTranslations[key];
-                }
-            });
+            Sfera.applyTranslations(loadedTranslations);
 
-            document.getElementById('langBtn').textContent = lang.toUpperCase();
-            localStorage.setItem('lang', lang);
+            Sfera.setLangLabel(lang);
 
             const activeLi = document.querySelector('#adminMenu li.active');
             if (activeLi) renderSection(activeLi.dataset.section);
         }
 
-        document.getElementById('langBtn').addEventListener('click', function() {
-            const cycle = ['tm', 'ru', 'en'];
-            let idx = cycle.indexOf(currentLang);
-            idx = (idx + 1) % cycle.length;
-            setLanguage(cycle[idx]);
-        });
+        Sfera.bindLanguageCycle('langBtn', () => currentLang, setLanguage);
 
         document.getElementById('adminName').textContent = userData.username || 'Admin';
 
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = 'login.html';
-        });
+        Sfera.bindLogout('logoutBtn');
 
         // Отрисовка секций
         function renderSection(section) {
@@ -534,18 +503,7 @@
 
         // Частицы
         document.addEventListener('DOMContentLoaded', () => {
-            const particles = document.getElementById('particles');
-            if (particles && particles.children.length === 0) {
-                for (let i = 0; i < 60; i++) {
-                    const p = document.createElement('span');
-                    p.className = 'particle';
-                    p.style.left = Math.random() * 100 + '%';
-                    p.style.top = Math.random() * 100 + '%';
-                    p.style.animationDuration = (6 + Math.random() * 12) + 's';
-                    p.style.animationDelay = Math.random() * 5 + 's';
-                    particles.appendChild(p);
-                }
-            }
+            Sfera.initParticles('particles');
             setLanguage(currentLang);
         });
     </script>
