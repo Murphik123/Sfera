@@ -1,6 +1,7 @@
 // src/controllers/chatController.js
 const Message = require('../models/Message');
 const User = require('../models/User');
+const { isValidObjectId } = require('../utils/validators');
 
 // ============================================================
 // ОТПРАВКА СООБЩЕНИЯ
@@ -10,7 +11,11 @@ exports.sendMessage = async (req, res) => {
     const { to, text, attachments } = req.body;
     const from = req.userId;
 
-    if (!to || (!text && (!attachments || attachments.length === 0))) {
+    if (!isValidObjectId(to)) {
+      return res.status(400).json({ message: 'Некорректный получатель сообщения' });
+    }
+
+    if (!text && (!attachments || attachments.length === 0)) {
       return res.status(400).json({ message: 'Укажите получателя и текст/файлы сообщения' });
     }
 
@@ -40,6 +45,11 @@ exports.sendMessage = async (req, res) => {
 exports.getMessages = async (req, res) => {
   try {
     const { userId } = req.params;
+
+    if (!isValidObjectId(userId)) {
+      return res.status(400).json({ message: 'Некорректный идентификатор пользователя' });
+    }
+
     const messages = await Message.find({
       $or: [
         { from: req.userId, to: userId },
@@ -104,6 +114,11 @@ exports.getDialogs = async (req, res) => {
 exports.markAsRead = async (req, res) => {
   try {
     const { messageId } = req.params;
+
+    if (!isValidObjectId(messageId)) {
+      return res.status(400).json({ message: 'Некорректный идентификатор сообщения' });
+    }
+
     const message = await Message.findById(messageId);
 
     if (!message) return res.status(404).json({ message: 'Сообщение не найдено' });

@@ -1,15 +1,24 @@
 const Listing = require('../models/Listing');
+const { isValidObjectId, asString, pick } = require('../utils/validators');
+
+const LISTING_UPDATABLE_FIELDS = ['title', 'description', 'price', 'currency', 'category', 'location', 'images'];
 
 exports.getListings = async (req, res) => {
   try {
-    const { page = 1, limit = 10, category, search, minPrice, maxPrice, status = 'active' } = req.query;
-    const query = { status };
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 10, 1), 100);
+    const category = asString(req.query.category);
+    const search = asString(req.query.search);
+    const minPrice = Number(req.query.minPrice);
+    const maxPrice = Number(req.query.maxPrice);
+
+    const query = { status: asString(req.query.status) || 'active' };
 
     if (category) query.category = category;
-    if (minPrice || maxPrice) {
+    if (!Number.isNaN(minPrice) || !Number.isNaN(maxPrice)) {
       query.price = {};
-      if (minPrice) query.price.$gte = Number(minPrice);
-      if (maxPrice) query.price.$lte = Number(maxPrice);
+      if (!Number.isNaN(minPrice)) query.price.$gte = minPrice;
+      if (!Number.isNaN(maxPrice)) query.price.$lte = maxPrice;
     }
     if (search) query.$text = { $search: search };
 
@@ -17,7 +26,7 @@ exports.getListings = async (req, res) => {
       .populate('seller', 'name email avatar')
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
-      .limit(Number(limit));
+      .limit(limit);
 
     const total = await Listing.countDocuments(query);
 
@@ -26,7 +35,7 @@ exports.getListings = async (req, res) => {
       count: listings.length,
       total,
       totalPages: Math.ceil(total / limit),
-      currentPage: Number(page),
+      currentPage: page,
       data: listings
     });
   } catch (error) {
@@ -36,6 +45,10 @@ exports.getListings = async (req, res) => {
 
 exports.getListingById = async (req, res) => {
   try {
+    if (!isValidObjectId(req.params.id)) {
+      return res.status(400).json({ success: false, message: 'Некорректный идентификатор объявления' });
+    }
+
     const listing = await Listing.findByIdAndUpdate(
       req.params.id,
       { $inc: { viewsCount: 1 } },
@@ -96,6 +109,10 @@ exports.createListing = async (req, res) => {
 
 exports.updateListing = async (req, res) => {
   try {
+    if (!isValidObjectId(req.params.id)) {
+      return res.status(400).json({ success: false, message: 'Некорректный идентификатор объявления' });
+    }
+
     let listing = await Listing.findById(req.params.id);
 
     if (!listing) {
@@ -106,6 +123,10 @@ exports.updateListing = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Нет прав на редактирование' });
     }
 
+    // Обновляем только разрешённые поля: seller, status и счётчики
+    // не должны меняться из тела запроса.
+    const updates = pick(req.body, LISTING_UPDATABLE_FIELDS);
+
     if (req.files && req.files.length > 0) {
       const protocol = req.headers['x-forwarded-proto'] || req.protocol;
       const host = req.get('host');
@@ -113,10 +134,10 @@ exports.updateListing = async (req, res) => {
         url: `${protocol}://${host}/uploads/${file.filename}`,
         public_id: file.filename
       }));
-      req.body.images = [...listing.images, ...newImages];
+      updates.images = [...listing.images, ...newImages];
     }
 
-    listing = await Listing.findByIdAndUpdate(req.params.id, req.body, {
+    listing = await Listing.findByIdAndUpdate(req.params.id, updates, {
       new: true,
       runValidators: true
     });
@@ -129,6 +150,10 @@ exports.updateListing = async (req, res) => {
 
 exports.deleteListing = async (req, res) => {
   try {
+    if (!isValidObjectId(req.params.id)) {
+      return res.status(400).json({ success: false, message: 'Некорректный идентификатор объявления' });
+    }
+
     const listing = await Listing.findById(req.params.id);
 
     if (!listing) {

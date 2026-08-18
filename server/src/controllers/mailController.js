@@ -1,6 +1,13 @@
 // src/controllers/mailController.js
 const { Resend } = require('resend');
 
+const escapeHtml = (value) => String(value)
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;');
+
 exports.sendMail = async (req, res) => {
   try {
     const { to, subject, html, text } = req.body;
@@ -20,22 +27,29 @@ exports.sendMail = async (req, res) => {
       });
     }
 
+    // Сырой HTML разрешён только администраторам, иначе любой пользователь
+    // может рассылать фишинг с домена платформы.
+    const isAdmin = req.user?.role === 'admin';
+    const body = isAdmin && html
+      ? html
+      : `<p>${escapeHtml(text || 'Hello from Sfera!')}</p>`;
+
     const resend = new Resend(apiKey);
     const response = await resend.emails.send({
       from: 'Sfera Platform <onboarding@resend.dev>',
       to: [to],
-      subject: subject || 'Notification from Sfera',
-      html: html || `<p>${text || 'Hello from Sfera!'}</p>`,
+      subject: typeof subject === 'string' && subject ? subject : 'Notification from Sfera',
+      html: body,
     });
 
     if (response?.error) {
       console.error('Ошибка от Resend:', response.error);
-      return res.status(400).json({ success: false, message: 'Failed to send email.', error: response.error });
+      return res.status(400).json({ success: false, message: 'Failed to send email.' });
     }
 
     return res.status(200).json({ success: true, message: 'Email sent successfully.', id: response?.data?.id || null });
   } catch (error) {
     console.error('Ошибка при отправке почты:', error);
-    return res.status(500).json({ success: false, message: 'Failed to send email.', error: error.message });
+    return res.status(500).json({ success: false, message: 'Failed to send email.' });
   }
 };

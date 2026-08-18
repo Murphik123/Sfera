@@ -2,159 +2,117 @@
    SFERA PLATFORM — MAIN SERVER (Node.js + Express + Socket.io)
    ========================================================================== */
 
-const express = require('express');
+require('dotenv').config();
+
 const http = require('http');
-const path = require('path');
-const fs = require('fs');
-const cors = require('cors');
 const { Server } = require('socket.io');
 
-const app = express();
+if (!process.env.JWT_SECRET) {
+    console.error('❌ JWT_SECRET не задан. Задайте его в окружении перед запуском сервера.');
+    process.exit(1);
+}
+
+const app = require('./src/app');
+const connectDB = require('./src/config/db');
+const { verifyToken } = require('./src/utils/jwt');
+
 const server = http.createServer(app);
+
+const allowedOrigins = (process.env.CORS_ORIGINS || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
 const io = new Server(server, {
     cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
+        origin: allowedOrigins.length > 0 ? allowedOrigins : false,
+        methods: ['GET', 'POST'],
+        credentials: true
     }
 });
 
-// Middleware
-app.use(cors({ origin: true, credentials: true }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.set('io', io);
 
-// --- 1. ТОЧНЫЙ ПОИСК ПАПКИ PUBLIC ---
-const possiblePublicPaths = [
-    path.join(__dirname, '..', '..', 'public'),
-    path.join(__dirname, '..', 'public'),
-    path.join(__dirname, 'public'),
-    path.join(process.cwd(), 'public'),
-    path.join(process.cwd(), 'src', 'public')
-];
+// --- WebSocket & WebRTC Signaling ---
+// Соединение допускается только с валидным JWT; userId берётся из токена,
+// а не из данных клиента, поэтому подменить личность в сигналинге нельзя.
+io.use((socket, next) => {
+    const token = socket.handshake.auth?.token
+        || socket.handshake.headers?.authorization?.replace(/^Bearer /, '');
 
-let publicPath = possiblePublicPaths.find(p => fs.existsSync(p)) || path.join(process.cwd(), 'public');
-console.log(`📂 Раздача статики из папки: ${publicPath}`);
+    if (!token) {
+        return next(new Error('Authentication error: token missing'));
+    }
 
-// Подключаем раздачу статики (CSS, JS, картинки)
-app.use(express.static(publicPath));
+    const decoded = verifyToken(token);
+    if (!decoded || !decoded.userId) {
+        return next(new Error('Authentication error: invalid token'));
+    }
 
-// --- 2. УНИВЕРСАЛЬНЫЙ ПОИСК И ПОДКЛЮЧЕНИЕ МАРШРУТОВ REST API ---
-const possibleRoutesPaths = [
-    path.join(__dirname, 'routes'),
-    path.join(__dirname, '..', 'routes'),
-    path.join(__dirname, '..', '..', 'routes'),
-    path.join(process.cwd(), 'routes'),
-    path.join(process.cwd(), 'src', 'routes'),
-    path.join(process.cwd(), 'server', 'routes'),
-    path.join(process.cwd(), 'server', 'src', 'routes')
-];
+    socket.userId = String(decoded.userId);
+    next();
+});
 
-let actualRoutesPath = possibleRoutesPaths.find(p => fs.existsSync(p));
+const activeUsers = new Map(); // userId -> Set<socketId>
 
-if (actualRoutesPath) {
-    console.log(`📁 Найдена папка маршрутов (routes): ${actualRoutesPath}`);
-    const files = fs.readdirSync(actualRoutesPath);
-    
-    files.forEach(file => {
-        if (file.endsWith('.js')) {
-            // Корректное формирование префикса: authRoutes.js -> /api/auth
-            let routeName = file.replace(/Routes\.js$/i, '').replace(/\.js$/i, '');
-            let prefix = `/api/${routeName}`;
-            
-            if (file.toLowerCase() === 'paymentroutes.js') prefix = '/api/tmpay';
-            
-            try {
-                const routeModule = require(path.join(actualRoutesPath, file));
-                app.use(prefix, routeModule);
-                console.log(`✅ Маршрут подключен: ${prefix} -> ${file}`);
-            } catch (err) {
-                console.error(`❌ Ошибка загрузки маршрута ${file}:`, err.message);
-            }
-        }
-    });
-} else {
-    console.error('⚠️ ВНИМАНИЕ: Папка с маршрутами (routes) не найдена ни по одному из путей!');
-}
+const addSocket = (userId, socketId) => {
+    if (!activeUsers.has(userId)) activeUsers.set(userId, new Set());
+    activeUsers.get(userId).add(socketId);
+};
 
-// --- 3. WebSocket & WebRTC Signaling Logic ---
-const activeUsers = new Map(); // userId -> socketId
+const socketIdsFor = (userId) => Array.from(activeUsers.get(String(userId)) || []);
 
 io.on('connection', (socket) => {
-    socket.on('register_user', (userId) => {
-        activeUsers.set(userId, socket.id);
-        io.emit('user_status_change', { userId, online: true });
+    addSocket(socket.userId, socket.id);
+    socket.join(socket.userId);
+    io.emit('user_status_change', { userId: socket.userId, online: true });
+
+    const relay = (event, targetId, payload) => {
+        socketIdsFor(targetId).forEach((socketId) => io.to(socketId).emit(event, payload));
+    };
+
+    socket.on('send_message', (data = {}) => {
+        relay('receive_message', data.recipientId || data.to, { ...data, senderId: socket.userId });
     });
 
-    socket.on('send_message', (data) => {
-        const recipientSocketId = activeUsers.get(data.recipientId);
-        if (recipientSocketId) {
-            io.to(recipientSocketId).emit('receive_message', data);
-        }
+    socket.on('call_user', (data = {}) => {
+        relay('incoming_call', data.userToCall, {
+            signal: data.signalData,
+            from: socket.userId,
+            isVideo: data.isVideo
+        });
     });
 
-    socket.on('call_user', (data) => {
-        const recipientSocketId = activeUsers.get(data.userToCall);
-        if (recipientSocketId) {
-            io.to(recipientSocketId).emit('incoming_call', {
-                signal: data.signalData,
-                from: data.from,
-                isVideo: data.isVideo
-            });
-        }
+    socket.on('answer_call', (data = {}) => {
+        relay('call_accepted', data.to, data.signal);
     });
 
-    socket.on('answer_call', (data) => {
-        const callerSocketId = activeUsers.get(data.to);
-        if (callerSocketId) {
-            io.to(callerSocketId).emit('call_accepted', data.signal);
-        }
+    socket.on('ice_candidate', (data = {}) => {
+        relay('ice_candidate', data.to, { candidate: data.candidate, from: socket.userId });
     });
 
-    socket.on('ice_candidate', (data) => {
-        const recipientSocketId = activeUsers.get(data.to);
-        if (recipientSocketId) {
-            io.to(recipientSocketId).emit('ice_candidate', { candidate: data.candidate });
-        }
-    });
-
-    socket.on('end_call', (data) => {
-        const recipientSocketId = activeUsers.get(data.to);
-        if (recipientSocketId) {
-            io.to(recipientSocketId).emit('call_ended');
-        }
+    socket.on('end_call', (data = {}) => {
+        relay('call_ended', data.to);
     });
 
     socket.on('disconnect', () => {
-        for (let [userId, socketId] of activeUsers.entries()) {
-            if (socketId === socket.id) {
-                activeUsers.delete(userId);
-                io.emit('user_status_change', { userId, online: false });
-                break;
-            }
+        const sockets = activeUsers.get(socket.userId);
+        if (!sockets) return;
+
+        sockets.delete(socket.id);
+        if (sockets.size === 0) {
+            activeUsers.delete(socket.userId);
+            io.emit('user_status_change', { userId: socket.userId, online: false });
         }
     });
 });
 
-// --- 4. ПРАВИЛЬНЫЙ ФОЛЛБЭК ДЛЯ ROUTING / HTML ---
-app.get('*', (req, res) => {
-    // Если запрос идёт к файлу (.js, .css, .png и т.д.), но он отсутствует в express.static, отдаем 404
-    if (path.extname(req.path)) {
-        return res.status(404).type('text/plain').send('File not found');
-    }
-
-    const indexPath = path.join(publicPath, 'index.html');
-    if (fs.existsSync(indexPath)) {
-        res.sendFile(indexPath);
-    } else {
-        res.status(404).send('Front-end main file not found.');
-    }
-});
-
-// Запуск сервера
 const PORT = process.env.PORT || 10000;
 const HOST = '0.0.0.0';
 
-server.listen(PORT, HOST, () => {
-    console.log(`🚀 Server running on http://${HOST}:${PORT}`);
-    console.log(`🔌 WebSocket готов`);
+connectDB().then(() => {
+    server.listen(PORT, HOST, () => {
+        console.log(`🚀 Server running on http://${HOST}:${PORT}`);
+        console.log(`🔌 WebSocket готов`);
+    });
 });
