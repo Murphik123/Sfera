@@ -5,12 +5,12 @@
     font-family: "Inter", sans-serif;
 }
 
-html { 
-    scroll-behavior: smooth; 
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    background: linear-gradient(135deg, #06111d, #0b2035, #102b45);
+    background: linear-gradient(135deg, var(--dark), var(--dark2), var(--dark3));
     color: var(--white);
     overflow-x: hidden;
 }
@@ -18,8 +18,7 @@ body {
 body::before {
     content: "";
     position: fixed;
-    width: 200%;
-    height: 200%;
+    inset: -10%;
     background:
         radial-gradient(circle at 20% 30%, rgba(0,212,255,.15), transparent 35%),
         radial-gradient(circle at 80% 20%, rgba(0,255,170,.10), transparent 35%),
@@ -33,15 +32,46 @@ body::before {
     margin: auto;
 }
 
+main.page-shell {
+    position: relative;
+    isolation: isolate;
+}
+
+section {
+    position: relative;
+}
+
+section + section {
+    margin-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.section-shell {
+    position: relative;
+    border: 1px solid var(--glass-border);
+    background: linear-gradient(135deg, var(--glass-strong), var(--glass-soft));
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    box-shadow: var(--shadow-soft);
+}
+
+.section-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255,255,255,.08), transparent 70%);
+    pointer-events: none;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
 }
 ::-webkit-scrollbar-thumb {
-    background: #00d4ff;
+    background: var(--primary);
     border-radius: 20px;
 }
 ::-webkit-scrollbar-track {
-    background: #08131d;
+    background: var(--dark);
 }
 
 .hidden {

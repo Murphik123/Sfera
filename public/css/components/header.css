@@ -6,9 +6,9 @@ header {
     z-index: 999;
     backdrop-filter: blur(18px) saturate(180%);
     -webkit-backdrop-filter: blur(18px) saturate(180%);
-    background: rgba(255, 255, 255, 0.12);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, var(--glass-strong), var(--glass-soft));
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-soft);
 }
 
 header .container {
@@ -23,8 +23,8 @@ header .container {
     align-items: center;
     gap: 12px;
     text-decoration: none;
-    color: white;
-    transition: transform 0.3s ease;
+    color: var(--white);
+    transition: transform .3s ease;
 }
 
 .logo:hover {
@@ -65,7 +65,7 @@ header .container {
     font-weight: 800;
     margin: 0;
     line-height: 1.1;
-    background: linear-gradient(to right, #fff, #b4d7ff);
+    background: linear-gradient(to right, var(--white), #b4d7ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -75,7 +75,7 @@ header .container {
     font-weight: 600;
     letter-spacing: 0.5px;
     margin: 4px 0 0 0;
-    color: #9fb5c8;
+    color: var(--text-muted);
     white-space: nowrap;
 }
 
@@ -87,7 +87,7 @@ nav ul {
 
 nav a {
     text-decoration: none;
-    color: white;
+    color: var(--white);
     font-weight: 500;
     transition: .3s;
 }
@@ -115,28 +115,28 @@ nav a:hover {
 }
 
 .lang {
-    background: transparent;
-    border: 1px solid var(--border) !important;
-    color: white;
+    background: var(--glass-soft);
+    border: 1px solid var(--glass-border) !important;
+    color: var(--white);
 }
 
 .login {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: white;
+    color: var(--white);
 }
 
 .login:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(0,212,255,.35);
+    box-shadow: var(--shadow-glow);
 }
 
 footer {
     margin-top: 120px;
     backdrop-filter: blur(18px) saturate(180%);
     -webkit-backdrop-filter: blur(18px) saturate(180%);
-    background: rgba(255, 255, 255, 0.12);
-    border-top: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, var(--glass-strong), var(--glass-soft));
+    border-top: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-soft);
 }
 
 footer .container {
@@ -151,7 +151,7 @@ footer .logo-text h2 {
     font-weight: 800;
     margin: 0;
     line-height: 1.1;
-    background: linear-gradient(to right, #fff, #b4d7ff);
+    background: linear-gradient(to right, var(--white), #b4d7ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -161,11 +161,11 @@ footer .logo-text p {
     font-weight: 600;
     letter-spacing: 0.5px;
     margin: 4px 0 0 0;
-    color: #9fb5c8;
+    color: var(--text-muted);
     white-space: nowrap;
 }
 
 footer p {
-    color: #c0d8f0;
+    color: var(--text);
     font-size: 14px;
 }

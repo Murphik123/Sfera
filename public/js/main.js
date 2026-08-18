@@ -3,24 +3,46 @@
  * Version: 1.0
  */
 
-// Безопасный импорт вспомогательных модулей с фоллбэками
 import { createParticles } from './particles.js';
 import { getTheme, toggleTheme } from './theme.js';
 import { animateCounter, initScrollReveal, staggerReveal } from './animations.js';
 
-// Инициализация интерфейса и эффектов при загрузке DOM
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // 1. Создание фоновых плавающих частиц
+/**
+ * Safely returns an element by id without throwing if it does not exist.
+ * @param {string} id - DOM element identifier.
+ * @returns {HTMLElement | null}
+ */
+const getElement = (id) => document.getElementById(id) || null;
+
+/**
+ * Safely executes a callback and logs a warning if it fails.
+ * @param {Function} callback - Function to execute.
+ * @param {string} message - Context for the warning.
+ */
+const safeInvoke = (callback, message) => {
     try {
-        if (typeof createParticles === 'function' && document.getElementById('particles')) {
-            createParticles('particles', 60);
-        }
-    } catch (err) {
-        console.warn('⚠️ Ошибка инициализации частиц:', err.message);
+        callback();
+    } catch (error) {
+        console.warn(`⚠️ ${message}:`, error?.message || error);
+    }
+};
+
+/**
+ * Initializes the particle background if the target container exists.
+ */
+const initParticles = () => {
+    const container = getElement('particles');
+    if (!container || typeof createParticles !== 'function') {
+        return;
     }
 
-    // 2. Анимация счётчиков на главной странице
+    createParticles('particles', 60);
+};
+
+/**
+ * Runs counter animations for known numeric elements on the page.
+ */
+const initCounters = () => {
     const counters = [
         { id: 'online', target: 1842 },
         { id: 'users', target: 2340000 },
@@ -29,66 +51,98 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 'coin', target: 21000000 }
     ];
 
-    counters.forEach(c => {
-        const el = document.getElementById(c.id);
-        if (el) {
-            if (typeof animateCounter === 'function') {
-                animateCounter(el, c.target);
-            } else {
-                el.textContent = c.target.toLocaleString();
-            }
+    counters.forEach(({ id, target }) => {
+        const element = getElement(id);
+        if (!element) {
+            return;
+        }
+
+        if (typeof animateCounter === 'function') {
+            animateCounter(element, target);
+        } else {
+            element.textContent = target.toLocaleString();
         }
     });
+};
 
-    // 3. Плавное появление элементов при скролле
-    try {
+/**
+ * Initializes scroll reveal animations for reveal and staggered elements.
+ */
+const initRevealEffects = () => {
+    safeInvoke(() => {
         if (typeof initScrollReveal === 'function') {
             initScrollReveal('.reveal');
         }
         if (typeof staggerReveal === 'function') {
             staggerReveal('.stagger', 100);
         }
-    } catch (err) {
-        console.warn('⚠️ Ошибка анимации появления:', err.message);
+    }, 'Ошибка анимации появления');
+};
+
+/**
+ * Attaches theme toggle behavior and synchronizes its icon state.
+ */
+const initThemeToggle = () => {
+    const themeToggleBtn = getElement('themeToggle');
+    if (!themeToggleBtn) {
+        return;
     }
 
-    // 4. Переключение темы (светлая/тёмная)
-    const themeToggleBtn = document.getElementById('themeToggle');
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', () => {
-            if (typeof toggleTheme === 'function') {
-                toggleTheme();
-            }
-            if (typeof getTheme === 'function') {
-                themeToggleBtn.textContent = getTheme() === 'dark' ? '🌙' : '☀️';
-            }
-        });
-
-        if (typeof getTheme === 'function') {
-            themeToggleBtn.textContent = getTheme() === 'dark' ? '🌙' : '☀️';
+    const syncThemeIcon = () => {
+        if (typeof getTheme !== 'function') {
+            return;
         }
+
+        themeToggleBtn.textContent = getTheme() === 'dark' ? '🌙' : '☀️';
+    };
+
+    themeToggleBtn.addEventListener('click', () => {
+        if (typeof toggleTheme === 'function') {
+            toggleTheme();
+        }
+        syncThemeIcon();
+    });
+
+    syncThemeIcon();
+};
+
+/**
+ * Initializes the mobile hamburger navigation menu if the relevant elements exist.
+ */
+const initMobileNavigation = () => {
+    const hamburger = getElement('hamburger');
+    const nav = getElement('mainNav');
+
+    if (!hamburger || !nav) {
+        return;
     }
 
-    // 5. Обработка мобильного гамбургер-меню (хедер)
-    const hamburger = document.getElementById('hamburger');
-    const nav = document.getElementById('mainNav');
+    hamburger.addEventListener('click', function toggleMenu() {
+        this.classList.toggle('active');
+        nav.classList.toggle('active');
+    });
 
-    if (hamburger && nav) {
-        hamburger.addEventListener('click', function() {
-            this.classList.toggle('active');
-            nav.classList.toggle('active');
+    nav.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 1200) {
+                hamburger.classList.remove('active');
+                nav.classList.remove('active');
+            }
         });
+    });
+};
 
-        // Закрытие меню при клике на любую ссылку на мобильных устройствах
-        nav.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth <= 1200) {
-                    hamburger.classList.remove('active');
-                    nav.classList.remove('active');
-                }
-            });
-        });
-    }
+/**
+ * Initializes all page interactions after the DOM is ready.
+ */
+const initializeApp = () => {
+    initParticles();
+    initCounters();
+    initRevealEffects();
+    initThemeToggle();
+    initMobileNavigation();
 
     console.log('✅ SFERA Platform initialized');
-});
+};
+
+document.addEventListener('DOMContentLoaded', initializeApp);
