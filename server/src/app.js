@@ -13,6 +13,7 @@ const mailRoutes = require('./routes/mailRoutes');
 const bankRoutes = require('./routes/bankRoutes');
 const aiRoutes = require('./routes/aiRoutes');
 const statsRoutes = require('./routes/statsRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
@@ -52,6 +53,7 @@ app.use(express.static(publicPath2));
 // 2. API маршруты
 app.use('/api/auth', authRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/chat', authMiddleware, chatRoutes);
 app.use('/api/marketplace', authMiddleware, marketplaceRoutes);
 app.use('/api/mail', authMiddleware, mailRoutes);

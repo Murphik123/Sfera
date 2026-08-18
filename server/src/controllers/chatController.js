@@ -1,75 +1,146 @@
 // src/controllers/chatController.js
+const mongoose = require('mongoose');
 const Message = require('../models/Message');
-const User = require('../models/User');
+
+const createHttpError = (message, status = 500, details) => {
+  const error = new Error(message);
+  error.status = status;
+  if (details) {
+    error.details = details;
+  }
+  return error;
+};
+
+const logControllerError = (context, error, meta = {}) => {
+  console.error(`[chatController:${context}]`, {
+    message: error.message,
+    status: error.status || 500,
+    name: error.name,
+    stack: error.stack,
+    ...meta
+  });
+};
+
+const normalizeMessagePayload = (body = {}) => {
+  const { to, text, attachments } = body;
+  const normalizedText = typeof text === 'string' ? text.trim() : '';
+  const normalizedAttachments = Array.isArray(attachments)
+    ? attachments.filter((item) => typeof item === 'string' && item.trim())
+    : [];
+
+  return {
+    to,
+    text: normalizedText,
+    attachments: normalizedAttachments
+  };
+};
 
 // ============================================================
 // ОТПРАВКА СООБЩЕНИЯ
 // ============================================================
-exports.sendMessage = async (req, res) => {
+exports.sendMessage = async (req, res, next) => {
   try {
-    const { to, text, attachments } = req.body;
+    const { to, text, attachments } = normalizeMessagePayload(req.body);
     const from = req.userId;
 
-    if (!to || (!text && (!attachments || attachments.length === 0))) {
-      return res.status(400).json({ message: 'Укажите получателя и текст/файлы сообщения' });
+    if (!from) {
+      throw createHttpError('Пользователь не авторизован', 401);
     }
 
-    const message = new Message({ from, to, text, attachments });
-    await message.save();
+    if (!to || !mongoose.Types.ObjectId.isValid(String(to))) {
+      throw createHttpError('Неверный идентификатор получателя', 400);
+    }
 
-    const populatedMessage = await Message.findById(message._id)
+    if (!text && attachments.length === 0) {
+      throw createHttpError('Укажите получателя и текст/файлы сообщения', 400);
+    }
+
+    const messagePayload = {
+      from,
+      to,
+      text,
+      attachments
+    };
+
+    const message = new Message(messagePayload);
+
+    try {
+      await message.validate();
+    } catch (validationError) {
+      const details = Object.values(validationError.errors || {}).map((item) => item.message);
+      throw createHttpError('Ошибка валидации сообщения', 400, details);
+    }
+
+    const savedMessage = await message.save();
+
+    const populatedMessage = await Message.findById(savedMessage._id)
       .populate('from', 'username avatar online')
       .populate('to', 'username avatar online');
 
-    // Оповещение через WebSocket
     const io = req.app.get('io');
     if (io) {
-      io.to(to.toString()).emit('new_message', populatedMessage);
-      io.to(from.toString()).emit('new_message', populatedMessage);
+      io.to(String(to)).emit('new_message', populatedMessage);
+      io.to(String(from)).emit('new_message', populatedMessage);
     }
 
-    res.status(201).json(populatedMessage);
+    return res.status(201).json(populatedMessage);
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка при отправке сообщения', error: error.message });
+    logControllerError('sendMessage', error, {
+      from: req.userId,
+      to: req.body?.to
+    });
+    next(error);
   }
 };
 
 // ============================================================
 // ПОЛУЧЕНИЕ ПЕРЕПИСКИ С ПОЛЬЗОВАТЕЛЕМ
 // ============================================================
-exports.getMessages = async (req, res) => {
+exports.getMessages = async (req, res, next) => {
   try {
     const { userId } = req.params;
+
+    if (!userId || !mongoose.Types.ObjectId.isValid(String(userId))) {
+      throw createHttpError('Неверный идентификатор пользователя', 400);
+    }
+
     const messages = await Message.find({
       $or: [
         { from: req.userId, to: userId },
         { from: userId, to: req.userId }
       ]
     })
-    .populate('from', 'username avatar')
-    .populate('to', 'username avatar')
-    .sort({ createdAt: 1 });
+      .populate('from', 'username avatar')
+      .populate('to', 'username avatar')
+      .sort({ createdAt: 1 });
 
-    res.json(messages);
+    return res.json(messages);
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка при получении сообщений', error: error.message });
+    logControllerError('getMessages', error, {
+      userId: req.params?.userId,
+      currentUserId: req.userId
+    });
+    next(error);
   }
 };
 
 // ============================================================
 // СПИСОК ДИАЛОГОВ ТЕКУЩЕГО ПОЛЬЗОВАТЕЛЯ
 // ============================================================
-exports.getDialogs = async (req, res) => {
+exports.getDialogs = async (req, res, next) => {
   try {
     const currentUserId = req.userId;
 
-    // Находим все сообщения, где текущий пользователь — отправитель или получатель
+    if (!currentUserId) {
+      throw createHttpError('Пользователь не авторизован', 401);
+    }
+
     const messages = await Message.find({
       $or: [{ from: currentUserId }, { to: currentUserId }]
     })
-    .sort({ createdAt: -1 })
-    .populate('from', 'username avatar online')
-    .populate('to', 'username avatar online');
+      .sort({ createdAt: -1 })
+      .populate('from', 'username avatar online')
+      .populate('to', 'username avatar online');
 
     const dialogsMap = new Map();
 
@@ -92,30 +163,45 @@ exports.getDialogs = async (req, res) => {
       }
     });
 
-    res.json(Array.from(dialogsMap.values()));
+    return res.json(Array.from(dialogsMap.values()));
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка при получении списка диалогов', error: error.message });
+    logControllerError('getDialogs', error, {
+      currentUserId: req.userId
+    });
+    next(error);
   }
 };
 
 // ============================================================
 // ОТМЕТКА СООБЩЕНИЯ КАК ПРОЧИТАННОГО
 // ============================================================
-exports.markAsRead = async (req, res) => {
+exports.markAsRead = async (req, res, next) => {
   try {
     const { messageId } = req.params;
+
+    if (!messageId || !mongoose.Types.ObjectId.isValid(String(messageId))) {
+      throw createHttpError('Неверный идентификатор сообщения', 400);
+    }
+
     const message = await Message.findById(messageId);
 
-    if (!message) return res.status(404).json({ message: 'Сообщение не найдено' });
+    if (!message) {
+      throw createHttpError('Сообщение не найдено', 404);
+    }
 
     if (message.to.toString() !== req.userId.toString()) {
-      return res.status(403).json({ message: 'Нет прав для выполнения операции' });
+      throw createHttpError('Нет прав для выполнения операции', 403);
     }
 
     message.read = true;
     await message.save();
-    res.json({ message: 'Сообщение отмечено как прочитанное' });
+
+    return res.json({ message: 'Сообщение отмечено как прочитанное' });
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка при обновлении статуса', error: error.message });
+    logControllerError('markAsRead', error, {
+      messageId: req.params?.messageId,
+      currentUserId: req.userId
+    });
+    next(error);
   }
 };

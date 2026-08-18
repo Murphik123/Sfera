@@ -1,42 +1,51 @@
 // src/controllers/bankController.js
+const mongoose = require('mongoose');
 const Account = require('../models/Account');
 const Transaction = require('../models/Transaction');
 
-// ============================================================
-// ПОЛУЧЕНИЕ БАЛАНСА (с авто-созданием, если счета нет)
-// ============================================================
-exports.getBalance = async (req, res) => {
+const buildError = (message, status = 500) => {
+  const error = new Error(message);
+  error.status = status;
+  return error;
+};
+
+exports.getBalance = async (req, res, next) => {
   try {
-    let account = await Account.findOne({ userId: req.userId });
-    
-    // Если счет не найден — создаем новый с 0 балансом
+    let account = await Account.findOne({ userId: req.userId }).lean();
+
     if (!account) {
       account = await Account.create({ userId: req.userId, balance: 0 });
     }
 
-    res.json({ balance: account.balance, currency: account.currency });
+    return res.status(200).json({
+      success: true,
+      data: {
+        balance: account.balance,
+        currency: account.currency
+      }
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка получения баланса', error: error.message });
+    next(error);
   }
 };
 
-// ============================================================
-// ПЕРЕВОД СРЕДСТВ (Атомарный безопасный вариант)
-// ============================================================
-exports.transfer = async (req, res) => {
+exports.transfer = async (req, res, next) => {
   try {
-    const { toUserId, amount, description } = req.body;
+    const { toUserId, amount, description } = req.body || {};
     const transferAmount = Number(amount);
 
-    if (!transferAmount || transferAmount <= 0) {
-      return res.status(400).json({ message: 'Сумма перевода должна быть больше нуля' });
+    if (!toUserId || !mongoose.Types.ObjectId.isValid(String(toUserId))) {
+      throw buildError('Неверный идентификатор получателя', 400);
     }
 
-    if (req.userId.toString() === toUserId.toString()) {
-      return res.status(400).json({ message: 'Нельзя перевести средства самому себе' });
+    if (!Number.isFinite(transferAmount) || transferAmount <= 0) {
+      throw buildError('Сумма перевода должна быть больше нуля', 400);
     }
 
-    // 1. Атомарно списываем средства с проверкой наличия нужного баланса
+    if (String(req.userId) === String(toUserId)) {
+      throw buildError('Нельзя перевести средства самому себе', 400);
+    }
+
     const fromAccount = await Account.findOneAndUpdate(
       { userId: req.userId, balance: { $gte: transferAmount } },
       { $inc: { balance: -transferAmount } },
@@ -44,73 +53,68 @@ exports.transfer = async (req, res) => {
     );
 
     if (!fromAccount) {
-      return res.status(400).json({ message: 'Недостаточно средств или счет не найден' });
+      throw buildError('Недостаточно средств или счёт не найден', 400);
     }
 
-    // 2. Пополняем счет получателю (или создаем счет, если у получателя его еще нет)
     const toAccount = await Account.findOneAndUpdate(
       { userId: toUserId },
       { $inc: { balance: transferAmount } },
       { new: true, upsert: true }
     );
 
-    // 3. Фиксируем транзакцию
-    const transaction = new Transaction({
-      fromAccount: fromAccount._id,
-      toAccount: toAccount._id,
+    const transaction = await Transaction.create({
+      sender: req.userId,
+      recipient: toUserId,
       amount: transferAmount,
+      currency: 'TMT',
       type: 'transfer',
-      description: description || 'Перевод внутри системы SFERA',
-      status: 'completed'
+      status: 'completed',
+      description: description || 'Перевод внутри системы SFERA'
     });
-    await transaction.save();
 
-    // 4. Оповещаем получателя в реальном времени через Socket.io
     const io = req.app.get('io');
     if (io) {
-      io.to(toUserId.toString()).emit('balance_updated', {
+      io.to(String(toUserId)).emit('balance_updated', {
         newBalance: toAccount.balance,
         received: transferAmount
       });
     }
 
-    res.json({ 
-      message: 'Перевод успешно выполнен', 
-      newBalance: fromAccount.balance, 
-      transaction 
+    return res.status(201).json({
+      success: true,
+      data: {
+        transaction,
+        balance: fromAccount.balance
+      }
     });
-
   } catch (error) {
-    console.error('❌ Transfer error:', error);
-    res.status(500).json({ message: 'Ошибка при выполнении перевода', error: error.message });
+    next(error);
   }
 };
 
-// ============================================================
-// ИСТОРИЯ ТРАНЗАКЦИЙ
-// ============================================================
-exports.getTransactions = async (req, res) => {
+exports.getTransactions = async (req, res, next) => {
   try {
-    let account = await Account.findOne({ userId: req.userId });
+    const limit = Math.min(Math.max(Number(req.query.limit) || 20, 1), 100);
+    const skip = Math.max(Number(req.query.skip) || 0, 0);
+
+    let account = await Account.findOne({ userId: req.userId }).lean();
     if (!account) {
-      return res.json([]);
+      return res.status(200).json({ success: true, data: [] });
     }
 
     const transactions = await Transaction.find({
-      $or: [{ fromAccount: account._id }, { toAccount: account._id }]
+      $or: [{ sender: req.userId }, { recipient: req.userId }]
     })
-    .populate({
-      path: 'fromAccount',
-      populate: { path: 'userId', select: 'username email avatar' }
-    })
-    .populate({
-      path: 'toAccount',
-      populate: { path: 'userId', select: 'username email avatar' }
-    })
-    .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
 
-    res.json(transactions);
+    return res.status(200).json({
+      success: true,
+      data: transactions
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка получения историй транзакций', error: error.message });
+    next(error);
   }
 };

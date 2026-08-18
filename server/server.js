@@ -8,6 +8,8 @@ const path = require('path');
 const fs = require('fs');
 const cors = require('cors');
 const { Server } = require('socket.io');
+const connectDB = require('./src/config/db');
+const { searchProducts } = require('./vectorStore');
 
 const app = express();
 const server = http.createServer(app);
@@ -136,6 +138,23 @@ io.on('connection', (socket) => {
 });
 
 // --- 4. ПРАВИЛЬНЫЙ ФОЛЛБЭК ДЛЯ ROUTING / HTML ---
+// Векторный поиск товаров через Qdrant
+app.get('/api/products/search', async (req, res) => {
+    try {
+        const { q } = req.query;
+        if (!q) {
+            return res.status(400).json({ success: false, error: 'Параметр запроса q обязателен' });
+        }
+        const results = await searchProducts(q, 10);
+        res.json({ success: true, count: results.length, data: results });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok', service: 'sfera-api' });
+});
+
 app.get('*', (req, res) => {
     // Если запрос идёт к файлу (.js, .css, .png и т.д.), но он отсутствует в express.static, отдаем 404
     if (path.extname(req.path)) {
@@ -154,7 +173,12 @@ app.get('*', (req, res) => {
 const PORT = process.env.PORT || 10000;
 const HOST = '0.0.0.0';
 
-server.listen(PORT, HOST, () => {
-    console.log(`🚀 Server running on http://${HOST}:${PORT}`);
-    console.log(`🔌 WebSocket готов`);
+connectDB().then(() => {
+    server.listen(PORT, HOST, () => {
+        console.log(`🚀 Server running on http://${HOST}:${PORT}`);
+        console.log(`🔌 WebSocket готов`);
+    });
+}).catch((error) => {
+    console.error('Failed to start server:', error);
+    process.exit(1);
 });
