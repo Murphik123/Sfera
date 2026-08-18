@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Wallet = require('../models/Wallet');
 const Transaction = require('../models/Transaction');
+const { isValidObjectId } = require('../utils/validators');
 
 // Получение или создание кошелька
 exports.getWallet = async (req, res) => {
@@ -25,6 +26,12 @@ exports.transfer = async (req, res) => {
     try {
         const { recipientId, amount, currency = 'TMT', description } = req.body;
         const senderId = req.user._id;
+
+        if (!isValidObjectId(recipientId)) {
+            await session.abortTransaction();
+            session.endSession();
+            return res.status(400).json({ message: 'Некорректный получатель перевода' });
+        }
 
         if (senderId.toString() === recipientId) {
             await session.abortTransaction();

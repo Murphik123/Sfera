@@ -9,11 +9,10 @@ const redisClient = require('../config/redis');
 // ============================================================
 exports.register = async (req, res) => {
     try {
-        const { username, email, password, role } = req.body;
+        const { username, email, password } = req.body;
 
-        console.log('📝 Registration attempt:', { username, email, role });
-
-        if (!username || !email || !password) {
+        if (typeof username !== 'string' || typeof email !== 'string' || typeof password !== 'string'
+            || !username || !email || !password) {
             return res.status(400).json({
                 message: 'Укажите логин, email и пароль'
             });
@@ -29,16 +28,16 @@ exports.register = async (req, res) => {
             });
         }
 
-        // Создание пользователя (пароль передаем в чистом виде — User.js захэширует его сам)
+        // Создание пользователя (пароль передаем в чистом виде — User.js захэширует его сам).
+        // Роль всегда 'user': назначить администратора можно только через админ-панель.
         const user = new User({
             username,
             email: email.toLowerCase(),
-            password, 
-            role: role === 'admin' ? 'admin' : 'user'
+            password,
+            role: 'user'
         });
 
         await user.save();
-        console.log('✅ User created:', { id: user._id, username: user.username, role: user.role });
 
         // Автоматическое создание банковского/финансового счёта
         try {
@@ -64,7 +63,7 @@ exports.register = async (req, res) => {
 
     } catch (error) {
         console.error('❌ Registration error:', error);
-        res.status(500).json({ message: 'Ошибка при регистрации', error: error.message });
+        res.status(500).json({ message: 'Ошибка при регистрации' });
     }
 };
 
@@ -75,9 +74,7 @@ exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        console.log('📥 Login attempt:', email);
-
-        if (!email || !password) {
+        if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
             return res.status(400).json({
                 message: 'Укажите email и пароль'
             });
@@ -103,7 +100,6 @@ exports.login = async (req, res) => {
         // Сохранение сессии в Redis / RedisMock
         try {
             await redisClient.set(`session:${user._id}`, token);
-            console.log('✅ Redis session saved');
         } catch (redisError) {
             console.log('⚠️ Redis session save skipped:', redisError.message);
         }
@@ -121,7 +117,7 @@ exports.login = async (req, res) => {
 
     } catch (error) {
         console.error('❌ Login error:', error);
-        res.status(500).json({ message: 'Ошибка при входе', error: error.message });
+        res.status(500).json({ message: 'Ошибка при входе' });
     }
 };
 
@@ -136,7 +132,7 @@ exports.logout = async (req, res) => {
         }
         res.json({ message: 'Успешный выход из системы' });
     } catch (error) {
-        res.status(500).json({ message: 'Ошибка при выходе', error: error.message });
+        res.status(500).json({ message: 'Ошибка при выходе' });
     }
 };
 
@@ -155,6 +151,6 @@ exports.getMe = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ message: 'Ошибка при получении профиля', error: error.message });
+        res.status(500).json({ message: 'Ошибка при получении профиля' });
     }
 };

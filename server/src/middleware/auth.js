@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
 const redisClient = require('../config/redis');
 const User = require('../models/User');
+const { verifyToken } = require('../utils/jwt');
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -13,7 +13,10 @@ const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ message: 'No token provided' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
+    const decoded = verifyToken(token);
+    if (!decoded || !decoded.userId) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
 
     // Проверка Redis сессии (если клиент активен)
     if (redisClient && redisClient.isOpen) {
@@ -30,7 +33,11 @@ const authMiddleware = async (req, res, next) => {
     // Загружаем пользователя из БД
     const user = await User.findById(decoded.userId).select('-password');
     if (!user) {
-      return res.status(401).json({ message: 'User not found' });
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    if (user.isBlocked) {
+      return res.status(403).json({ message: 'Аккаунт заблокирован' });
     }
 
     req.user = user;          // полный объект пользователя
@@ -38,7 +45,7 @@ const authMiddleware = async (req, res, next) => {
 
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Unauthorized', error: error.message });
+    return res.status(401).json({ message: 'Unauthorized' });
   }
 };
 

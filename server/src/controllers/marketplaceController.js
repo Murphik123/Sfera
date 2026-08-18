@@ -1,6 +1,7 @@
 const Listing = require('../models/Listing');
 const Order = require('../models/Order');
 const redisClient = require('../config/redis');
+const { isValidObjectId } = require('../utils/validators');
 
 exports.getListings = async (req, res) => {
   try {
@@ -42,6 +43,11 @@ exports.createListing = async (req, res) => {
 exports.createOrder = async (req, res) => {
   try {
     const { listingId } = req.body;
+
+    if (!isValidObjectId(listingId)) {
+      return res.status(400).json({ message: 'Некорректный идентификатор объявления' });
+    }
+
     const listing = await Listing.findById(listingId);
     if (!listing) return res.status(404).json({ message: 'Listing not found' });
 

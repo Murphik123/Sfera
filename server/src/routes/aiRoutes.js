@@ -4,8 +4,9 @@
 // ============================================================
 const router = require('express').Router();
 const { getPredictions, createPrediction } = require('../controllers/aiController');
+const { adminAuth } = require('../middleware/adminAuth');
 
 router.get('/predictions', getPredictions);
-router.post('/predictions', createPrediction);
+router.post('/predictions', adminAuth, createPrediction);
 
 module.exports = router;

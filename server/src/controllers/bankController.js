@@ -1,6 +1,7 @@
 // src/controllers/bankController.js
 const Account = require('../models/Account');
 const Transaction = require('../models/Transaction');
+const { isValidObjectId } = require('../utils/validators');
 
 // ============================================================
 // ПОЛУЧЕНИЕ БАЛАНСА (с авто-созданием, если счета нет)
@@ -16,7 +17,7 @@ exports.getBalance = async (req, res) => {
 
     res.json({ balance: account.balance, currency: account.currency });
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка получения баланса', error: error.message });
+    res.status(500).json({ message: 'Ошибка получения баланса' });
   }
 };
 
@@ -28,7 +29,11 @@ exports.transfer = async (req, res) => {
     const { toUserId, amount, description } = req.body;
     const transferAmount = Number(amount);
 
-    if (!transferAmount || transferAmount <= 0) {
+    if (!isValidObjectId(toUserId)) {
+      return res.status(400).json({ message: 'Некорректный получатель перевода' });
+    }
+
+    if (!Number.isFinite(transferAmount) || transferAmount <= 0) {
       return res.status(400).json({ message: 'Сумма перевода должна быть больше нуля' });
     }
 
@@ -82,7 +87,7 @@ exports.transfer = async (req, res) => {
 
   } catch (error) {
     console.error('❌ Transfer error:', error);
-    res.status(500).json({ message: 'Ошибка при выполнении перевода', error: error.message });
+    res.status(500).json({ message: 'Ошибка при выполнении перевода' });
   }
 };
 
@@ -111,6 +116,6 @@ exports.getTransactions = async (req, res) => {
 
     res.json(transactions);
   } catch (error) {
-    res.status(500).json({ message: 'Ошибка получения историй транзакций', error: error.message });
+    res.status(500).json({ message: 'Ошибка получения историй транзакций' });
   }
 };
