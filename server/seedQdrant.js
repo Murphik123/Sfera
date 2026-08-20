@@ -1,5 +1,6 @@
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+// Загружаем .env из корня проекта (на один уровень выше)
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 const embeddingModule = require('./src/services/embedding.service');
 const qdrant = require('./src/services/qdrant.service');
@@ -44,17 +45,17 @@ async function seed() {
   console.log(`🌱 Запуск индексации коллекции "${collectionName}"...`);
 
   if (!qdrant.client) {
-    throw new Error('Подключение к Qdrant отсутствует. Проверьте QDRANT_URL в server/.env');
+    throw new Error('Подключение к Qdrant отсутствует. Проверьте QDRANT_URL в .env');
   }
 
-  // 1. Генерация пробного вектора и определение размерности
+  // 1. Генерация пробного вектора через Gemini API
   console.log('⏳ Вычисление размерности вектора...');
   const firstText = `${sampleProducts[0].title}. ${sampleProducts[0].description}. Категория: ${sampleProducts[0].category}`;
   const firstVector = await getEmbedding(firstText);
   const vectorSize = firstVector.length;
   console.log(`📏 Размерность векторов модели: ${vectorSize}`);
 
-  // 2. Создание или пересоздание коллекции
+  // 2. Создание или пересоздание коллекции под размерность Gemini
   try {
     const { collections } = await qdrant.client.getCollections();
     const exists = collections.some(c => c.name === collectionName);
@@ -73,7 +74,7 @@ async function seed() {
     throw e;
   }
 
-  // 3. Сохранение товаров (с реутилизацией первого вектора)
+  // 3. Сохранение товаров
   for (let i = 0; i < sampleProducts.length; i++) {
     const product = sampleProducts[i];
     const vector = (i === 0) 
