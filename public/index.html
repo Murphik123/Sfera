@@ -1,402 +1,147 @@
-﻿<!DOCTYPE html>
-<html lang="tm">
+﻿<!doctype html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SFERA вЂ” TГјrkmenistanyЕ€ BirleЕџdirilen Sanly Platformasy</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SFERA</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+  <!-- Design system styles -->
+  <link rel="stylesheet" href="/css/_design-vars.css">
+  <link rel="stylesheet" href="/css/glass-utils.css">
+  <link rel="stylesheet" href="/css/particles.css">
+  <link rel="stylesheet" href="/css/sphere.css">
+
+  <!-- Meta for translation management -->
+  <meta name="supported-langs" content="tm,ru,en">
+  <meta name="default-lang" content="en">
+
+  <!-- Existing app CSS (if any) -->
+  <!-- <link rel="stylesheet" href="/css/app.css"> -->
 </head>
 <body>
+  <div id="app" class="spotlight" data-current-lang="en">
+    <header class="glass" style="padding:12px 20px; display:flex; align-items:center; justify-content:space-between;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <a href="/" aria-label="SFERA home" style="display:inline-flex; align-items:center; gap:10px; text-decoration:none; color:inherit;">
+          <div style="width:40px; height:40px; border-radius:8px; background:linear-gradient(135deg,var(--primary),var(--secondary)); box-shadow:0 6px 18px rgba(0,0,0,0.35);"></div>
+          <strong style="font-size:1.05rem;">SFERA</strong>
+        </a>
+      </div>
 
-    <div id="particles"></div>
-
-    <header>
-        <div class="container">
-            <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00ffa3"/>
-                                <stop offset="50%" stop-color="#00d4ff"/>
-                                <stop offset="100%" stop-color="#1f6bff"/>
-                            </linearGradient>
-                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="4" result="blur"/>
-                                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-                            </filter>
-                        </defs>
-                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)"/>
-                        <g filter="url(#logoGlow)">
-                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
-                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" 
-                                  stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
-                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)"/>
-                        </g>
-                    </svg>
-                </div>
-                <div class="logo-text">
-                    <h2 data-i18n="logo_title">SFERA</h2>
-                    <p data-i18n="logo_sub">Milli Sanly Platforma</p>
-                </div>
-            </a>
-            <nav>
-                <ul>
-                    <li><a href="#" data-i18n="nav_home">BaЕџ sahypa</a></li>
-                    <li><a href="#" data-i18n="nav_exchange">BirЕѕa</a></li>
-                    <li><a href="#" data-i18n="nav_tmpay">TM Pay</a></li>
-                    <li><a href="#" data-i18n="nav_tmcoin">TM Coin</a></li>
-                    <li><a href="#" data-i18n="nav_bank">Bank</a></li>
-                    <li><a href="#" data-i18n="nav_ai">IIG</a></li>
-                    <li><a href="#" data-i18n="nav_docs">Resminamalar</a></li>
-                    <li><a href="#" data-i18n="nav_contacts">HabarlaЕџmak</a></li>
-                </ul>
-            </nav>
-            <div class="header-buttons">
-                <button class="lang">TM</button>
-                <a href="login.html" class="login" data-i18n="btn_login">Girmek</a>
-            </div>
-        </div>
+      <!-- Language switcher (non-destructive) -->
+      <nav id="lang-switch" aria-label="Language switch" style="display:flex; gap:8px;">
+        <button class="glass hover-lift" data-lang="tm" aria-pressed="false" title="Türkmençe">TM</button>
+        <button class="glass hover-lift" data-lang="ru" aria-pressed="false" title="Русский">RU</button>
+        <button class="glass hover-lift" data-lang="en" aria-pressed="true" title="English">EN</button>
+      </nav>
     </header>
 
-    <section class="hero">
-        <div class="hero-grid"></div>
-        <canvas id="heroCanvas"></canvas>
-        <div class="hero-glow glow-left"></div>
-        <div class="hero-glow glow-right"></div>
+    <main style="padding:28px; min-height:70vh; position:relative; z-index:2;">
+      <section style="display:flex; gap:28px; align-items:center; justify-content:center; flex-wrap:wrap;">
+        <div style="max-width:720px;">
+          <h1 data-i18n="home.title" style="margin:0 0 12px 0; font-size:2rem;">Добро пожаловать в SFERA</h1>
+          <p data-i18n="home.subtitle" style="margin:0 0 18px 0; color:var(--muted);">
+            Универсальная платформа. Интерфейс с эффектом glassmorphism и лёгкими анимациями.
+          </p>
+          <div style="display:flex; gap:12px;">
+            <a class="bg-accent glass hover-lift" href="#" data-i18n="home.cta.start" style="padding:10px 16px; border-radius:12px; text-decoration:none;">Начать</a>
+            <a class="glass hover-lift" href="#" data-i18n="home.cta.docs" style="padding:10px 16px; border-radius:12px; text-decoration:none;">Документация</a>
+          </div>
+        </div>
 
-        <div class="map-wrapper">
-            <svg class="tm-map" viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#00d4ff"/>
-                        <stop offset="100%" stop-color="#00ff99"/>
-                    </linearGradient>
-                </defs>
-                <path d="M92 270 L150 210 L280 170 L420 120 L580 140 L710 160 L790 210 L760 290 L640 340 L540 370 L360 360 L220 330 L120 300 Z"
-                      fill="rgba(0,212,255,.08)" stroke="url(#mapGradient)" stroke-width="3" class="map-outline"/>
+        <!-- Sphere component inline include -->
+        <div aria-hidden="true">
+          <div class="sphere-wrap glass-strong hover-lift" aria-hidden="true" style="width:360px;height:360px;display:flex;align-items:center;justify-content:center;">
+            <svg class="rings" viewBox="-200 -200 400 400" width="320" height="320" preserveAspectRatio="xMidYMid meet" style="position:absolute; inset:0; margin:auto;">
+              <defs>
+                <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#00d4ff"/><stop offset="1" stop-color="#1f6bff"/></linearGradient>
+                <linearGradient id="g2" x1="0" x2="1"><stop offset="0" stop-color="#00ffa3"/><stop offset="1" stop-color="#00d4ff"/></linearGradient>
+              </defs>
+              <g class="rings-group" transform="rotate(0)">
+                <circle class="ring ring-1" r="80" stroke="url(#g1)" stroke-width="1.6" fill="none" stroke-dasharray="1 6"></circle>
+                <circle class="ring ring-2" r="110" stroke="url(#g2)" stroke-width="1.2" fill="none" stroke-dasharray="1 6"></circle>
+              </g>
             </svg>
+            <div class="core" style="position:relative; z-index:2; width:var(--core-size); height:var(--core-size); border-radius:50%;"></div>
+          </div>
         </div>
+      </section>
 
-        <div class="hero-content">
-            <span class="hero-tag" data-i18n="hero_tag">SFERA вЂ” SANLY PLATFORMA</span>
-            <h1 data-i18n="hero_title">TГјrkmenistanyЕ€ BirleЕџdirilen sanly platformasy</h1>
-            <p class="hero-subtitle" data-i18n="hero_subtitle">SГ¶wda вЂў IIG вЂў TГ¶legler вЂў Bank вЂў Resminama dolanyЕџygy</p>
-            <p class="hero-text" data-i18n="hero_text">
-                Elektron sГ¶wdany, intellektual analitikany, maliГЅe hyzmatlaryny, resminama dolanyЕџygyny we sanly dГ¶wlet hyzmatlaryny birleЕџdirГЅГ¤n hГ¤zirki zaman dГ¶wlet sanly ekosistemasy.
-            </p>
-            <div class="hero-buttons">
-                <a href="dashboard.html" class="primary-btn" data-i18n="btn_start">IЕџe baЕџlaЕ€</a>
-                <a href="#" class="glass-btn" data-i18n="btn_demo">Demo</a>
-            </div>
-        </div>
-
-        <div class="hero-visual">
-            <div class="core">
-                <div class="core-ring ring-1"></div>
-                <div class="core-ring ring-2"></div>
-                <div class="core-ring ring-3"></div>
-                <div class="core-center">
-                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 80px; height: 80px; animation: spinRing 15s linear infinite; overflow: visible;">
-                        <defs>
-                            <linearGradient id="heroCoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00ffa3"/>
-                                <stop offset="50%" stop-color="#00d4ff"/>
-                                <stop offset="100%" stop-color="#1f6bff"/>
-                            </linearGradient>
-                        </defs>
-                        <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" 
-                              stroke="url(#heroCoreGrad)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="1 6"/>
-                        <circle cx="48" cy="48" r="5.5" fill="#ffffff"/>
-                    </svg>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <main class="page-shell">
-    <section class="modules section-shell">
-        <h2 data-i18n="modules_title">PlatformanyЕ€ esasy modullary</h2>
-        <div class="grid">
-            <div class="card"><div class="icon">рџ›’</div><h3 data-i18n="mod_exchange_title">BirЕѕa</h3><p data-i18n="mod_exchange_desc">Elektron sГ¶wda meГЅdanГ§asy</p></div>
-            <div class="card"><div class="icon">рџ’і</div><h3 data-i18n="mod_pay_title">TM Pay</h3><p data-i18n="mod_pay_desc">Milli tГ¶leg ulgamy</p></div>
-            <div class="card"><div class="icon">в‚®</div><h3 data-i18n="mod_coin_title">TM Coin</h3><p data-i18n="mod_coin_desc">Sanly dГ¶wlet pul birligi</p></div>
-            <div class="card"><div class="icon">рџЏ¦</div><h3 data-i18n="mod_bank_title">Bank</h3><p data-i18n="mod_bank_desc">"Blago" sanly banky</p></div>
-            <div class="card"><div class="icon">рџ¤–</div><h3 data-i18n="mod_ai_title">IIG</h3><p data-i18n="mod_ai_desc">Resminamalary barlamak, Г§aklama, analitika</p></div>
-            <div class="card"><div class="icon">рџ“„</div><h3 data-i18n="mod_docs_title">Resminamalar</h3><p data-i18n="mod_docs_desc">Awotomatik barlag</p></div>
-        </div>
-    </section>
-
-    <section class="statistics section-shell">
-        <div class="stat"><h1 id="users">0</h1><p data-i18n="stat_users">Ulanyjylar</p></div>
-        <div class="stat"><h1 id="orders">0</h1><p data-i18n="stat_orders">SГ¶wdalar</p></div>
-        <div class="stat"><h1 id="docs">0</h1><p data-i18n="stat_docs">Resminamalar</p></div>
-        <div class="stat"><h1 id="coin">0</h1><p data-i18n="stat_coin">TM Coin</p></div>
-    </section>
-
-    <section class="news section-shell">
-        <h2 data-i18n="news_title">SoЕ€ky habarlar</h2>
-        <div class="news-grid">
-            <div class="news-card"><h3 data-i18n="news_1_title">PlatformanyЕ€ iЕџe girizilmegi</h3><p data-i18n="news_1_desc">TГ¤ze nesliЕ€ hГ¤zirki zaman sanly ekosistemasy.</p></div>
-            <div class="news-card"><h3 data-i18n="news_2_title">IIG moduly</h3><p data-i18n="news_2_desc">Resminamalary awtomatiki barlamak.</p></div>
-            <div class="news-card"><h3 data-i18n="news_3_title">TM Pay</h3><p data-i18n="news_3_desc">Milli Г§alt tГ¶legler ulgamy.</p></div>
-        </div>
-    </section>
-
+      <section id="page-content" style="margin-top:28px;">
+        <article data-i18n-key="home.intro">
+          <h2 data-i18n="home.features.title">Функции</h2>
+          <p data-i18n="home.features.desc">Здесь будет краткое описание возможностей платформы.</p>
+        </article>
+      </section>
     </main>
 
-    <footer>
-        <div class="container">
-            <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="footerLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#00ffa3"/>
-                                <stop offset="50%" stop-color="#00d4ff"/>
-                                <stop offset="100%" stop-color="#1f6bff"/>
-                            </linearGradient>
-                            <filter id="footerLogoGlow" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="4" result="blur"/>
-                                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-                            </filter>
-                        </defs>
-                        <circle cx="50" cy="50" r="28" fill="url(#footerLogoGrad)" opacity="0.15" filter="url(#footerLogoGlow)"/>
-                        <g filter="url(#footerLogoGlow)">
-                            <circle cx="50" cy="50" r="40" stroke="url(#footerLogoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
-                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" 
-                                  stroke="url(#footerLogoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
-                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#footerLogoGlow)"/>
-                        </g>
-                    </svg>
-                </div>
-                <div class="logo-text">
-                    <h2 data-i18n="logo_title">SFERA</h2>
-                    <p data-i18n="logo_sub">Milli Sanly Platforma</p>
-                </div>
-            </a>
-            <p data-i18n="footer_copy">В© 2026 вЂ” TГјrkmenistanyЕ€ BirleЕџdirilen sanly platformasy</p>
-        </div>
+    <footer class="glass" style="padding:14px 20px; display:flex; justify-content:space-between; align-items:center;">
+      <small style="color:var(--muted)">© SFERA — Все права защищены</small>
+      <div style="display:flex; gap:10px;">
+        <a href="#" class="glass" style="padding:6px 10px; border-radius:8px; text-decoration:none;">Support</a>
+        <a href="#" class="glass" style="padding:6px 10px; border-radius:8px; text-decoration:none;">Privacy</a>
+      </div>
     </footer>
+  </div>
 
-    <script>
-        // РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЏР·С‹РєР°: РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ TM, СЃРѕС…СЂР°РЅСЏРµС‚СЃСЏ РІ localStorage
-        const langs = ["TM", "RU", "EN"];
-        let currentLang = localStorage.getItem("sfera_lang") || "TM";
+  <!-- Constellation canvas -->
+  <canvas id="constellation" style="position:fixed; inset:0; z-index:0; pointer-events:none;"></canvas>
 
-        async function setLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem("sfera_lang", lang);
-            
-            const langBtn = document.querySelector(".lang");
-            if (langBtn) langBtn.textContent = lang;
-            document.documentElement.lang = lang.toLowerCase();
+  <!-- Visual assets -->
+  <script src="/js/particles-init.js" defer></script>
+  <script src="/js/spotlight.js" defer></script>
 
-            try {
-                const response = await fetch(`languages/${lang.toLowerCase()}.json`);
-                const translations = await response.json();
-                
-                document.querySelectorAll("[data-i18n]").forEach(el => {
-                    const key = el.getAttribute("data-i18n");
-                    if (translations[key]) {
-                        el.innerHTML = translations[key];
-                    }
-                });
-            } catch (e) {
-                console.error("РћС€РёР±РєР° Р·Р°РіСЂСѓР·РєРё СЏР·С‹РєРѕРІРѕРіРѕ С„Р°Р№Р»Р°:", e);
-            }
+  <!-- Constellation module -->
+  <script type="module" defer>
+    import initConstellation from '/js/constellation.js';
+    document.addEventListener('DOMContentLoaded', ()=> {
+      const c = document.getElementById('constellation');
+      if(c) initConstellation(c);
+    });
+
+    // Language switcher wiring that emits an event and calls optional global hook.
+    (function(){
+      try {
+        const switcher = document.getElementById('lang-switch');
+        if(!switcher) return;
+        function setPressed(btn){
+          switcher.querySelectorAll('button[data-lang]').forEach(b => b.setAttribute('aria-pressed','false'));
+          btn.setAttribute('aria-pressed','true');
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            setLanguage(currentLang);
-
-            const langButton = document.querySelector(".lang");
-            if (langButton) {
-                langButton.addEventListener("click", () => {
-                    let nextIndex = (langs.indexOf(currentLang) + 1) % langs.length;
-                    setLanguage(langs[nextIndex]);
-                });
-            }
-
-            // Canvas: Р»РёРЅРёРё РґР°РЅРЅС‹С…
-            const canvas = document.getElementById('heroCanvas');
-            if (canvas) {
-                const ctx = canvas.getContext('2d');
-                let w, h;
-
-                function resize() {
-                    const rect = canvas.parentElement.getBoundingClientRect();
-                    canvas.width = rect.width;
-                    canvas.height = rect.height;
-                    w = canvas.width;
-                    h = canvas.height;
-                }
-                resize();
-                window.addEventListener('resize', resize);
-
-                const points = [];
-                for (let i = 0; i < 30; i++) {
-                    points.push({
-                        x: Math.random() * w,
-                        y: Math.random() * h,
-                        vx: (Math.random() - 0.5) * 0.6,
-                        vy: (Math.random() - 0.5) * 0.6,
-                    });
-                }
-
-                function drawLines() {
-                    ctx.clearRect(0, 0, w, h);
-                    points.forEach(p => {
-                        p.x += p.vx;
-                        p.y += p.vy;
-                        if (p.x < 0 || p.x > w) p.vx *= -1;
-                        if (p.y < 0 || p.y > h) p.vy *= -1;
-                    });
-                    for (let i = 0; i < points.length; i++) {
-                        for (let j = i+1; j < points.length; j++) {
-                            const dx = points[i].x - points[j].x;
-                            const dy = points[i].y - points[j].y;
-                            const dist = Math.sqrt(dx*dx + dy*dy);
-                            if (dist < 150) {
-                                ctx.beginPath();
-                                ctx.moveTo(points[i].x, points[i].y);
-                                ctx.lineTo(points[j].x, points[j].y);
-                                ctx.strokeStyle = `rgba(0,212,255,${0.15 * (1 - dist/150)})`;
-                                ctx.stroke();
-                            }
-                        }
-                    }
-                    points.forEach(p => {
-                        ctx.beginPath();
-                        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-                        ctx.fillStyle = 'rgba(0,212,255,0.5)';
-                        ctx.fill();
-                    });
-                    requestAnimationFrame(drawLines);
-                }
-                drawLines();
-            }
-
-            // Р§Р°СЃС‚РёС†С‹
-            const particles = document.getElementById("particles");
-            if (particles) {
-                for (let i = 0; i < 60; i++) {
-                    const p = document.createElement("span");
-                    p.className = "particle";
-                    p.style.left = Math.random() * 100 + "%";
-                    p.style.top = Math.random() * 100 + "%";
-                    p.style.animationDuration = (6 + Math.random() * 12) + "s";
-                    p.style.animationDelay = Math.random() * 5 + "s";
-                    particles.appendChild(p);
-                }
-            }
+        switcher.addEventListener('click', (e) => {
+          const btn = e.target.closest('button[data-lang]');
+          if(!btn) return;
+          const lang = btn.getAttribute('data-lang');
+          setPressed(btn);
+          // update attribute for other scripts
+          document.getElementById('app').setAttribute('data-current-lang', lang);
+          // emit event for external i18n loader
+          window.dispatchEvent(new CustomEvent('sfera:langchange', { detail: { lang } }));
+          // optional synchronous hook for legacy loaders
+          if(typeof window.SFERA_onLangChange === 'function'){
+            try { window.SFERA_onLangChange(lang); } catch(e){ console.error(e); }
+          }
         });
+      } catch(e){ console.error('lang switch init error', e); }
+    })();
+  </script>
 
-        // РђРЅРёРјРёСЂРѕРІР°РЅРЅС‹Рµ СЃС‡С‘С‚С‡РёРєРё
-        const counters = [
-            { id: "users", target: 2340000 },
-            { id: "orders", target: 18540291 },
-            { id: "docs", target: 11328901 },
-            { id: "coin", target: 21000000 }
-        ];
+  <!-- Placeholder: include your i18n loader here. It should listen to 'sfera:langchange' or implement window.SFERA_onLangChange -->
+  <!-- Example: <script src="/js/i18n-loader.js" defer></script> -->
 
-        function animateCounter(el, target) {
-            let value = 0;
-            const step = Math.max(1, Math.floor(target / 180));
-            const timer = setInterval(() => {
-                value += step;
-                if (value >= target) {
-                    value = target;
-                    clearInterval(timer);
-                }
-                el.textContent = value.toLocaleString("ru-RU");
-            }, 16);
+  <!-- Mobile performance hint -->
+  <script defer>
+    (function(){
+      try {
+        if(window.matchMedia && window.matchMedia('(max-width: 768px)').matches){
+          document.documentElement.style.setProperty('--particle-min-duration', '8s');
+          document.documentElement.style.setProperty('--particle-max-duration', '20s');
+          // optional flag for particles-init.js
+          window.__SFERA_REDUCE_PARTICLES = true;
         }
-
-        window.addEventListener("load", () => {
-            counters.forEach(c => {
-                const el = document.getElementById(c.id);
-                if (el) animateCounter(el, c.target);
-            });
-        });
-
-        // Intersection Observer
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add("visible");
-                }
-            });
-        }, { threshold: 0.15 });
-
-        document.querySelectorAll(".card, .news-card, .stat").forEach(el => {
-            el.classList.add("hidden");
-            observer.observe(el);
-        });
-
-        // Hover СЌС„С„РµРєС‚ РЅР° РєР°СЂС‚РѕС‡РєР°С…
-        document.querySelectorAll(".card").forEach(card => {
-            card.addEventListener("mousemove", e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                card.style.background = `
-                    radial-gradient(circle at ${x}px ${y}px,
-                    rgba(0,212,255,.18),
-                    rgba(255,255,255,.05))
-                `;
-            });
-            card.addEventListener("mouseleave", () => {
-                card.style.background = "rgba(255,255,255,.06)";
-            });
-        });
-
-        // Р›РёРїРєРёР№ С…РµРґРµСЂ
-        const header = document.querySelector("header");
-        window.addEventListener("scroll", () => {
-            if (window.scrollY > 50) {
-                header.style.background = "rgba(255, 255, 255, 0.22)";
-                header.style.boxShadow = "0 10px 35px rgba(0,0,0,.2)";
-            } else {
-                header.style.background = "rgba(255, 255, 255, 0.12)";
-                header.style.boxShadow = "0 8px 32px 0 rgba(0, 0, 0, 0.1)";
-            }
-        });
-
-        // РљРЅРѕРїРєРё
-        document.querySelectorAll("button").forEach(btn => {
-            btn.addEventListener("mouseenter", () => {
-                btn.style.transform = "translateY(-3px) scale(1.03)";
-            });
-            btn.addEventListener("mouseleave", () => {
-                btn.style.transform = "";
-            });
-        });
-
-        // Р­С„С„РµРєС‚ РїСѓР»СЊСЃР°С†РёРё СЃС„РµСЂС‹
-        const core = document.querySelector(".core-center");
-        if (core) {
-            setInterval(() => {
-                core.style.boxShadow = "0 0 " + (80 + Math.random() * 60) + "px rgba(0,212,255,.6)";
-            }, 1500);
-        }
-
-        console.log("SFERA PLATFORMA Р·Р°РіСЂСѓР¶РµРЅР°");
-    </script>
-    <canvas id="constellation" style="position:fixed; inset:0; z-index:0; pointer-events:none;"></canvas>
-    <script src="/js/particles-init.js" defer></script>
-    <script src="/js/spotlight.js" defer></script>
-    <script type="module" defer>
-      import initConstellation from '/js/constellation.js';
-      document.addEventListener('DOMContentLoaded', ()=> {
-        const c = document.getElementById('constellation');
-        if(c) initConstellation(c);
-      });
-    </script>
+      } catch(e){}
+    })();
+  </script>
 </body>
 </html>
-

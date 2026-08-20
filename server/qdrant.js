@@ -1,56 +1,88 @@
+require('dotenv').config();
 const { QdrantClient } = require('@qdrant/js-client-rest');
 
-const QDRANT_URL = process.env.QDRANT_URL;
+const rawUrl = (process.env.QDRANT_URL || '').trim();
+
+const host = rawUrl
+  .replace(/^https?:\/\//, '')
+  .replace(/:[0-9]+.*$/, '')
+  .replace(/\/.*$/, '');
+
 const QDRANT_API_KEY = process.env.QDRANT_API_KEY;
 
-const qdrantClient = QDRANT_URL
-  ? new QdrantClient({ url: QDRANT_URL, apiKey: QDRANT_API_KEY })
+const qdrantClient = host
+  ? new QdrantClient({
+      host: host,
+      port: 443,
+      https: true,
+      apiKey: QDRANT_API_KEY,
+      checkCompatibility: false
+    })
   : null;
 
-async function checkQdrantConnection() {
-  if (!qdrantClient) {
-    console.warn('⚠️ Qdrant: QDRANT_URL не задана');
-    return false;
-  }
-  try {
-    const collections = await qdrantClient.getCollections();
-    console.log(`✅ Qdrant подключен: ${QDRANT_URL} (коллекций: ${collections.collections.length})`);
-    return true;
-  } catch (error) {
-    console.error(`❌ Qdrant недоступен (${QDRANT_URL}): ${error.message}`);
-    return false;
-  }
-}
-
-// Добавление или обновление вектора
-async function upsertVector(collectionName, { id, vector, payload }) {
-  if (!qdrantClient) return null;
-  return await qdrantClient.upsert(collectionName, {
-    points: [{ id, vector, payload }]
-  });
-}
-
-// Поиск похожих векторов
-async function searchSimilar(collectionName, queryVector, limit = 10, filter = null) {
-  if (!qdrantClient) return [];
-  return await qdrantClient.search(collectionName, {
-    vector: queryVector,
-    limit,
-    filter
-  });
-}
-
-// Удаление вектора по ID
-async function deleteVector(collectionName, id) {
-  if (!qdrantClient) return null;
-  return await qdrantClient.delete(collectionName, {
-    points: [id]
-  });
-}
-
 module.exports = {
-  checkQdrantConnection,
-  upsertVector,
-  searchSimilar,
-  deleteVector
+  qdrantClient,
+  client: qdrantClient,
+
+  checkQdrantConnection: async () => {
+    if (!qdrantClient) return false;
+    try {
+      const res = await qdrantClient.getCollections();
+      console.log(`✅ Qdrant подключен (коллекций: ${res.collections.length})`);
+      return true;
+    } catch (e) {
+      console.error(`❌ Ошибка Qdrant: ${e.message}`);
+      return false;
+    }
+  },
+
+  upsertVector: async (collectionName, { id, vector, payload }) => {
+    if (!qdrantClient) return null;
+    return await qdrantClient.upsert(collectionName, {
+      points: [{ id, vector, payload }]
+    });
+  },
+
+  searchSimilar: async (collectionName, queryVector, limit = 10, filter = null) => {
+    if (!qdrantClient) return [];
+
+    const options = {
+      limit,
+      with_payload: true
+    };
+    if (filter) options.filter = filter;
+
+    // 1. Qdrant JS SDK v1.10+ (Universal Query API)
+    if (typeof qdrantClient.query === 'function') {
+      const res = await qdrantClient.query(collectionName, {
+        query: queryVector,
+        ...options
+      });
+      return res.points || res;
+    }
+
+    // 2. qdrantClient.queryPoints
+    if (typeof qdrantClient.queryPoints === 'function') {
+      const res = await qdrantClient.queryPoints(collectionName, {
+        query: queryVector,
+        ...options
+      });
+      return res.points || res;
+    }
+
+    // 3. Совместимость со старыми версиями
+    if (typeof qdrantClient.search === 'function') {
+      return await qdrantClient.search(collectionName, {
+        vector: queryVector,
+        ...options
+      });
+    }
+
+    throw new Error('Подходящий метод поиска векторов не найден');
+  },
+
+  deleteVector: async (collectionName, id) => {
+    if (!qdrantClient) return null;
+    return await qdrantClient.delete(collectionName, { points: [id] });
+  }
 };

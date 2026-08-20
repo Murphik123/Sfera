@@ -1,0 +1,356 @@
+diff --git a/public/css/_design-vars.css b/public/css/_design-vars.css
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/public/css/_design-vars.css
+@@ -0,0 +1,46 @@
++:root{
++  /* Background palette */
++  --bg-1: #06111d;
++  --bg-2: #0b2035;
++  --bg-3: #102b45;
++
++  /* Accent colors */
++  --primary: #00d4ff; /* neon cyan */
++  --secondary: #1f6bff; /* deep blue */
++  --accent: #00ffa3; /* emerald mint */
++
++  /* Text */
++  --text: #ffffff;
++  --text-ice: #dbe9ff;
++  --muted: #9fb5c8;
++
++  /* Glassmorphism */
++  --glass-bg: rgba(255,255,255,0.06);
++  --glass-bg-strong: rgba(255,255,255,0.12);
++  --glass-border: rgba(255,255,255,0.18);
++  --glass-blur: 18px;
++
++  /* Particles */
++  --dot-size: 4px;
++  --dot-glow: 12px;
++  --particle-min-duration: 6s;
++  --particle-max-duration: 18s;
++
++  /* Sphere core */
++  --ring-radius: 120px;
++  --core-size: 48px;
++}
+diff --git a/public/css/glass-utils.css b/public/css/glass-utils.css
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/public/css/glass-utils.css
+@@ -0,0 +1,120 @@
++@import './_design-vars.css';
++
++/* Base page styles */
++html,body{
++  height:100%;
++}
++body {
++  margin:0;
++  min-height:100%;
++  background: linear-gradient(180deg, var(--bg-1), var(--bg-2), var(--bg-3));
++  color: var(--text);
++  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
++  -webkit-font-smoothing: antialiased;
++  -moz-osx-font-smoothing: grayscale;
++}
++
++/* Glassmorphism utility */
++.glass {
++  background: var(--glass-bg);
++  border: 1px solid var(--glass-border);
++  border-radius: 16px;
++  backdrop-filter: blur(var(--glass-blur));
++  -webkit-backdrop-filter: blur(var(--glass-blur));
++  box-shadow: 0 8px 30px rgba(2,6,23,0.6);
++  color: inherit;
++}
++.glass-strong {
++  background: var(--glass-bg-strong);
++  border-radius: 20px;
++  border: 1px solid rgba(255,255,255,0.22);
++}
++
++/* Gradient utility */
++.bg-accent {
++  background-image: linear-gradient(135deg, var(--primary), var(--secondary));
++  color: white;
++}
++
++/* Hover lift */
++.hover-lift {
++  transition: transform .28s cubic-bezier(.2,.9,.2,1), box-shadow .28s;
++}
++.hover-lift:hover {
++  transform: translateY(-8px);
++  box-shadow: 0 18px 40px rgba(0,0,0,0.45), 0 0 24px rgba(0,212,255,0.08);
++}
++
++/* Spotlight (radial gradient following cursor) */
++.spotlight {
++  position: relative;
++  overflow: hidden;
++}
++.spotlight::after {
++  content: "";
++  position: absolute;
++  left: var(--spot-x, 50%);
++  top: var(--spot-y, 50%);
++  width: 420px;
++  height: 420px;
++  transform: translate(-50%, -50%);
++  pointer-events: none;
++  background: radial-gradient(circle at center, rgba(0,212,255,0.12), transparent 40%);
++  mix-blend-mode: screen;
++  transition: left .12s linear, top .12s linear;
++}
++
++/* Reduce motion preference */
++@media (prefers-reduced-motion: reduce) {
++  .hover-lift { transition: none; transform: none !important; }
++  .rings, .core { animation: none !important; }
++  .particles .dot { animation: none !important; opacity: 0.7; }
++}
+diff --git a/public/css/particles.css b/public/css/particles.css
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/public/css/particles.css
+@@ -0,0 +1,40 @@
++@import './_design-vars.css';
++
++.particles {
++  position: fixed;
++  inset: 0;
++  pointer-events: none;
++  z-index: 0;
++}
++
++.particles .dot {
++  position: absolute;
++  width: var(--dot-size);
++  height: var(--dot-size);
++  border-radius: 50%;
++  background: var(--primary);
++  box-shadow: 0 0 var(--dot-glow) var(--primary);
++  opacity: 0.85;
++  transform: translate3d(0,0,0);
++  animation-name: floatUp;
++  animation-timing-function: ease-in-out;
++  animation-iteration-count: infinite;
++  will-change: transform, opacity;
++}
++
++@keyframes floatUp {
++  0% { transform: translateY(30vh) scale(0.9); opacity: 0.6; }
++  50% { transform: translateY(10vh) scale(1.05); opacity: 1; }
++  100% { transform: translateY(-10vh) scale(0.95); opacity: 0.6; }
++}
+diff --git a/public/css/sphere.css b/public/css/sphere.css
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/public/css/sphere.css
+@@ -0,0 +1,56 @@
++@import './_design-vars.css';
++
++.sphere-wrap { position: relative; display:inline-flex; align-items:center; justify-content:center; }
++.rings { transform-origin:center; animation: spinRing 18s linear infinite; z-index:1; }
++.ring { opacity: 0.95; filter: drop-shadow(0 0 8px rgba(0,212,255,0.18)); transition: transform .6s ease; }
++.ring:hover { transform: rotate(45deg); }
++
++@keyframes spinRing { from{ transform: rotate(0deg);} to{ transform: rotate(360deg);} }
++
++.core {
++  width: var(--core-size);
++  height: var(--core-size);
++  border-radius: 50%;
++  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(0,212,255,0.12) 30%, rgba(0,0,0,0) 60%);
++  box-shadow: 0 0 28px rgba(0,212,255,0.28), inset 0 0 12px rgba(255,255,255,0.12);
++  animation: corePulse 2.6s ease-in-out infinite;
++  z-index:2;
++}
++@keyframes corePulse {
++  0% { transform: scale(1); opacity: 1; }
++  50% { transform: scale(1.12); opacity: 0.9; }
++  100% { transform: scale(1); opacity: 1; }
++}
+diff --git a/public/js/particles-init.js b/public/js/particles-init.js
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/public/js/particles-init.js
+@@ -0,0 +1,56 @@
++/* particles-init.js
++   Создаёт набор плавающих точек и добавляет их в body.
++   Лёгкая, без зависимостей, инициализация.
++*/
++(function(){
++  try {
++    const root = document.documentElement;
++    const container = document.createElement('div');
++    container.className = 'particles';
++    const count = 24;
++    const minDur = parseFloat(getComputedStyle(root).getPropertyValue('--particle-min-duration')) || 6;
++    const maxDur = parseFloat(getComputedStyle(root).getPropertyValue('--particle-max-duration')) || 18;
++    for(let i=0;i<count;i++){
++      const d = document.createElement('div');
++      d.className = 'dot';
++      const left = Math.random()*100;
++      const top = 60 + Math.random()*40; // старт снизу
++      const dur = (Math.random()*(maxDur - minDur) + minDur).toFixed(2);
++      d.style.left = left + '%';
++      d.style.top = top + 'vh';
++      d.style.animationDuration = dur + 's';
++      d.style.animationDelay = (Math.random()*-18).toFixed(2) + 's';
++      container.appendChild(d);
++    }
++    document.addEventListener('DOMContentLoaded', ()=> document.body.appendChild(container));
++  } catch(e) {
++    console.error('particles-init error', e);
++  }
++})();
+diff --git a/public/js/spotlight.js b/public/js/spotlight.js
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/public/js/spotlight.js
+@@ -0,0 +1,64 @@
++/* spotlight.js
++   Отслеживает курсор и обновляет CSS-переменные --spot-x и --spot-y для элементов .spotlight
++*/
++(function(){
++  try {
++    const els = [];
++    function refreshEls(){
++      els.length = 0;
++      document.querySelectorAll('.spotlight').forEach(e => els.push(e));
++    }
++    function onMove(e){
++      const x = e.clientX;
++      const y = e.clientY;
++      els.forEach(el=>{
++        const rect = el.getBoundingClientRect();
++        const rx = ((x - rect.left)/rect.width)*100;
++        const ry = ((y - rect.top)/rect.height)*100;
++        el.style.setProperty('--spot-x', rx + '%');
++        el.style.setProperty('--spot-y', ry + '%');
++      });
++    }
++    document.addEventListener('DOMContentLoaded', refreshEls);
++    document.addEventListener('DOMContentLoaded', ()=> addEventListener('pointermove', onMove));
++    // observe DOM changes to catch dynamically added spotlight elements
++    const obs = new MutationObserver(refreshEls);
++    obs.observe(document.body, {childList:true, subtree:true});
++  } catch(e) {
++    console.error('spotlight init error', e);
++  }
++})();
+diff --git a/public/js/constellation.js b/public/js/constellation.js
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/public/js/constellation.js
+@@ -0,0 +1,88 @@
++// initConstellation: лёгкая canvas-констелляция с точками и линиями
++export default function initConstellation(canvas){
++  if(!canvas) return;
++  const ctx = canvas.getContext('2d');
++  let width, height, nodes;
++  function resize(){ width = canvas.width = innerWidth; height = canvas.height = innerHeight; initNodes(); }
++  function initNodes(){
++    nodes = [];
++    const count = Math.max(6, Math.floor((width*height)/90000));
++    for(let i=0;i<count;i++){
++      nodes.push({x: Math.random()*width, y: Math.random()*height, vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.5)*0.3});
++    }
++  }
++  function step(){
++    ctx.clearRect(0,0,width,height);
++    for(let i=0;i<nodes.length;i++){
++      const n = nodes[i];
++      n.x += n.vx; n.y += n.vy;
++      if(n.x<0||n.x>width) n.vx *= -1;
++      if(n.y<0||n.y>height) n.vy *= -1;
++      ctx.fillStyle = 'rgba(0,212,255,0.9)';
++      ctx.beginPath(); ctx.arc(n.x,n.y,1.6,0,Math.PI*2); ctx.fill();
++      for(let j=i+1;j<nodes.length;j++){
++        const m = nodes[j];
++        const dx = n.x-m.x, dy = n.y-m.y;
++        const d2 = dx*dx+dy*dy;
++        if(d2<9000){
++          ctx.strokeStyle = 'rgba(0,212,255,' + (0.12 - d2/9000*0.12) + ')';
++          ctx.lineWidth = 0.6;
++          ctx.beginPath(); ctx.moveTo(n.x,n.y); ctx.lineTo(m.x,m.y); ctx.stroke();
++        }
++      }
++    }
++    requestAnimationFrame(step);
++  }
++  addEventListener('resize', resize);
++  resize();
++  step();
++}
+diff --git a/public/components/sphere.html b/public/components/sphere.html
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/public/components/sphere.html
+@@ -0,0 +1,28 @@
++<div class="sphere-wrap glass-strong hover-lift" aria-hidden="true" style="width:360px;height:360px;display:flex;align-items:center;justify-content:center;">
++  <svg class="rings" viewBox="-200 -200 400 400" width="320" height="320" preserveAspectRatio="xMidYMid meet" style="position:absolute; inset:0; margin:auto;">
++    <defs>
++      <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#00d4ff"/><stop offset="1" stop-color="#1f6bff"/></linearGradient>
++      <linearGradient id="g2" x1="0" x2="1"><stop offset="0" stop-color="#00ffa3"/><stop offset="1" stop-color="#00d4ff"/></linearGradient>
++    </defs>
++    <g class="rings-group" transform="rotate(0)">
++      <circle class="ring ring-1" r="80" stroke="url(#g1)" stroke-width="1.6" fill="none" stroke-dasharray="1 6"></circle>
++      <circle class="ring ring-2" r="110" stroke="url(#g2)" stroke-width="1.2" fill="none" stroke-dasharray="1 6"></circle>
++    </g>
++  </svg>
++  <div class="core" style="position:relative; z-index:2; width:var(--core-size); height:var(--core-size); border-radius:50%;"></div>
++</div>
+diff --git a/public/README_DESIGN.md b/public/README_DESIGN.md
+new file mode 100644
+index 0000000..e69de29
+--- /dev/null
++++ b/public/README_DESIGN.md
+@@ -0,0 +1,36 @@
++Design system for SFERA (Glassmorphism)
++
++Files added:
++- css/_design-vars.css         — CSS custom properties (colors, sizes, durations)
++- css/glass-utils.css          — glassmorphism utilities, spotlight, hover-lift
++- css/particles.css            — styles for floating neon particles
++- css/sphere.css               — styles for rings and core
++- js/particles-init.js         — creates floating particles on page load
++- js/constellation.js          — module for canvas constellation
++- js/spotlight.js              — spotlight cursor tracking
++- components/sphere.html       — SVG rings + core component
++
++How to enable:
++1. Ensure your layout includes the CSS links in the <head> and the scripts before </body>.
++   Example head includes:
++     <link rel="stylesheet" href="/css/_design-vars.css">
++     <link rel="stylesheet" href="/css/glass-utils.css">
++     <link rel="stylesheet" href="/css/particles.css">
++     <link rel="stylesheet" href="/css/sphere.css">
++
++   Example scripts before </body>:
++     <canvas id="constellation" style="position:fixed; inset:0; z-index:0; pointer-events:none;"></canvas>
++     <script src="/js/particles-init.js" defer></script>
++     <script src="/js/spotlight.js" defer></script>
++     <script type="module" defer>
++       import initConstellation from '/js/constellation.js';
++       document.addEventListener('DOMContentLoaded', ()=> {
++         const c = document.getElementById('constellation');
++         if(c) initConstellation(c);
++       });
++     </script>
++
++Performance notes:
++- Limit particle count on mobile.
++- Respect prefers-reduced-motion for accessibility.

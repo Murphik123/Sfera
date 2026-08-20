@@ -1,95 +1,78 @@
-<<<<<<< HEAD
-=======
-// src/services/qdrant.service.js
->>>>>>> d969d102572f3321a56f4fced5f8b7c6b9cb6b70
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+
 const { QdrantClient } = require('@qdrant/js-client-rest');
 
-const QDRANT_URL = process.env.QDRANT_URL;
-const QDRANT_API_KEY = process.env.QDRANT_API_KEY;
+const rawUrl = (process.env.QDRANT_URL || '').trim();
+const apiKey = (process.env.QDRANT_API_KEY || '').trim();
 
-<<<<<<< HEAD
-=======
-// Клиент создается только при наличии URL — платформа должна запускаться и без Qdrant
->>>>>>> d969d102572f3321a56f4fced5f8b7c6b9cb6b70
-const qdrantClient = QDRANT_URL
-  ? new QdrantClient({ url: QDRANT_URL, apiKey: QDRANT_API_KEY })
+const host = rawUrl
+  .replace(/^https?:\/\//, '')
+  .replace(/:[0-9]+.*$/, '')
+  .replace(/\/.*$/, '');
+
+const qdrantClient = host
+  ? new QdrantClient({
+      host: host,
+      port: 443,
+      https: true,
+      apiKey: apiKey,
+      checkCompatibility: false
+    })
   : null;
 
-<<<<<<< HEAD
-async function checkQdrantConnection() {
-  if (!qdrantClient) {
-    console.warn('⚠️ Qdrant: QDRANT_URL не задана');
-    return false;
-  }
-  try {
-    const collections = await qdrantClient.getCollections();
-    console.log(`✅ Qdrant подключен: ${QDRANT_URL} (коллекций: ${collections.collections.length})`);
-=======
-const isQdrantConfigured = () => Boolean(QDRANT_URL);
-
-// Логирует состояние кластера при старте сервера. Никогда не бросает исключение,
-// чтобы недоступный Qdrant не мешал запуску платформы.
-const checkQdrantConnection = async () => {
-  if (!qdrantClient) {
-    console.warn('⚠️  Qdrant: переменная QDRANT_URL не задана, векторный поиск отключен');
-    return false;
-  }
-
-  if (!QDRANT_API_KEY) {
-    console.warn('⚠️  Qdrant: QDRANT_API_KEY не задан, подключение к облачному кластеру может быть отклонено');
-  }
-
-  try {
-    const { collections } = await qdrantClient.getCollections();
-    const names = collections.map((collection) => collection.name);
-
-    console.log(`✅ Qdrant подключен: ${QDRANT_URL} (коллекций: ${names.length})`);
-    if (names.length) {
-      console.log(`   Коллекции: ${names.join(', ')}`);
-    }
->>>>>>> d969d102572f3321a56f4fced5f8b7c6b9cb6b70
-    return true;
-  } catch (error) {
-    console.error(`❌ Qdrant недоступен (${QDRANT_URL}): ${error.message}`);
-    return false;
-  }
-<<<<<<< HEAD
-}
-
-// Добавление или обновление вектора
-async function upsertVector(collectionName, { id, vector, payload }) {
-  if (!qdrantClient) return null;
-  return await qdrantClient.upsert(collectionName, {
-    points: [{ id, vector, payload }]
-  });
-}
-
-// Поиск похожих векторов
-async function searchSimilar(collectionName, queryVector, limit = 10, filter = null) {
-  if (!qdrantClient) return [];
-  return await qdrantClient.search(collectionName, {
-    vector: queryVector,
-    limit,
-    filter
-  });
-}
-
-// Удаление вектора по ID
-async function deleteVector(collectionName, id) {
-  if (!qdrantClient) return null;
-  return await qdrantClient.delete(collectionName, {
-    points: [id]
-  });
-}
-
 module.exports = {
-  checkQdrantConnection,
-  upsertVector,
-  searchSimilar,
-  deleteVector
-};
-=======
-};
+  qdrantClient,
+  client: qdrantClient,
 
-module.exports = { qdrantClient, checkQdrantConnection, isQdrantConfigured };
->>>>>>> d969d102572f3321a56f4fced5f8b7c6b9cb6b70
+  checkQdrantConnection: async () => {
+    if (!qdrantClient) return false;
+    try {
+      const res = await qdrantClient.getCollections();
+      console.log(`✅ Qdrant подключен (коллекций: ${res.collections.length})`);
+      return true;
+    } catch (e) {
+      console.error(`❌ Ошибка Qdrant: ${e.message}`);
+      return false;
+    }
+  },
+
+  upsertVector: async (collectionName, { id, vector, payload }) => {
+    if (!qdrantClient) {
+      throw new Error('Qdrant client не инициализирован. Проверьте QDRANT_URL в server/.env');
+    }
+    return await qdrantClient.upsert(collectionName, {
+      wait: true,
+      points: [{ id, vector, payload }]
+    });
+  },
+
+  searchSimilar: async (collectionName, queryVector, limit = 10, filter = null) => {
+    if (!qdrantClient) {
+      throw new Error('Qdrant client не инициализирован. Проверьте QDRANT_URL в server/.env');
+    }
+
+    const options = {
+      limit,
+      with_payload: true
+    };
+    if (filter) options.filter = filter;
+
+    if (typeof qdrantClient.search === 'function') {
+      return await qdrantClient.search(collectionName, {
+        vector: queryVector,
+        ...options
+      });
+    }
+
+    if (typeof qdrantClient.query === 'function') {
+      const res = await qdrantClient.query(collectionName, {
+        query: queryVector,
+        ...options
+      });
+      return res.points || res;
+    }
+
+    throw new Error('Метод поиска в Qdrant не найден');
+  }
+};

@@ -1,33 +1,31 @@
-require('dotenv').config();
-const express = require('express');
 const path = require('path');
-const fs = require('fs');
-const { checkQdrantConnection } = require('./src/services/qdrant.service');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+const express = require('express');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
+// Middleware
+app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Раздача статической папки
-const publicPath = path.join(__dirname, '../public');
-console.log(`📂 Раздача статики из папки: ${publicPath}`);
-app.use(express.static(publicPath));
+// Подключение роутов
+const searchRoutes = require('./src/routes/searchRoutes');
+app.use('/api/search', searchRoutes);
 
-// Автоматическое подключение всех файлов маршрутов из src/routes
-const routesPath = path.join(__dirname, 'src/routes');
-if (fs.existsSync(routesPath)) {
-  console.log(`📁 Найдена папка маршрутов (routes): ${routesPath}`);
-  fs.readdirSync(routesPath).forEach((file) => {
-    if (file.endsWith('.js')) {
-      const routeName = file.replace('Routes.js', '').replace('.js', '');
-      app.use(`/api/${routeName}`, require(`./src/routes/${file}`));
-      console.log(`✅ Маршрут подключен: /api/${routeName} -> ${file}`);
-    }
-  });
-}
+// Проверка статуса сервера
+app.get('/', (req, res) => {
+  res.json({ success: true, message: 'Backend Sfera работает' });
+});
 
-app.listen(PORT, async () => {
-  console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
-  await checkQdrantConnection();
+// Обработка 404
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: 'Маршрут не найден' });
+});
+
+// Запуск сервера
+app.listen(PORT, () => {
+  console.log(`🚀 Сервер запущен на http://localhost:${PORT}`);
 });

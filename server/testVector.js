@@ -1,36 +1,51 @@
-const { qdrant } = require('./qdrant');
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
+const util = require('util');
 
-async function testVectorOperations() {
-  const collectionName = 'sfera_vectors';
+const qdrant = require('./qdrant');
+const { getEmbedding } = require('./embeddingService');
 
+async function testVector() {
   try {
-    const dummyVector = Array.from({ length: 1536 }, () => Math.random());
+    const client = qdrant.client || qdrant.qdrantClient;
+    const upsertFn = qdrant.upsertVector;
 
-    // 1. Записываем вектор и ждем подтверждения индексации
-    await qdrant.upsert(collectionName, {
-      wait: true,
-      points: [
-        {
-          id: 1,
-          vector: dummyVector,
-          payload: { title: 'Тестовая запись Sfera' },
-        },
-      ],
-    });
-    console.log('✅ Тестовый вектор успешно записан!');
+    console.log('🔄 Генерация вектора через Gemini...');
+    const vector = await getEmbedding('Тестовый запрос для Sfera');
 
-    // 2. Выполняем поиск с явным запросом payload
-    const searchResult = await qdrant.query(collectionName, {
-      query: dummyVector,
-      limit: 1,
-      with_payload: true,
-    });
+    console.log('🔄 Сохранение в Qdrant...');
 
-    console.log('✅ Тестовый поиск выполнен!');
-    console.dir(searchResult, { depth: null });
+    if (typeof upsertFn === 'function') {
+      await upsertFn('sfera_vectors', {
+        id: 1,
+        vector: vector,
+        payload: { text: 'Тестовый запрос для Sfera', category: 'test' }
+      });
+    } else {
+      await client.upsert('sfera_vectors', {
+        points: [
+          {
+            id: 1,
+            vector: vector,
+            payload: { text: 'Тестовый запрос для Sfera', category: 'test' }
+          }
+        ]
+      });
+    }
+
+    console.log('✅ Вектор успешно сгенерирован и сохранен в Qdrant!');
   } catch (error) {
-    console.error('❌ Ошибка работы с векторами:', error.message);
+    console.error('❌ Основная ошибка:', error.message);
+
+    // Вывод точной причины сетевого сбоя
+    if (error.cause) {
+      console.error('🔍 Детали сетевой ошибки (error.cause):', error.cause);
+    }
+
+    // Полный разбор объекта ошибки
+    console.error('\n📋 Полный дамп ошибки:');
+    console.dir(error, { depth: null, colors: true });
   }
 }
 
-testVectorOperations();
+testVector();

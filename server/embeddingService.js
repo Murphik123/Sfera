@@ -1,10 +1,12 @@
+
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 const { ProxyAgent, fetch: undiciFetch } = require('undici');
 
-// На локальном ПК используем Psiphon, на Render — прямое соединение
-const proxyUrl = process.env.HTTP_PROXY || (process.env.NODE_ENV !== 'production' ? 'http://127.0.0.1:65171' : null);
-const proxyAgent = proxyUrl ? new ProxyAgent(proxyUrl) : undefined;
+// Условный прокси: включается только при USE_PROXY=true и наличии URL
+const proxyUrl = process.env.PROXY_URL || process.env.HTTP_PROXY;
+const isProxyEnabled = process.env.USE_PROXY === 'true' && proxyUrl;
+const proxyAgent = isProxyEnabled ? new ProxyAgent(proxyUrl) : undefined;
 
 /**
  * Превращает текст в вектор из 768 чисел через Gemini API
@@ -26,10 +28,9 @@ async function getEmbedding(text) {
     body: JSON.stringify({
       content: { parts: [{ text }] },
       outputDimensionality: 768
-    }),
+    })
   };
 
-  // Подключаем прокси только если он задан
   if (proxyAgent) {
     fetchOptions.dispatcher = proxyAgent;
   }
@@ -48,4 +49,4 @@ async function getEmbedding(text) {
   return data.embedding.values;
 }
 
-module.exports = { getEmbedding };
+module.exports = getEmbedding;
