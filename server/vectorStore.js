@@ -1,20 +1,23 @@
-const { getEmbedding } = require('./embeddingService');
-const { qdrantClient } = require('./qdrant');
+import { getEmbedding } from './embeddingService.js';
+import { qdrantClient } from './config/qdrant.js';
 
 const COLLECTION_NAME = 'sfera_vectors';
 
 /**
  * Добавление или обновление товара в векторной базе
  */
-async function indexProduct(product) {
+export async function indexProduct(product) {
   try {
     const textToVectorize = `${product.title} ${product.description || ''} ${product.category || ''}`;
     const vector = await getEmbedding(textToVectorize);
 
+    // Qdrant принимает в id только число (integer) или UUID
+    const productId = product.id || product._id;
+
     await qdrantClient.upsert(COLLECTION_NAME, {
       points: [
         {
-          id: product.id, // ID товара из основной БД (числовой или UUID)
+          id: productId,
           vector: vector,
           payload: {
             title: product.title,
@@ -25,26 +28,26 @@ async function indexProduct(product) {
         }
       ]
     });
-    console.log(`[Qdrant] Товар ID ${product.id} проиндексирован.`);
+    console.log(`[Qdrant] Товар ID ${productId} проиндексирован.`);
   } catch (error) {
-    console.error(`[Qdrant] Ошибка индексации товара ID ${product.id}:`, error);
+    console.error(`[Qdrant] Ошибка индексации товара:`, error);
   }
 }
 
 /**
  * Поиск товаров по смысловому запросу
  */
-async function searchProducts(queryText, limit = 10) {
+export async function searchProducts(queryText, limit = 10) {
   try {
     const queryVector = await getEmbedding(queryText);
 
     const result = await qdrantClient.query(COLLECTION_NAME, {
       query: queryVector,
       limit: limit,
-      with_payload: true
+      withPayload: true
     });
 
-    return result.points.map(point => ({
+    return (result.points || []).map(point => ({
       id: point.id,
       score: point.score,
       ...point.payload
@@ -54,5 +57,3 @@ async function searchProducts(queryText, limit = 10) {
     return [];
   }
 }
-
-module.exports = { indexProduct, searchProducts };
