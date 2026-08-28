@@ -1,147 +1,1154 @@
-﻿<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SFERA</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>СФЕРА — Единая цифровая платформа Туркменистана</title>
 
-  <!-- Design system styles -->
-  <link rel="stylesheet" href="/css/_design-vars.css">
-  <link rel="stylesheet" href="/css/glass-utils.css">
-  <link rel="stylesheet" href="/css/particles.css">
-  <link rel="stylesheet" href="/css/sphere.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- Meta for translation management -->
-  <meta name="supported-langs" content="tm,ru,en">
-  <meta name="default-lang" content="en">
+    <style>
+        /* =====================================================
+           СФЕРА — ПРЕМИАЛЬНЫЕ GLASSMORPHISM И НЕОНОВЫЕ СТИЛИ
+           (Верстка сохранена 1-в-1, устранено деление на блоки)
+        ===================================================== */
 
-  <!-- Existing app CSS (if any) -->
-  <!-- <link rel="stylesheet" href="/css/app.css"> -->
+        :root {
+            --primary: #00d4ff;
+            --secondary: #1f6bff;
+            --accent: #00ffa3;
+            --dark-bg: #050c14;
+            --glass-bg: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-hover-bg: rgba(0, 212, 255, 0.07);
+            --glass-hover-border: rgba(0, 212, 255, 0.4);
+            --header-footer-bg: rgba(6, 17, 29, 0.68);
+            --white: #ffffff;
+            --text: #dbe9ff;
+            --text-muted: #bcd0e2;
+            --radius: 22px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+
+        html { 
+            scroll-behavior: smooth; 
+        }
+
+        /* Единый, непрерывный фиксированный фон без швов */
+        body {
+            background: linear-gradient(135deg, #050c14 0%, #0a1928 50%, #0e2238 100%) fixed;
+            color: var(--white);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Сквозная неоновая фоновая сетка на весь сайт */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.025) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Фоновое динамическое свечение */
+        body::before {
+            content: "";
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.12), transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 163, 0.08), transparent 40%),
+                radial-gradient(circle at 60% 80%, rgba(31, 107, 255, 0.12), transparent 45%);
+            animation: bgmove 22s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        @keyframes bgmove {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-4%, -3%) rotate(2deg); }
+            100% { transform: translate(3%, 4%) rotate(-1deg); }
+        }
+
+        .container {
+            width: min(1400px, 92%);
+            margin: auto;
+        }
+
+        /* ================= HEADER & LOGO ================= */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: var(--header-footer-bg);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.18);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: all 0.4s ease;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: translateY(-1px) scale(1.01);
+        }
+
+        .logo-icon {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .logo-svg g {
+            transform-origin: center;
+            transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .logo:hover .logo-svg g {
+            transform: rotate(45deg);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h2 {
+            font-size: 22px;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #ffffff 0%, #00d4ff 50%, #00ffa3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-text p {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            margin: 4px 0 0 0;
+            color: #9fb5c8;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+            text-shadow: 0 0 12px rgba(0, 212, 255, 0.6);
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .header-buttons a,
+        .header-buttons button {
+            padding: 12px 22px;
+            border: none;
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.35s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        .lang {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.25) !important;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang:hover {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .login {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 212, 255, 0.5);
+        }
+
+        /* ================= HERO SECTION ================= */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            padding: 140px 7% 80px;
+            gap: 60px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .hero-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        #heroCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        .hero-glow {
+            position: absolute;
+            width: 550px;
+            height: 550px;
+            border-radius: 50%;
+            filter: blur(140px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.35;
+            animation: pulseGlow 5s ease-in-out infinite alternate;
+        }
+
+        .glow-left {
+            top: -10%;
+            left: -10%;
+            background: rgba(0, 212, 255, 0.4);
+        }
+
+        .glow-right {
+            bottom: -10%;
+            right: -10%;
+            background: rgba(0, 255, 163, 0.3);
+            animation-delay: 2.5s;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1); opacity: 0.25; }
+            100% { transform: scale(1.25); opacity: 0.55; }
+        }
+
+        .map-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            height: 85%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.18;
+        }
+
+        .tm-map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-outline {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawMap 8s ease forwards;
+            filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.5));
+        }
+
+        @keyframes drawMap {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 8px 22px;
+            border-radius: 30px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.35);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--primary);
+            margin-bottom: 25px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-content h1 {
+            font-size: 62px;
+            font-weight: 900;
+            line-height: 1.12;
+            margin-bottom: 22px;
+            background: linear-gradient(135deg, #ffffff 20%, #b4d7ff 60%, #00ffa3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 15px rgba(0,0,0,0.4));
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            font-weight: 600;
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .hero-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--text-muted);
+            max-width: 560px;
+            margin-bottom: 40px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .hero-buttons a,
+        .hero-buttons button {
+            padding: 18px 40px;
+            border: none;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #00d4ff 0%, #008cff 100%);
+            color: white;
+            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.35);
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 212, 255, 0.6);
+        }
+
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            color: white;
+        }
+
+        .glass-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(0, 212, 255, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.2);
+        }
+
+        .hero-visual {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .core {
+            position: relative;
+            width: 330px;
+            height: 330px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .core-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            animation: spinRing linear infinite;
+        }
+
+        .ring-1 {
+            width: 100%;
+            height: 100%;
+            animation-duration: 20s;
+            border-color: rgba(0, 212, 255, 0.35);
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.15);
+        }
+
+        .ring-2 {
+            width: 122%;
+            height: 122%;
+            animation-duration: 16s;
+            animation-direction: reverse;
+            border-color: rgba(0, 255, 163, 0.25);
+        }
+
+        .ring-3 {
+            width: 144%;
+            height: 144%;
+            animation-duration: 26s;
+            border-color: rgba(31, 107, 255, 0.25);
+        }
+
+        @keyframes spinRing {
+            to { transform: rotate(360deg); }
+        }
+
+        .core-center {
+            width: 145px;
+            height: 145px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #00ffa3 0%, #00d4ff 40%, #004d80 100%);
+            box-shadow: 0 0 90px rgba(0, 212, 255, 0.55), inset 0 0 20px rgba(255, 255, 255, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: pulseCore 3.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseCore {
+            0% { transform: scale(1); box-shadow: 0 0 80px rgba(0, 212, 255, 0.45); }
+            100% { transform: scale(1.06); box-shadow: 0 0 130px rgba(0, 212, 255, 0.8), 0 0 40px rgba(0, 255, 163, 0.5); }
+        }
+
+        /* ================= MODULES SECTION ================= */
+        .modules {
+            padding: 120px 7%;
+            background: transparent;
+            position: relative;
+        }
+
+        .modules h2 {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 70px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+        }
+
+        /* Премиальный Glassmorphism для карточек */
+        .card {
+            position: relative;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 45px;
+            overflow: hidden;
+            transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 220%;
+            height: 220%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transition: all 0.75s ease;
+            pointer-events: none;
+        }
+
+        .card:hover::before {
+            top: 0;
+            left: 0;
+        }
+
+        .card:hover {
+            transform: translateY(-12px);
+            background: var(--glass-hover-bg);
+            border-color: var(--glass-hover-border);
+            box-shadow: 0 30px 60px rgba(0, 212, 255, 0.22);
+        }
+
+        .icon {
+            font-size: 58px;
+            margin-bottom: 25px;
+            display: inline-block;
+            filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.4));
+        }
+
+        .card h3 {
+            font-size: 28px;
+            margin-bottom: 16px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .card p {
+            line-height: 1.8;
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        /* ================= STATISTICS SECTION ================= */
+        .statistics {
+            padding: 100px 7%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 35px;
+            background: transparent;
+        }
+
+        .stat {
+            background: var(--glass-bg);
+            border-radius: 22px;
+            padding: 45px;
+            text-align: center;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: var(--glass-hover-bg);
+            border-color: var(--glass-hover-border);
+            box-shadow: 0 25px 50px rgba(0, 212, 255, 0.2);
+        }
+
+        .stat h1 {
+            font-size: 58px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00d4ff 0%, #00ffa3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3));
+        }
+
+        .stat p {
+            font-size: 17px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ================= NEWS SECTION ================= */
+        .news {
+            padding: 120px 7%;
+            background: transparent;
+        }
+
+        .news h2 {
+            text-align: center;
+            font-size: 48px;
+            margin-bottom: 60px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #b4d7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 35px;
+        }
+
+        .news-card {
+            padding: 40px;
+            border-radius: 22px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .news-card:hover {
+            transform: translateY(-10px);
+            background: var(--glass-hover-bg);
+            border-color: var(--glass-hover-border);
+            box-shadow: 0 25px 50px rgba(0, 212, 255, 0.2);
+        }
+
+        .news-card h3 {
+            margin-bottom: 18px;
+            font-size: 26px;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .news-card p {
+            color: var(--text-muted);
+            line-height: 1.75;
+            font-size: 16px;
+        }
+
+        /* ================= FOOTER ================= */
+        footer {
+            margin-top: 100px;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: var(--header-footer-bg);
+            border-top: 1px solid rgba(0, 212, 255, 0.18);
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+        }
+
+        footer .logo-text h2 {
+            font-size: 22px;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #ffffff 0%, #00d4ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        footer .logo-text p {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            margin: 4px 0 0 0;
+            color: #9fb5c8;
+            white-space: nowrap;
+        }
+
+        footer p {
+            color: #c0d8f0;
+            font-size: 14px;
+        }
+
+        /* ================= SCROLLBAR ================= */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #00d4ff, #1f6bff);
+            border-radius: 20px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050c14;
+        }
+
+        .hidden {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Сквозные светящиеся плавающие частицы */
+        #particles {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            20% { opacity: 0.7; }
+            80% { opacity: 0.7; }
+            100% { transform: translateY(-120vh) translateX(30px); opacity: 0; }
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @media(max-width: 1200px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 130px 5% 60px;
+            }
+            .hero-content { max-width: 100%; }
+            .hero-text { max-width: 100%; margin: 0 auto 40px; }
+            .hero-buttons { justify-content: center; }
+            .hero-visual { margin-top: 40px; }
+            .core { width: 260px; height: 260px; }
+            .core-center { width: 110px; height: 110px; font-size: 28px; }
+            .hero-content h1 { font-size: 44px; }
+            nav { display: none; }
+        }
+
+        @media(max-width: 768px) {
+            .hero-content h1 { font-size: 34px; }
+            .hero-subtitle { font-size: 18px; }
+            .hero-text { font-size: 16px; }
+            .modules h2, .news h2 { font-size: 34px; }
+            .core { width: 200px; height: 200px; }
+            .core-center { width: 90px; height: 90px; font-size: 22px; }
+            .primary-btn, .glass-btn { padding: 14px 28px; font-size: 16px; }
+        }
+    </style>
 </head>
 <body>
-  <div id="app" class="spotlight" data-current-lang="en">
-    <header class="glass" style="padding:12px 20px; display:flex; align-items:center; justify-content:space-between;">
-      <div style="display:flex; align-items:center; gap:12px;">
-        <a href="/" aria-label="SFERA home" style="display:inline-flex; align-items:center; gap:10px; text-decoration:none; color:inherit;">
-          <div style="width:40px; height:40px; border-radius:8px; background:linear-gradient(135deg,var(--primary),var(--secondary)); box-shadow:0 6px 18px rgba(0,0,0,0.35);"></div>
-          <strong style="font-size:1.05rem;">SFERA</strong>
-        </a>
-      </div>
 
-      <!-- Language switcher (non-destructive) -->
-      <nav id="lang-switch" aria-label="Language switch" style="display:flex; gap:8px;">
-        <button class="glass hover-lift" data-lang="tm" aria-pressed="false" title="Türkmençe">TM</button>
-        <button class="glass hover-lift" data-lang="ru" aria-pressed="false" title="Русский">RU</button>
-        <button class="glass hover-lift" data-lang="en" aria-pressed="true" title="English">EN</button>
-      </nav>
+    <div id="particles"></div>
+
+    <header>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3"/>
+                                <stop offset="50%" stop-color="#00d4ff"/>
+                                <stop offset="100%" stop-color="#1f6bff"/>
+                            </linearGradient>
+                            <filter id="logoGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="4" result="blur"/>
+                                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                            </filter>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15" filter="url(#logoGlow)"/>
+                        <g filter="url(#logoGlow)">
+                            <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" 
+                                  stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#logoGlow)"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>СФЕРА</h2>
+                    <p>Национальная Цифровая Платформа</p>
+                </div>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#">Главная</a></li>
+                    <li><a href="#">Биржа</a></li>
+                    <li><a href="#">TM Pay</a></li>
+                    <li><a href="#">TM Coin</a></li>
+                    <li><a href="#">Банк</a></li>
+                    <li><a href="#">ИИ</a></li>
+                    <li><a href="#">Документы</a></li>
+                    <li><a href="#">Контакты</a></li>
+                </ul>
+            </nav>
+            <div class="header-buttons">
+                <button class="lang">RU</button>
+                <a href="login.html" class="login">Войти</a>
+            </div>
+        </div>
     </header>
 
-    <main style="padding:28px; min-height:70vh; position:relative; z-index:2;">
-      <section style="display:flex; gap:28px; align-items:center; justify-content:center; flex-wrap:wrap;">
-        <div style="max-width:720px;">
-          <h1 data-i18n="home.title" style="margin:0 0 12px 0; font-size:2rem;">Добро пожаловать в SFERA</h1>
-          <p data-i18n="home.subtitle" style="margin:0 0 18px 0; color:var(--muted);">
-            Универсальная платформа. Интерфейс с эффектом glassmorphism и лёгкими анимациями.
-          </p>
-          <div style="display:flex; gap:12px;">
-            <a class="bg-accent glass hover-lift" href="#" data-i18n="home.cta.start" style="padding:10px 16px; border-radius:12px; text-decoration:none;">Начать</a>
-            <a class="glass hover-lift" href="#" data-i18n="home.cta.docs" style="padding:10px 16px; border-radius:12px; text-decoration:none;">Документация</a>
-          </div>
-        </div>
+    <section class="hero">
+        <div class="hero-grid"></div>
+        <canvas id="heroCanvas"></canvas>
+        <div class="hero-glow glow-left"></div>
+        <div class="hero-glow glow-right"></div>
 
-        <!-- Sphere component inline include -->
-        <div aria-hidden="true">
-          <div class="sphere-wrap glass-strong hover-lift" aria-hidden="true" style="width:360px;height:360px;display:flex;align-items:center;justify-content:center;">
-            <svg class="rings" viewBox="-200 -200 400 400" width="320" height="320" preserveAspectRatio="xMidYMid meet" style="position:absolute; inset:0; margin:auto;">
-              <defs>
-                <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#00d4ff"/><stop offset="1" stop-color="#1f6bff"/></linearGradient>
-                <linearGradient id="g2" x1="0" x2="1"><stop offset="0" stop-color="#00ffa3"/><stop offset="1" stop-color="#00d4ff"/></linearGradient>
-              </defs>
-              <g class="rings-group" transform="rotate(0)">
-                <circle class="ring ring-1" r="80" stroke="url(#g1)" stroke-width="1.6" fill="none" stroke-dasharray="1 6"></circle>
-                <circle class="ring ring-2" r="110" stroke="url(#g2)" stroke-width="1.2" fill="none" stroke-dasharray="1 6"></circle>
-              </g>
+        <div class="map-wrapper">
+            <svg class="tm-map" viewBox="0 0 900 500" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="mapGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#00d4ff"/>
+                        <stop offset="100%" stop-color="#00ff99"/>
+                    </linearGradient>
+                </defs>
+                <path d="M92 270 L150 210 L280 170 L420 120 L580 140 L710 160 L790 210 L760 290 L640 340 L540 370 L360 360 L220 330 L120 300 Z"
+                      fill="rgba(0,212,255,.08)" stroke="url(#mapGradient)" stroke-width="3" class="map-outline"/>
             </svg>
-            <div class="core" style="position:relative; z-index:2; width:var(--core-size); height:var(--core-size); border-radius:50%;"></div>
-          </div>
         </div>
-      </section>
 
-      <section id="page-content" style="margin-top:28px;">
-        <article data-i18n-key="home.intro">
-          <h2 data-i18n="home.features.title">Функции</h2>
-          <p data-i18n="home.features.desc">Здесь будет краткое описание возможностей платформы.</p>
-        </article>
-      </section>
-    </main>
+        <div class="hero-content">
+            <span class="hero-tag">СФЕРА — ЦИФРОВАЯ ПЛАТФОРМА</span>
+            <h1>Единая цифровая<br>платформа Туркменистана</h1>
+            <p class="hero-subtitle">Торговля • ИИ • Платежи • Банк • Документооборот</p>
+            <p class="hero-text">
+                Современная государственная цифровая экосистема, объединяющая электронную торговлю, интеллектуальную аналитику, финансовые сервисы, документооборот и цифровые государственные услуги.
+            </p>
+            <div class="hero-buttons">
+                <a href="dashboard.html" class="primary-btn">Начать работу</a>
+                <a href="#" class="glass-btn">Демо</a>
+            </div>
+        </div>
 
-    <footer class="glass" style="padding:14px 20px; display:flex; justify-content:space-between; align-items:center;">
-      <small style="color:var(--muted)">© SFERA — Все права защищены</small>
-      <div style="display:flex; gap:10px;">
-        <a href="#" class="glass" style="padding:6px 10px; border-radius:8px; text-decoration:none;">Support</a>
-        <a href="#" class="glass" style="padding:6px 10px; border-radius:8px; text-decoration:none;">Privacy</a>
-      </div>
+        <div class="hero-visual">
+            <div class="core">
+                <div class="core-ring ring-1"></div>
+                <div class="core-ring ring-2"></div>
+                <div class="core-ring ring-3"></div>
+                <div class="core-center">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 80px; height: 80px; animation: spinRing 15s linear infinite; overflow: visible;">
+                        <defs>
+                            <linearGradient id="heroCoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3"/>
+                                <stop offset="50%" stop-color="#00d4ff"/>
+                                <stop offset="100%" stop-color="#1f6bff"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" 
+                              stroke="url(#heroCoreGrad)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="1 6"/>
+                        <circle cx="48" cy="48" r="5.5" fill="#ffffff"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="modules">
+        <h2>Основные модули платформы</h2>
+        <div class="grid">
+            <div class="card"><div class="icon">🛒</div><h3>Биржа</h3><p>Электронная торговая площадка</p></div>
+            <div class="card"><div class="icon">💳</div><h3>TM Pay</h3><p>Национальная платежная система</p></div>
+            <div class="card"><div class="icon">₮</div><h3>TM Coin</h3><p>Цифровая государственная валюта</p></div>
+            <div class="card"><div class="icon">🏦</div><h3>Банк</h3><p>Цифровой банк "Благо"</p></div>
+            <div class="card"><div class="icon">🤖</div><h3>ИИ</h3><p>Проверка документов, прогнозирование, аналитика</p></div>
+            <div class="card"><div class="icon">📄</div><h3>Документы</h3><p>Автоматическая верификация</p></div>
+        </div>
+    </section>
+
+    <section class="statistics">
+        <div class="stat"><h1 id="users">0</h1><p>Пользователей</p></div>
+        <div class="stat"><h1 id="orders">0</h1><p>Сделок</p></div>
+        <div class="stat"><h1 id="docs">0</h1><p>Документов</p></div>
+        <div class="stat"><h1 id="coin">0</h1><p>TM Coin</p></div>
+    </section>
+
+    <section class="news">
+        <h2>Последние новости</h2>
+        <div class="news-grid">
+            <div class="news-card"><h3>Запуск платформы</h3><p>Современная цифровая экосистема нового поколения.</p></div>
+            <div class="news-card"><h3>ИИ модуль</h3><p>Автоматическая проверка документов.</p></div>
+            <div class="news-card"><h3>TM Pay</h3><p>Национальная система мгновенных платежей.</p></div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="footerLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#00ffa3"/>
+                                <stop offset="50%" stop-color="#00d4ff"/>
+                                <stop offset="100%" stop-color="#1f6bff"/>
+                            </linearGradient>
+                            <filter id="footerLogoGlow" x="-30%" y="-30%" width="160%" height="160%">
+                                <feGaussianBlur stdDeviation="4" result="blur"/>
+                                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                            </filter>
+                        </defs>
+                        <circle cx="50" cy="50" r="28" fill="url(#footerLogoGrad)" opacity="0.15" filter="url(#footerLogoGlow)"/>
+                        <g filter="url(#footerLogoGlow)">
+                            <circle cx="50" cy="50" r="40" stroke="url(#footerLogoGrad)" stroke-width="2.5" stroke-dasharray="1 5" stroke-linecap="round" opacity="0.4"/>
+                            <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" 
+                                  stroke="url(#footerLogoGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 6"/>
+                            <circle cx="48" cy="48" r="3.5" fill="#ffffff" filter="url(#footerLogoGlow)"/>
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <h2>СФЕРА</h2>
+                    <p>Национальная Цифровая Платформа</p>
+                </div>
+            </a>
+            <p>© 2026 — Единая цифровая платформа Туркменистана</p>
+        </div>
     </footer>
-  </div>
 
-  <!-- Constellation canvas -->
-  <canvas id="constellation" style="position:fixed; inset:0; z-index:0; pointer-events:none;"></canvas>
+    <script>
+        // Canvas: динамические линии данных
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('heroCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let w, h;
 
-  <!-- Visual assets -->
-  <script src="/js/particles-init.js" defer></script>
-  <script src="/js/spotlight.js" defer></script>
+            function resize() {
+                const rect = canvas.parentElement.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = rect.height;
+                w = canvas.width;
+                h = canvas.height;
+            }
+            resize();
+            window.addEventListener('resize', resize);
 
-  <!-- Constellation module -->
-  <script type="module" defer>
-    import initConstellation from '/js/constellation.js';
-    document.addEventListener('DOMContentLoaded', ()=> {
-      const c = document.getElementById('constellation');
-      if(c) initConstellation(c);
-    });
+            const points = [];
+            for (let i = 0; i < 35; i++) {
+                points.push({
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    vx: (Math.random() - 0.5) * 0.6,
+                    vy: (Math.random() - 0.5) * 0.6,
+                });
+            }
 
-    // Language switcher wiring that emits an event and calls optional global hook.
-    (function(){
-      try {
-        const switcher = document.getElementById('lang-switch');
-        if(!switcher) return;
-        function setPressed(btn){
-          switcher.querySelectorAll('button[data-lang]').forEach(b => b.setAttribute('aria-pressed','false'));
-          btn.setAttribute('aria-pressed','true');
-        }
-        switcher.addEventListener('click', (e) => {
-          const btn = e.target.closest('button[data-lang]');
-          if(!btn) return;
-          const lang = btn.getAttribute('data-lang');
-          setPressed(btn);
-          // update attribute for other scripts
-          document.getElementById('app').setAttribute('data-current-lang', lang);
-          // emit event for external i18n loader
-          window.dispatchEvent(new CustomEvent('sfera:langchange', { detail: { lang } }));
-          // optional synchronous hook for legacy loaders
-          if(typeof window.SFERA_onLangChange === 'function'){
-            try { window.SFERA_onLangChange(lang); } catch(e){ console.error(e); }
-          }
+            function drawLines() {
+                ctx.clearRect(0, 0, w, h);
+                points.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > w) p.vx *= -1;
+                    if (p.y < 0 || p.y > h) p.vy *= -1;
+                });
+                for (let i = 0; i < points.length; i++) {
+                    for (let j = i + 1; j < points.length; j++) {
+                        const dx = points[i].x - points[j].x;
+                        const dy = points[i].y - points[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 160) {
+                            ctx.beginPath();
+                            ctx.moveTo(points[i].x, points[i].y);
+                            ctx.lineTo(points[j].x, points[j].y);
+                            ctx.strokeStyle = `rgba(0, 212, 255, ${0.18 * (1 - dist / 160)})`;
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        }
+                    }
+                }
+                points.forEach(p => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 2.2, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(0, 212, 255, 0.7)';
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = '#00d4ff';
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                });
+                requestAnimationFrame(drawLines);
+            }
+            drawLines();
         });
-      } catch(e){ console.error('lang switch init error', e); }
-    })();
-  </script>
 
-  <!-- Placeholder: include your i18n loader here. It should listen to 'sfera:langchange' or implement window.SFERA_onLangChange -->
-  <!-- Example: <script src="/js/i18n-loader.js" defer></script> -->
+        // Анимированные счётчики
+        const counters = [
+            { id: "users", target: 2340000 },
+            { id: "orders", target: 18540291 },
+            { id: "docs", target: 11328901 },
+            { id: "coin", target: 21000000 }
+        ];
 
-  <!-- Mobile performance hint -->
-  <script defer>
-    (function(){
-      try {
-        if(window.matchMedia && window.matchMedia('(max-width: 768px)').matches){
-          document.documentElement.style.setProperty('--particle-min-duration', '8s');
-          document.documentElement.style.setProperty('--particle-max-duration', '20s');
-          // optional flag for particles-init.js
-          window.__SFERA_REDUCE_PARTICLES = true;
+        function animateCounter(el, target) {
+            let value = 0;
+            const step = Math.max(1, Math.floor(target / 180));
+            const timer = setInterval(() => {
+                value += step;
+                if (value >= target) {
+                    value = target;
+                    clearInterval(timer);
+                }
+                el.textContent = value.toLocaleString("ru-RU");
+            }, 16);
         }
-      } catch(e){}
-    })();
-  </script>
+
+        window.addEventListener("load", () => {
+            counters.forEach(c => {
+                const el = document.getElementById(c.id);
+                if (el) animateCounter(el, c.target);
+            });
+        });
+
+        // Intersection Observer для плавной подгрузки элементов
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll(".card, .news-card, .stat").forEach(el => {
+            el.classList.add("hidden");
+            observer.observe(el);
+        });
+
+        // Интерактивный Spotlight эффект на карточках при движении курсора
+        document.querySelectorAll(".card, .news-card, .stat").forEach(card => {
+            card.addEventListener("mousemove", e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.background = `
+                    radial-gradient(circle at ${x}px ${y}px,
+                    rgba(0, 212, 255, 0.16),
+                    rgba(255, 255, 255, 0.04))
+                `;
+            });
+            card.addEventListener("mouseleave", () => {
+                card.style.background = "var(--glass-bg)";
+            });
+        });
+
+        // Плавная прозрачность хедера при скролле
+        const header = document.querySelector("header");
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 50) {
+                header.style.background = "rgba(5, 12, 20, 0.88)";
+                header.style.boxShadow = "0 10px 35px rgba(0, 0, 0, 0.5)";
+            } else {
+                header.style.background = "var(--header-footer-bg)";
+                header.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.4)";
+            }
+        });
+
+        // Разноцветные неоновые частицы
+        const particlesContainer = document.getElementById("particles");
+        if (particlesContainer) {
+            const colors = ['#00d4ff', '#00ffa3', '#1f6bff'];
+            for (let i = 0; i < 65; i++) {
+                const p = document.createElement("span");
+                p.className = "particle";
+                const size = Math.random() * 3.5 + 1.5;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                p.style.width = size + "px";
+                p.style.height = size + "px";
+                p.style.background = color;
+                p.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
+                p.style.left = Math.random() * 100 + "%";
+                p.style.top = Math.random() * 100 + "%";
+                p.style.animationDuration = (7 + Math.random() * 12) + "s";
+                p.style.animationDelay = (Math.random() * 5) + "s";
+                particlesContainer.appendChild(p);
+            }
+        }
+
+        // Анимация кнопок
+        document.querySelectorAll("button, .primary-btn, .glass-btn").forEach(btn => {
+            btn.addEventListener("mouseenter", () => {
+                btn.style.transform = "translateY(-3px) scale(1.02)";
+            });
+            btn.addEventListener("mouseleave", () => {
+                btn.style.transform = "";
+            });
+        });
+
+        // Переключение языка (сохранено без изменений)
+        const langButton = document.querySelector(".lang");
+        const langs = ["RU", "TM", "EN"];
+        let langIndex = 0;
+        if (langButton) {
+            langButton.addEventListener("click", () => {
+                langIndex++;
+                if (langIndex >= langs.length) langIndex = 0;
+                langButton.textContent = langs[langIndex];
+            });
+        }
+
+        // Эффект динамической пульсации ядра сферы
+        const core = document.querySelector(".core-center");
+        if (core) {
+            setInterval(() => {
+                core.style.boxShadow = "0 0 " + (85 + Math.random() * 55) + "px rgba(0, 212, 255, 0.65)";
+            }, 1500);
+        }
+
+        console.log("СФЕРА ПЛАТФОРМА — Дизайн обновлен");
+    </script>
 </body>
 </html>
