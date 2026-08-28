@@ -1,35 +1,36 @@
 const dns = require('dns');
-// Явное указание DNS Яндекса для обхода блокировок SRV-запросов MongoDB
 dns.setServers(['77.88.8.8', '77.88.8.1']);
 
 const mongoose = require('mongoose');
 const path = require('path');
 const dotenv = require('dotenv');
 
-// Поочередный поиск файла .env в папке server и в корне проекта
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 dotenv.config();
 
 const Listing = require('./models/Listing');
 
-// Генерируем тестовый ID продавца для прохождения валидации схемы
 const dummySellerId = new mongoose.Types.ObjectId();
 
 const products = [
   {
     title: 'Смартфон Sfera Phone 1',
-    price: 450,
+    price: 3499,
     description: 'Тестовый смартфон для проверки маркетплейса',
-    category: 'Электроника',
-    seller: dummySellerId
+    category: 'electronics',
+    segment: 'b2c',
+    seller: dummySellerId,
+    images: [{ url: 'https://via.placeholder.com/150' }]
   },
   {
     title: 'Беспроводные наушники Sfera Sound',
-    price: 80,
+    price: 800,
     description: 'Качественный звук и шумоподавление',
-    category: 'Аксессуары',
-    seller: dummySellerId
+    category: 'electronics',
+    segment: 'b2c',
+    seller: dummySellerId,
+    images: [{ url: 'https://via.placeholder.com/150' }]
   }
 ];
 

@@ -20,20 +20,42 @@ exports.getListings = async (req, res) => {
 
 exports.createListing = async (req, res) => {
   try {
-    const { title, description, price, category, images } = req.body;
+    const { title, name, description, price, category, segment, image, images, seller } = req.body;
+
     const listing = new Listing({
-      seller: req.userId,
-      title,
-      description,
-      price,
-      category,
-      images
+      seller: req.userId || (seller && seller.match(/^[0-9a-fA-F]{24}$/) ? seller : null),
+      title: title || name || 'Без названия',
+      description: description || '',
+      price: Number(price) || 0,
+      category: category || 'electronics',
+      segment: segment || 'b2c',
+      images: Array.isArray(images) && images.length > 0 
+        ? images 
+        : (image ? [image] : [])
     });
+
     await listing.save();
 
     // Очищаем кеш
     await redisClient.del('listings:all');
     res.status(201).json(listing);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.deleteListing = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedListing = await Listing.findByIdAndDelete(id);
+
+    if (!deletedListing) {
+      return res.status(404).json({ message: 'Listing not found' });
+    }
+
+    // Очищаем кеш
+    await redisClient.del('listings:all');
+    res.json({ message: 'Listing deleted successfully', id });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
