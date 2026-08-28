@@ -9,9 +9,13 @@ const http = require('http');
 const cors = require('cors');
 const { Server } = require('socket.io');
 const { checkQdrantConnection } = require('./src/services/qdrant.service');
+const connectDB = require('./src/config/db');
 
 // Загрузка .env из корня проекта
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+
+// Подключение к MongoDB
+connectDB();
 
 const app = express();
 
