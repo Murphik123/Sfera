@@ -1,40 +1,42 @@
 /* ============================================
    SFERA — Глобальная система переводов (i18n)
    Язык по умолчанию: tm (туркменский)
-   Файлы переводов: /languages/tm.json, ru.json, en.json
 ============================================ */
 
 const LANGS = ['tm', 'ru', 'en'];
 const DEFAULT_LANG = 'tm';
 
-// Кэш переводов
-let translations = {};
-let currentLang = localStorage.getItem('lang');
+// Глобальные переменные
+window.translations = {};
+window.currentLang = localStorage.getItem('lang') || DEFAULT_LANG;
 
-// Если язык не сохранён или недопустим — ставим tm
-if (!currentLang || !LANGS.includes(currentLang)) {
-    currentLang = DEFAULT_LANG;
-    localStorage.setItem('lang', currentLang);
+if (!LANGS.includes(window.currentLang)) {
+    window.currentLang = DEFAULT_LANG;
+    localStorage.setItem('lang', window.currentLang);
 }
 
-// Загрузка переводов с сервера
+// Загрузка переводов
 async function loadTranslations(lang) {
     try {
         const response = await fetch(`/languages/${lang}.json`);
         if (!response.ok) throw new Error('HTTP ' + response.status);
         const data = await response.json();
-        translations[lang] = data;
+        window.translations[lang] = data;
         return data;
     } catch (e) {
         console.warn(`Не удалось загрузить ${lang}.json, используем фолбэк.`);
-        // Минимальный фолбэк, чтобы не сломать интерфейс
-        return {};
+        // Фолбэк на случай offline
+        return {
+            logo_subtitle: lang === 'tm' ? 'Milli Sanly Platforma' : lang === 'ru' ? 'Национальная Цифровая Платформа' : 'National Digital Platform',
+            logout: lang === 'tm' ? '🚪 Çykmak' : lang === 'ru' ? '🚪 Выйти' : '🚪 Logout',
+            back: lang === 'tm' ? '← Yza' : lang === 'ru' ? '← Назад' : '← Back'
+        };
     }
 }
 
-// Применение переводов ко всем элементам с data-i18n и data-i18n-placeholder
+// Применение переводов
 function applyTranslations(lang) {
-    const t = translations[lang] || {};
+    const t = window.translations[lang] || {};
     
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
@@ -46,33 +48,28 @@ function applyTranslations(lang) {
         if (t[key]) el.placeholder = t[key];
     });
 
-    // Обновляем кнопку языка
     const langBtn = document.getElementById('langBtn');
     if (langBtn) langBtn.textContent = lang.toUpperCase();
     
     localStorage.setItem('lang', lang);
+    window.currentLang = lang;
 }
 
-// Инициализация при загрузке страницы
+// Инициализация
 async function initI18n() {
-    // Загружаем все три языка сразу для быстрого переключения
     await Promise.all(LANGS.map(lang => loadTranslations(lang)));
-    
-    // Применяем текущий язык
-    applyTranslations(currentLang);
+    applyTranslations(window.currentLang);
 
-    // Обработчик кнопки переключения языка
     const langBtn = document.getElementById('langBtn');
     if (langBtn) {
         langBtn.addEventListener('click', () => {
-            const nextIndex = (LANGS.indexOf(currentLang) + 1) % LANGS.length;
-            currentLang = LANGS[nextIndex];
-            applyTranslations(currentLang);
+            const nextIndex = (LANGS.indexOf(window.currentLang) + 1) % LANGS.length;
+            applyTranslations(LANGS[nextIndex]);
         });
     }
 }
 
-// Обработчики кнопок (если они есть на странице)
+// Обработчики кнопок
 function initActionButtons() {
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
