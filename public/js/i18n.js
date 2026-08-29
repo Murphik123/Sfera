@@ -1,144 +1,142 @@
 /**
- * SFERA Platform — i18n Module
+ * Единый модуль локализации платформы "СФЕРА" (без ES6 export)
+ * Язык по умолчанию: Туркменский (tm)
  */
+(function () {
+    const DEFAULT_LANG = 'tm';
+    const SUPPORTED_LANGS = ['tm', 'ru', 'en'];
+    
+    let currentLang = localStorage.getItem('sfera_lang') || DEFAULT_LANG;
+    let fallbackDictionary = {}; // Базовый словарь (tm.json)
+    let activeDictionary = {};   // Текущий словарь (ru.json / en.json / tm.json)
 
-const DEFAULT_LANG = 'tm';
-const SUPPORTED_LANGS = ['tm', 'ru', 'en'];
-
-// Prefer canonical key 'sfera_lang' but keep backward compatibility with older keys
-const STORAGE_KEYS = ['sfera_lang', 'sfera-lang', 'lang'];
-
-function readStoredLang() {
-    for (const k of STORAGE_KEYS) {
-        const v = localStorage.getItem(k);
-        if (v) return v;
-    }
-    return null;
-}
-
-let currentLang = readStoredLang() || DEFAULT_LANG;
-let translations = {};
-
-async function loadLanguage(lang) {
-    try {
-        // Относительный путь от корня public (languages/lang.json)
-        const res = await fetch(`languages/${lang}.json`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return await res.json();
-    } catch (err) {
-        console.error(`[i18n] Failed to load ${lang}.json:`, err);
-        if (lang !== DEFAULT_LANG) {
-            console.warn(`[i18n] Falling back to ${DEFAULT_LANG}`);
-            return loadLanguage(DEFAULT_LANG);
-        }
-        return {};
-    }
-}
-
-function applyTranslations(data) {
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        const val = data[key];
-        if (val !== undefined) {
-            if (val.includes('<')) {
-                el.innerHTML = val;
-            } else {
-                el.textContent = val;
+    /**
+     * Загрузка JSON-файла с переводом
+     */
+    async function fetchTranslationFile(lang) {
+        try {
+            const response = await fetch(`./languages/${lang}.json`);
+            if (!response.ok) {
+                throw new Error(`Не удалось загрузить файл переводов: ${lang}.json`);
             }
+            return await response.json();
+        } catch (error) {
+            console.warn(`[i18n] Ошибка загрузки ${lang}.json:`, error);
+            return null;
         }
-    });
-}
-
-async function setLanguage(lang) {
-    if (!SUPPORTED_LANGS.includes(lang)) {
-        lang = DEFAULT_LANG;
     }
-    const data = await loadLanguage(lang);
-    translations = data;
-    applyTranslations(data);
-    currentLang = lang;
-    // Write canonical key and keep older keys for compatibility
-    try {
+
+    /**
+     * Инициализация и смены языка
+     */
+    async function setLanguage(lang) {
+        if (!SUPPORTED_LANGS.includes(lang)) {
+            lang = DEFAULT_LANG;
+        }
+
+        // 1. Всегда загружаем туркменский словарь в качестве запасного (fallback)
+        if (Object.keys(fallbackDictionary).length === 0) {
+            fallbackDictionary = (await fetchTranslationFile(DEFAULT_LANG)) || {};
+        }
+
+        // 2. Загружаем целевой язык
+        if (lang === DEFAULT_LANG) {
+            activeDictionary = fallbackDictionary;
+        } else {
+            const loaded = await fetchTranslationFile(lang);
+            activeDictionary = loaded || fallbackDictionary;
+        }
+
+        currentLang = lang;
         localStorage.setItem('sfera_lang', lang);
-        localStorage.setItem('sfera-lang', lang);
-        localStorage.setItem('lang', lang);
-    } catch (e) {
-        console.warn('[i18n] Could not persist language to localStorage', e);
+
+        // 3. Обновляем интерфейс
+        applyTranslations();
+        updateActiveLangUI();
     }
 
-    document.documentElement.lang = lang;
-    document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
-}
-
-function cycleLanguage() {
-    const idx = SUPPORTED_LANGS.indexOf(currentLang);
-    const next = (idx + 1) % SUPPORTED_LANGS.length;
-    setLanguage(SUPPORTED_LANGS[next]);
-}
-
-async function initI18n() {
-    const saved = readStoredLang() || DEFAULT_LANG;
-    await setLanguage(saved);
-}
-
-// Автоматический запуск после загрузки страницы
-document.addEventListener('DOMContentLoaded', () => {
-    initI18n();
-    const btn = document.getElementById('langBtn');
-    if (btn) {
-        btn.addEventListener('click', cycleLanguage);
-    }
-});
-
-// Sync language across tabs/windows
-window.addEventListener('storage', (ev) => {
-    if (!ev.key) return;
-    if (STORAGE_KEYS.includes(ev.key)) {
-        const newLang = readStoredLang() || DEFAULT_LANG;
-        if (newLang && newLang !== currentLang) {
-            setLanguage(newLang).catch(() => {});
+    /**
+     * Получение перевода по ключу с fallback на TM
+     */
+    function t(key) {
+        // Проверяем текущий язык -> затем туркменский fallback -> иначе возвращаем сам ключ
+        if (activeDictionary && activeDictionary[key] !== undefined && activeDictionary[key] !== "") {
+            return activeDictionary[key];
         }
+        if (fallbackDictionary && fallbackDictionary[key] !== undefined && fallbackDictionary[key] !== "") {
+            return fallbackDictionary[key];
+        }
+        return key;
     }
-});
 
-// Enhance applyTranslations to support placeholders, titles and values
-function applyTranslations(data) {
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        const val = data && data[key];
-        if (val !== undefined && val !== null) {
-            if (typeof val === 'string' && val.includes('<')) {
-                el.innerHTML = val;
+    /**
+     * Применение переводов к DOM-элементам
+     */
+    function applyTranslations() {
+        // Элементы с атрибутом data-i18n
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            const translation = t(key);
+
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                if (el.hasAttribute('placeholder')) {
+                    el.placeholder = translation;
+                } else {
+                    el.value = translation;
+                }
             } else {
-                el.textContent = val;
+                el.textContent = translation;
             }
-        }
+        });
+
+        // Элементы с явным указанием плейсхолдера data-i18n-placeholder
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            el.placeholder = t(key);
+        });
+
+        // Элементы с атрибутом title (подсказки)
+        document.querySelectorAll('[data-i18n-title]').forEach(el => {
+            const key = el.getAttribute('data-i18n-title');
+            el.title = t(key);
+        });
+    }
+
+    /**
+     * Подсветка активной кнопки выбора языка (.lang или .lang-btn)
+     */
+    function updateActiveLangUI() {
+        document.querySelectorAll('.lang, .lang-btn, [data-lang]').forEach(btn => {
+            const btnLang = (btn.getAttribute('data-lang') || btn.textContent).toLowerCase().trim();
+            if (btnLang === currentLang) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+    }
+
+    // Экспорт в глобальный объект window
+    window.i18n = {
+        init: () => setLanguage(currentLang),
+        setLanguage: setLanguage,
+        getLang: () => currentLang,
+        t: t
+    };
+
+    // Слушатель событий при загрузке DOM
+    document.addEventListener('DOMContentLoaded', () => {
+        window.i18n.init();
+
+        // Делегирование кликов по кнопкам смены языка
+        document.addEventListener('click', (e) => {
+            const langBtn = e.target.closest('.lang, .lang-btn, [data-lang]');
+            if (langBtn) {
+                const selectedLang = (langBtn.getAttribute('data-lang') || langBtn.textContent).toLowerCase().trim();
+                if (SUPPORTED_LANGS.includes(selectedLang)) {
+                    window.i18n.setLanguage(selectedLang);
+                }
+            }
+        });
     });
-
-    // placeholders
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-        const key = el.getAttribute('data-i18n-placeholder');
-        const val = data && data[key];
-        if (val !== undefined && val !== null) el.setAttribute('placeholder', val);
-    });
-
-    // titles
-    document.querySelectorAll('[data-i18n-title]').forEach(el => {
-        const key = el.getAttribute('data-i18n-title');
-        const val = data && data[key];
-        if (val !== undefined && val !== null) el.setAttribute('title', val);
-    });
-
-    // values
-    document.querySelectorAll('[data-i18n-value]').forEach(el => {
-        const key = el.getAttribute('data-i18n-value');
-        const val = data && data[key];
-        if (val !== undefined && val !== null) el.value = val;
-    });
-
-    // update lang button if present
-    const btn = document.getElementById('langBtn');
-    if (btn) btn.textContent = (currentLang || DEFAULT_LANG).toUpperCase();
-}
-
-export { setLanguage, cycleLanguage, initI18n, currentLang, translations };
+})();
