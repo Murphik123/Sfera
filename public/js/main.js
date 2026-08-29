@@ -1,148 +1,96 @@
 /**
- * SFERA Platform — Main Entry Point
- * Version: 1.0
+ * Главный скрипт платформы "СФЕРА" (без ES-модулей)
+ * Отвечает за навигацию, сессии и глобальные события
  */
-
-import { createParticles } from './particles.js';
-import { getTheme, toggleTheme } from './theme.js';
-import { animateCounter, initScrollReveal, staggerReveal } from './animations.js';
-
-/**
- * Safely returns an element by id without throwing if it does not exist.
- * @param {string} id - DOM element identifier.
- * @returns {HTMLElement | null}
- */
-const getElement = (id) => document.getElementById(id) || null;
-
-/**
- * Safely executes a callback and logs a warning if it fails.
- * @param {Function} callback - Function to execute.
- * @param {string} message - Context for the warning.
- */
-const safeInvoke = (callback, message) => {
-    try {
-        callback();
-    } catch (error) {
-        console.warn(`⚠️ ${message}:`, error?.message || error);
-    }
-};
-
-/**
- * Initializes the particle background if the target container exists.
- */
-const initParticles = () => {
-    const container = getElement('particles');
-    if (!container || typeof createParticles !== 'function') {
-        return;
-    }
-
-    createParticles('particles', 60);
-};
-
-/**
- * Runs counter animations for known numeric elements on the page.
- */
-const initCounters = () => {
-    const counters = [
-        { id: 'online', target: 1842 },
-        { id: 'users', target: 2340000 },
-        { id: 'orders', target: 18540291 },
-        { id: 'docs', target: 11328901 },
-        { id: 'coin', target: 21000000 }
-    ];
-
-    counters.forEach(({ id, target }) => {
-        const element = getElement(id);
-        if (!element) {
-            return;
-        }
-
-        if (typeof animateCounter === 'function') {
-            animateCounter(element, target);
-        } else {
-            element.textContent = target.toLocaleString();
-        }
-    });
-};
-
-/**
- * Initializes scroll reveal animations for reveal and staggered elements.
- */
-const initRevealEffects = () => {
-    safeInvoke(() => {
-        if (typeof initScrollReveal === 'function') {
-            initScrollReveal('.reveal');
-        }
-        if (typeof staggerReveal === 'function') {
-            staggerReveal('.stagger', 100);
-        }
-    }, 'Ошибка анимации появления');
-};
-
-/**
- * Attaches theme toggle behavior and synchronizes its icon state.
- */
-const initThemeToggle = () => {
-    const themeToggleBtn = getElement('themeToggle');
-    if (!themeToggleBtn) {
-        return;
-    }
-
-    const syncThemeIcon = () => {
-        if (typeof getTheme !== 'function') {
-            return;
-        }
-
-        themeToggleBtn.textContent = getTheme() === 'dark' ? '🌙' : '☀️';
-    };
-
-    themeToggleBtn.addEventListener('click', () => {
-        if (typeof toggleTheme === 'function') {
-            toggleTheme();
-        }
-        syncThemeIcon();
-    });
-
-    syncThemeIcon();
-};
-
-/**
- * Initializes the mobile hamburger navigation menu if the relevant elements exist.
- */
-const initMobileNavigation = () => {
-    const hamburger = getElement('hamburger');
-    const nav = getElement('mainNav');
-
-    if (!hamburger || !nav) {
-        return;
-    }
-
-    hamburger.addEventListener('click', function toggleMenu() {
-        this.classList.toggle('active');
-        nav.classList.toggle('active');
-    });
-
-    nav.querySelectorAll('a').forEach((link) => {
-        link.addEventListener('click', () => {
-            if (window.innerWidth <= 1200) {
-                hamburger.classList.remove('active');
-                nav.classList.remove('active');
+(function () {
+    /**
+     * Обработка кнопки "Назад" (#btn-back, .btn-back)
+     */
+    function setupBackButton() {
+        document.addEventListener('click', function (e) {
+            const backBtn = e.target.closest('#btn-back, .btn-back');
+            if (backBtn) {
+                e.preventDefault();
+                if (window.history.length > 1 && document.referrer !== "") {
+                    window.history.back();
+                } else {
+                    window.location.href = 'index.html';
+                }
             }
         });
-    });
-};
+    }
 
-/**
- * Initializes all page interactions after the DOM is ready.
- */
-const initializeApp = () => {
-    initParticles();
-    initCounters();
-    initRevealEffects();
-    initThemeToggle();
-    initMobileNavigation();
+    /**
+     * Обработка кнопки "Выйти" (#btn-logout, .btn-logout)
+     */
+    function setupLogoutButton() {
+        document.addEventListener('click', function (e) {
+            const logoutBtn = e.target.closest('#btn-logout, .btn-logout');
+            if (logoutBtn) {
+                e.preventDefault();
+                
+                // Очистка сессии пользователя
+                localStorage.removeItem('sfera_token');
+                localStorage.removeItem('sfera_user');
+                sessionStorage.clear();
 
-    console.log('✅ SFERA Platform initialized');
-};
+                // Перенаправление на страницу входа
+                window.location.href = 'login.html';
+            }
+        });
+    }
 
-document.addEventListener('DOMContentLoaded', initializeApp);
+    /**
+     * Проверка состояния авторизации пользователя
+     */
+    function checkAuthStatus() {
+        const token = localStorage.getItem('sfera_token');
+        const user = localStorage.getItem('sfera_user');
+        const currentPage = window.location.pathname.split('/').pop();
+
+        // Защищенные страницы, требующие авторизации
+        const protectedPages = ['dashboard.html', 'marketplace.html'];
+
+        if (protectedPages.includes(currentPage) && !token) {
+            console.warn('[AUTH] Доступ ограничен. Перенаправление на login.html');
+            // window.location.href = 'login.html'; // Расскоментировать при необходимости жесткой защиты
+        }
+
+        // Если пользователь авторизован, обновляем имя в шапке
+        if (user) {
+            try {
+                const userData = JSON.parse(user);
+                const userNameEl = document.getElementById('user-name') || document.querySelector('.user-profile-name');
+                if (userNameEl && userData.name) {
+                    userNameEl.textContent = userData.name;
+                }
+            } catch (err) {
+                console.error('[AUTH] Ошибка парсинга данных пользователя:', err);
+            }
+        }
+    }
+
+    /**
+     * Инициализация всех модулей
+     */
+    function init() {
+        setupBackButton();
+        setupLogoutButton();
+        checkAuthStatus();
+        
+        console.log('[SFERA] Платформа успешно инициализирована.');
+    }
+
+    // Экспорт базовых функций в window
+    window.SferaApp = {
+        init: init,
+        logout: () => {
+            localStorage.removeItem('sfera_token');
+            localStorage.removeItem('sfera_user');
+            window.location.href = 'login.html';
+        }
+    };
+
+    // Запуск при готовности DOM
+    document.addEventListener('DOMContentLoaded', init);
+})();
