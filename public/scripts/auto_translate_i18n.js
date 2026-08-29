@@ -1,65 +1,105 @@
-const fs = require('fs');
-const path = require('path');
+/* ============================================
+   SFERA — Глобальная система переводов (i18n)
+   Язык по умолчанию: tm (туркменский)
+   Файлы переводов: /languages/tm.json, ru.json, en.json
+============================================ */
 
-const languagesDir = path.resolve(__dirname, '..', 'languages');
-const tmPath = path.join(languagesDir, 'tm.json');
-const ruPath = path.join(languagesDir, 'ru.json');
-const enPath = path.join(languagesDir, 'en.json');
+const LANGS = ['tm', 'ru', 'en'];
+const DEFAULT_LANG = 'tm';
 
-if (!fs.existsSync(tmPath)) {
-  console.error('tm.json not found'); process.exit(1);
+// Кэш переводов
+let translations = {};
+let currentLang = localStorage.getItem('lang');
+
+// Если язык не сохранён или недопустим — ставим tm
+if (!currentLang || !LANGS.includes(currentLang)) {
+    currentLang = DEFAULT_LANG;
+    localStorage.setItem('lang', currentLang);
 }
 
-const tm = JSON.parse(fs.readFileSync(tmPath,'utf8'));
-const ru = fs.existsSync(ruPath) ? JSON.parse(fs.readFileSync(ruPath,'utf8')) : {};
-const en = fs.existsSync(enPath) ? JSON.parse(fs.readFileSync(enPath,'utf8')) : {};
+// Загрузка переводов с сервера
+async function loadTranslations(lang) {
+    try {
+        const response = await fetch(`/languages/${lang}.json`);
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        const data = await response.json();
+        translations[lang] = data;
+        return data;
+    } catch (e) {
+        console.warn(`Не удалось загрузить ${lang}.json, используем фолбэк.`);
+        // Минимальный фолбэк, чтобы не сломать интерфейс
+        return {};
+    }
+}
 
-// Collect keys that need translation: ru[key] missing or equal to tm, or empty; same for en
-const ruKeys = Object.keys(tm).filter(k => !ru[k] || ru[k] === tm[k] || ru[k] === '');
-const enKeys = Object.keys(tm).filter(k => !en[k] || en[k] === tm[k] || en[k] === '');
-
-console.log('Keys to translate RU:', ruKeys.length, 'EN:', enKeys.length);
-
-// Use LibreTranslate public endpoint
-const LIBRE = 'https://libretranslate.com/translate';
-
-async function translateText(text, source, target) {
-  try {
-    const res = await fetch(LIBRE, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ q: text, source, target, format: 'text' })
+// Применение переводов ко всем элементам с data-i18n и data-i18n-placeholder
+function applyTranslations(lang) {
+    const t = translations[lang] || {};
+    
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) el.textContent = t[key];
     });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const j = await res.json();
-    return j.translatedText;
-  } catch (e) {
-    console.error('translate error', e.message);
-    return null;
-  }
+    
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (t[key]) el.placeholder = t[key];
+    });
+
+    // Обновляем кнопку языка
+    const langBtn = document.getElementById('langBtn');
+    if (langBtn) langBtn.textContent = lang.toUpperCase();
+    
+    localStorage.setItem('lang', lang);
 }
 
-(async () => {
-  // translate RU in batches
-  for (const key of ruKeys) {
-    const text = tm[key] || '';
-    if (!text) { ru[key] = ''; continue; }
-    const translated = await translateText(text, 'auto', 'ru');
-    ru[key] = translated || text;
-    // small delay to be polite
-    await new Promise(r => setTimeout(r, 250));
-  }
+// Инициализация при загрузке страницы
+async function initI18n() {
+    // Загружаем все три языка сразу для быстрого переключения
+    await Promise.all(LANGS.map(lang => loadTranslations(lang)));
+    
+    // Применяем текущий язык
+    applyTranslations(currentLang);
 
-  for (const key of enKeys) {
-    const text = tm[key] || '';
-    if (!text) { en[key] = ''; continue; }
-    const translated = await translateText(text, 'auto', 'en');
-    en[key] = translated || text;
-    await new Promise(r => setTimeout(r, 250));
-  }
+    // Обработчик кнопки переключения языка
+    const langBtn = document.getElementById('langBtn');
+    if (langBtn) {
+        langBtn.addEventListener('click', () => {
+            const nextIndex = (LANGS.indexOf(currentLang) + 1) % LANGS.length;
+            currentLang = LANGS[nextIndex];
+            applyTranslations(currentLang);
+        });
+    }
+}
 
-  fs.writeFileSync(ruPath, JSON.stringify(ru, null, 2), 'utf8');
-  fs.writeFileSync(enPath, JSON.stringify(en, null, 2), 'utf8');
+// Обработчики кнопок (если они есть на странице)
+function initActionButtons() {
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('username');
+            window.location.href = '/login.html';
+        });
+    }
 
-  console.log('Translation finished.');
-})();
+    const backLink = document.getElementById('backLink');
+    if (backLink) {
+        backLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = '/index.html';
+            }
+        });
+    }
+}
+
+// Запуск после загрузки DOM
+document.addEventListener('DOMContentLoaded', () => {
+    initI18n();
+    initActionButtons();
+});
