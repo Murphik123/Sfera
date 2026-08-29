@@ -3,460 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>СФЕРА — Marketpleýs</title>
+    <title>SFERA - Marketplace</title>
     
-    <!-- Модульные стили проекта -->
-    <link rel="stylesheet" href="/css/variables.css">
-    <link rel="stylesheet" href="/css/glass.css">
-    <link rel="stylesheet" href="/css/ui.css">
-    <link rel="stylesheet" href="/css/main.css">
+    <!-- Единое подключение глобальных стилей -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/glass.css">
+    <link rel="stylesheet" href="css/ui.css">
 
+    <!-- Уникальные стили маркетплейса (без переопределения шапки) -->
     <style>
-        /* ===== УНИКАЛЬНЫЕ СТИЛИ ДЛЯ МАРКЕТПЛЕЙСА ===== */
-        .marketplace { padding: 140px 0 60px; min-height: 100vh; }
-        .mp-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; }
-        .mp-header h1 { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #fff, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .mp-header p { color: #9fb5c8; font-size: 14px; }
+        .marketplace-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
 
-        /* ===== ШАПКА: прижата вправо и стеклянные кнопки ===== */
-        .header-right {
+        .market-header-tabs {
             display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-left: auto; /* прижимает вправо */
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+            padding-bottom: 1rem;
         }
-        .user-info {
-            color: var(--text);
-            font-size: 14px;
-            padding: 8px 14px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            backdrop-filter: blur(8px);
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted, #a0aec0);
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: color 0.3s;
         }
-        .header-right .lang,
-        .header-right .logout-btn,
-        .header-right .btn-switch {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            backdrop-filter: blur(12px);
-            transition: all .3s ease;
-            padding: 8px 16px;
-            border-radius: 12px;
+
+        .tab-btn.active {
+            color: var(--accent-color, #00f2fe);
+            border-bottom: 2px solid var(--accent-color, #00f2fe);
             font-weight: 600;
-            font-size: 14px;
-        }
-        .header-right .lang:hover,
-        .header-right .logout-btn:hover,
-        .header-right .btn-switch:hover {
-            background: rgba(0, 212, 255, 0.2);
-            border-color: var(--primary);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
-        }
-        .logout-btn {
-            background: linear-gradient(135deg, rgba(255,77,77,0.3), rgba(255,77,77,0.1)) !important;
-            border-color: rgba(255,77,77,0.3) !important;
-        }
-        .logout-btn:hover {
-            background: rgba(255,77,77,0.4) !important;
         }
 
-        /* ===== Остальное — без изменений ===== */
-        .segment-selector { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; background: var(--glass-bg); padding: 8px; border-radius: 16px; border: 1px solid var(--glass-border); }
-        .segment-btn { flex: 1; min-width: 100px; padding: 10px 16px; border: none; border-radius: 12px; background: transparent; color: var(--text-muted); font-weight: 600; font-size: 14px; cursor: pointer; transition: .3s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .segment-btn.active { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; box-shadow: 0 8px 20px rgba(0,212,255,0.3); }
-        .segment-btn:hover:not(.active) { background: rgba(255,255,255,0.08); color: #fff; }
+        /* Сетка товаров */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
 
-        .category-selector { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px; }
-        .category-btn { padding: 6px 16px; border: 1px solid var(--glass-border); border-radius: 20px; background: transparent; color: var(--text-muted); cursor: pointer; transition: .3s; font-size: 13px; }
-        .category-btn.active { background: rgba(0,212,255,0.15); border-color: var(--primary); color: var(--primary); }
-        .category-btn:hover { background: rgba(255,255,255,0.05); }
+        .product-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            padding: 1.25rem;
+        }
 
-        .search-bar { display: flex; gap: 12px; margin-bottom: 25px; }
-        .search-bar input { flex: 1; padding: 12px 18px; border-radius: 14px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: #fff; font-size: 15px; outline: none; transition: .3s; }
-        .search-bar input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(0,212,255,0.2); }
-
-        .mp-tabs { display: flex; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 25px; flex-wrap: wrap; }
-        .mp-tabs button { padding: 10px 20px; background: transparent; border: none; color: var(--text-muted); font-size: 16px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; transition: .3s; }
-        .mp-tabs button.active { color: var(--primary); border-bottom-color: var(--primary); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-        .product-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 18px; padding: 16px; backdrop-filter: blur(15px); transition: .3s; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
-        .product-card:hover { transform: translateY(-5px); border-color: rgba(0,212,255,0.4); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
-        .product-card .badge { position: absolute; top: 12px; left: 12px; padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; z-index: 2; }
-        .badge-b2c { background: rgba(0,212,255,0.2); color: var(--primary); border: 1px solid rgba(0,212,255,0.4); }
-        .badge-b2b { background: rgba(0,255,163,0.2); color: var(--accent); border: 1px solid rgba(0,255,163,0.4); }
-        .badge-b2g { background: rgba(255,184,0,0.2); color: #ffb800; border: 1px solid rgba(255,184,0,0.4); }
-        .product-card .image { width: 100%; height: 150px; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.03); display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
-        .product-card .image img { width: 100%; height: 100%; object-fit: cover; }
-        .product-card .image .no-img { font-size: 40px; opacity: 0.5; }
-        .product-card .name { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 4px; }
-        .product-card .price { font-size: 20px; font-weight: 800; color: var(--accent); }
-        .product-card .seller { font-size: 12px; color: var(--text-muted); margin: 4px 0 12px; }
-        .product-card .favorite-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-muted); transition: .2s; z-index: 2; }
-        .product-card .favorite-btn.active { color: #ffd700; }
-
-        .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--glass-bg); padding: 12px 18px; border-radius: 12px; margin-bottom: 10px; }
-        .cart-item .info { flex: 1; }
-        .cart-item .info strong { color: #fff; }
-        .cart-item .info .meta { font-size: 12px; color: var(--text-muted); }
-        .cart-item .actions { display: flex; align-items: center; gap: 12px; }
-        .cart-item .actions .qty-btn { background: rgba(255,255,255,0.08); border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-weight: 700; transition: .2s; }
-        .cart-item .actions .qty-btn:hover { background: var(--primary); color: #000; }
-        .cart-item .actions .remove-btn { background: rgba(255,77,77,0.2); border: none; color: #ff4d4d; padding: 4px 10px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: .2s; }
-        .cart-item .actions .remove-btn:hover { background: #ff4d4d; color: #fff; }
-        .cart-total { background: var(--glass-bg); padding: 20px; border-radius: 16px; text-align: right; margin-top: 20px; }
-        .cart-total .total-price { font-size: 22px; font-weight: 700; color: var(--accent); }
-
-        .profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .profile-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; }
-        .profile-card h3 { font-size: 18px; margin-bottom: 16px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; }
-        .profile-card .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
-
-        .admin-panel { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 24px; }
-        .admin-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
-        .admin-form .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
-        .admin-form .form-group input,
-        .admin-form .form-group select {
+        .product-img {
             width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--glass-border);
-            background: rgba(0,0,0,0.2);
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-            transition: .3s;
+            height: 180px;
+            object-fit: cover;
+            border-radius: var(--radius-sm, 8px);
+            margin-bottom: 1rem;
         }
-        .admin-form .form-group select option { background: #0b2035; color: #fff; }
 
-        .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
-        .empty-state .icon { font-size: 48px; margin-bottom: 10px; }
-
-        .order-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,.7); backdrop-filter: blur(10px); justify-content: center; align-items: center; z-index: 1000; }
-        .order-modal.active { display: flex; }
-        .order-modal .modal-box { background: rgba(20,30,45,0.95); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,.15); border-radius: 24px; padding: 30px; max-width: 500px; width: 95%; max-height: 90vh; overflow-y: auto; }
-        .order-modal .modal-box h2 { color: #fff; margin-bottom: 20px; }
-
-        .message { padding: 12px 20px; border-radius: 12px; margin-bottom: 20px; text-align: center; font-weight: 600; }
-        .message.success { background: rgba(0,255,163,0.15); border: 1px solid rgba(0,255,163,0.4); color: var(--accent); }
-        .message.error { background: rgba(255,77,77,0.15); border: 1px solid rgba(255,77,77,0.4); color: #ff4d4d; }
-
-        /* ===== Дополнительно: стили для частиц (если внешний скрипт не загрузился) ===== */
-        #particles {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: -1;
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: var(--accent-color, #00f2fe);
+            margin: 0.5rem 0;
         }
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0;
-            animation: float linear infinite;
+
+        /* Виджет корзины */
+        .cart-drawer {
+            margin-top: 2rem;
+            padding: 1.5rem;
         }
-        @keyframes float {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            20% { opacity: 0.7; }
-            80% { opacity: 0.7; }
-            100% { transform: translateY(-120vh) translateX(30px); opacity: 0; }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
     </style>
 </head>
 <body>
-    <div id="particles"></div>
+    <!-- Фоновый холст для частиц -->
+    <canvas id="particles-canvas"></canvas>
 
-    <header>
-        <div class="container">
-            <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00ffa3"/><stop offset="50%" stop-color="#00d4ff"/><stop offset="100%" stop-color="#1f6bff"/></linearGradient></defs>
-                        <circle cx="50" cy="50" r="28" fill="url(#logoGrad)" opacity="0.15"/>
-                        <path d="M50 12 C72 12, 88 28, 88 50 C88 72, 68 88, 46 86 C26 84, 14 66, 16 46 C18 28, 34 16, 52 18 C68 20, 78 34, 76 50 C74 64, 62 74, 48 72 C36 70, 28 58, 30 46 C32 36, 42 28, 52 30 C60 32, 66 40, 64 50 C62 58, 54 62, 46 60" stroke="url(#logoGrad)" stroke-width="3"/>
-                        <circle cx="48" cy="48" r="3.5" fill="#ffffff"/>
-                    </svg>
-                </div>
-                <div class="logo-text"><h2>SFERA</h2><p id="logoSubtitle" data-i18n="logo_subtitle">Milli Sanly Platforma</p></div>
-            </a>
-            <div class="header-right">
-                <span class="user-info">👤 <strong id="username">User</strong></span>
-                <button class="lang" id="langBtn">TM</button>
-                <button class="logout-btn" id="logoutBtn" data-i18n="logout">🚪 Çykmak</button>
-                <a href="#" id="backLink" class="btn-switch" data-i18n="back">← Yza</a>
+    <!-- Шапка (Header) -->
+    <header class="header glass-panel">
+        <a href="index.html" class="back-link" id="backLink" data-i18n="btn_back">← Yza</a>
+        
+        <div class="header-right">
+            <div class="user-info">
+                <div class="user-avatar">S</div>
+                <span id="user-name">User</span>
             </div>
+
+            <!-- Селектор языков -->
+            <div class="lang-selector">
+                <button class="lang-btn" data-lang="tm">TM</button>
+                <button class="lang-btn" data-lang="ru">RU</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+
+            <button class="logout-btn" id="logoutBtn" data-i18n="nav_logout">Çykmak</button>
         </div>
     </header>
 
-    <section class="marketplace">
-        <div class="container">
-            <div class="mp-header">
-                <div><h1 data-i18n="mp_title">🛒 SFERA Marketpleýs</h1><p data-i18n="mp_subtitle">Şahsy satuwlar • Biznes üpjünçilik • Döwlet satyn alyşlar</p></div>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn btn-outline" id="resetProductsBtn" title="Сбросить товары к демо">↺ Сброс данных</button>
-                    <button class="btn btn-outline" id="refreshBtn" data-i18n="refresh">⟳ Täzele</button>
-                </div>
-            </div>
-
-            <div id="message" class="message" style="display:none;"></div>
-
-            <!-- Сегменты -->
-            <div class="segment-selector">
-                <button class="segment-btn active" data-segment="all" data-i18n="segment_all">🌐 Ähli</button>
-                <button class="segment-btn" data-segment="b2c" data-i18n="segment_b2c">👤 B2C</button>
-                <button class="segment-btn" data-segment="b2b" data-i18n="segment_b2b">🏢 B2B</button>
-                <button class="segment-btn" data-segment="b2g" data-i18n="segment_b2g">🏛️ B2G</button>
-            </div>
-
-            <!-- Категории -->
-            <div class="category-selector" id="categorySelector">
-                <button class="category-btn active" data-category="all" data-i18n="category_all">Ähli kategoriýa</button>
-                <button class="category-btn" data-category="electronics">📱 Электроника</button>
-                <button class="category-btn" data-category="food">🍎 Продукты</button>
-                <button class="category-btn" data-category="industry">⚙️ Промышленность</button>
-                <button class="category-btn" data-category="agriculture">🌾 Сельское хозяйство</button>
-                <button class="category-btn" data-category="gov_tenders">📋 Гос. тендеры</button>
-            </div>
-
-            <!-- Поиск -->
-            <div class="search-bar">
-                <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder" placeholder="Harytlary gözlemek..." />
-            </div>
-
-            <!-- Табы -->
-            <div class="mp-tabs">
-                <button class="active" data-tab="catalog" data-i18n="tab_catalog">Katalog</button>
-                <button data-tab="cart" data-i18n="tab_cart">Sebet (<span id="cartCount">0</span>)</button>
-                <button data-tab="profile" data-i18n="tab_profile">Şahsy kabinet</button>
-                <button data-tab="wishlist" data-i18n="tab_wishlist">⭐ Söýliler</button>
-                <button id="adminTab" data-tab="admin" style="display:inline-block; color:#00ffa3;" data-i18n="tab_admin">Admin</button>
-            </div>
-
-            <!-- Каталог -->
-            <div class="tab-content active" id="tab-catalog"><div id="catalogContent"></div></div>
-
-            <!-- Корзина -->
-            <div class="tab-content" id="tab-cart">
-                <div id="cartContent">
-                    <div class="empty-state" id="emptyCart"><div class="icon">🛒</div><p data-i18n="cart_empty">Sebet boş</p></div>
-                    <div id="cartItems" style="display:none;"></div>
-                    <div id="cartTotal" style="display:none;">
-                        <div class="cart-total">
-                            <p data-i18n="total">Jemi:</p>
-                            <span class="total-price" id="totalAmount">0.00</span> TMT
-                            <button class="btn btn-primary" id="checkoutBtn" style="margin-top:10px; max-width:200px; display:inline-block;" data-i18n="checkout">Sargyt et</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Профиль -->
-            <div class="tab-content" id="tab-profile">
-                <div class="profile-grid">
-                    <div class="profile-card">
-                        <h3><span data-i18n="profile_info">Profil maglumatlary</span></h3>
-                        <div id="profileDisplay">
-                            <div class="row"><span data-i18n="username_label">Ulanyjy ady:</span><span id="profileUsername">User</span></div>
-                            <div class="row"><span data-i18n="email_label">Email:</span><span id="profileEmail">user@example.com</span></div>
-                            <div class="row"><span data-i18n="phone_label">Telefon:</span><span id="profilePhone">+993 65 000000</span></div>
-                            <div class="row"><span data-i18n="address_label">Adres:</span><span id="profileAddress">Aşgabat</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Избранное -->
-            <div class="tab-content" id="tab-wishlist">
-                <div id="wishlistContent"><div class="empty-state"><div class="icon">⭐</div><p data-i18n="wishlist_empty">Söýli harytlar ýok</p></div></div>
-            </div>
-
-            <!-- Админ-панель -->
-            <div class="tab-content" id="tab-admin">
-                <div class="admin-panel">
-                    <h3 data-i18n="admin_title">Управление каталогом</h3>
-                    <form id="adminProductForm">
-                        <div class="admin-form">
-                            <div class="form-group"><label data-i18n="admin_segment">Сегмент</label><select id="adminSegment" class="form-select"><option value="b2c">B2C</option><option value="b2b">B2B</option><option value="b2g">B2G</option></select></div>
-                            <div class="form-group"><label data-i18n="admin_category">Kategoriýa</label><select id="adminCategory" class="form-select"><option value="electronics">Электроника</option><option value="industry">Промышленность</option><option value="food">Продукты</option><option value="agriculture">Сельское хозяйство</option><option value="gov_tenders">Гос. тендеры</option></select></div>
-                            <div class="form-group"><label data-i18n="admin_name">Ady</label><input type="text" id="adminName" placeholder="Наименование товара" class="form-input" required /></div>
-                            <div class="form-group"><label data-i18n="admin_price">Bahasy (TMT)</label><input type="number" id="adminPrice" step="0.01" class="form-input" required placeholder="0.00" /></div>
-                            <div class="form-group"><label data-i18n="admin_seller">Satyjy</label><input type="text" id="adminSeller" class="form-input" required placeholder="ООО / ИП" /></div>
-                            <div class="form-group"><label data-i18n="admin_image">Surat URL</label><input type="url" id="adminImageUrl" class="form-input" placeholder="https://..." /></div>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="max-width:200px;" data-i18n="admin_add">Goşmak</button>
-                    </form>
-                    <div style="margin-top:30px;"><h4 data-i18n="admin_list">Ähli harytlar</h4><div id="adminProductsList" style="margin-top:15px;"></div></div>
-                </div>
-            </div>
+    <!-- Основной контент Маркетплейса -->
+    <main class="marketplace-container">
+        <div class="market-header-tabs">
+            <button class="tab-btn active" onclick="switchTab('catalog')" data-i18n="nav_marketplace">Katalog</button>
+            <button class="tab-btn" onclick="switchTab('cart')"><span data-i18n="cart_title">Sebet</span> (<span id="cart-count">0</span>)</button>
         </div>
-    </section>
 
-    <!-- Подключение скриптов с обработкой отсутствия локальных модулей -->
-    <script src="/js/auth-check.js" onerror="console.warn('auth-check.js not found')"></script>
-    <script src="/js/api.js" onerror="console.warn('api.js not found')"></script>
-    <script src="/js/theme.js" onerror="console.warn('theme.js not found')"></script>
-    <script src="/js/spotlight.js" onerror="console.warn('spotlight.js not found')"></script>
-    <script src="/js/particles.js" onerror="console.warn('particles.js not found')"></script>
-    <script src="/js/particles-init.js" onerror="console.warn('particles-init.js not found')"></script>
-    <script src="/js/animations.js" onerror="console.warn('animations.js not found')"></script>
+        <!-- Секция каталога -->
+        <section id="section-catalog">
+            <div class="products-grid" id="products-container"></div>
+        </section>
 
-    <!-- Глобальный i18n (язык по умолчанию tm) -->
-    <script src="/js/i18n.js"></script>
+        <!-- Секция корзины -->
+        <section id="section-cart" class="glass-panel cart-drawer" style="display: none;">
+            <h2 data-i18n="cart_title">Sebet</h2>
+            <div id="cart-items"></div>
+            <hr style="margin: 1rem 0; border-color: rgba(255,255,255,0.1);">
+            <h3>Jemi: <span id="cart-total">0</span> TMT</h3>
+        </section>
+    </main>
 
+    <!-- Подключение скриптов в верной последовательности -->
+    <script src="js/i18n.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- Локальный скрипт логики Маркетплейса -->
     <script>
-        // ===== ГЕНЕРАЦИЯ ЧАСТИЦ (если внешние скрипты не загрузились) =====
-        (function() {
-            const particlesContainer = document.getElementById('particles');
-            if (!particlesContainer) return;
-            if (particlesContainer.children.length > 0) return; // если уже есть частицы
+        // 1. Инициализация локального состояния
+        const state = {
+            products: [
+                { id: 1, name: "Smartfon Sfera X", price: 2500, img: "https://via.placeholder.com/260x180" },
+                { id: 2, name: "Noutbuk Sfera Pro", price: 8900, img: "https://via.placeholder.com/260x180" },
+                { id: 3, name: "Qulaqlyk Wireless", price: 450, img: "https://via.placeholder.com/260x180" }
+            ],
+            cart: []
+        };
 
-            const colors = ['#00d4ff', '#00ffa3', '#1f6bff'];
-            for (let i = 0; i < 65; i++) {
-                const p = document.createElement('span');
-                p.className = 'particle';
-                const size = Math.random() * 3.5 + 1.5;
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                p.style.width = size + 'px';
-                p.style.height = size + 'px';
-                p.style.background = color;
-                p.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
-                p.style.left = Math.random() * 100 + '%';
-                p.style.top = Math.random() * 100 + '%';
-                p.style.animationDuration = (7 + Math.random() * 12) + 's';
-                p.style.animationDelay = (Math.random() * 5) + 's';
-                particlesContainer.appendChild(p);
-            }
-        })();
-
-        // ===== ОСНОВНОЙ КОД МАРКЕТПЛЕЙСА (без переводов) =====
-        const DEFAULT_PRODUCTS = [
-            { id: "1", name: "Смартфон Sfera Phone X", price: 3499.00, segment: "b2c", category: "electronics", seller: "Sfera Tech", image: "" },
-            { id: "2", name: "Серверное оборудование Dell PowerEdge", price: 45000.00, segment: "b2b", category: "industry", seller: "TechServer LLC", image: "" },
-            { id: "3", name: "Пшеница высшего сорта (10 тонн)", price: 18000.00, segment: "b2g", category: "agriculture", seller: "Agro Holding", image: "" },
-            { id: "4", name: "Ноутбук Asus ZenBook Pro", price: 12500.00, segment: "b2c", category: "electronics", seller: "Asus Store", image: "" },
-            { id: "5", name: "Консервированная продукция (Партия)", price: 5400.00, segment: "b2b", category: "food", seller: "FoodLine Corp", image: "" }
-        ];
-
-        function loadLocalProducts() {
-            try {
-                const stored = localStorage.getItem('mp_products');
-                if (!stored) return [...DEFAULT_PRODUCTS];
-                const parsed = JSON.parse(stored);
-                return (Array.isArray(parsed) && parsed.length > 0) ? parsed : [...DEFAULT_PRODUCTS];
-            } catch (e) {
-                console.error("Ошибка чтения товаров:", e);
-                return [...DEFAULT_PRODUCTS];
-            }
+        // 2. Объявление функций рендеринга до вызова
+        function renderProducts() {
+            const container = document.getElementById('products-container');
+            if (!container) return;
+            
+            container.innerHTML = state.products.map(p => `
+                <div class="product-card glass-panel">
+                    <img src="${p.img}" alt="${p.name}" class="product-img">
+                    <h3>${p.name}</h3>
+                    <div class="product-price">${p.price} TMT</div>
+                    <button class="btn-glass" onclick="addToCart(${p.id})" data-i18n="btn_add_to_cart">Sebede goşmak</button>
+                </div>
+            `).join('');
+            
+            if (window.i18n) window.i18n.init();
         }
 
-        async function fetchServerProducts() {
-            if (!window.api || typeof window.api.request !== 'function') return loadLocalProducts();
-            try {
-                const rawListings = await window.api.request('/marketplace');
-                if (!Array.isArray(rawListings) || rawListings.length === 0) {
-                    return loadLocalProducts();
-                }
-                return rawListings.map(item => ({
-                    id: String(item._id || item.id),
-                    name: item.title || item.name || 'Без названия',
-                    price: Number(item.price) || 0,
-                    segment: item.segment || 'b2c',
-                    category: item.category || 'electronics',
-                    seller: typeof item.seller === 'object' ? (item.seller?.username || 'Sfera Seller') : (item.seller || 'Sfera Seller'),
-                    image: (item.images && item.images[0]) ? (item.images[0].url || item.images[0]) : (item.image || '')
-                }));
-            } catch (err) {
-                console.warn('[Marketplace] Загрузка с сервера не удалась, используем локальные данные:', err.message);
-                return loadLocalProducts();
-            }
-        }
-
-        let products = loadLocalProducts();
-        let cart = JSON.parse(localStorage.getItem('mp_cart') || '[]');
-        let wishlist = JSON.parse(localStorage.getItem('mp_wishlist') || '[]');
-        let currentSegment = 'all';
-        let currentCategory = 'all';
-
-        function showMessage(msg, type = 'success') {
-            const el = document.getElementById('message');
-            if (!el) return;
-            el.textContent = msg;
-            el.className = `message ${type}`;
-            el.style.display = 'block';
-            setTimeout(() => { el.style.display = 'none'; }, 3500);
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            renderCatalog();
-            renderCart();
-            renderAdminList();
-            renderWishlist();
-
-            const serverProducts = await fetchServerProducts();
-            if (serverProducts && serverProducts.length > 0) {
-                products = serverProducts;
-                localStorage.setItem('mp_products', JSON.stringify(products));
-                renderCatalog();
-                renderAdminList();
-            }
-        });
-
-        function renderCatalog() {
-            const container = document.getElementById('catalogContent');
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const totalEl = document.getElementById('cart-total');
+            const countEl = document.getElementById('cart-count');
             if (!container) return;
 
-            const searchInput = document.getElementById('searchInput');
-            const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+            let total = 0;
+            let count = 0;
 
-            const filtered = products.filter(p => {
-                if (!p) return false;
-                const matchSeg = currentSegment === 'all' || p.segment === currentSegment;
-                const matchCat = currentCategory === 'all' || p.category === currentCategory;
-                const pName = (p.name || '').toLowerCase();
-                const pSeller = (p.seller || '').toLowerCase();
-                const matchQuery = !query || pName.includes(query) || pSeller.includes(query);
-                return matchSeg && matchCat && matchQuery;
-            });
-
-            if (filtered.length === 0) {
-                container.innerHTML = `<div class="empty-state"><div class="icon">📦</div><p>Товары не найдены</p></div>`;
-                return;
-            }
-
-            // Используем перевод для кнопки из глобального объекта translations
-            const t = window.translations && window.translations[window.currentLang] ? window.translations[window.currentLang] : {};
-            const btnText = t.add_to_cart || 'В корзину';
-
-            container.innerHTML = `<div class="products-grid">` + filtered.map(p => {
-                const isFav = wishlist.includes(String(p.id));
+            container.innerHTML = state.cart.map(item => {
+                total += item.price * item.quantity;
+                count += item.quantity;
                 return `
-                    <div class="product-card">
-                        <span class="badge badge-${p.segment || 'b2c'}">${(p.segment || 'b2c').toUpperCase()}</span>
-                        <button class="favorite-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${p.id}')">★</button>
-                        <div class="image">
-                            ${p.image ? `<img src="${p.image}" alt="${p.name}">` : `<div class="no-img">🛍️</div>`}
+                    <div class="cart-item">
+                        <div>
+                            <strong>${item.name}</strong> (${item.quantity} sany)
                         </div>
-                        <div class="name">${p.name}</div>
-                        <div class="seller">🏢 ${p.seller || 'Продавец'}</div>
-                        <div class="price">${Number(p.price || 0).toFixed(2)} TMT</div>
-                        <button class="btn btn-primary" style="margin-top:10px; width:100%;" onclick="addToCart('${p.id}')">
-                            ${btnText}
-                        </button>
+                        <div>${item.price * item.quantity} TMT</div>
                     </div>
                 `;
-            }).join('') + `</div>`;
+            }).join('') || '<p>Sebet boş</p>';
+
+            if (totalEl) totalEl.textContent = total;
+            if (countEl) countEl.textContent = count;
         }
 
-        // Остальные функции (renderAdminList, deleteProduct, addToCart и т.д.) остаются без изменений...
-        // ... (они уже есть в вашем коде, я их не дублирую, чтобы не перегружать ответ)
-        // Продолжите с того места, где у вас заканчивается код.
+        function addToCart(id) {
+            const product = state.products.find(p => p.id === id);
+            if (!product) return;
+
+            const existing = state.cart.find(c => c.id === id);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                state.cart.push({ ...product, quantity: 1 });
+            }
+
+            renderCart();
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('section-catalog').style.display = tab === 'catalog' ? 'block' : 'none';
+            document.getElementById('section-cart').style.display = tab === 'cart' ? 'block' : 'none';
+        }
+
+        // 3. Фолбэк генерации частиц (если particles.js не сработал)
+        function ensureParticlesFallback() {
+            const canvas = document.getElementById('particles-canvas');
+            if (canvas && (!window.Particles || typeof window.Particles.init !== 'function')) {
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+                for (let i = 0; i < 30; i++) {
+                    ctx.beginPath();
+                    ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        // 4. Запуск при готовности DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            renderCart();
+            ensureParticlesFallback();
+        });
     </script>
 </body>
 </html>
