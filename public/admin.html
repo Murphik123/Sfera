@@ -14,15 +14,15 @@
 
     <style>
         :root {
-            color-scheme: light;
+            /* color-scheme: light; */
         }
 
         body {
             background:
                 radial-gradient(circle at top left, rgba(0,212,255,0.18), transparent 30%),
                 radial-gradient(circle at bottom right, rgba(0,255,170,0.16), transparent 28%),
-                linear-gradient(135deg, #f7fbff 0%, #edf6ff 40%, #fdfefe 100%);
-            color: #16304b;
+                linear-gradient(135deg, #0b111e 0%, #0f172a 40%, #080d1a 100%);
+            color: #e2e8f0;
             font-family: "Inter", sans-serif;
             margin: 0;
             padding: 0;
@@ -40,11 +40,11 @@
 
         .admin-sidebar {
             width: 270px;
-            background: rgba(255,255,255,0.62);
+            background: rgba(15, 23, 42, 0.65);
             backdrop-filter: blur(26px) saturate(180%);
             -webkit-backdrop-filter: blur(26px) saturate(180%);
-            border: 1px solid rgba(255,255,255,0.75);
-            box-shadow: 0 24px 70px rgba(19, 53, 86, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
             border-radius: 28px;
             padding: 22px 18px;
             flex-shrink: 0;
@@ -59,7 +59,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(255,255,255,0.16));
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
             pointer-events: none;
         }
 
@@ -76,29 +76,29 @@
             border-radius: 16px;
             margin-bottom: 8px;
             cursor: pointer;
-            color: #2d4d68;
+            color: #cbd5e1;
             transition: all .25s ease;
             display: flex;
             align-items: center;
             gap: 12px;
             font-weight: 600;
-            border: 1px solid transparent;
-            background: rgba(255,255,255,0.45);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
         }
 
         .admin-sidebar li:hover {
             transform: translateY(-2px);
-            background: rgba(255,255,255,0.78);
-            border-color: rgba(0,212,255,0.24);
-            color: #0f4d8f;
+            background: rgba(0, 212, 255, 0.15);
+            border-color: rgba(0,212,255,0.3);
+            color: #00d4ff;
         }
 
         .admin-sidebar li.active {
-            background: linear-gradient(135deg, rgba(0,212,255,0.16), rgba(255,255,255,0.95));
-            color: #0d5fbe;
-            box-shadow: 0 16px 30px rgba(0,212,255,0.14);
-            border-color: rgba(0,212,255,0.24);
+            background: linear-gradient(135deg, rgba(0,212,255,0.25), rgba(15,23,42,0.8));
+            color: #00d4ff;
+            box-shadow: 0 16px 30px rgba(0,212,255,0.2);
+            border-color: rgba(0,212,255,0.4);
         }
 
         .admin-sidebar li .icon {
@@ -119,13 +119,13 @@
             font-size: 34px;
             font-weight: 800;
             margin: 0 0 12px;
-            color: #12395d;
+            color: #ffffff;
             letter-spacing: -0.02em;
         }
 
         .admin-content .welcome {
             font-size: 16px;
-            color: #5e7b95;
+            color: #94a3b8;
             margin: 0 0 28px;
             max-width: 760px;
         }
@@ -138,8 +138,8 @@
         }
 
         .module-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.84), rgba(235,245,255,0.72));
-            border: 1px solid rgba(255,255,255,0.9);
+            background: rgba(15, 23, 42, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(24px) saturate(180%);
             -webkit-backdrop-filter: blur(24px) saturate(180%);
             border-radius: 22px;
@@ -147,9 +147,9 @@
             text-align: center;
             transition: all .3s ease;
             text-decoration: none;
-            color: #17344f;
+            color: #f1f5f9;
             display: block;
-            box-shadow: 0 18px 35px rgba(29, 74, 117, 0.10);
+            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.25);
             position: relative;
             overflow: hidden;
         }
@@ -167,8 +167,8 @@
 
         .module-card:hover {
             transform: translateY(-6px);
-            border-color: rgba(0,212,255,0.3);
-            box-shadow: 0 24px 48px rgba(22, 93, 146, 0.16);
+            border-color: rgba(0,212,255,0.4);
+            box-shadow: 0 24px 48px rgba(0, 212, 255, 0.15);
         }
 
         .module-card .icon {
@@ -179,31 +179,31 @@
         .module-card h3 {
             font-size: 20px;
             margin: 0 0 8px;
-            color: #12395d;
+            color: #ffffff;
         }
 
         .module-card p {
             font-size: 14px;
-            color: #5f7a92;
+            color: #94a3b8;
             margin: 0;
             line-height: 1.5;
         }
 
         .admin-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.82), rgba(240,247,255,0.72));
+            background: rgba(15, 23, 42, 0.55);
             backdrop-filter: blur(24px) saturate(180%);
             -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border: 1px solid rgba(255,255,255,0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 22px;
             padding: 22px 24px;
             margin-bottom: 24px;
-            box-shadow: 0 18px 40px rgba(29, 74, 117, 0.10);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
         }
 
         .admin-card h3 {
             font-size: 18px;
             margin: 0 0 14px;
-            color: #12395d;
+            color: #ffffff;
         }
 
         .admin-card .stat-grid {
@@ -214,22 +214,22 @@
         }
 
         .admin-card .stat-item {
-            background: rgba(255,255,255,0.64);
+            background: rgba(255, 255, 255, 0.05);
             padding: 16px;
             border-radius: 16px;
             text-align: center;
-            border: 1px solid rgba(255,255,255,0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .admin-card .stat-item .number {
             font-size: 28px;
             font-weight: 700;
-            color: #0b6fe4;
+            color: #00d4ff;
         }
 
         .admin-card .stat-item .label {
             font-size: 13px;
-            color: #66809a;
+            color: #94a3b8;
             margin-top: 4px;
         }
 
@@ -242,20 +242,20 @@
         .admin-table th {
             text-align: left;
             padding: 10px 12px;
-            color: #66809a;
+            color: #94a3b8;
             font-weight: 600;
-            border-bottom: 1px solid rgba(145, 178, 209, 0.25);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
         }
 
         .admin-table td {
             padding: 10px 12px;
-            border-bottom: 1px solid rgba(145, 178, 209, 0.16);
-            color: #29475d;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
         }
 
         .admin-table .badge {
             background: rgba(0,212,255,0.14);
-            color: #0a73c9;
+            color: #00d4ff;
             padding: 2px 10px;
             border-radius: 20px;
             font-size: 12px;
@@ -263,31 +263,31 @@
 
         .admin-table .badge.admin {
             background: rgba(255,200,0,0.16);
-            color: #c08a00;
+            color: #ffca28;
         }
 
         .admin-table .badge.user {
             background: rgba(0,255,170,0.12);
-            color: #1d7a58;
+            color: #00ffa3;
         }
 
         .logout-btn {
-            background: rgba(255,255,255,.72);
-            border: 1px solid rgba(255,255,255,.9);
-            color: #2d4d68;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #e2e8f0;
             padding: 10px 24px;
             border-radius: 12px;
             cursor: pointer;
             transition: .3s;
             font-weight: 600;
             margin-left: 12px;
-            box-shadow: 0 10px 24px rgba(29, 74, 117, 0.08);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
         }
 
         .logout-btn:hover {
-            background: rgba(255,0,0,.12);
-            border-color: rgba(255,0,0,.2);
-            color: #af2f2f;
+            background: rgba(255,0,0,0.2);
+            border-color: rgba(255,0,0,0.4);
+            color: #ff6b6b;
         }
 
         #particles {
@@ -372,7 +372,7 @@
             </a>
 
             <div class="header-right" style="display:flex; align-items:center; gap:12px;">
-                <span class="user-info">👑 <strong id="adminName">Admin</strong></span>
+                <span class="user-info">👑 <strong id="adminName" data-i18n="admin_admin">Admin</strong></span>
                 <a href="index.html" class="btn btn-outline" data-i18n="back" style="padding:8px 16px; font-size:13px; background:transparent; border:1px solid rgba(255,255,255,.15); color:white; border-radius:12px; text-decoration:none;">← Yza</a>
                 <button class="lang" id="langBtn">TM</button>
                 <button class="logout-btn" id="logoutBtn" data-i18n="logout">Çykmak</button>
@@ -481,8 +481,11 @@
         document.getElementById('adminName').textContent = userData.username || 'Admin';
 
         document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (window.SFERA_LOGOUT) return window.SFERA_LOGOUT();
             localStorage.removeItem('token');
+            localStorage.removeItem('sfera_token');
             localStorage.removeItem('user');
+            localStorage.removeItem('sfera_user');
             window.location.href = 'login.html';
         });
 
@@ -493,11 +496,11 @@
 
             if (section === 'dashboard') {
                 contentArea.innerHTML = `
-                    <h1>${t.welcome || 'Hoş geldiňiz!'}</h1>
-                    <p class="welcome">${t.dashboard_welcome || ''}</p>
+                    <h1 data-i18n="admin_t_welcome_ho_geldi_iz">${t.welcome || 'Hoş geldiňiz!'}</h1>
+                    <p class="welcome" data-i18n="admin_t_dashboard_welcome">${t.dashboard_welcome || ''}</p>
                     
                     <div class="modules-grid">
-                        <a href="marketplace.html" class="module-card"><div class="icon">🛒</div><h3>${t.module_marketplace || 'Marketplace'}</h3><p>${t.module_marketplace_desc || ''}</p></a>
+                        <a href="marketplace.html" class="module-card"><div class="icon">🛒</div><h3 data-i18n="admin_t_module_marketplace_marketplace">${t.module_marketplace || 'Marketplace'}</h3><p>${t.module_marketplace_desc || ''}</p></a>
                         <a href="bank.html" class="module-card"><div class="icon">🏦</div><h3>${t.module_bank || 'TM Bank'}</h3><p>${t.module_bank_desc || ''}</p></a>
                         <a href="messenger.html" class="module-card"><div class="icon">💬</div><h3>${t.module_messenger || 'Messenger'}</h3><p>${t.module_messenger_desc || ''}</p></a>
                         <a href="mailtm.html" class="module-card"><div class="icon">✉️</div><h3>${t.module_mail || 'TM Mail'}</h3><p>${t.module_mail_desc || ''}</p></a>
@@ -510,7 +513,7 @@
                     <div class="admin-card">
                         <h3>Platformanyň ýagdaýy</h3>
                         <div class="stat-grid">
-                            <div class="stat-item"><div class="number" id="statUsers">0</div><div class="label">Ulanyjylar</div></div>
+                            <div class="stat-item"><div class="number" id="statUsers">0</div><div class="label" data-i18n="admin_ulanyjylar">Ulanyjylar</div></div>
                             <div class="stat-item"><div class="number">24</div><div class="label">Sargytlar</div></div>
                             <div class="stat-item"><div class="number">142</div><div class="label">TM Coin söwdalary</div></div>
                             <div class="stat-item"><div class="number">8</div><div class="label">Hatlar</div></div>
@@ -520,7 +523,7 @@
                     <div class="admin-card">
                         <h3>Iň soňky ulanyjylar</h3>
                         <table class="admin-table">
-                            <thead><tr><th>Ulanyjy</th><th>Email</th><th>Rol</th><th>Döredilen</th></tr></thead>
+                            <thead><tr><th data-i18n="admin_ulanyjy">Ulanyjy</th><th>Email</th><th>Rol</th><th>Döredilen</th></tr></thead>
                             <tbody id="recentUsersBody"></tbody>
                         </table>
                     </div>
@@ -534,7 +537,7 @@
                         <table class="admin-table">
                             <thead><tr><th>Ulanyjy</th><th>Email</th><th>Rol</th><th>Hereket</th></tr></thead>
                             <tbody>
-                                <tr><td>admin</td><td>admin@sfera.tm</td><td><span class="badge admin">admin</span></td><td><div class="admin-actions"><button class="danger">Poz</button></div></td></tr>
+                                <tr><td data-i18n="admin_admin">admin</td><td>admin@sfera.tm</td><td><span class="badge admin">admin</span></td><td><div class="admin-actions"><button class="danger">Poz</button></div></td></tr>
                                 <tr><td>user1</td><td>user1@sfera.tm</td><td><span class="badge user">user</span></td><td><div class="admin-actions"><button>Üýtget</button><button class="danger">Poz</button></div></td></tr>
                             </tbody>
                         </table>
