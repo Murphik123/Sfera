@@ -605,6 +605,103 @@ header {
     padding: 8px 16px !important;
     border-radius: 12px !important;
 }    
+
+        /* ===== ВЫРАВНИВАНИЕ КНОПОК В ШАПКЕ ===== */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.header-right .logout-btn,
+.header-right .btn-switch,
+.header-right .lang {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+    background: rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    color: #dbe9ff !important;
+    text-decoration: none !important;
+    transition: all .3s !important;
+}
+
+.header-right .logout-btn:hover,
+.header-right .btn-switch:hover,
+.header-right .lang:hover {
+    background: rgba(255,255,255,0.15) !important;
+    border-color: rgba(0,212,255,0.5) !important;
+    color: #00d4ff !important;
+}
+
+.header-right .btn-switch {
+    margin-left: 4px;
+}
+
+/* ===== СООБЩЕНИЯ В ЧАТЕ ===== */
+.message.sent {
+    background: linear-gradient(135deg, #00d4ff, #008cff) !important;
+    color: #ffffff !important;
+    border-bottom-right-radius: 6px !important;
+}
+
+.message.received {
+    background: rgba(255,255,255,0.1) !important;
+    color: #e0e8f0 !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    border-bottom-left-radius: 6px !important;
+}
+
+.message.received .msg-time {
+    color: #9fb5c8 !important;
+}
+
+.message .msg-username {
+    color: #00d4ff !important;
+}
+
+/* ===== ФОН ЧАТА И САЙДБАРА ===== */
+.messenger-container {
+    background: linear-gradient(135deg, rgba(20,30,45,0.9), rgba(10,18,28,0.95)) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
+}
+
+.messenger-sidebar {
+    background: rgba(20,30,45,0.7) !important;
+    border-right: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+.messenger-chat {
+    background: rgba(15,25,40,0.5) !important;
+}
+
+/* ===== СПИСОК ДИАЛОГОВ ===== */
+.dialog-item {
+    color: #e0e8f0 !important;
+}
+
+.dialog-item.active {
+    background: rgba(0,212,255,0.12) !important;
+    border-left-color: #00d4ff !important;
+}
+
+.dialog-info .name {
+    color: #ffffff !important;
+}
+
+.dialog-info .last-msg {
+    color: #9fb5c8 !important;
+}
+
+.dialog-time {
+    color: #7a8fa6 !important;
+}
+        
     </style>
 </head>
 <body>
