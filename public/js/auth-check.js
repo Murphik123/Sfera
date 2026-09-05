@@ -41,15 +41,30 @@ window.fetch = async function (url, options = {}) {
     return originalFetch(url, options);
 };
 // ==========================================
-// Обработка глобальных кнопок "Выход" и "Назад"
+// Универсальная обработка кнопок "Выход" и "Назад"
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Обработка кнопки "Выход"
-    const logoutButtons = document.querySelectorAll('#logoutBtn, [data-action="logout"], .logout-btn');
-    logoutButtons.forEach(btn => {
-        btn.addEventListener('click', async (e) => {
+    // Делегирование кликов на весь документ
+    document.addEventListener('click', async (e) => {
+        const target = e.target.closest('button, a, div, span');
+        if (!target) return;
+
+        // Определяем идентификаторы элемента
+        const id = (target.id || '').toLowerCase();
+        const className = (target.className || '').toString().toLowerCase();
+        const action = (target.getAttribute('data-action') || '').toLowerCase();
+        const text = (target.textContent || '').trim().toLowerCase();
+
+        // 1. Проверка кнопки "Выход"
+        const isLogout = id.includes('logout') || 
+                         className.includes('logout') || 
+                         action === 'logout' || 
+                         text === 'выход' || 
+                         text === 'чыкмак' || 
+                         text === 'exit';
+
+        if (isLogout) {
             e.preventDefault();
-            
             try {
                 if (typeof api !== 'undefined' && api.post) {
                     await api.post('/api/auth/logout');
@@ -60,25 +75,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.warn('Ошибка при выходе на бэкенде:', err);
             } finally {
                 localStorage.removeItem('token');
+                localStorage.removeItem('sfera_token');
                 localStorage.removeItem('user');
                 sessionStorage.clear();
-                
                 window.location.href = 'login.html';
             }
-        });
-    });
+            return;
+        }
 
-    // 2. Обработка кнопки "Назад"
-    const backButtons = document.querySelectorAll('#backBtn, [data-action="back"], .back-btn');
-    backButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        // 2. Проверка кнопки "Назад"
+        const isBack = id.includes('back') || 
+                       className.includes('back') || 
+                       action === 'back' || 
+                       text === 'назад' || 
+                       text === 'ызына' || 
+                       text === 'go back';
+
+        if (isBack) {
             e.preventDefault();
-            
             if (window.history.length > 1 && document.referrer) {
                 window.history.back();
             } else {
                 window.location.href = 'dashboard.html';
             }
-        });
+        }
     });
 });
