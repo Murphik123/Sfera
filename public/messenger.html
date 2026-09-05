@@ -440,6 +440,49 @@ header {
             .chat-input-area .input-group input { min-width: 100%; }
             .emoji-picker { left: 10px; width: 250px; }
         }
+        /* Тёмные модальные окна */
+.group-modal, .call-modal {
+    background: rgba(0,0,0,0.7) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+}
+
+.group-modal .modal-box, .call-modal .modal-box {
+    background: rgba(20,30,45,0.95) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    color: white !important;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6) !important;
+}
+
+.group-modal .modal-box h2, .call-modal .modal-box h2 {
+    color: white !important;
+}
+
+.group-modal .modal-box .form-group label,
+.call-modal .modal-box .form-group label {
+    color: #dbe9ff !important;
+}
+
+.group-modal .modal-box .form-group input,
+.group-modal .modal-box .form-group select,
+.call-modal .modal-box .form-group input {
+    background: rgba(255,255,255,0.1) !important;
+    border-color: rgba(255,255,255,0.2) !important;
+    color: white !important;
+}
+
+.group-modal .modal-box .form-group input:focus,
+.group-modal .modal-box .form-group select:focus {
+    border-color: #00d4ff !important;
+    background: rgba(255,255,255,0.15) !important;
+}
+
+.group-modal .modal-box .form-actions .btn-cancel,
+.call-actions .btn-end-call {
+    background: rgba(255,77,77,0.14) !important;
+    border: 1px solid rgba(255,77,77,0.25) !important;
+    color: #be3d3d !important;
+}
     </style>
 </head>
 <body>
