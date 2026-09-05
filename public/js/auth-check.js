@@ -40,3 +40,45 @@ window.fetch = async function (url, options = {}) {
     }
     return originalFetch(url, options);
 };
+// ==========================================
+// Обработка глобальных кнопок "Выход" и "Назад"
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Обработка кнопки "Выход"
+    const logoutButtons = document.querySelectorAll('#logoutBtn, [data-action="logout"], .logout-btn');
+    logoutButtons.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            try {
+                if (typeof api !== 'undefined' && api.post) {
+                    await api.post('/api/auth/logout');
+                } else {
+                    await fetch('/api/auth/logout', { method: 'POST' });
+                }
+            } catch (err) {
+                console.warn('Ошибка при выходе на бэкенде:', err);
+            } finally {
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                sessionStorage.clear();
+                
+                window.location.href = 'login.html';
+            }
+        });
+    });
+
+    // 2. Обработка кнопки "Назад"
+    const backButtons = document.querySelectorAll('#backBtn, [data-action="back"], .back-btn');
+    backButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            if (window.history.length > 1 && document.referrer) {
+                window.history.back();
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        });
+    });
+});
