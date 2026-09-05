@@ -1,4 +1,15 @@
 /* ========== MAIN LAYOUT & BACKGROUND ========== */
+/* ========== SFERA CORE DARK SYSTEM ========== */
+:root {
+    color-scheme: dark;
+    --white: #ffffff;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-hover-bg: rgba(255, 255, 255, 0.08);
+    --glass-hover-border: rgba(0, 212, 255, 0.3);
+    --glass-bar-bg: rgba(13, 30, 44, 0.75);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,29 +17,17 @@
     font-family: "Inter", sans-serif;
 }
 
-body {
-    background: #0d1e2c; /* единый фон */
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background-color: #0d1e2c !important;
     color: var(--white);
     overflow-x: hidden;
     position: relative;
-    min-height: 100vh;
 }
 
-body::after {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-image:
-        linear-gradient(rgba(0, 212, 255, 0.008) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 212, 255, 0.008) 1px, transparent 1px);
-    background-size: 60px 60px;
-    pointer-events: none;
-    z-index: -1;
-}
-
+/* Динамический фон Sfera (голубое и зеленое свечение) */
 body::before {
     content: "";
     position: fixed;
@@ -36,15 +35,33 @@ body::before {
     height: 200%;
     top: -50%;
     left: -50%;
-    background:
-        radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.08), transparent 40%),
-        radial-gradient(circle at 80% 20%, rgba(0, 255, 163, 0.05), transparent 40%),
-        radial-gradient(circle at 60% 80%, rgba(31, 107, 255, 0.07), transparent 45%);
+    background: radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.12), transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 163, 0.08), transparent 40%),
+                radial-gradient(circle at 60% 80%, rgba(31, 107, 255, 0.1), transparent 45%);
     animation: bgmove 22s ease-in-out infinite alternate;
     pointer-events: none;
     z-index: -2;
 }
 
+/* Сетка интерфейса */
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes bgmove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-5%, -5%); }
+}
 @keyframes bgmove {
     0% { transform: translate(0, 0) rotate(0deg); }
     50% { transform: translate(-4%, -3%) rotate(2deg); }
