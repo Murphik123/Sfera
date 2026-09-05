@@ -567,13 +567,6 @@
         </div>
     </div>
 
-    <!-- Подключение файлов локализации, стилей и системных скриптов -->
-   <script src="js/particles.js"></script>
-<script src="js/particles-init.js"></script>
-<script src="js/constellation.js"></script>
-<script src="js/socket.js"></script>
-<script src="js/theme.js"></script>
-<script src="js/animations.js"></script>
 
     <script>
         // ============================================================
@@ -1107,13 +1100,23 @@
             selectDialog('assistant');
         }
 
-      // Init App
-        initMockData();
-        if (typeof setLanguage === 'function') {
-            setLanguage('tm');
-        }
-        applyLanguage();
-    </script>
-     <script src="js/auth-check.js"></script>
+      </script>
+
+
+<!-- Библиотека Socket.IO (обязательна) -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<!-- Обычные скрипты -->
+<script src="js/particles.js"></script>
+<script src="js/particles-init.js"></script>
+<script src="js/socket.js"></script>
+
+<!-- ES6-модули (тема, анимации, созвездия) -->
+<script type="module" src="js/theme.js"></script>
+<script type="module" src="js/animations.js"></script>
+<script type="module" src="js/constellation.js"></script>
+
+<!-- Скрипт проверки авторизации (один раз) -->
+<script src="js/auth-check.js"></script>
 </body>
 </html>
