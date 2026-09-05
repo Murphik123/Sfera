@@ -130,3 +130,58 @@ svg.turkmenistan-map:hover {
     filter: blur(0px) drop-shadow(0 0 25px rgba(0, 212, 255, 0.4));
     pointer-events: auto;
 }
+/* ==========================================
+   Стилизация Мессенджера (Glassmorphism UI)
+   ========================================== */
+.messenger-container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(25px) saturate(180%);
+    -webkit-backdrop-filter: blur(25px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+}
+
+.messenger-sidebar {
+    background: rgba(255, 255, 255, 0.03);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.messenger-chat {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.chat-header, 
+.chat-input-area {
+    background: var(--glass-bar-bg);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.chat-input-area .input-group input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    color: #fff;
+}
+
+.chat-input-area .input-group input:focus {
+    border-color: #00d4ff;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+}
+
+.dialog-item {
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.dialog-item:hover {
+    background: var(--glass-hover-bg);
+}
+
+.dialog-item.active {
+    background: rgba(0, 212, 255, 0.12);
+    border-left-color: #00d4ff;
+}
