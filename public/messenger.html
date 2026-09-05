@@ -482,81 +482,103 @@ header {
     border: 1px solid rgba(255,77,77,0.25) !important;
     color: #be3d3d !important;
 }
-        /* Тёмная тема для мессенджера */
-.messenger-container,
-.messenger-sidebar,
-.messenger-chat,
-.chat-header,
-.chat-input-area {
-    background: rgba(20, 30, 45, 0.85) !important;
-    border-color: rgba(255,255,255,0.15) !important;
-    color: white !important;
+ /* Мягкая тёмная тема для мессенджера */
+.messenger-container {
+    background: linear-gradient(135deg, rgba(30, 45, 65, 0.75), rgba(15, 25, 40, 0.85)) !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4) !important;
+    backdrop-filter: blur(20px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
 }
 
 .messenger-sidebar {
-    background: rgba(20, 30, 45, 0.9) !important;
-    border-right: 1px solid rgba(255,255,255,0.15) !important;
+    background: rgba(25, 35, 55, 0.7) !important;
+    border-right: 1px solid rgba(255,255,255,0.1) !important;
+    backdrop-filter: blur(15px) !important;
+}
+
+.messenger-chat {
+    background: rgba(25, 35, 55, 0.55) !important;
 }
 
 .chat-header {
-    background: rgba(20, 30, 45, 0.85) !important;
-    border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+    background: rgba(25, 35, 55, 0.75) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
 }
 
 .chat-input-area {
-    background: rgba(20, 30, 45, 0.9) !important;
-    border-top: 1px solid rgba(255,255,255,0.15) !important;
+    background: rgba(25, 35, 55, 0.8) !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
 }
 
-.dialog-item {
-    color: white !important;
-}
-
-.dialog-item:hover {
-    background: rgba(255,255,255,0.08) !important;
-}
-
-.dialog-item.active {
-    background: rgba(0,212,255,0.15) !important;
-    border-left-color: #00d4ff !important;
-}
-
+/* Текст */
 .dialog-info .name,
-.dialog-info .last-msg,
 .chat-name,
-.chat-status,
-.message.received {
-    color: white !important;
+.message.received,
+.empty-chat h3,
+.sidebar-header h2 {
+    color: #e0e8f0 !important;
 }
 
-.dialog-time {
+.dialog-info .last-msg,
+.chat-status,
+.dialog-time,
+.empty-chat p {
     color: #9fb5c8 !important;
 }
 
-.sidebar-header h2 {
-    color: white !important;
+/* Список диалогов */
+.dialog-item {
+    color: #e0e8f0 !important;
+    transition: background .2s;
 }
 
+.dialog-item:hover {
+    background: rgba(255,255,255,0.06) !important;
+}
+
+.dialog-item.active {
+    background: linear-gradient(90deg, rgba(0,212,255,0.15), rgba(0,212,255,0.05)) !important;
+    border-left-color: #00d4ff !important;
+}
+
+.dialog-avatar {
+    background: linear-gradient(135deg, rgba(0,212,255,0.3), rgba(255,255,255,0.1)) !important;
+    color: #00d4ff !important;
+}
+
+/* Поля ввода */
 .sidebar-search input,
 .chat-input-area .input-group input {
-    background: rgba(255,255,255,0.1) !important;
-    border-color: rgba(255,255,255,0.2) !important;
-    color: white !important;
+    background: rgba(255,255,255,0.08) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    color: #e0e8f0 !important;
 }
 
 .sidebar-search input::placeholder,
 .chat-input-area .input-group input::placeholder {
-    color: #9fb5c8 !important;
+    color: #7a8fa6 !important;
 }
 
-.empty-chat h3,
-.empty-chat p {
+/* Кнопки */
+.send-btn {
+    background: linear-gradient(135deg, #00d4ff, #008cff) !important;
     color: white !important;
+    box-shadow: 0 8px 20px rgba(0,212,255,0.3) !important;
 }
 
+.create-group-btn,
+.theme-toggle,
+.dropbtn {
+    background: rgba(255,255,255,0.1) !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    color: #e0e8f0 !important;
+}
+
+/* Эмодзи-пикер */
 .emoji-picker {
-    background: rgba(20,30,45,0.95) !important;
-    border-color: rgba(255,255,255,0.15) !important;
+    background: rgba(25, 35, 55, 0.95) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
 }
     </style>
 </head>
