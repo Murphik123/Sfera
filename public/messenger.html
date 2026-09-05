@@ -1100,6 +1100,13 @@
             selectDialog('assistant');
         }
 
+        initMockData();
+        if (typeof setLanguage === 'function') {
+            setLanguage('tm');
+        }
+        applyLanguage();
+        console.log('END inline');
+
       </script>
 
 
