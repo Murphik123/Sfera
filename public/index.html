@@ -822,20 +822,20 @@
                 </div>
                 <div class="logo-text">
                     <h2>СФЕРА</h2>
-                    <p>Национальная Цифровая Платформа</p>
+                    <p data-i18n="logo_subtitle">Национальная Цифровая Платформа</p>
                 </div>
             </a>
             <nav>
                 <ul>
-                    <li><a href="#">Главная</a></li>
-                    <li><a href="#">Биржа</a></li>
-                    <li><a href="#">TM Pay</a></li>
-                    <li><a href="#">TM Coin</a></li>
-                    <li><a href="#">Банк</a></li>
-                    <li><a href="#">ИИ</a></li>
-                    <li><a href="#">Документы</a></li>
-                    <li><a href="#">Контакты</a></li>
-                </ul>
+                       <a href="#" data-i18n="nav_home">Главная</a>                
+ <a href="#" data-i18n="nav_exchange">Биржа</a>                   
+   <a href="#" data-i18n="nav_tmpay">TM Pay</a>                
+   <a href="#" data-i18n="nav_tmcoin">TM Coin</a>                  
+ <a href="#" data-i18n="nav_bank">Банк</a>                  
+  <a href="#" data-i18n="nav_ai">ИИ</a>                  
+ <a href="#" data-i18n="nav_docs">Документы</a>                  
+ <a href="#" data-i18n="nav_contacts">Контакты</a>              
+ </ul>
             </nav>
             <div class="header-buttons">
                <button id="langBtn" class="lang">TM</button>
@@ -899,32 +899,58 @@
 
     <section class="modules">
         <h2 data-i18n="modules_title">Основные модули платформы</h2>
-        <div class="grid">
-            <div class="card"><div class="icon">🛒</div><h3>Биржа</h3><p>Электронная торговая площадка</p></div>
-            <div class="card"><div class="icon">💳</div><h3>TM Pay</h3><p>Национальная платежная система</p></div>
-            <div class="card"><div class="icon">₮</div><h3>TM Coin</h3><p>Цифровая государственная валюта</p></div>
-            <div class="card"><div class="icon">🏦</div><h3>Банк</h3><p>Цифровой банк "Благо"</p></div>
-            <div class="card"><div class="icon">🤖</div><h3>ИИ</h3><p>Проверка документов, прогнозирование, аналитика</p></div>
-            <div class="card"><div class="icon">📄</div><h3>Документы</h3><p>Автоматическая верификация</p></div>
+         <div class="card">
+    <div class="icon">🛒</div>
+    <h3 data-i18n="module_exchange_title">Биржа</h3>
+    <p data-i18n="module_exchange_desc">Электронная торговая площадка</p>
+</div>
+<div class="card">
+    <div class="icon">💳</div>
+    <h3 data-i18n="module_tmpay_title">TM Pay</h3>
+    <p data-i18n="module_tmpay_desc">Национальная платежная система</p>
+</div>
+<div class="card">
+    <div class="icon">₮</div>
+    <h3 data-i18n="module_tmcoin_title">TM Coin</h3>
+    <p data-i18n="module_tmcoin_desc">Цифровая государственная валюта</p>
+</div>
+<div class="card">
+    <div class="icon">🏦</div>
+    <h3 data-i18n="module_bank_title">Банк</h3>
+    <p data-i18n="module_bank_desc">Цифровой банк "Благо"</p>
+</div>
+<div class="card">
+    <div class="icon">🤖</div>
+    <h3 data-i18n="module_ai_title">ИИ</h3>
+    <p data-i18n="module_ai_desc">Проверка документов, прогнозирование, аналитика</p>
+</div>          
+<h3 data-i18n="module_docs_title">Документы</h3><p data-i18n="module_docs_desc">Автоматическая верификация</p>
         </div>
     </section>
 
     <section class="statistics">
-        <div class="stat"><h1 id="users">0</h1><p>Пользователей</p></div>
-        <div class="stat"><h1 id="orders">0</h1><p>Сделок</p></div>
-        <div class="stat"><h1 id="docs">0</h1><p>Документов</p></div>
-        <div class="stat"><h1 id="coin">0</h1><p>TM Coin</p></div>
-    </section>
-
-    <section class="news">
-        <h2>Последние новости</h2>
-        <div class="news-grid">
-            <div class="news-card"><h3>Запуск платформы</h3><p>Современная цифровая экосистема нового поколения.</p></div>
-            <div class="news-card"><h3>ИИ модуль</h3><p>Автоматическая проверка документов.</p></div>
-            <div class="news-card"><h3>TM Pay</h3><p>Национальная система мгновенных платежей.</p></div>
+    <div class="stat"><h1 id="users">0</h1><p data-i18n="stat_users">Пользователей</p></div>
+    <div class="stat"><h1 id="orders">0</h1><p data-i18n="stat_orders">Сделок</p></div>
+    <div class="stat"><h1 id="docs">0</h1><p data-i18n="stat_docs">Документов</p></div>
+    <div class="stat"><h1 id="coin">0</h1><p data-i18n="stat_coin">TM Coin</p></div>
+</section>
+   <section class="news">
+    <h2 data-i18n="news_title">Последние новости</h2>
+    <div class="news-grid">
+        <div class="news-card">
+            <h3 data-i18n="news_1_title">Запуск платформы</h3>
+            <p data-i18n="news_1_desc">Современная цифровая экосистема нового поколения.</p>
         </div>
-    </section>
-
+        <div class="news-card">
+            <h3 data-i18n="news_2_title">ИИ модуль</h3>
+            <p data-i18n="news_2_desc">Автоматическая проверка документов.</p>
+        </div>
+        <div class="news-card">
+            <h3 data-i18n="news_3_title">TM Pay</h3>
+            <p data-i18n="news_3_desc">Национальная система мгновенных платежей.</p>
+        </div>
+    </div>
+</section>
     <footer>
         <div class="container">
             <a href="index.html" class="logo">
@@ -952,10 +978,10 @@
                 </div>
                 <div class="logo-text">
                     <h2>СФЕРА</h2>
-                    <p>Национальная Цифровая Платформа</p>
+                   <p data-i18n="footer_logo_subtitle">Национальная Цифровая Платформа</p>
                 </div>
             </a>
-            <p>© 2026 — Единая цифровая платформа Туркменистана</p>
+            <p data-i18n="footer_copyright">© 2026 — Единая цифровая платформа Туркменистана</p>
         </div>
     </footer>
 
