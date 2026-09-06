@@ -82,6 +82,7 @@ function initActionButtons() {
         });
     }
 
+    /*
     const backLink = document.getElementById('backLink');
     if (backLink) {
         backLink.addEventListener('click', (e) => {
@@ -93,8 +94,8 @@ function initActionButtons() {
             }
         });
     }
+    */
 }
-
 // Запуск после загрузки DOM
 document.addEventListener('DOMContentLoaded', () => {
     initI18n();
