@@ -377,3 +377,29 @@ body::after {
     80% { opacity: 0.7; }
     100% { transform: translateY(-120vh) translateX(30px); opacity: 0; }
 }
+/* Единый стиль для кнопок в шапке */
+.header-right .lang,
+.header-right .logout-btn,
+.header-right .btn-switch,
+.header-right .btn-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all .3s;
+}
+
+.header-right .lang:hover,
+.header-right .logout-btn:hover,
+.header-right .btn-switch:hover,
+.header-right .btn-back:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: #00d4ff;
+    color: #00d4ff;
+}
