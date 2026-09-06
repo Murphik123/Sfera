@@ -865,14 +865,12 @@
 
         <div class="hero-content">
             <span class="hero-tag">СФЕРА — ЦИФРОВАЯ ПЛАТФОРМА</span>
-            <h1>Единая цифровая<br>платформа Туркменистана</h1>
-            <p class="hero-subtitle">Торговля • ИИ • Платежи • Банк • Документооборот</p>
-            <p class="hero-text">
-                Современная государственная цифровая экосистема, объединяющая электронную торговлю, интеллектуальную аналитику, финансовые сервисы, документооборот и цифровые государственные услуги.
-            </p>
+            <h1 data-i18n="hero_title">Единая цифровая<br>платформа Туркменистана</h1>
+            <p class="hero-subtitle" data-i18n="hero_subtitle">Торговля • ИИ • Платежи • Банк • Документооборот</p>
+                <p class="hero-text" data-i18n="hero_text">Современная государственная цифровая экосистема...</p>        
             <div class="hero-buttons">
-                <a href="dashboard.html" class="primary-btn">Начать работу</a>
-                <a href="#" class="glass-btn">Демо</a>
+                <a href="dashboard.html" class="primary-btn" data-i18n="start_btn">Начать работу</a>
+<a href="#" class="glass-btn" data-i18n="demo_btn">Демо</a>
             </div>
         </div>
 
@@ -900,7 +898,7 @@
     </section>
 
     <section class="modules">
-        <h2>Основные модули платформы</h2>
+        <h2 data-i18n="modules_title">Основные модули платформы</h2>
         <div class="grid">
             <div class="card"><div class="icon">🛒</div><h3>Биржа</h3><p>Электронная торговая площадка</p></div>
             <div class="card"><div class="icon">💳</div><h3>TM Pay</h3><p>Национальная платежная система</p></div>
@@ -1128,18 +1126,19 @@
             });
         });
 
-        // Переключение языка (сохранено без изменений)
-        const langButton = document.querySelector(".lang");
-        const langs = ["RU", "TM", "EN"];
-        let langIndex = 0;
-        if (langButton) {
-            langButton.addEventListener("click", () => {
-                langIndex++;
-                if (langIndex >= langs.length) langIndex = 0;
-                langButton.textContent = langs[langIndex];
-            });
-        }
-
+       /*
+// Переключение языка (сохранено без изменений)
+const langButton = document.querySelector(".lang");
+const langs = ["RU", "TM", "EN"];
+let langIndex = 0;
+if (langButton) {
+    langButton.addEventListener("click", () => {
+        langIndex++;
+        if (langIndex >= langs.length) langIndex = 0;
+        langButton.textContent = langs[langIndex];
+    });
+}
+*/
         // Эффект динамической пульсации ядра сферы
         const core = document.querySelector(".core-center");
         if (core) {
