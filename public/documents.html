@@ -706,7 +706,7 @@
         // ============================================================
         // УСТАНОВКА ЯЗЫКА
         // ============================================================
-        let currentLang = localStorage.getItem('lang') || 'ru';
+        let currentLang = window.currentLang || localStorage.getItem('lang') || 'tm';
 
         function setLanguage(lang) {
             if (!translations[lang]) return;
@@ -728,11 +728,20 @@
                 const key = opt.getAttribute('data-i18n');
                 if (translations[lang][key]) opt.textContent = translations[lang][key];
             });
-            document.getElementById('langBtn').textContent = lang.toUpperCase();
-            localStorage.setItem('lang', lang);
-            updateUI();
-        }
+  localStorage.setItem('lang', lang);
+    window.currentLang = lang;
+    
+    // ... остальной код (updateUI, обработчики) ...
+}
 
+           /*
+document.getElementById('langBtn').addEventListener('click', function() {
+    const cycle = ['ru', 'tm', 'en'];
+    let idx = cycle.indexOf(currentLang);
+    idx = (idx + 1) % cycle.length;
+    setLanguage(cycle[idx]);
+});
+*/
         function updateUI() {
             // Обновляем вкладки
             document.querySelectorAll('.doc-tabs button').forEach(btn => {
@@ -1190,5 +1199,6 @@
         renderChart();
         console.log('✅ Documents module with chart, filters, delete and storage loaded');
     </script>
+<script src="/scripts/auto_translate_i18n.js"></script>
 </body>
 </html>
