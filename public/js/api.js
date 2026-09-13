@@ -180,8 +180,13 @@
 
             return response?.user ||
                    response ||
-                   getStoredUser();
-        } catch {
+                   null;
+        } catch (error) {
+            if (error.status === 401) {
+                clearSession();
+                return null;
+            }
+
             return getStoredUser();
         }
     }
