@@ -7,15 +7,12 @@ const fs = require('fs');
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
-const { Server } = require('socket.io');
 const { checkQdrantConnection } = require('./src/services/qdrant.service');
 const connectDB = require('./src/config/db');
+const initSocket = require('./src/sockets');
 
 // Загрузка .env из корня проекта
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
-
-// Подключение к MongoDB
-connectDB();
 
 const app = express();
 
@@ -24,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../public')));
 
-// 1. Динамическое авто-подключение всех маршрутов из src/routes
+// Динамическое авто-подключение всех маршрутов из src/routes
 const routesDir = path.join(__dirname, 'src/routes');
 
 if (fs.existsSync(routesDir)) {
@@ -33,7 +30,6 @@ if (fs.existsSync(routesDir)) {
 
   files.forEach((file) => {
     if (file.endsWith('.js')) {
-      // Превращаем adminRoutes.js -> /api/admin
       const routeName = file.replace(/Routes\.js$|\.js$/, '').toLowerCase();
       const routePath = `/api/${routeName}`;
       const fullFilePath = path.join(routesDir, file);
@@ -54,12 +50,27 @@ app.get('/api/health', (req, res) => {
   res.json({ success: true, status: 'ok', uptime: Math.floor(process.uptime()) });
 });
 
-// Запуск сервера
 const PORT = process.env.PORT || 10000;
 const HOST = '0.0.0.0';
+const httpServer = http.createServer(app);
 
-app.listen(PORT, HOST, () => {
-  console.log(`🚀 Server running on http://${HOST}:${PORT}`);
-  console.log(`🔌 WebSocket готов`);
-  checkQdrantConnection();
-});
+// Один production Socket.IO gateway на общем HTTP-сервере.
+const io = initSocket(httpServer);
+app.set('io', io);
+
+async function startServer() {
+  try {
+    await connectDB();
+
+    httpServer.listen(PORT, HOST, () => {
+      console.log(`🚀 Server running on http://${HOST}:${PORT}`);
+      console.log(`🔌 WebSocket готов`);
+      checkQdrantConnection();
+    });
+  } catch (error) {
+    console.error('❌ Server startup failed:', error.message);
+    process.exit(1);
+  }
+}
+
+startServer();

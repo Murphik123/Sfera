@@ -1,4 +1,4 @@
-// src/sockets/index.js
+// SFERA — single authenticated Socket.IO gateway
 const { Server } = require('socket.io');
 const { verifyToken } = require('../utils/jwt');
 const Message = require('../models/Message');
@@ -6,16 +6,19 @@ const Message = require('../models/Message');
 module.exports = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: '*',
+      origin: process.env.SOCKET_CORS_ORIGIN || '*',
       methods: ['GET', 'POST'],
       credentials: true,
     },
   });
 
-  // Авторизация сокет-соединения через JWT
+  // Авторизация сокет-соединения через JWT.
+  // Идентичность всегда берётся из токена, а не из данных клиента.
   io.use((socket, next) => {
-    const token = socket.handshake.auth?.token || socket.handshake.headers?.authorization?.split(' ')[1];
-    
+    const token =
+      socket.handshake.auth?.token ||
+      socket.handshake.headers?.authorization?.split(' ')[1];
+
     if (!token) {
       return next(new Error('Authentication error: Token missing'));
     }
@@ -30,23 +33,32 @@ module.exports = (server) => {
   });
 
   io.on('connection', (socket) => {
-    console.log(`🟢 Пользователь ${socket.userId} подключился к WebSocket (${socket.id})`);
+    const userId = socket.userId;
 
-    // Подключаем пользователя к собственной личной комнате (для адресных уведомлений)
-    socket.join(socket.userId);
+    console.log(`🟢 Пользователь ${userId} подключился к WebSocket (${socket.id})`);
 
-    // Обработка отправки сообщения через сокет
-    socket.on('send_message', async (data) => {
+    // Персональная комната — основной механизм адресной доставки.
+    socket.join(userId);
+    io.emit('user_status_change', { userId, online: true });
+
+    // Совместимость со старым Messenger-клиентом.
+    // ВАЖНО: событие не может изменить socket.userId.
+    socket.on('register_user', () => {
+      io.emit('user_status_change', { userId, online: true });
+    });
+
+    // Сохранение и realtime-доставка сообщений.
+    socket.on('send_message', async (data = {}) => {
       try {
-        const { to, text, attachments } = data;
+        const { to, text, attachments = [] } = data;
 
         if (!to || !text) return;
 
         const message = new Message({
-          from: socket.userId,
+          from: userId,
           to,
           text,
-          attachments: attachments || []
+          attachments: attachments || [],
         });
 
         await message.save();
@@ -55,17 +67,59 @@ module.exports = (server) => {
           .populate('from', 'username avatar online')
           .populate('to', 'username avatar online');
 
-        // Отправляем только адресату и самому себе
-        io.to(to.toString()).emit('new_message', populatedMessage);
-        io.to(socket.userId).emit('new_message', populatedMessage);
-
+        io.to(String(to)).emit('new_message', populatedMessage);
+        io.to(userId).emit('new_message', populatedMessage);
       } catch (err) {
         console.error('❌ Socket send_message error:', err.message);
+        socket.emit('message_error', {
+          success: false,
+          error: 'Message delivery failed',
+        });
       }
     });
 
+    // WebRTC: инициатор звонка.
+    socket.on('call_user', (data = {}) => {
+      const target = data.userToCall;
+      if (!target) return;
+
+      io.to(String(target)).emit('incoming_call', {
+        signal: data.signalData,
+        from: userId,
+        isVideo: Boolean(data.isVideo),
+      });
+    });
+
+    // WebRTC: ответ на звонок.
+    socket.on('answer_call', (data = {}) => {
+      const target = data.to;
+      if (!target) return;
+
+      io.to(String(target)).emit('call_accepted', data.signal);
+    });
+
+    // WebRTC: ICE-кандидат.
+    socket.on('ice_candidate', (data = {}) => {
+      const target = data.to;
+      if (!target) return;
+
+      io.to(String(target)).emit('ice_candidate', {
+        candidate: data.candidate,
+        from: userId,
+      });
+    });
+
+    // WebRTC: завершение звонка.
+    socket.on('end_call', (data = {}) => {
+      const target = data.to;
+      if (!target) return;
+
+      io.to(String(target)).emit('call_ended');
+    });
+
     socket.on('disconnect', () => {
-      console.log(`🔴 Пользователь ${socket.userId} отключился от WebSocket`);
+      console.log(`🔴 Пользователь ${userId} отключился от WebSocket`);
+      io.emit('user_status_change', { userId, online: false });
     });
   });
 
