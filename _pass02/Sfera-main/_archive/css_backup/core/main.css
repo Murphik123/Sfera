@@ -1,0 +1,86 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: linear-gradient(135deg, var(--dark), var(--dark2), var(--dark3));
+    color: var(--white);
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: -10%;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(0,212,255,.15), transparent 35%),
+        radial-gradient(circle at 80% 20%, rgba(0,255,170,.10), transparent 35%),
+        radial-gradient(circle at 60% 80%, rgba(32,108,255,.15), transparent 40%);
+    animation: bgmove 18s linear infinite;
+    z-index: -2;
+}
+
+.container {
+    width: min(1400px, 92%);
+    margin: auto;
+}
+
+main.page-shell {
+    position: relative;
+    isolation: isolate;
+}
+
+section {
+    position: relative;
+}
+
+section + section {
+    margin-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.section-shell {
+    position: relative;
+    border: 1px solid var(--glass-border);
+    background: linear-gradient(135deg, var(--glass-strong), var(--glass-soft));
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    box-shadow: var(--shadow-soft);
+}
+
+.section-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255,255,255,.08), transparent 70%);
+    pointer-events: none;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 20px;
+}
+::-webkit-scrollbar-track {
+    background: var(--dark);
+}
+
+.hidden {
+    opacity: 0;
+    transform: translateY(60px);
+    transition: .8s;
+}
+
+.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
