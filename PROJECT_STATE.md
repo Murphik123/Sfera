@@ -1,7 +1,7 @@
 # SFERA — PROJECT STATE
 
 > Готовый снимок проекта для передачи в новый чат.
-> Сформирован: **2026-09-15 06:16:46**
+> Сформирован: **2026-09-15 15:49:21**
 > Локальная папка: `C:\Users\roman\SFERA1`
 
 ---
@@ -11,8 +11,8 @@
 - Проект: **SFERA / СФЕРА**
 - Путь: `C:\Users\roman\SFERA1`
 - Git branch: `main`
-- Текущий HEAD: `dc94fba0aeae28ff9af7d9f93e252a75e2e3f823`
-- HEAD предыдущей синхронизации: `(нет)`
+- Текущий HEAD: `6c8e16ca33bf915ad04f61079fcf2da8026b90b1`
+- HEAD предыдущей синхронизации: `dc94fba0aeae28ff9af7d9f93e252a75e2e3f823`
 
 ---
 
@@ -50,11 +50,7 @@
 # 3. GIT STATUS
 
 ```text
-?? PROJECT_NOTES.md
-?? __pycache__/
-?? _pass02/
-?? login-test.json
-?? sphere_sync.py
+M public/login.html
 ```
 
 ---
@@ -62,6 +58,14 @@
 # 4. ПОСЛЕДНИЕ 15 КОММИТОВ
 
 ```text
+6c8e16c | 2026-09-15 14:29:06 | fix: add login window glow
+b2a364f | 2026-09-15 14:19:32 | fix: improve login particle visibility
+30de52a | 2026-09-15 14:12:11 | fix: restore login particle layer
+f47400a | 2026-09-15 13:45:16 | fix: restore login floating particles
+dfc78ae | 2026-09-15 13:14:15 | fix: restore login design and email input
+f42b36f | 2026-09-15 09:01:04 | SFERA secure Messenger chat routes with central auth
+81c70c7 | 2026-09-15 06:17:29 | sync: сохранить точку dc94fba0aeae
+2e58d1c | 2026-09-15 06:16:57 | sync: 2026-09-15 06:16
 dc94fba | 2026-09-13 14:24:59 | SFERA fix invalid auth session handling
 bfd5b2e | 2026-09-13 13:53:08 | SFERA integrate Pass 04-C messenger backend
 48dbc94 | 2026-09-08 06:37:06 | Add bank HTML structure and styles
@@ -69,14 +73,6 @@ bfd5b2e | 2026-09-13 13:53:08 | SFERA integrate Pass 04-C messenger backend
 8844fce | 2026-09-06 16:51:23 | Update stylesheet links in messenger.html
 f6fa66e | 2026-09-06 16:44:42 | Add glass.css stylesheet to messenger.html
 f1ad8c3 | 2026-09-06 16:30:16 | Delete public/css/style.css
-e976d7b | 2026-09-06 16:26:56 | Change stylesheet link from style.css to main.css
-67a6b66 | 2026-09-06 16:09:27 | Add main layout and background styles
-f9c6134 | 2026-09-06 16:08:26 | Create style.css
-700baa8 | 2026-09-06 16:07:19 | Rename style.css to main.css
-ce98748 | 2026-09-06 16:02:29 | Add new style.css file
-a36a381 | 2026-09-06 15:10:17 | Add auth-check script to documents.html
-70a3e0d | 2026-09-06 14:55:59 | Improve language setting logic in documents.html
-cbb972f | 2026-09-06 12:43:40 | Refactor language keys for consistency in ru.json
 ```
 
 ---
@@ -84,7 +80,134 @@ cbb972f | 2026-09-06 12:43:40 | Refactor language keys for consistency in ru.jso
 # 5. DIFF --STAT С ПРЕДЫДУЩЕЙ СИНХРОНИЗАЦИИ
 
 ```text
-(Предыдущая синхронизация отсутствует.)
+.last_sync                                         |    1 +
+ PROJECT_NOTES.md                                   |   27 +
+ PROJECT_STATE.md                                   | 9274 ++++++++++++++++++++
+ __pycache__/sphere_sync.cpython-314.pyc            |  Bin 0 -> 20064 bytes
+ _pass02/STABLE-FOUNDATION-PASS-01.md               |   15 +
+ _pass02/Sfera-main/.clinerules                     |   20 +
+ _pass02/Sfera-main/.gitignore                      |    3 +
+ _pass02/Sfera-main/AGENTS.md                       |  145 +
+ _pass02/Sfera-main/API-CONTRACT-AUDIT.md           |   70 +
+ _pass02/Sfera-main/DOC-007.docx                    |  Bin 0 -> 76688 bytes
+ _pass02/Sfera-main/STABLE-FOUNDATION-PASS-02.md    |   13 +
+ _pass02/Sfera-main/TRANSFER-MANIFEST.md            |   36 +
+ .../_archive/css_backup/_design-vars.css           |  Bin 0 -> 1338 bytes
+ .../_archive/css_backup/components/cards.css       |  237 +
+ .../css_backup/components/glass-effects.css        |   81 +
+ .../_archive/css_backup/components/header.css      |  171 +
+ .../_archive/css_backup/components/hero.css        |  225 +
+ .../Sfera-main/_archive/css_backup/core/main.css   |   86 +
+ .../_archive/css_backup/core/variables.css         |   22 +
+ .../Sfera-main/_archive/css_backup/glass-utils.css |  Bin 0 -> 3820 bytes
+ .../Sfera-main/_archive/css_backup/particles.css   |  Bin 0 -> 1450 bytes
+ _pass02/Sfera-main/_archive/css_backup/sphere.css  |  Bin 0 -> 1950 bytes
+ _pass02/Sfera-main/_archive/css_backup/style.css   |    6 +
+ _pass02/Sfera-main/public/admin.html               |  596 ++
+ _pass02/Sfera-main/public/ai.html                  | 1236 +++
+ .../Sfera-main/public/assets/maps/turkmenistan.svg |   44 +
+ _pass02/Sfera-main/public/components/sphere.html   |  Bin 0 -> 2312 bytes
+ _pass02/Sfera-main/public/css/glass.css            |  187 +
+ _pass02/Sfera-main/public/css/main.css             |  405 +
+ _pass02/Sfera-main/public/css/ui.css               |  246 +
+ _pass02/Sfera-main/public/css/variables.css        |   15 +
+ _pass02/Sfera-main/public/dashboard.html           |  480 +
+ _pass02/Sfera-main/public/documents.html           | 1205 +++
+ _pass02/Sfera-main/public/index.html               |  929 ++
+ _pass02/Sfera-main/public/js/animations.js         |   86 +
+ _pass02/Sfera-main/public/js/api.js                |   53 +
+ _pass02/Sfera-main/public/js/auth-check.js         |  103 +
+ _pass02/Sfera-main/public/js/auth.js               |   81 +
+ _pass02/Sfera-main/public/js/constellation.js      |  Bin 0 -> 2824 bytes
+ _pass02/Sfera-main/public/js/i18n.js               |  395 +
+ _pass02/Sfera-main/public/js/main.js               |   96 +
+ _pass02/Sfera-main/public/js/particles-init.js     |  Bin 0 -> 2332 bytes
+ _pass02/Sfera-main/public/js/particles.js          |  117 +
+ _pass02/Sfera-main/public/js/socket.js             |  147 +
+ _pass02/Sfera-main/public/js/spotlight.js          |  Bin 0 -> 2158 bytes
+ _pass02/Sfera-main/public/js/theme.js              |   57 +
+ _pass02/Sfera-main/public/languages/en.json        |  378 +
+ _pass02/Sfera-main/public/languages/ru.json        |  378 +
+ _pass02/Sfera-main/public/languages/tm.json        |  378 +
+ _pass02/Sfera-main/public/login.html               |  443 +
+ _pass02/Sfera-main/public/mailtm.html              | 1420 +++
+ _pass02/Sfera-main/public/marketplace.html         | 1926 ++++
+ _pass02/Sfera-main/public/messenger.html           |  950 ++
+ _pass02/Sfera-main/public/register.html            |  615 ++
+ .../public/scripts/auto_translate_i18n.js          |  103 +
+ .../Sfera-main/public/scripts/find_copied_keys.js  |   22 +
+ _pass02/Sfera-main/public/scripts/update_i18n.js   |  103 +
+ _pass02/Sfera-main/public/tm-coin.html             | 1358 +++
+ _pass02/Sfera-main/public/tm-pay.html              | 1167 +++
+ _pass02/Sfera-main/server/.gitignore               |    4 +
+ _pass02/Sfera-main/server/config/qdrant.js         |   34 +
+ _pass02/Sfera-main/server/embeddingService.js      |   52 +
+ _pass02/Sfera-main/server/initCollection.js        |   28 +
+ _pass02/Sfera-main/server/package-lock.json        | 3437 ++++++++
+ _pass02/Sfera-main/server/package.json             |   28 +
+ _pass02/Sfera-main/server/qdrant.js                |   88 +
+ _pass02/Sfera-main/server/seedQdrant.js            |  101 +
+ _pass02/Sfera-main/server/server.js                |   86 +
+ _pass02/Sfera-main/server/src/app.js               |   81 +
+ _pass02/Sfera-main/server/src/config/db.js         |   32 +
+ _pass02/Sfera-main/server/src/config/redis.js      |   64 +
+ _pass02/Sfera-main/server/src/config/upload.js     |   27 +
+ .../server/src/controllers/adminController.js      |  246 +
+ .../server/src/controllers/aiController.js         |   25 +
+ .../server/src/controllers/authController.js       |  160 +
+ .../server/src/controllers/bankController.js       |  120 +
+ .../server/src/controllers/chatController.js       |  207 +
+ .../server/src/controllers/listingController.js    |  148 +
+ .../server/src/controllers/mailController.js       |   41 +
+ .../src/controllers/marketplaceController.js       |  316 +
+ .../server/src/controllers/paymentController.js    |  151 +
+ .../server/src/controllers/predictionController.js |   21 +
+ .../server/src/controllers/searchController.js     |   21 +
+ .../Sfera-main/server/src/middleware/adminAuth.js  |   17 +
+ _pass02/Sfera-main/server/src/middleware/auth.js   |   50 +
+ .../server/src/middleware/errorHandler.js          |    8 +
+ _pass02/Sfera-main/server/src/models/Account.js    |   24 +
+ _pass02/Sfera-main/server/src/models/Listing.js    |   60 +
+ _pass02/Sfera-main/server/src/models/Mail.js       |   33 +
+ _pass02/Sfera-main/server/src/models/Message.js    |   31 +
+ _pass02/Sfera-main/server/src/models/Order.js      |   47 +
+ _pass02/Sfera-main/server/src/models/Prediction.js |   11 +
+ .../Sfera-main/server/src/models/Transaction.js    |   47 +
+ _pass02/Sfera-main/server/src/models/User.js       |   69 +
+ _pass02/Sfera-main/server/src/models/Wallet.js     |   40 +
+ .../Sfera-main/server/src/routes/adminRoutes.js    |   35 +
+ _pass02/Sfera-main/server/src/routes/aiRoutes.js   |   11 +
+ _pass02/Sfera-main/server/src/routes/authRoutes.js |  127 +
+ _pass02/Sfera-main/server/src/routes/bankRoutes.js |   11 +
+ _pass02/Sfera-main/server/src/routes/chatRoutes.js |   18 +
+ .../Sfera-main/server/src/routes/listingRoutes.js  |   24 +
+ _pass02/Sfera-main/server/src/routes/mailRoutes.js |   16 +
+ .../server/src/routes/marketplaceRoutes.js         |   16 +
+ .../Sfera-main/server/src/routes/paymentRoutes.js  |   12 +
+ .../server/src/routes/predictionRoutes.js          |    8 +
+ .../Sfera-main/server/src/routes/searchRoutes.js   |   53 +
+ .../Sfera-main/server/src/routes/statsRoutes.js    |   18 +
+ _pass02/Sfera-main/server/src/routes/userRoutes.js |   81 +
+ _pass02/Sfera-main/server/src/seed.js              |   61 +
+ .../server/src/services/embedding.service.js       |   83 +
+ .../server/src/services/qdrant.service.js          |   41 +
+ _pass02/Sfera-main/server/src/sockets/index.js     |  107 +
+ .../Sfera-main/server/src/sockets/serverSocket.js  |    3 +
+ _pass02/Sfera-main/server/src/utils/jwt.js         |   25 +
+ _pass02/Sfera-main/server/test-qdrant.js           |   55 +
+ _pass02/Sfera-main/server/test-vector.mjs          |   33 +
+ _pass02/Sfera-main/server/testSearch.js            |   40 +
+ _pass02/Sfera-main/server/testVectorSearch.js      |   36 +
+ _pass02/Sfera-main/server/tests/userRoutes.test.js |   46 +
+ _pass02/Sfera-main/server/vectorStore.js           |   59 +
+ _pass02/Sfera-main/temp_check_i18n.py              |   13 +
+ _pass02/Sfera-main/update_lang_dicts.py            |  546 ++
+ _pass02/Sfera-main/update_translations.py          |   74 +
+ login-test.json                                    |    1 +
+ public/login.html                                  |    9 +-
+ server/src/routes/chatRoutes.js                    |    3 +-
+ sphere_sync.py                                     |  588 ++
+ 127 files changed, 34355 insertions(+), 4 deletions(-)
 ```
 
 ---
@@ -95,6 +218,10 @@ cbb972f | 2026-09-06 12:43:40 | Refactor language keys for consistency in ru.jso
 |---|---:|
 | `.clinerules` | 20 |
 | `.gitignore` | 3 |
+| `.last_sync` | 1 |
+| `PROJECT_NOTES.md` | 27 |
+| `PROJECT_STATE.md` | 9274 |
+| `__pycache__/sphere_sync.cpython-314.pyc` | 302 |
 | `_archive/css_backup/_design-vars.css` | 34 |
 | `_archive/css_backup/components/cards.css` | 237 |
 | `_archive/css_backup/components/glass-effects.css` | 81 |
@@ -106,6 +233,126 @@ cbb972f | 2026-09-06 12:43:40 | Refactor language keys for consistency in ru.jso
 | `_archive/css_backup/particles.css` | 31 |
 | `_archive/css_backup/sphere.css` | 25 |
 | `_archive/css_backup/style.css` | 6 |
+| `_pass02/STABLE-FOUNDATION-PASS-01.md` | 15 |
+| `_pass02/Sfera-main/.clinerules` | 20 |
+| `_pass02/Sfera-main/.gitignore` | 3 |
+| `_pass02/Sfera-main/AGENTS.md` | 145 |
+| `_pass02/Sfera-main/API-CONTRACT-AUDIT.md` | 70 |
+| `_pass02/Sfera-main/DOC-007.docx` | 603 |
+| `_pass02/Sfera-main/STABLE-FOUNDATION-PASS-02.md` | 13 |
+| `_pass02/Sfera-main/TRANSFER-MANIFEST.md` | 36 |
+| `_pass02/Sfera-main/_archive/css_backup/_design-vars.css` | 34 |
+| `_pass02/Sfera-main/_archive/css_backup/components/cards.css` | 237 |
+| `_pass02/Sfera-main/_archive/css_backup/components/glass-effects.css` | 81 |
+| `_pass02/Sfera-main/_archive/css_backup/components/header.css` | 171 |
+| `_pass02/Sfera-main/_archive/css_backup/components/hero.css` | 225 |
+| `_pass02/Sfera-main/_archive/css_backup/core/main.css` | 86 |
+| `_pass02/Sfera-main/_archive/css_backup/core/variables.css` | 22 |
+| `_pass02/Sfera-main/_archive/css_backup/glass-utils.css` | 74 |
+| `_pass02/Sfera-main/_archive/css_backup/particles.css` | 31 |
+| `_pass02/Sfera-main/_archive/css_backup/sphere.css` | 25 |
+| `_pass02/Sfera-main/_archive/css_backup/style.css` | 6 |
+| `_pass02/Sfera-main/public/admin.html` | 596 |
+| `_pass02/Sfera-main/public/ai.html` | 1236 |
+| `_pass02/Sfera-main/public/assets/maps/turkmenistan.svg` | 44 |
+| `_pass02/Sfera-main/public/components/sphere.html` | 15 |
+| `_pass02/Sfera-main/public/css/glass.css` | 187 |
+| `_pass02/Sfera-main/public/css/main.css` | 405 |
+| `_pass02/Sfera-main/public/css/ui.css` | 246 |
+| `_pass02/Sfera-main/public/css/variables.css` | 15 |
+| `_pass02/Sfera-main/public/dashboard.html` | 480 |
+| `_pass02/Sfera-main/public/documents.html` | 1205 |
+| `_pass02/Sfera-main/public/index.html` | 929 |
+| `_pass02/Sfera-main/public/js/animations.js` | 86 |
+| `_pass02/Sfera-main/public/js/api.js` | 53 |
+| `_pass02/Sfera-main/public/js/auth-check.js` | 103 |
+| `_pass02/Sfera-main/public/js/auth.js` | 81 |
+| `_pass02/Sfera-main/public/js/constellation.js` | 41 |
+| `_pass02/Sfera-main/public/js/i18n.js` | 395 |
+| `_pass02/Sfera-main/public/js/main.js` | 96 |
+| `_pass02/Sfera-main/public/js/particles-init.js` | 31 |
+| `_pass02/Sfera-main/public/js/particles.js` | 117 |
+| `_pass02/Sfera-main/public/js/socket.js` | 147 |
+| `_pass02/Sfera-main/public/js/spotlight.js` | 32 |
+| `_pass02/Sfera-main/public/js/theme.js` | 57 |
+| `_pass02/Sfera-main/public/languages/en.json` | 378 |
+| `_pass02/Sfera-main/public/languages/ru.json` | 378 |
+| `_pass02/Sfera-main/public/languages/tm.json` | 378 |
+| `_pass02/Sfera-main/public/login.html` | 443 |
+| `_pass02/Sfera-main/public/mailtm.html` | 1420 |
+| `_pass02/Sfera-main/public/marketplace.html` | 1926 |
+| `_pass02/Sfera-main/public/messenger.html` | 950 |
+| `_pass02/Sfera-main/public/register.html` | 615 |
+| `_pass02/Sfera-main/public/scripts/auto_translate_i18n.js` | 103 |
+| `_pass02/Sfera-main/public/scripts/find_copied_keys.js` | 22 |
+| `_pass02/Sfera-main/public/scripts/update_i18n.js` | 103 |
+| `_pass02/Sfera-main/public/tm-coin.html` | 1358 |
+| `_pass02/Sfera-main/public/tm-pay.html` | 1167 |
+| `_pass02/Sfera-main/server/.gitignore` | 4 |
+| `_pass02/Sfera-main/server/config/qdrant.js` | 34 |
+| `_pass02/Sfera-main/server/embeddingService.js` | 52 |
+| `_pass02/Sfera-main/server/initCollection.js` | 28 |
+| `_pass02/Sfera-main/server/package-lock.json` | 3437 |
+| `_pass02/Sfera-main/server/package.json` | 28 |
+| `_pass02/Sfera-main/server/qdrant.js` | 88 |
+| `_pass02/Sfera-main/server/seedQdrant.js` | 101 |
+| `_pass02/Sfera-main/server/server.js` | 86 |
+| `_pass02/Sfera-main/server/src/app.js` | 81 |
+| `_pass02/Sfera-main/server/src/config/db.js` | 32 |
+| `_pass02/Sfera-main/server/src/config/redis.js` | 64 |
+| `_pass02/Sfera-main/server/src/config/upload.js` | 27 |
+| `_pass02/Sfera-main/server/src/controllers/adminController.js` | 246 |
+| `_pass02/Sfera-main/server/src/controllers/aiController.js` | 25 |
+| `_pass02/Sfera-main/server/src/controllers/authController.js` | 160 |
+| `_pass02/Sfera-main/server/src/controllers/bankController.js` | 120 |
+| `_pass02/Sfera-main/server/src/controllers/chatController.js` | 207 |
+| `_pass02/Sfera-main/server/src/controllers/listingController.js` | 148 |
+| `_pass02/Sfera-main/server/src/controllers/mailController.js` | 41 |
+| `_pass02/Sfera-main/server/src/controllers/marketplaceController.js` | 316 |
+| `_pass02/Sfera-main/server/src/controllers/paymentController.js` | 151 |
+| `_pass02/Sfera-main/server/src/controllers/predictionController.js` | 21 |
+| `_pass02/Sfera-main/server/src/controllers/searchController.js` | 21 |
+| `_pass02/Sfera-main/server/src/middleware/adminAuth.js` | 17 |
+| `_pass02/Sfera-main/server/src/middleware/auth.js` | 50 |
+| `_pass02/Sfera-main/server/src/middleware/errorHandler.js` | 8 |
+| `_pass02/Sfera-main/server/src/models/Account.js` | 24 |
+| `_pass02/Sfera-main/server/src/models/Listing.js` | 60 |
+| `_pass02/Sfera-main/server/src/models/Mail.js` | 33 |
+| `_pass02/Sfera-main/server/src/models/Message.js` | 31 |
+| `_pass02/Sfera-main/server/src/models/Order.js` | 47 |
+| `_pass02/Sfera-main/server/src/models/Prediction.js` | 11 |
+| `_pass02/Sfera-main/server/src/models/Transaction.js` | 47 |
+| `_pass02/Sfera-main/server/src/models/User.js` | 69 |
+| `_pass02/Sfera-main/server/src/models/Wallet.js` | 40 |
+| `_pass02/Sfera-main/server/src/routes/adminRoutes.js` | 35 |
+| `_pass02/Sfera-main/server/src/routes/aiRoutes.js` | 11 |
+| `_pass02/Sfera-main/server/src/routes/authRoutes.js` | 127 |
+| `_pass02/Sfera-main/server/src/routes/bankRoutes.js` | 11 |
+| `_pass02/Sfera-main/server/src/routes/chatRoutes.js` | 18 |
+| `_pass02/Sfera-main/server/src/routes/listingRoutes.js` | 24 |
+| `_pass02/Sfera-main/server/src/routes/mailRoutes.js` | 16 |
+| `_pass02/Sfera-main/server/src/routes/marketplaceRoutes.js` | 16 |
+| `_pass02/Sfera-main/server/src/routes/paymentRoutes.js` | 12 |
+| `_pass02/Sfera-main/server/src/routes/predictionRoutes.js` | 8 |
+| `_pass02/Sfera-main/server/src/routes/searchRoutes.js` | 53 |
+| `_pass02/Sfera-main/server/src/routes/statsRoutes.js` | 18 |
+| `_pass02/Sfera-main/server/src/routes/userRoutes.js` | 81 |
+| `_pass02/Sfera-main/server/src/seed.js` | 61 |
+| `_pass02/Sfera-main/server/src/services/embedding.service.js` | 83 |
+| `_pass02/Sfera-main/server/src/services/qdrant.service.js` | 41 |
+| `_pass02/Sfera-main/server/src/sockets/index.js` | 107 |
+| `_pass02/Sfera-main/server/src/sockets/serverSocket.js` | 3 |
+| `_pass02/Sfera-main/server/src/utils/jwt.js` | 25 |
+| `_pass02/Sfera-main/server/test-qdrant.js` | 55 |
+| `_pass02/Sfera-main/server/test-vector.mjs` | 33 |
+| `_pass02/Sfera-main/server/testSearch.js` | 40 |
+| `_pass02/Sfera-main/server/testVectorSearch.js` | 36 |
+| `_pass02/Sfera-main/server/tests/userRoutes.test.js` | 46 |
+| `_pass02/Sfera-main/server/vectorStore.js` | 59 |
+| `_pass02/Sfera-main/temp_check_i18n.py` | 13 |
+| `_pass02/Sfera-main/update_lang_dicts.py` | 546 |
+| `_pass02/Sfera-main/update_translations.py` | 74 |
+| `login-test.json` | 1 |
 | `public/admin.html` | 596 |
 | `public/ai.html` | 1236 |
 | `public/assets/maps/turkmenistan.svg` | 44 |
@@ -134,7 +381,7 @@ cbb972f | 2026-09-06 12:43:40 | Refactor language keys for consistency in ru.jso
 | `public/languages/en.json` | 308 |
 | `public/languages/ru.json` | 308 |
 | `public/languages/tm.json` | 308 |
-| `public/login.html` | 443 |
+| `public/login.html` | 462 |
 | `public/mailtm.html` | 1420 |
 | `public/marketplace.html` | 719 |
 | `public/messenger.html` | 579 |
@@ -5672,7 +5919,7 @@ cbb972f | 2026-09-06 12:43:40 | Refactor language keys for consistency in ru.jso
 | `server/src/routes/aiRoutes.js` | 11 |
 | `server/src/routes/authRoutes.js` | 25 |
 | `server/src/routes/bankRoutes.js` | 11 |
-| `server/src/routes/chatRoutes.js` | 18 |
+| `server/src/routes/chatRoutes.js` | 19 |
 | `server/src/routes/listingRoutes.js` | 24 |
 | `server/src/routes/mailRoutes.js` | 16 |
 | `server/src/routes/marketplaceRoutes.js` | 16 |
@@ -5693,6 +5940,7 @@ cbb972f | 2026-09-06 12:43:40 | Refactor language keys for consistency in ru.jso
 | `server/testVectorSearch.js` | 36 |
 | `server/tests/userRoutes.test.js` | 46 |
 | `server/vectorStore.js` | 59 |
+| `sphere_sync.py` | 588 |
 | `temp_check_i18n.py` | 13 |
 | `update_lang_dicts.py` | 546 |
 | `update_translations.py` | 74 |
@@ -6134,13 +6382,14 @@ module.exports = router;
 ```text
 // src/routes/chatRoutes.js
 const router = require('express').Router();
+const authMiddleware = require('../middleware/auth');
 const { 
   sendMessage, 
   getMessages, 
   markAsRead, 
   getDialogs 
 } = require('../controllers/chatController');
-
+router.use(authMiddleware);
 // 1. Статические роуты первыми!
 router.get('/dialogs', getDialogs);
 router.post('/send', sendMessage);

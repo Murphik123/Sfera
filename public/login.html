@@ -17,6 +17,22 @@
     <script src="js/auth-check.js"></script>
 
     <style>
+        body::before {
+            content: "";
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 30%, rgba(0,212,255,.15), transparent 35%), radial-gradient(circle at 80% 20%, rgba(0,255,170,.10), transparent 35%), radial-gradient(circle at 60% 80%, rgba(32,108,255,.15), transparent 40%);
+            animation: bgmove 18s linear infinite;
+            z-index: -2;
+        }
+
+        @keyframes bgmove {
+            0% { transform: translate(0,0); }
+            50% { transform: translate(-8%,-5%); }
+            100% { transform: translate(0,0); }
+        }
+
         /* Специфичные стили для контейнера входа */
         .login-page {
             min-height: 100vh;
@@ -29,9 +45,9 @@
         }
 
         .login-box {
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            background: radial-gradient(circle at 50% 30%, rgba(0, 212, 255, 0.15), rgba(255, 255, 255, 0.03));
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
             border: 1px solid var(--border, rgba(255, 255, 255, 0.18));
             border-radius: 24px;
             padding: 40px 35px;
