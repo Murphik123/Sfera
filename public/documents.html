@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>СФЕРА — Resmiýetler</title>
 
-    <!-- Подключение централизованных стилей -->
+    <!-- Подключение централизованного стиля -->
     <link rel="stylesheet" href="public/css/main.css" />
-    <link rel="stylesheet" href="/css/style.css" />
     
     <!-- Chart.js для круговой диаграммы -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -367,9 +366,9 @@
     <div class="bg-grid"></div>
     <div id="particles"></div>
 
-    <!-- ЕДИНАЯ ШАПКА -->
+    <!-- ЕДИНАЯ ШАПКА С КНОПКАМИ СПРАВА -->
     <header>
-        <div class="container">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center;">
             <a href="index.html" class="logo">
                 <div class="logo-icon">
                     <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -398,8 +397,8 @@
                 </div>
             </a>
 
-            <!-- ЭЛЕМЕНТЫ УПРАВЛЕНИЯ СПРАВА В ШАПКЕ -->
-            <div class="header-right header-buttons">
+            <!-- ЭЛЕМЕНТЫ УПРАВЛЕНИЯ СПРАВА -->
+            <div class="header-right header-buttons" style="margin-left: auto; display: flex; align-items: center; gap: 12px;">
                 <span class="user-info">👤 <strong id="username">User</strong></span>
                 <button class="lang-btn" id="langBtn">TM</button>
                 <button class="logout-btn btn-danger" id="logoutBtn" style="padding: 8px 16px; border-radius: 12px; cursor: pointer;">🚪 Çykmak</button>
@@ -534,15 +533,6 @@
     <script src="public/scripts/auto_translate_i18n.js"></script>
 
     <script>
-        /*
-        // СТАРЫЙ ЛОКАЛЬНЫЙ МАССИВ ПЕРЕВОДОВ (ЗАКОММЕНТИРОВАНО)
-        const translations = {
-            ru: { logo_subtitle: "Национальная Цифровая Платформа", ... },
-            tm: { logo_subtitle: "Milli Sanly Platforma", ... },
-            en: { logo_subtitle: "National Digital Platform", ... }
-        };
-        */
-
         // ============================================================
         // ИНИЦИАЛИЗАЦИЯ ЯЗЫКА (по умолчанию 'tm')
         // ============================================================
