@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="dashboard_page_title">СФЕРА — Пользовательский дашборд</title>
+    <title data-i18n="dashboard_page_title">СФЕРА — Дашборд</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -420,7 +420,7 @@
             <h1><span data-i18n="welcome_title">👋 Hoş geldiňiz</span>, <span id="greetingUser">User</span>!</h1>
             <p class="welcome" data-i18n="welcome_subtitle">Platformanyň modullaryna giriş etmek üçin aşakdaky kartlardan saýlaň.</p>
             
-            <div class="grid">
+            <div class="grid" id="dashboardGrid">
                 <a href="marketplace.html" class="card">
                     <div class="icon">🛒</div>
                     <h3 data-i18n="card_marketplace">Marketpleýs</h3>
@@ -465,45 +465,12 @@
         </div>
     </section>
 
-    <!-- ПОДКТЮЧЕНИЕ АВТО-ПЕРЕВОДЧИКА И ПРОВЕРКИ АВТОРИЗАЦИИ С КНОПКОЙ НАЗАД -->
+    <!-- ПОДКЛЮЧЕНИЕ АВТО-ПЕРЕВОДЧИКА И ПРОВЕРКИ АВТОРИЗАЦИИ С КНОПКОЙ НАЗАД -->
     <script src="public/scripts/auto_translate_i18n.js"></script>
     <script src="public/js/auth-check.js"></script>
 
     <script>
-        /* 
-        ==========================================================================
-        ЛОКАЛЬНЫЙ ПЕРЕВОДЧИК ЗАКОММЕНТИРОВАН (Используется public/scripts/auto_translate_i18n.js)
-        ==========================================================================
-        const translations = {
-            ru: { ... },
-            tm: { ... },
-            en: { ... }
-        };
-
-        let currentLang = localStorage.getItem('lang') || 'ru';
-
-        function setLanguage(lang) {
-            if (!translations[lang]) return;
-            currentLang = lang;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    el.textContent = translations[lang][key];
-                }
-            });
-            document.getElementById('langBtn').textContent = lang.toUpperCase();
-            localStorage.setItem('lang', lang);
-        }
-
-        document.getElementById('langBtn').addEventListener('click', function() {
-            const cycle = ['ru', 'tm', 'en'];
-            let idx = cycle.indexOf(currentLang);
-            idx = (idx + 1) % cycle.length;
-            setLanguage(cycle[idx]);
-        });
-        */
-
-        // Проверка авторизации и логика дашборда
+        // Проверка авторизации и логика единого дашборда
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         const token = localStorage.getItem('token');
 
@@ -511,8 +478,38 @@
             window.location.href = 'login.html';
         }
 
-        document.getElementById('username').textContent = user.username || 'User';
-        document.getElementById('greetingUser').textContent = user.username || 'User';
+        // Подстановка логина и отображение прав роли
+        const usernameDisplay = user.username || 'User';
+        const roleText = user.role === 'admin' ? ' (Admin)' : '';
+        
+        document.getElementById('username').textContent = usernameDisplay + roleText;
+        document.getElementById('greetingUser').textContent = usernameDisplay;
+
+        // Динамический переход для кнопки Назад (в зависимости от роли)
+        document.getElementById('backBtn').addEventListener('click', function() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = user.role === 'admin' ? 'admin.html' : 'index.html';
+            }
+        });
+
+        // Если вошел Администратор — динамически добавляем модуль управления системного администрирования
+        if (user.role === 'admin') {
+            const grid = document.getElementById('dashboardGrid');
+            if (grid) {
+                const adminCard = document.createElement('a');
+                adminCard.href = 'admin.html';
+                adminCard.className = 'card';
+                adminCard.style.border = '1px solid rgba(0, 255, 163, 0.4)';
+                adminCard.innerHTML = `
+                    <div class="icon">⚡</div>
+                    <h3 data-i18n="card_admin">Admin Panel</h3>
+                    <p data-i18n="desc_admin">Ulgam dolandyryş paneli</p>
+                `;
+                grid.insertBefore(adminCard, grid.firstChild);
+            }
+        }
 
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('token');
@@ -523,13 +520,16 @@
         // Инициализация графических эффектов эталонного дизайна
         document.addEventListener('DOMContentLoaded', () => {
             // Эффект движения мыши по карточкам
-            document.querySelectorAll(".card").forEach(card => {
-                card.addEventListener("mousemove", e => {
-                    const rect = card.getBoundingClientRect();
-                    card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
-                    card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+            const initCardHover = () => {
+                document.querySelectorAll(".card").forEach(card => {
+                    card.addEventListener("mousemove", e => {
+                        const rect = card.getBoundingClientRect();
+                        card.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+                        card.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+                    });
                 });
-            });
+            };
+            initCardHover();
 
             // Светящиеся частицы
             const particlesContainer = document.getElementById("particles");
