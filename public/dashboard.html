@@ -426,6 +426,13 @@
             <p class="welcome" data-i18n="welcome_subtitle">Platformanyň modullaryna giriş etmek üçin aşakdaky kartlardan saýlaň.</p>
             
             <div class="grid" id="dashboardGrid">
+                <!-- Карточка Администратора (по умолчанию скрыта, проявляется только для роли admin) -->
+                <a href="admin.html" class="card" id="adminCard" style="display: none; border: 1px solid rgba(0, 255, 163, 0.4);">
+                    <div class="icon">⚡</div>
+                    <h3 data-i18n="card_admin">Admin Panel</h3>
+                    <p data-i18n="desc_admin">Ulgam dolandyryş paneli</p>
+                </a>
+
                 <a href="marketplace.html" class="card">
                     <div class="icon">🛒</div>
                     <h3 data-i18n="card_marketplace">Marketpleýs</h3>
@@ -514,20 +521,11 @@
             window.location.href = 'index.html';
         });
 
-        // Если вошел Администратор — динамически добавляем модуль управления системного администрирования
+        // Если вошел Администратор — показываем статически встроенный модуль администрирования
         if (user.role === 'admin') {
-            const grid = document.getElementById('dashboardGrid');
-            if (grid) {
-                const adminCard = document.createElement('a');
-                adminCard.href = 'admin.html';
-                adminCard.className = 'card';
-                adminCard.style.border = '1px solid rgba(0, 255, 163, 0.4)';
-                adminCard.innerHTML = `
-                    <div class="icon">⚡</div>
-                    <h3 data-i18n="card_admin">Admin Panel</h3>
-                    <p data-i18n="desc_admin">Ulgam dolandyryş paneli</p>
-                `;
-                grid.insertBefore(adminCard, grid.firstChild);
+            const adminCard = document.getElementById('adminCard');
+            if (adminCard) {
+                adminCard.style.display = 'block';
             }
         }
 
@@ -540,6 +538,11 @@
 
         // Инициализация графических эффектов эталонного дизайна
         document.addEventListener('DOMContentLoaded', () => {
+            // Инициализация выбранного языка автопереводчиком при загрузке
+            if (typeof changeLanguage === 'function') {
+                changeLanguage(currentLang);
+            }
+
             // Эффект движения мыши по карточкам
             const initCardHover = () => {
                 document.querySelectorAll(".card").forEach(card => {
