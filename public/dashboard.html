@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="tm">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -183,6 +183,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 16px 0;
+            flex-wrap: nowrap;
         }
 
         .logo {
@@ -192,6 +193,7 @@
             text-decoration: none;
             color: white;
             transition: transform 0.3s ease;
+            flex-shrink: 0;
         }
 
         .logo:hover {
@@ -246,6 +248,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            flex-shrink: 0;
         }
 
         .user-info {
@@ -256,6 +259,7 @@
             padding: 8px 14px;
             border-radius: 12px;
             border: 1px solid rgba(0, 212, 255, 0.15);
+            white-space: nowrap;
         }
 
         .back-btn, .lang, .logout-btn {
@@ -273,6 +277,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            white-space: nowrap;
         }
 
         .back-btn:hover, .lang:hover, .logout-btn:hover {
@@ -409,7 +414,7 @@
             <div class="header-right">
                 <button class="back-btn" id="backBtn" data-i18n="btn_back">⬅️ Yza</button>
                 <span class="user-info">👤 <strong id="username">User</strong></span>
-                <button class="lang" id="langBtn">RU</button>
+                <button class="lang" id="langBtn">TM</button>
                 <button class="logout-btn" id="logoutBtn" data-i18n="logout">🚪 Çykmak</button>
             </div>
         </div>
@@ -470,12 +475,31 @@
     <script src="public/js/auth-check.js"></script>
 
     <script>
+        // Управление системной локализацией (по умолчанию tm)
+        let currentLang = localStorage.getItem('selected_lang') || 'tm';
+        localStorage.setItem('selected_lang', currentLang);
+
+        const langBtn = document.getElementById('langBtn');
+        if (langBtn) {
+            langBtn.textContent = currentLang.toUpperCase();
+            langBtn.addEventListener('click', () => {
+                currentLang = currentLang === 'tm' ? 'ru' : (currentLang === 'ru' ? 'en' : 'tm');
+                localStorage.setItem('selected_lang', currentLang);
+                langBtn.textContent = currentLang.toUpperCase();
+                if (typeof changeLanguage === 'function') {
+                    changeLanguage(currentLang);
+                } else {
+                    location.reload();
+                }
+            });
+        }
+
         // Проверка авторизации и логика единого дашборда
         const user = JSON.parse(localStorage.getItem('user') || '{}');
         const token = localStorage.getItem('token');
 
-        if (!token || !user) {
-            window.location.href = 'login.html';
+        if (!token || !user || !user.username) {
+            window.location.href = 'register.html';
         }
 
         // Подстановка логина и отображение прав роли
@@ -485,13 +509,9 @@
         document.getElementById('username').textContent = usernameDisplay + roleText;
         document.getElementById('greetingUser').textContent = usernameDisplay;
 
-        // Динамический переход для кнопки Назад (в зависимости от роли)
+        // Переход для кнопки Назад (строго на главную страницу)
         document.getElementById('backBtn').addEventListener('click', function() {
-            if (window.history.length > 1) {
-                window.history.back();
-            } else {
-                window.location.href = user.role === 'admin' ? 'admin.html' : 'index.html';
-            }
+            window.location.href = 'index.html';
         });
 
         // Если вошел Администратор — динамически добавляем модуль управления системного администрирования
@@ -511,10 +531,11 @@
             }
         }
 
+        // Выход из системы — строго на страницу регистрации
         document.getElementById('logoutBtn').addEventListener('click', function() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = 'login.html';
+            window.location.href = 'register.html';
         });
 
         // Инициализация графических эффектов эталонного дизайна
