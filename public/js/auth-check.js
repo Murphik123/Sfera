@@ -19,13 +19,12 @@
         isAdmin: role === 'admin'
     };
 
-    // Если закрытый раздел admin.html пытается открыть не-админ
     if (window.location.pathname.includes('admin.html') && role !== 'admin') {
         window.location.href = 'login.html';
     }
 })();
 
-// Перехватчик всех fetch-запросов для автоматической передачи токена
+// Перехватчик fetch
 const originalFetch = window.fetch;
 window.fetch = async function (url, options = {}) {
     const token = localStorage.getItem('token') || localStorage.getItem('sfera_token');
@@ -33,32 +32,34 @@ window.fetch = async function (url, options = {}) {
 
     if (token) {
         if (options.headers instanceof Headers) {
-            options.headers.append('Authorization', `Bearer ${token}`);
+            if (!options.headers.has('Authorization')) {
+                options.headers.append('Authorization', `Bearer ${token}`);
+            }
         } else {
-            options.headers['Authorization'] = `Bearer ${token}`;
+            if (!options.headers['Authorization']) {
+                options.headers['Authorization'] = `Bearer ${token}`;
+            }
         }
     }
     return originalFetch(url, options);
 };
-// ==========================================
+
 // Универсальная обработка кнопок "Выход" и "Назад"
-// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Делегирование кликов на весь документ
     document.addEventListener('click', async (e) => {
-        const target = e.target.closest('button, a, div, span');
+        // Ищем только интерактивные элементы (кнопки, ссылки или элементы с data-action)
+        const target = e.target.closest('button, a, [data-action]');
         if (!target) return;
 
-        // Определяем идентификаторы элемента
         const id = (target.id || '').toLowerCase();
         const className = (target.className || '').toString().toLowerCase();
         const action = (target.getAttribute('data-action') || '').toLowerCase();
         const text = (target.textContent || '').trim().toLowerCase();
 
         // 1. Проверка кнопки "Выход"
-        const isLogout = id.includes('logout') || 
-                         className.includes('logout') || 
-                         action === 'logout' || 
+        const isLogout = action === 'logout' || 
+                         id === 'logout' || 
+                         className.split(' ').includes('btn-logout') || 
                          text === 'выход' || 
                          text === 'чыкмак' || 
                          text === 'exit';
@@ -83,17 +84,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // 2. Проверка кнопки "Назад"
-        const isBack = id.includes('back') || 
-                       className.includes('back') || 
-                       action === 'back' || 
-                       text === 'назад' || 
-                       text === 'ызына' || 
-                       text === 'go back';
+        // 2. Проверка кнопки "Назад" (только точные совпадения)
+        const isBack = action === 'back' || 
+                        id === 'back-btn' || 
+                        className.split(' ').includes('btn-back') || 
+                        text === 'назад' || 
+                        text === 'ызына' || 
+                        text === 'go back';
 
         if (isBack) {
             e.preventDefault();
-            if (window.history.length > 1 && document.referrer) {
+            if (window.history.length > 1 && document.referrer && !document.referrer.includes(window.location.pathname)) {
                 window.history.back();
             } else {
                 window.location.href = 'dashboard.html';
