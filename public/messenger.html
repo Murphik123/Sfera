@@ -1,24 +1,28 @@
 <!DOCTYPE html>
-<html lang="tm">
+<html lang="tm" translate="no">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title data-i18n="page_title">СФЕРА — TM Pay</title>
+    <meta name="google" content="notranslate" />
+    <title data-i18n="messenger_page_title">SFERA — Habarlaşyk</title>
 
-    <!-- Шрифт Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Общий CSS -->
-    <link rel="stylesheet" href="/css/style.css" />
-
-    <!-- Chart.js для графика -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Подключение общих стилей платформы -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/ui.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/glass.css">
+<!-- Добавьте эту строку в тег <head> прямо перед автопереводчиком -->
+<script src="public/js/auth-check.js"></script>
+    <!-- Автоматический переводчик i18n -->
+    <script src="public/scripts/auto_translate_i18n.js"></script>
 
     <style>
         /* ==========================================================================
-           1. ЦВЕТОВАЯ ПАЛИТРА И ДИЗАЙН-ТОКЕНЫ
+           1. ЦВЕТОВАЯ ПАЛИТРА И ДИЗАЙН-ТОКЕНЫ (THEME & COLOR VARIABLES)
            ========================================================================== */
         :root {
             --primary: #00d4ff;
@@ -36,9 +40,24 @@
             --radius: 22px;
         }
 
-        /* ==========================================================================
-           2. СТИЛИЗАЦИЯ ПОЛЗУНКА ПРОКРУТКИ
-           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0, 212, 255, 0.4) #03080e;
+        }
+
+        body {
+            background-color: var(--dark-bg) !important;
+            color: var(--white) !important;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Neon Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #03080e; border-left: 1px solid rgba(0, 212, 255, 0.1); }
         ::-webkit-scrollbar-thumb {
@@ -51,9 +70,7 @@
             box-shadow: 0 0 12px rgba(0, 212, 255, 0.8);
         }
 
-        /* ==========================================================================
-           3. ЭФФЕКТЫ СТЕКЛОВИДНОСТИ И ГРАДИЕНТЫ
-           ========================================================================== */
+        /* Glassmorphism & Background Canvas */
         .full-glass-backdrop {
             position: fixed;
             inset: 0;
@@ -85,10 +102,8 @@
 
         #bgCanvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             pointer-events: none;
             z-index: 2;
             opacity: 0.85;
@@ -97,8 +112,6 @@
         #particles {
             position: fixed;
             inset: 0;
-            width: 100vw;
-            height: 100vh;
             pointer-events: none;
             overflow: hidden;
             z-index: 3;
@@ -118,28 +131,10 @@
             100% { transform: translateY(-10vh) translateX(15px) scale(1.1); opacity: 0; }
         }
 
-        /* ==========================================================================
-           4. БАЗОВЫЕ СТИЛИ
-           ========================================================================== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Inter", sans-serif;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(0, 212, 255, 0.4) #03080e;
-        }
-
-        html { scroll-behavior: smooth; background-color: var(--dark-bg); }
-        body { background-color: var(--dark-bg); color: var(--white); overflow-x: hidden; position: relative; min-height: 100vh; }
-        .container { width: min(1400px, 92%); margin: auto; position: relative; z-index: 10; }
-
-        /* ШАПКА */
+        /* HEADER STYLES */
         header {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
+            top: 0; left: 0; width: 100%;
             z-index: 999;
             backdrop-filter: blur(25px) saturate(200%);
             -webkit-backdrop-filter: blur(25px) saturate(200%);
@@ -149,17 +144,52 @@
             transition: all 0.4s ease;
         }
 
-        header .container { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; }
+        header .header-container {
+            width: min(1400px, 92%);
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+        }
 
-        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; transition: transform 0.3s ease; }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
         .logo:hover { transform: translateY(-1px) scale(1.02); }
-        .logo-icon { width: 54px; height: 54px; display: flex; justify-content: center; align-items: center; }
-        .logo-svg { width: 100%; height: 100%; overflow: visible; }
-        .logo-svg g { transform-origin: 50px 50px; animation: spinLogo 16s linear infinite; }
-        @keyframes spinLogo { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .logo-svg g {
+            transform-origin: 50px 50px;
+            animation: spinLogo 16s linear infinite;
+        }
+
+        @keyframes spinLogo {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
         .logo-text h2 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
             margin: 0;
             line-height: 1.1;
@@ -168,17 +198,38 @@
             -webkit-text-fill-color: transparent;
             letter-spacing: 0.5px;
         }
-        .logo-text p { font-size: 10px; font-weight: 600; letter-spacing: 0.8px; margin: 4px 0 0 0; color: #9fb5c8; text-transform: uppercase; }
 
-        .header-right { display: flex; gap: 12px; align-items: center; }
-        .user-info { font-size: 14px; font-weight: 600; color: var(--text); }
+        .logo-text p {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            margin: 2px 0 0 0;
+            color: #9fb5c8;
+            text-transform: uppercase;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-info {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
 
         .lang-btn {
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(0, 212, 255, 0.3);
             color: white;
             backdrop-filter: blur(10px);
-            padding: 10px 18px;
+            padding: 9px 16px;
             border-radius: 12px;
             font-weight: 700;
             font-size: 14px;
@@ -189,8 +240,9 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 54px;
+            min-width: 52px;
         }
+
         .lang-btn:hover {
             background: rgba(0, 212, 255, 0.2);
             border-color: var(--primary);
@@ -198,214 +250,419 @@
             transform: translateY(-1px);
         }
 
+        .btn-switch {
+            text-decoration: none;
+            padding: 9px 18px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .btn-switch:hover {
+            background: rgba(0, 212, 255, 0.15);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
         .logout-btn {
-            padding: 10px 20px;
+            padding: 9px 18px;
             border-radius: 12px;
             font-weight: 700;
             font-size: 14px;
             background: rgba(255, 77, 77, 0.15);
-            border: 1px solid rgba(255, 77, 77, 0.4);
+            border: 1px solid rgba(255, 77, 77, 0.35);
             color: #ff6b6b;
             cursor: pointer;
-            transition: 0.3s ease;
+            transition: all 0.3s ease;
         }
-        .logout-btn:hover { background: rgba(255, 77, 77, 0.3); border-color: #ff6b6b; transform: translateY(-2px); }
 
-        /* ===== СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ TM PAY ===== */
-        .pay-page { padding: 140px 0 60px; min-height: 100vh; position: relative; z-index: 10; }
-        .pay-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 30px; }
-        .pay-header h1 {
-            font-size: 36px;
-            font-weight: 800;
-            background: linear-gradient(to right, #fff, #b4d7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .logout-btn:hover {
+            background: rgba(255, 77, 77, 0.3);
+            border-color: #ff4d4d;
+            box-shadow: 0 0 15px rgba(255, 77, 77, 0.4);
+            color: #fff;
         }
-        .pay-header .actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 
-        .btn {
-            padding: 10px 24px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: .3s;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
+        /* MESSENGER MAIN LAYOUT */
+        .messenger-page {
+            padding: 100px 20px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+            box-sizing: border-box;
         }
-        .btn-primary { background: linear-gradient(135deg, #00d4ff, #008cff); color: white; box-shadow: 0 10px 30px rgba(0,212,255,.25); }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 40px rgba(0,212,255,.4); }
-        .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,.2); color: white; }
-        .btn-outline:hover { background: rgba(255,255,255,.05); border-color: #00d4ff; }
 
-        /* Балансовая карта */
-        .balance-card {
-            background: rgba(255,255,255,.035);
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(25px);
+        .messenger-container {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 120px);
+            min-height: 580px;
             border-radius: 24px;
-            padding: 30px 35px;
-            margin-bottom: 30px;
+            overflow: hidden;
+            position: relative;
+            background: rgba(10, 18, 32, 0.55);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .messenger-sidebar {
+            width: 330px;
+            min-width: 290px;
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+            background: rgba(5, 12, 22, 0.45);
+        }
+
+        .sidebar-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            gap: 8px;
         }
-        .balance-card .balance-label { font-size: 16px; color: #bdd0df; }
-        .balance-card .balance-amount {
-            font-size: 48px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #00d4ff, #00ffa3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .balance-card .balance-currency { font-size: 22px; color: #bdd0df; margin-left: 8px; }
 
-        .chart-container {
-            background: rgba(255,255,255,.035);
+        .sidebar-header h2 { font-size: 18px; font-weight: 800; margin: 0; color: #fff; }
+
+        .sidebar-header .dropdown-tabs { position: relative; display: inline-block; }
+        .sidebar-header .dropdown-tabs .dropbtn {
+            background: rgba(0, 212, 255, 0.1);
             border: 1px solid var(--glass-border);
-            backdrop-filter: blur(25px);
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 30px;
-            position: relative;
-            height: 180px;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
         }
 
-        .wallet-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-top: 16px; }
-        .wallet-item {
-            background: rgba(255,255,255,.035);
+        .sidebar-header .dropdown-tabs .dropbtn:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: var(--primary);
+        }
+
+        .sidebar-header .dropdown-tabs .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: rgba(5, 14, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
             border-radius: 16px;
-            padding: 16px;
-            text-align: center;
-            border: 1px solid var(--glass-border);
+            min-width: 160px;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+            z-index: 100;
+            padding: 6px 0;
+            margin-top: 8px;
         }
-        .wallet-item .currency { font-size: 14px; color: #9fb5c8; }
-        .wallet-item .amount { font-size: 24px; font-weight: 700; color: white; }
 
-        .pay-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,.05); padding-bottom: 4px; }
-        .pay-tabs button {
+        .sidebar-header .dropdown-tabs .dropdown-content button {
             background: transparent;
             border: none;
-            color: #9fb5c8;
-            padding: 12px 24px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            transition: .3s;
-            border-bottom: 3px solid transparent;
-        }
-        .pay-tabs button.active { color: #00d4ff; border-bottom-color: #00d4ff; }
-        .pay-tabs button:hover { color: white; }
-
-        .tab-content { display: none; animation: fadeUp .4s ease; }
-        .tab-content.active { display: block; }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .transfer-form { max-width: 520px; margin: 0 auto; }
-        .transfer-form .form-group { margin-bottom: 16px; }
-        .transfer-form .form-group label { display: block; font-size: 14px; font-weight: 500; color: #dbe9ff; margin-bottom: 6px; }
-        .transfer-form .form-group input,
-        .transfer-form .form-group select,
-        .transfer-form .form-group textarea {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 10px 18px;
             width: 100%;
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,.15);
-            background: rgba(255,255,255,.05);
-            color: white;
-            font-size: 15px;
-            transition: .3s;
-            outline: none;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
         }
-        .transfer-form .form-group input:focus,
-        .transfer-form .form-group select:focus,
-        .transfer-form .form-group textarea:focus { border-color: #00d4ff; box-shadow: 0 0 20px rgba(0,212,255,.1); }
-        .transfer-form .form-group textarea { resize: vertical; min-height: 60px; }
-        .transfer-form .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px; }
 
-        .empty-state { text-align: center; padding: 40px 20px; color: #bdd0df; }
-        .empty-state .icon { font-size: 40px; margin-bottom: 10px; }
+        .sidebar-header .dropdown-tabs .dropdown-content button:hover { background: rgba(0, 212, 255, 0.15); color: #fff; }
+        .sidebar-header .dropdown-tabs .dropdown-content button.active { color: var(--primary); font-weight: 800; }
+        .sidebar-header .dropdown-tabs.show .dropdown-content { display: block; }
 
-        .transactions-list { list-style: none; padding: 0; margin: 0; max-height: 400px; overflow-y: auto; }
-        .transactions-list li { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.05); display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
-        .transactions-list .tx-type { display: inline-block; padding: 2px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-right: 8px; }
-        .tx-type.credit { background: rgba(0,255,170,.15); color: #00ffa3; }
-        .tx-type.debit { background: rgba(255,0,0,.15); color: #ff6b6b; }
-        .tx-type.transfer { background: rgba(0,212,255,.15); color: #00d4ff; }
-        .tx-type.international { background: rgba(255,193,7,.15); color: #ffc107; }
-        .tx-amount.positive { color: #00ffa3; }
-        .tx-amount.negative { color: #ff6b6b; }
-        .tx-date { color: #9fb5c8; font-size: 12px; }
-        .tx-description { flex: 1; margin: 0 12px; color: #bdd0df; }
-
-        .filter-bar { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
-        .filter-bar select {
-            padding: 8px 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,.15);
-            background: rgba(255,255,255,.05);
-            color: white;
+        .sidebar-search { padding: 14px 20px; display: flex; gap: 8px; }
+        .sidebar-search input {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 14px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
             font-size: 14px;
             outline: none;
+            transition: border-color 0.3s;
         }
+        .sidebar-search input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0, 212, 255, 0.2); }
+        .sidebar-search .create-group-btn {
+            padding: 10px 14px;
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 14px;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        .sidebar-search .create-group-btn:hover { background: rgba(0, 212, 255, 0.3); color: #fff; }
 
-        .qr-container {
+        .dialogs-list, .news-feed { flex: 1; overflow-y: auto; padding: 8px 0; }
+        
+        .dialog-item {
             display: flex;
-            justify-content: center;
             align-items: center;
-            flex-direction: column;
-            background: rgba(255,255,255,.04);
-            border-radius: 18px;
-            padding: 24px;
-            border: 1px solid rgba(255,255,255,.08);
-            margin-top: 16px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.25s, border-color 0.25s;
+            border-left: 3px solid transparent;
+            gap: 12px;
         }
-        .qr-container img { border-radius: 12px; background: white; padding: 8px; }
 
-        /* Тосты */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: rgba(13,28,41,.95);
-            border: 1px solid rgba(0,212,255,.3);
-            border-radius: 16px;
-            padding: 16px 24px;
-            color: white;
-            font-weight: 500;
-            box-shadow: 0 20px 40px rgba(0,0,0,.4);
-            z-index: 2000;
-            animation: slideUp 0.3s ease;
-            backdrop-filter: blur(10px);
+        .dialog-item:hover { background: rgba(0, 212, 255, 0.06); }
+        .dialog-item.active { background: rgba(0, 212, 255, 0.12); border-left-color: var(--primary); }
+        
+        .dialog-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+            flex-shrink: 0;
+            position: relative;
         }
-        .toast.success { border-left: 4px solid #00ffa3; }
-        .toast.error { border-left: 4px solid #ff6b6b; }
-        .toast.info { border-left: 4px solid #00d4ff; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .dialog-avatar.ai-avatar {
+            background: linear-gradient(135deg, rgba(0, 255, 163, 0.2), rgba(0, 212, 255, 0.2));
+            border-color: #00ffa3;
+            color: #00ffa3;
+        }
+
+        .dialog-avatar .online-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+
+        .dialog-info { flex: 1; min-width: 0; }
+        .dialog-info .name { font-weight: 700; font-size: 15px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .dialog-info .last-msg { font-size: 13px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+        .dialog-time { font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
+        .unread-badge { background: var(--primary); color: #000; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 20px; }
+        .ai-badge { background: linear-gradient(135deg, #00ffa3, #00d4ff); color: #000; font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 6px; text-transform: uppercase; }
+
+        /* CHAT WINDOW */
+        .messenger-chat { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative; 
+            z-index: 1; 
+            background: radial-gradient(circle at top right, rgba(0, 212, 255, 0.08), transparent 60%),
+                        radial-gradient(circle at bottom left, rgba(0, 255, 163, 0.05), transparent 60%),
+                        rgba(5, 12, 22, 0.3);
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-height: 70px;
+            box-sizing: border-box;
+            background: rgba(5, 14, 26, 0.4);
+        }
+
+        .chat-header .back-btn { display: none; background: transparent; border: none; color: inherit; font-size: 20px; cursor: pointer; }
+        
+        .chat-header .chat-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .chat-header .chat-name { font-weight: 800; font-size: 18px; color: #fff; }
+        .chat-header .chat-status { font-size: 13px; color: var(--accent); font-weight: 500; }
+        .chat-header .chat-actions { margin-left: auto; display: flex; gap: 8px; }
+        .chat-header .chat-actions button {
+            width: 36px; height: 36px;
+            font-size: 15px; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            color: #fff; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .chat-header .chat-actions button:hover { background: rgba(0, 212, 255, 0.2); border-color: var(--primary); }
+
+        .chat-messages { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+        
+        .message { max-width: 75%; padding: 12px 18px; border-radius: 20px; font-size: 15px; word-wrap: break-word; position: relative; line-height: 1.5; }
+        .message.sent {
+            align-self: flex-end;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.35), rgba(31, 107, 255, 0.5));
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.25);
+        }
+        .message.received {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-bottom-left-radius: 4px;
+            color: var(--text);
+        }
+        .message .msg-time { font-size: 11px; opacity: 0.6; margin-top: 6px; text-align: right; }
+
+        /* Стиль встроенного файла */
+        .file-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.25);
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            margin-bottom: 6px;
+        }
+
+        .btn-download-file {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid var(--primary);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-download-file:hover {
+            background: var(--primary);
+            color: #000;
+            font-weight: bold;
+        }
+
+        .chat-input-area {
+            padding: 16px 24px;
+            border-top: 1px solid var(--glass-border);
+            display: flex; gap: 12px; align-items: center;
+            background: rgba(5, 14, 26, 0.4);
+        }
+
+        .chat-input-area .input-group { flex: 1; display: flex; gap: 10px; align-items: center; }
+        .chat-input-area .input-group input[type="text"] {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .chat-input-area .input-group input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 12px rgba(0, 212, 255, 0.25); }
+
+        .chat-input-area .input-group .emoji-btn, 
+        .chat-input-area .input-group .file-btn {
+            background: transparent; border: none; font-size: 22px; cursor: pointer; opacity: 0.8; transition: transform 0.2s, opacity 0.2s;
+        }
+        .chat-input-area .input-group .emoji-btn:hover,
+        .chat-input-area .input-group .file-btn:hover { opacity: 1; transform: scale(1.1); }
+
+        .chat-input-area .send-btn {
+            padding: 12px 26px; border: none; border-radius: 24px;
+            background: linear-gradient(135deg, #00d4ff 0%, #1f6bff 100%);
+            color: #fff; font-weight: 800; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .chat-input-area .send-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 212, 255, 0.5); }
+
+        .emoji-picker {
+            display: none; position: absolute; bottom: 85px; left: 24px;
+            background: rgba(5, 14, 26, 0.95);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px; padding: 14px;
+            max-width: 320px; max-height: 220px; overflow-y: auto; z-index: 20;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+        }
+        .emoji-picker.active { display: block; }
+        .emoji-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; font-size: 22px; }
+        .emoji-grid span { cursor: pointer; text-align: center; transition: transform 0.15s; }
+        .emoji-grid span:hover { transform: scale(1.25); }
+
+        /* MODALS (MODAL & CALLS) */
+        .group-modal, .call-modal {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(3, 8, 14, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            justify-content: center; align-items: center;
+            z-index: 1000;
+        }
+        .group-modal.active, .call-modal.active { display: flex; }
+
+        .group-modal .modal-box, .call-modal .modal-box {
+            background: linear-gradient(135deg, rgba(10, 20, 35, 0.9), rgba(5, 12, 22, 0.95));
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 440px; width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 30px rgba(0, 212, 255, 0.2);
+        }
 
         @media (max-width: 768px) {
-            .balance-card .balance-amount { font-size: 32px; }
-            .pay-tabs button { padding: 10px 14px; font-size: 13px; }
-            .chart-container { height: 140px; }
+            .messenger-container { flex-direction: column; height: auto; }
+            .messenger-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--glass-border); }
+            .chat-header .back-btn { display: block; }
         }
     </style>
 </head>
-<body>
-    <!-- ФОНОВЫЕ ЭФФЕКТЫ -->
+<body class="notranslate">
+
+    <!-- Фоновые слои дизайна страницы -->
     <div class="full-glass-backdrop"></div>
     <div class="bg-grid"></div>
     <canvas id="bgCanvas"></canvas>
     <div id="particles"></div>
 
-    <!-- ШАПКА -->
-    <header>
-        <div class="container">
-            <a href="index.html" class="logo">
+    <!-- Шапка платформы SFERA -->
+    <header class="notranslate">
+        <div class="header-container">
+            <a href="index.html" class="logo" aria-label="SFERA Baş sahypa">
                 <div class="logo-icon">
                     <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
@@ -425,742 +682,503 @@
                     </svg>
                 </div>
                 <div class="logo-text">
-                    <h2>SFERA</h2>
-                    <p id="logoSubtitle" data-i18n="logo_subtitle">Milli Sanly Platforma</p>
+                    <h2 data-i18n="logo_title">SFERA</h2>
+                    <p data-i18n="logo_subtitle">Milli Sanly Platforma</p>
                 </div>
             </a>
 
             <div class="header-right">
-                <span class="user-info">👤 <strong id="username">User</strong></span>
-                <button class="lang-btn" id="langBtn" type="button" aria-label="Переключение языка">TM</button>
-                <button class="logout-btn" id="logoutBtn" data-i18n="logout">🚪 Çykmak</button>
-                <!-- ПРЯМАЯ ССЫЛКА НА ДАШБОРД -->
-                <a href="user-dashboard.html" id="backLink" class="btn-outline" style="padding:8px 16px; border-radius:12px; text-decoration:none;" data-i18n="back">← Yza</a>
-            </div>
+                <span class="user-info">👤 <strong id="username" data-i18n="username_default">User</strong></span>
+                <button class="lang-btn" id="langBtn" type="button" aria-label="Dili çalyşmak">TM</button>
+              
+ <a href="dashboard.html" id="backLink" class="btn-switch" data-i18n="back">← Yza</a>
+<button class="logout-btn" id="logoutBtn" onclick="localStorage.clear(); window.location.href='login.html';" data-i18n="logout">🚪 Çykmak</button>
+       </div>
         </div>
     </header>
 
-    <!-- ОСНОВНОЙ КОНТЕНТ -->
-    <section class="pay-page">
-        <div class="container">
-            <div class="pay-header">
-                <h1 data-i18n="page_title">💳 TM Pay</h1>
-                <div class="actions">
-                    <button class="btn btn-outline" id="refreshBtn" data-i18n="refresh">⟳ Täzele</button>
-                </div>
-            </div>
-
-            <!-- График баланса -->
-            <div class="chart-container">
-                <canvas id="balanceChart"></canvas>
-            </div>
-
-            <!-- Баланс -->
-            <div class="balance-card">
-                <div>
-                    <div class="balance-label" data-i18n="total_balance">Jemi balans</div>
-                    <div>
-                        <span class="balance-amount" id="totalBalance">0.00</span>
-                        <span class="balance-currency">TMT</span>
+    <!-- Основной модуль Мессенджера -->
+    <section class="messenger-page notranslate">
+        <div style="flex:1; display:flex; flex-direction:column; max-width: 1350px; width: 100%; margin: 0 auto;">
+            <div class="messenger-container" id="messengerContainer">
+                <div class="messenger-sidebar" id="sidebar">
+                    <div class="sidebar-header">
+                        <div class="left-group">
+                            <h2 data-i18n="messenger_title">Söhbet</h2>
+                        </div>
+                        <div class="dropdown-tabs" id="tabsDropdown">
+                            <button class="dropbtn" id="dropbtn">📋 <span id="currentTabLabel" data-i18n="tab_chats">Çatlar</span> ▾</button>
+                            <div class="dropdown-content" id="dropdownContent">
+                                <button class="active" data-tab="chats" data-i18n="tab_chats">Çatlar</button>
+                                <button data-tab="news" data-i18n="tab_news">Habarlar</button>
+                                <button data-tab="assistant" data-i18n="tab_assistant">Kömekçi</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar-search">
+                        <input type="text" id="searchInput" placeholder="Gözleg..." data-i18n-placeholder="search_placeholder" />
+                        <button class="create-group-btn" id="createGroupBtn" data-i18n="create_group">➕ Topar</button>
+                    </div>
+                    <div class="dialogs-list" id="dialogsList"></div>
+                    <div class="news-feed" id="newsFeed" style="display:none; padding: 20px; opacity: 0.8;">
+                        <p data-i18n="news_feed_closed">Habarlar kanaly ýapyk.</p>
                     </div>
                 </div>
-                <div style="text-align:right; font-size:14px; color:#bdd0df;">
-                    <span data-i18n="wallet_id">Koşelge ID:</span> <span id="walletId">TM-1234-5678</span>
+
+                <div class="messenger-chat" id="chatWindow">
+                    <div class="chat-header" id="chatHeader">
+                        <button class="back-btn" id="backBtn">←</button>
+                        <div class="chat-avatar" id="chatAvatar">💻</div>
+                        <div>
+                            <div class="chat-name" id="chatName">Разработчики Sfera</div>
+                            <div class="chat-status" id="chatStatus">onlaýn</div>
+                        </div>
+                        <div class="chat-actions">
+                            <button id="searchInChatBtn" title="🔍">🔍</button>
+                            <button id="exportChatBtn" title="Загрузить историю на ПК">📥</button>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-input-area" id="chatInputArea">
+                        <div class="input-group">
+                            <button class="emoji-btn" id="emojiBtn">😊</button>
+                            
+                            <!-- Кнопка «Загрузить с ПК» -->
+                            <button class="file-btn" id="fileBtn" title="Загрузить файл с ПК">📎</button>
+                            <input type="file" id="fileInput" style="display:none;" onchange="handleFileUpload(event)" />
+                            
+                            <input type="text" id="messageInput" placeholder="Habaryňyzy ýazyň..." data-i18n-placeholder="type_message" />
+                        </div>
+                        <div class="call-buttons" style="display: flex; gap: 6px;">
+                            <button id="audioCallBtn" title="📞" style="background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); border-radius: 50%; width: 38px; height: 38px; color: #fff; cursor: pointer;">📞</button>
+                            <button id="videoCallBtn" title="📹" style="background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); border-radius: 50%; width: 38px; height: 38px; color: #fff; cursor: pointer;">📹</button>
+                        </div>
+                        <button class="send-btn" id="sendBtn" data-i18n="send">Iber</button>
+                    </div>
+                    <div class="emoji-picker" id="emojiPicker">
+                        <div class="emoji-grid" id="emojiGrid"></div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Мультивалютный кошелёк -->
-            <div class="wallet-grid" id="walletGrid"></div>
-
-            <!-- Вкладки -->
-            <div class="pay-tabs">
-                <button class="active" data-tab="transfer" data-i18n="tab_transfer">Geçiriş</button>
-                <button data-tab="international" data-i18n="tab_international">Daşarky</button>
-                <button data-tab="history" data-i18n="tab_history">Taryh</button>
-                <button data-tab="cards" data-i18n="tab_cards">Kartlar</button>
-                <button data-tab="receive" data-i18n="tab_receive">Al</button>
-            </div>
-
-            <!-- Вкладка: внутренние переводы -->
-            <div class="tab-content active" id="tab-transfer">
-                <div class="transfer-form">
-                    <form id="transferForm">
-                        <div class="form-group">
-                            <label for="transferCurrency" data-i18n="currency">Walýuta</label>
-                            <select id="transferCurrency">
-                                <option value="TMT">TMT</option>
-                                <option value="USD">USD</option>
-                                <option value="EUR">EUR</option>
-                                <option value="RUB">RUB</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="recipientId" data-i18n="recipient">Alýan (email, telefon ýa-da ID)</label>
-                            <input type="text" id="recipientId" placeholder="mysal@mail.com ýa-da +993 63 000000" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="transferAmount" data-i18n="amount">Mukdar</label>
-                            <input type="number" id="transferAmount" step="0.01" min="0.01" required placeholder="100.00" />
-                        </div>
-                        <div class="form-group">
-                            <label for="transferDesc" data-i18n="description">Düşündiriş</label>
-                            <textarea id="transferDesc" placeholder="Geçiriş sebäbi..."></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary" id="transferBtn" data-i18n="send">Iber</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Вкладка: международные переводы -->
-            <div class="tab-content" id="tab-international">
-                <div class="transfer-form">
-                    <form id="internationalForm">
-                        <div class="form-group">
-                            <label for="intCurrency" data-i18n="currency">Walýuta</label>
-                            <select id="intCurrency">
-                                <option value="USD">USD</option>
-                                <option value="EUR">EUR</option>
-                                <option value="GBP">GBP</option>
-                                <option value="TMT">TMT</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="intCountry" data-i18n="country">Ýurt</label>
-                            <input type="text" id="intCountry" placeholder="Türkiýe, ABŞ, Germaniýa..." required />
-                        </div>
-                        <div class="form-group">
-                            <label for="intBank" data-i18n="bank">Bank</label>
-                            <input type="text" id="intBank" placeholder="Bank ady" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="intAccount" data-i18n="account_number">Hasap belgisi (IBAN / SWIFT)</label>
-                            <input type="text" id="intAccount" placeholder="IBAN ýa-da SWIFT kody" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="intAmount" data-i18n="amount">Mukdar</label>
-                            <input type="number" id="intAmount" step="0.01" min="0.01" required placeholder="100.00" />
-                        </div>
-                        <div class="form-group">
-                            <label for="intDesc" data-i18n="description">Düşündiriş</label>
-                            <textarea id="intDesc" placeholder="Geçiriş sebäbi..."></textarea>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary" id="intTransferBtn" data-i18n="send_international">Daşarky geçir</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Вкладка: история -->
-            <div class="tab-content" id="tab-history">
-                <div class="filter-bar">
-                    <label for="txFilter" data-i18n="filter_type">Görnüşi:</label>
-                    <select id="txFilter">
-                        <option value="all" data-i18n="all">Ählisi</option>
-                        <option value="credit" data-i18n="filter_credit">Gelen</option>
-                        <option value="debit" data-i18n="filter_debit">Çykdajy</option>
-                        <option value="transfer" data-i18n="filter_transfer">Geçiriş</option>
-                        <option value="international" data-i18n="filter_international">Daşarky</option>
-                    </select>
-                </div>
-                <ul class="transactions-list" id="transactionsList"></ul>
-                <div class="empty-state" id="emptyTx" style="display:none;">
-                    <div class="icon">📭</div>
-                    <p data-i18n="no_transactions">Hiç hili amal ýok</p>
-                </div>
-            </div>
-
-            <!-- Вкладка: карты -->
-            <div class="tab-content" id="tab-cards">
-                <div id="cardsContainer" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px;"></div>
-                <div style="margin-top:20px;">
-                    <button class="btn btn-outline" id="addCardBtn" data-i18n="add_card">+ Täze kart</button>
-                </div>
-            </div>
-
-            <!-- Вкладка: получение платежей (QR) -->
-            <div class="tab-content" id="tab-receive">
-                <div class="qr-container">
-                    <div style="font-size:18px; font-weight:600; margin-bottom:12px;" data-i18n="receive_qr">Töleg almak üçin QR kody</div>
-                    <img id="qrCodeImage" src="" alt="QR code" style="width:150px; height:150px;" />
-                    <div style="margin-top:12px; color:#9fb5c8; word-break:break-all;" id="qrDataText">TM-1234-5678</div>
-                    <button class="btn btn-outline" id="copyQrDataBtn" style="margin-top:8px;" data-i18n="copy_address">Kopiýa</button>
-                </div>
-            </div>
-
         </div>
     </section>
 
-    <!-- СКРИПТ АВТОПЕРЕВОДА -->
-    <script src="auto_translate_i18n.js"></script>
+    <!-- Модальное окно создания группы -->
+    <div class="group-modal notranslate" id="groupModal">
+        <div class="modal-box">
+            <h2 data-i18n="create_group_title">Täze topar döret</h2>
+            <form id="groupForm" style="margin-top: 18px;">
+                <div class="form-group" style="margin-bottom: 14px; text-align: left;">
+                    <label for="groupName" data-i18n="group_name" style="font-size: 13px; color: var(--text-muted); display: block; margin-bottom: 6px;">Toparyň ady</label>
+                    <input type="text" id="groupName" placeholder="Mysal: Taslama topary" required style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.4); color: #fff; box-sizing: border-box; outline: none;" />
+                </div>
+                <div class="form-actions" style="display: flex; gap: 12px; justify-content: center; margin-top: 20px;">
+                    <button type="button" class="btn-cancel" id="cancelGroupBtn" style="padding: 10px 20px; border-radius: 12px; border: 1px solid var(--glass-border); cursor: pointer; background: rgba(255,255,255,0.08); color: #fff;">Ýatyr</button>
+                    <button type="submit" class="btn-create" style="padding: 10px 20px; border-radius: 12px; border: none; background: linear-gradient(135deg, #00d4ff, #00ffa3); color: #000; font-weight: bold; cursor: pointer;">Döret</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модальное окно аудио/видео вызова -->
+    <div class="call-modal notranslate" id="callModal">
+        <div class="modal-box">
+            <div class="call-avatar" id="callAvatar" style="font-size: 42px; margin-bottom: 12px;">👤</div>
+            <h2 id="callTargetName" style="color: #fff; font-size: 22px;">Сердар Аннаев</h2>
+            <div class="call-status" id="callStatusText" style="color: var(--primary); font-size: 14px; margin: 8px 0 20px 0;">Iberilýär...</div>
+            <div class="call-actions">
+                <button class="btn-end-call" id="endCallBtn" style="padding: 10px 24px; border-radius: 14px; border: none; background: #ff4d4d; color: #fff; cursor: pointer; font-weight: bold; box-shadow: 0 0 15px rgba(255,77,77,0.4);">Zaňy bes et</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Клиентские backend-скрипты Socket.io и мессенджера -->
+    <script src="public/js/socket.js"></script>
+    <script src="public/js/messenger-backend.js"></script>
 
     <script>
-        // ============================================================
-        // ПЕРЕВОДЫ (с дефолтным туркменским языком)
-        // ============================================================
-        const translations = {
-            tm: {
-                logo_subtitle: "Milli Sanly Platforma",
-                logout: "🚪 Çykmak",
-                back: "← Yza",
-                refresh: "⟳ Täzele",
-                page_title: "💳 TM Pay",
-                total_balance: "Jemi balans",
-                wallet_id: "Koşelge ID:",
-                tab_transfer: "Geçiriş",
-                tab_international: "Daşarky",
-                tab_history: "Taryh",
-                tab_cards: "Kartlar",
-                tab_receive: "Al",
-                currency: "Walýuta",
-                recipient: "Alýan",
-                amount: "Mukdar",
-                description: "Düşündiriş",
-                send: "Iber",
-                send_international: "Daşarky geçir",
-                country: "Ýurt",
-                bank: "Bank",
-                account_number: "Hasap belgisi",
-                no_transactions: "Hiç hili amal ýok",
-                add_card: "+ Täze kart",
-                card_number: "Kart nomeri",
-                card_expiry: "Işleýän çenli",
-                card_cvv: "CVV",
-                card_holder: "Eýesi",
-                transfer_success: "Geçiriş üstünlikli tamamlandy!",
-                transfer_error: "Geçiriş baş tutmady.",
-                insufficient: "Balans ýeterlik däl.",
-                invalid_recipient: "Alýanyň maglumatlary ýalňyş.",
-                invalid_amount: "Mukdar ýalňyş.",
-                receive_qr: "Töleg almak üçin QR kody",
-                copy_address: "Kopiýa",
-                filter_type: "Görnüşi:",
-                all: "Ählisi",
-                filter_credit: "Gelen",
-                filter_debit: "Çykdajy",
-                filter_transfer: "Geçiriş",
-                filter_international: "Daşarky"
-            },
-            ru: {
-                logo_subtitle: "Национальная Цифровая Платформа",
-                logout: "🚪 Выйти",
-                back: "← Назад",
-                refresh: "⟳ Обновить",
-                page_title: "💳 TM Pay",
-                total_balance: "Общий баланс",
-                wallet_id: "ID кошелька:",
-                tab_transfer: "Перевод",
-                tab_international: "Международный",
-                tab_history: "История",
-                tab_cards: "Карты",
-                tab_receive: "Получить",
-                currency: "Валюта",
-                recipient: "Получатель",
-                amount: "Сумма",
-                description: "Описание",
-                send: "Отправить",
-                send_international: "Отправить международный",
-                country: "Страна",
-                bank: "Банк",
-                account_number: "Номер счёта",
-                no_transactions: "Нет транзакций",
-                add_card: "+ Новая карта",
-                card_number: "Номер карты",
-                card_expiry: "Срок действия",
-                card_cvv: "CVV",
-                card_holder: "Владелец",
-                transfer_success: "Перевод выполнен успешно!",
-                transfer_error: "Ошибка перевода.",
-                insufficient: "Недостаточно средств.",
-                invalid_recipient: "Неверные данные получателя.",
-                invalid_amount: "Некорректная сумма.",
-                receive_qr: "QR-код для получения платежа",
-                copy_address: "Копировать",
-                filter_type: "Тип:",
-                all: "Все",
-                filter_credit: "Поступления",
-                filter_debit: "Расходы",
-                filter_transfer: "Переводы",
-                filter_international: "Международные"
-            },
-            en: {
-                logo_subtitle: "National Digital Platform",
-                logout: "🚪 Logout",
-                back: "← Back",
-                refresh: "⟳ Refresh",
-                page_title: "💳 TM Pay",
-                total_balance: "Total balance",
-                wallet_id: "Wallet ID:",
-                tab_transfer: "Transfer",
-                tab_international: "International",
-                tab_history: "History",
-                tab_cards: "Cards",
-                tab_receive: "Receive",
-                currency: "Currency",
-                recipient: "Recipient",
-                amount: "Amount",
-                description: "Description",
-                send: "Send",
-                send_international: "Send international",
-                country: "Country",
-                bank: "Bank",
-                account_number: "Account number",
-                no_transactions: "No transactions",
-                add_card: "+ Add card",
-                card_number: "Card number",
-                card_expiry: "Expiry date",
-                card_cvv: "CVV",
-                card_holder: "Card holder",
-                transfer_success: "Transfer successful!",
-                transfer_error: "Transfer failed.",
-                insufficient: "Insufficient balance.",
-                invalid_recipient: "Invalid recipient data.",
-                invalid_amount: "Invalid amount.",
-                receive_qr: "QR code for receiving payment",
-                copy_address: "Copy",
-                filter_type: "Type:",
-                all: "All",
-                filter_credit: "Income",
-                filter_debit: "Expense",
-                filter_transfer: "Transfers",
-                filter_international: "International"
-            }
-        };
-
-        // ============================================================
-        // ЯЗЫК ПО УМОЛЧАНИЮ: TM
-        // ============================================================
-        let currentLang = localStorage.getItem('sphere_lang') || 'tm';
-        if (!translations[currentLang]) currentLang = 'tm';
-
-        function setLanguage(lang) {
-            if (!translations[lang]) return;
-            currentLang = lang;
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[lang][key]) {
-                    if (el.tagName === 'INPUT' && el.getAttribute('placeholder')) {
-                        el.placeholder = translations[lang][key];
-                    } else {
-                        el.textContent = translations[lang][key];
-                    }
+        // Инициализация графических эффектов фона
+        function initVisualEffects() {
+            const particlesContainer = document.getElementById("particles");
+            if (particlesContainer) {
+                particlesContainer.innerHTML = "";
+                const colors = ['#00d4ff', '#00ffa3', '#1f6bff', '#ffffff'];
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement("div");
+                    particle.className = "particle";
+                    const size = Math.random() * 2.2 + 1.0; 
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.width = size + "px";
+                    particle.style.height = size + "px";
+                    particle.style.backgroundColor = color;
+                    particle.style.boxShadow = `0 0 ${size * 3}px ${color}`;
+                    particle.style.left = (Math.random() * 92 + 4) + "%";
+                    particle.style.top = "0px";
+                    particle.style.animationDuration = (10 + Math.random() * 12) + "s";
+                    particle.style.animationDelay = (Math.random() * -20) + "s";
+                    particlesContainer.appendChild(particle);
                 }
-            });
-
-            const langBtn = document.getElementById('langBtn');
-            if (langBtn) {
-                langBtn.textContent = lang === 'tm' ? 'TM' : lang.toUpperCase();
             }
 
-            localStorage.setItem('sphere_lang', lang);
-            updateUI();
-        }
-
-        function updateUI() {
-            document.querySelectorAll('.pay-tabs button').forEach(btn => {
-                const key = btn.dataset.i18n;
-                if (translations[currentLang][key]) btn.textContent = translations[currentLang][key];
-            });
-            renderWallets();
-            renderTransactions();
-            renderCards();
-            updateQR();
-        }
-
-        // КЛИК КНОПКИ ПЕРЕВОДА: TM -> RU -> EN -> TM
-        document.getElementById('langBtn').addEventListener('click', function() {
-            const cycle = ['tm', 'ru', 'en'];
-            let idx = cycle.indexOf(currentLang);
-            idx = (idx + 1) % cycle.length;
-            setLanguage(cycle[idx]);
-        });
-
-        // ============================================================
-        // АВТОРИЗАЦИЯ И НАВИГАЦИЯ
-        // ============================================================
-        const token = localStorage.getItem('token');
-        if (!token) window.location.href = 'login.html';
-
-        let user = {};
-        try {
-            user = JSON.parse(localStorage.getItem('user') || '{}');
-        } catch(e) {
-            user = {};
-        }
-
-        document.getElementById('username').textContent = user.username || 'User';
-
-        // НАДЕЖНЫЙ ПЕРЕХОД ПО КНОПКЕ "НАЗАД"
-        const backLink = document.getElementById('backLink');
-        if (user && user.role === 'admin') {
-            backLink.href = 'admin.html';
-        } else {
-            backLink.href = 'user-dashboard.html';
-        }
-
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            window.location.href = 'login.html';
-        });
-
-        // ============================================================
-        // ДАННЫЕ (localStorage)
-        // ============================================================
-        let wallets = [];
-        let transactions = [];
-        let cards = [];
-        let balanceHistory = [];
-        let chart = null;
-
-        const WALLETS_KEY = 'tm_pay_wallets';
-        const TRANSACTIONS_KEY = 'tm_pay_transactions';
-        const CARDS_KEY = 'tm_pay_cards';
-
-        function loadData() {
-            const storedWallets = localStorage.getItem(WALLETS_KEY);
-            if (storedWallets) {
-                try { wallets = JSON.parse(storedWallets); } catch(e) { wallets = []; }
-            }
-            if (!wallets || wallets.length === 0) {
-                wallets = [
-                    { currency: 'TMT', balance: 12500.75 },
-                    { currency: 'USD', balance: 500.50 },
-                    { currency: 'EUR', balance: 320.00 },
-                    { currency: 'RUB', balance: 15000.00 }
-                ];
-                saveWallets();
-            }
-
-            const storedTx = localStorage.getItem(TRANSACTIONS_KEY);
-            if (storedTx) {
-                try { transactions = JSON.parse(storedTx); } catch(e) { transactions = []; }
-            }
-            if (!transactions || transactions.length === 0) {
-                transactions = [
-                    { id: 'tx1', type: 'transfer', from: 'TMT', to: 'USD', amount: 200, description: 'Aýlyk geçiriş', date: new Date(Date.now() - 3600000 * 2).toISOString(), status: 'completed' },
-                    { id: 'tx2', type: 'debit', from: 'TMT', to: 'external', amount: 150, description: 'Haryt satyn almak', date: new Date(Date.now() - 3600000 * 5).toISOString(), status: 'completed' },
-                    { id: 'tx3', type: 'credit', from: 'external', to: 'TMT', amount: 300, description: 'Aýlyk girdeji', date: new Date(Date.now() - 3600000 * 24).toISOString(), status: 'completed' }
-                ];
-                saveTransactions();
-            }
-
-            const storedCards = localStorage.getItem(CARDS_KEY);
-            if (storedCards) {
-                try { cards = JSON.parse(storedCards); } catch(e) { cards = []; }
-            }
-            if (!cards || cards.length === 0) {
-                cards = [
-                    { id: 'c1', type: 'Visa', number: '**** 1234', expiry: '12/28', holder: user.username || 'User' },
-                    { id: 'c2', type: 'Mastercard', number: '**** 5678', expiry: '06/27', holder: user.username || 'User' }
-                ];
-                saveCards();
-            }
-
-            generateBalanceHistory();
-        }
-
-        function saveWallets() { localStorage.setItem(WALLETS_KEY, JSON.stringify(wallets)); }
-        function saveTransactions() { localStorage.setItem(TRANSACTIONS_KEY, JSON.stringify(transactions)); }
-        function saveCards() { localStorage.setItem(CARDS_KEY, JSON.stringify(cards)); }
-
-        function generateBalanceHistory() {
-            balanceHistory = [];
-            const now = Date.now();
-            let total = getTotalBalance();
-            for (let i = 6; i >= 0; i--) {
-                const date = new Date(now - i * 24 * 3600000);
-                const variation = (Math.random() - 0.5) * 200;
-                balanceHistory.push({ date: date.toISOString(), value: Math.max(0, total + variation) });
-            }
-        }
-
-        function getTotalBalance() {
-            const rates = { TMT: 1, USD: 3.5, EUR: 3.8, RUB: 0.04 };
-            return wallets.reduce((sum, w) => sum + (w.balance * (rates[w.currency] || 1)), 0);
-        }
-
-        function updateTotalBalance() {
-            const total = getTotalBalance();
-            document.getElementById('totalBalance').textContent = total.toFixed(2);
-            renderChart();
-        }
-
-        // ============================================================
-        // ГРАФИК
-        // ============================================================
-        function renderChart() {
-            const ctx = document.getElementById('balanceChart').getContext('2d');
-            if (chart) chart.destroy();
-            const labels = balanceHistory.map(d => new Date(d.date).toLocaleDateString());
-            const data = balanceHistory.map(d => d.value);
-            chart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Balans (TMT)',
-                        data: data,
-                        borderColor: '#00d4ff',
-                        backgroundColor: 'rgba(0,212,255,0.1)',
-                        fill: true,
-                        tension: 0.3,
-                        pointRadius: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { labels: { color: '#bdd0df' } } },
-                    scales: {
-                        x: { ticks: { color: '#9fb5c8', maxTicksLimit: 7 } },
-                        y: { ticks: { color: '#9fb5c8' } }
-                    }
+            const canvas = document.getElementById('bgCanvas');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                let w, h;
+                function resize() {
+                    w = canvas.width = window.innerWidth;
+                    h = canvas.height = window.innerHeight;
                 }
-            });
-        }
+                resize();
+                window.addEventListener('resize', resize);
 
-        function renderWallets() {
-            const container = document.getElementById('walletGrid');
-            container.innerHTML = wallets.map(w => `
-                <div class="wallet-item">
-                    <div class="currency">${w.currency}</div>
-                    <div class="amount">${w.balance.toFixed(2)}</div>
-                </div>
-            `).join('');
-        }
+                const points = Array.from({ length: 50 }, () => ({
+                    x: Math.random() * (w - 40) + 20,
+                    y: Math.random() * h,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    radius: Math.random() * 1.2 + 0.8
+                }));
 
-        function renderTransactions() {
-            const filter = document.getElementById('txFilter').value;
-            let filtered = transactions;
-            if (filter !== 'all') {
-                filtered = transactions.filter(tx => tx.type === filter);
-            }
-            const list = document.getElementById('transactionsList');
-            const empty = document.getElementById('emptyTx');
-            if (!filtered.length) {
-                list.innerHTML = '';
-                empty.style.display = 'block';
-                return;
-            }
-            empty.style.display = 'none';
-            const sorted = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
-            list.innerHTML = sorted.map(tx => {
-                const isCredit = tx.type === 'credit';
-                const sign = isCredit ? '+' : '-';
-                const amountClass = isCredit ? 'positive' : 'negative';
-                return `
-                    <li>
-                        <span>
-                            <span class="tx-type ${tx.type}">${tx.type}</span>
-                            <span class="tx-description">${tx.description || ''}</span>
-                        </span>
-                        <span>
-                            <span class="tx-amount ${amountClass}">${sign} ${Math.abs(tx.amount).toFixed(2)} ${tx.from}</span>
-                            <span class="tx-date">${new Date(tx.date).toLocaleDateString()}</span>
-                        </span>
-                    </li>
-                `;
-            }).join('');
-        }
+                function drawCanvas() {
+                    ctx.clearRect(0, 0, w, h);
+                    for (let i = 0; i < points.length; i++) {
+                        let p = points[i];
+                        p.x += p.vx; p.y += p.vy;
+                        if (p.x < 20 || p.x > w - 20) p.vx *= -1;
+                        if (p.y < 0 || p.y > h) p.vy *= -1;
 
-        document.getElementById('txFilter').addEventListener('change', renderTransactions);
-
-        function renderCards() {
-            const container = document.getElementById('cardsContainer');
-            if (!cards.length) {
-                container.innerHTML = '<div class="empty-state"><div class="icon">💳</div><p data-i18n="no_cards">Kartlar ýok</p></div>';
-                return;
-            }
-            container.innerHTML = cards.map(c => `
-                <div style="background:rgba(255,255,255,.035); border:1px solid var(--glass-border); border-radius:16px; padding:20px;">
-                    <div style="font-size:12px; color:#00d4ff;">${c.type}</div>
-                    <div style="font-size:20px; font-weight:600; margin:8px 0;">${c.number}</div>
-                    <div style="font-size:14px; color:#bdd0df;">${c.holder}</div>
-                    <div style="font-size:12px; color:#9fb5c8;">Işleýän çenli: ${c.expiry}</div>
-                </div>
-            `).join('');
-        }
-
-        function updateQR() {
-            const walletId = document.getElementById('walletId').textContent;
-            const qrData = `TM Pay:${walletId}`;
-            document.getElementById('qrDataText').textContent = qrData;
-            document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(qrData)}`;
-        }
-
-        document.getElementById('copyQrDataBtn').addEventListener('click', function() {
-            navigator.clipboard.writeText(document.getElementById('qrDataText').textContent).then(() => {
-                showToast('Kopiýalandy!', 'success');
-            });
-        });
-
-        // ПЕРЕВОДЫ И ФОРМЫ
-        document.getElementById('transferForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const currency = document.getElementById('transferCurrency').value;
-            const recipient = document.getElementById('recipientId').value.trim();
-            const amount = parseFloat(document.getElementById('transferAmount').value);
-            const desc = document.getElementById('transferDesc').value.trim();
-
-            const wallet = wallets.find(w => w.currency === currency);
-            if (!wallet || wallet.balance < amount) {
-                showToast(translations[currentLang].insufficient, 'error');
-                return;
-            }
-            wallet.balance -= amount;
-            saveWallets();
-
-            transactions.push({
-                id: 'tx' + Date.now(),
-                type: 'transfer',
-                from: currency,
-                to: recipient,
-                amount: amount,
-                description: desc || 'Içki geçiriş',
-                date: new Date().toISOString()
-            });
-            saveTransactions();
-
-            updateTotalBalance();
-            renderWallets();
-            renderTransactions();
-            showToast(translations[currentLang].transfer_success, 'success');
-            this.reset();
-        });
-
-        document.getElementById('addCardBtn').addEventListener('click', function() {
-            cards.push({
-                id: 'c' + Date.now(),
-                type: 'Visa',
-                number: '**** ' + Math.floor(1000 + Math.random() * 9000),
-                expiry: '12/' + (new Date().getFullYear() + 3).toString().slice(-2),
-                holder: user.username || 'User'
-            });
-            saveCards();
-            renderCards();
-            showToast('Täze kart goşuldy!', 'success');
-        });
-
-        document.getElementById('refreshBtn').addEventListener('click', function() {
-            renderWallets();
-            renderTransactions();
-            renderCards();
-            updateTotalBalance();
-            updateQR();
-            showToast('Täzelendi!', 'success');
-        });
-
-        function showToast(message, type = 'info') {
-            const existing = document.querySelector('.toast');
-            if (existing) existing.remove();
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transition = 'opacity 0.5s';
-                setTimeout(() => toast.remove(), 500);
-            }, 3000);
-        }
-
-        // ВКЛАДКИ
-        document.querySelectorAll('.pay-tabs button').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.pay-tabs button').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                const tab = this.dataset.tab;
-                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-                document.getElementById('tab-' + tab).classList.add('active');
-                if (tab === 'history') renderTransactions();
-                if (tab === 'cards') renderCards();
-                if (tab === 'receive') updateQR();
-            });
-        });
-
-        // ============================================================
-        // ИНТЕРАКТИВНЫЕ ЧАСТИЦЫ И НЕЙРОСЕТЕВОЙ CANVAS
-        // ============================================================
-        const particlesContainer = document.getElementById("particles");
-        if (particlesContainer) {
-            particlesContainer.innerHTML = "";
-            const colors = ['#00d4ff', '#00ffa3', '#1f6bff', '#ffffff'];
-            for (let i = 0; i < 60; i++) {
-                const particle = document.createElement("div");
-                particle.className = "particle";
-                const size = Math.random() * 2.2 + 1.0;
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.width = size + "px";
-                particle.style.height = size + "px";
-                particle.style.backgroundColor = color;
-                particle.style.boxShadow = `0 0 ${size * 3}px ${color}`;
-                particle.style.left = (Math.random() * 92 + 4) + "%";
-                particle.style.animationDuration = (10 + Math.random() * 12) + "s";
-                particle.style.animationDelay = (Math.random() * -20) + "s";
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        const canvas = document.getElementById('bgCanvas');
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            let w, h;
-            function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
-            resize();
-            window.addEventListener('resize', resize);
-
-            const points = Array.from({ length: 50 }, () => ({
-                x: Math.random() * w,
-                y: Math.random() * h,
-                vx: (Math.random() - 0.5) * 0.6,
-                vy: (Math.random() - 0.5) * 0.6,
-                radius: Math.random() * 1.2 + 0.8
-            }));
-
-            function drawCanvas() {
-                ctx.clearRect(0, 0, w, h);
-                for (let i = 0; i < points.length; i++) {
-                    let p = points[i];
-                    p.x += p.vx; p.y += p.vy;
-                    if (p.x < 0 || p.x > w) p.vx *= -1;
-                    if (p.y < 0 || p.y > h) p.vy *= -1;
-
-                    for (let j = i + 1; j < points.length; j++) {
-                        let p2 = points[j];
-                        let dx = p.x - p2.x, dy = p.y - p2.y;
-                        let dist = Math.sqrt(dx * dx + dy * dy);
-                        if (dist < 180) {
-                            ctx.beginPath();
-                            ctx.moveTo(p.x, p.y);
-                            ctx.lineTo(p2.x, p2.y);
-                            ctx.strokeStyle = `rgba(0, 212, 255, ${0.18 * (1 - dist / 180)})`;
-                            ctx.lineWidth = 1;
-                            ctx.stroke();
+                        for (let j = i + 1; j < points.length; j++) {
+                            let p2 = points[j];
+                            let dx = p.x - p2.x, dy = p.y - p2.y;
+                            let dist = Math.sqrt(dx * dx + dy * dy);
+                            if (dist < 170) {
+                                ctx.beginPath();
+                                ctx.moveTo(p.x, p.y);
+                                ctx.lineTo(p2.x, p2.y);
+                                ctx.strokeStyle = `rgba(0, 212, 255, ${0.15 * (1 - dist / 170)})`;
+                                ctx.lineWidth = 1;
+                                ctx.stroke();
+                            }
                         }
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                        ctx.fillStyle = 'rgba(0, 255, 163, 0.8)';
+                        ctx.fill();
                     }
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = 'rgba(0, 255, 163, 0.85)';
-                    ctx.fill();
+                    requestAnimationFrame(drawCanvas);
                 }
-                requestAnimationFrame(drawCanvas);
+                drawCanvas();
             }
-            drawCanvas();
         }
 
-        // ============================================================
-        // ИНИЦИАЛИЗАЦИЯ
-        // ============================================================
-        loadData();
-        setLanguage(currentLang);
-        updateTotalBalance();
-        renderWallets();
-        renderTransactions();
-        renderCards();
-        updateQR();
+        /* ==========================================================================
+           РЕЕСТР ПОЛЬЗОВАТЕЛЕЙ И ФИКСИРОВАННЫХ КОНТАКТОВ
+           ========================================================================== */
+        const globalUsersRegistry = [
+            // ИИ Помощник strictly во вкладке 'assistant'
+            { id: 'ai_assistant', name: 'Sfera AI Kömekçi', lastMsg: 'Salam! Men Sfera AI Kömekçi. Size nähili kömek edip bilerin?', time: 'Häzir', unread: 0, online: true, type: 'assistant', isAI: true },
+            
+            // Основной жестко зашитый контакт команды разработки во вкладке 'chats'
+            { id: 'devs', name: 'Разработчики Sfera', lastMsg: 'Täzeleşdirme taýýar! Торговый модуль и AI подгружены.', time: 'Duş', unread: 1, isGroup: true, type: 'chats', avatarIcon: '💻' },
+            
+            { id: '1', name: 'Сердар Аннаев', lastMsg: 'Salam, nähili ýagdaýlar?', time: '10:42', unread: 2, online: true, type: 'chats' },
+            { id: '2', name: 'Мая Гараева', lastMsg: 'Resminamalar iberildi', time: 'Düýn', unread: 0, online: false, type: 'chats' }
+        ];
+
+        let activeTab = 'chats';
+        let activeDialogId = 'devs'; // Выбор чата разработчиков по умолчанию
+
+        const emojis = ['😀','😃','😄','😁','😆','😅','😂','🤣','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😜','🤪','😎','🤩','🥳','😏','👍','🙌','❤️','🔥'];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initVisualEffects();
+
+            /* Yazyk (Language) logic - Default TM */
+            const langBtn = document.getElementById('langBtn');
+            const languages = ['tm', 'ru', 'en'];
+
+            let currentLang = localStorage.getItem('sphere_lang');
+            if (!currentLang || !languages.includes(currentLang)) {
+                currentLang = 'tm';
+                localStorage.setItem('sphere_lang', 'tm');
+            }
+
+            function applyLanguage(lang) {
+                currentLang = lang;
+                localStorage.setItem('sphere_lang', lang);
+                document.documentElement.lang = lang;
+
+                if (langBtn) langBtn.textContent = lang.toUpperCase();
+
+                if (typeof window.changeLanguage === 'function') {
+                    window.changeLanguage(lang);
+                } else if (typeof window.applyTranslations === 'function') {
+                    window.applyTranslations(lang);
+                }
+                window.dispatchEvent(new CustomEvent('sphereLanguageChanged', { detail: { lang } }));
+            }
+
+            if (langBtn) {
+                langBtn.addEventListener('click', () => {
+                    const currentIndex = languages.indexOf(currentLang);
+                    const nextIndex = (currentIndex + 1) % languages.length;
+                    applyLanguage(languages[nextIndex]);
+                });
+            }
+
+            applyLanguage(currentLang);
+
+            // Инициализация отображения диалогов
+            selectDialog('devs');
+            renderDialogs();
+            initEmojiPicker();
+
+            // Вкладки переключения
+            const tabsDropdown = document.getElementById('tabsDropdown');
+            const dropbtn = document.getElementById('dropbtn');
+            const dropdownContent = document.getElementById('dropdownContent');
+
+            dropbtn?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                tabsDropdown.classList.toggle('show');
+            });
+
+            document.addEventListener('click', () => tabsDropdown?.classList.remove('show'));
+
+            dropdownContent?.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    dropdownContent.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeTab = btn.getAttribute('data-tab');
+                    
+                    const labelSpan = document.getElementById('currentTabLabel');
+                    if (labelSpan) labelSpan.textContent = btn.textContent;
+                    tabsDropdown.classList.remove('show');
+
+                    if (activeTab === 'news') {
+                        document.getElementById('dialogsList').style.display = 'none';
+                        document.getElementById('newsFeed').style.display = 'block';
+                    } else if (activeTab === 'assistant') {
+                        document.getElementById('dialogsList').style.display = 'block';
+                        document.getElementById('newsFeed').style.display = 'none';
+                        selectDialog('ai_assistant');
+                        renderDialogs();
+                    } else {
+                        document.getElementById('dialogsList').style.display = 'block';
+                        document.getElementById('newsFeed').style.display = 'none';
+                        selectDialog('devs');
+                        renderDialogs();
+                    }
+                });
+            });
+
+            // Поиск по диалогам
+            document.getElementById('searchInput')?.addEventListener('input', (e) => {
+                renderDialogs(e.target.value.toLowerCase());
+            });
+
+            // Загрузка с ПК
+            document.getElementById('fileBtn')?.addEventListener('click', () => {
+                document.getElementById('fileInput').click();
+            });
+
+            // Скачать историю чата на ПК (Кнопка 📥)
+            document.getElementById('exportChatBtn')?.addEventListener('click', exportChatToPC);
+
+            // Модальное окно создания группы
+            document.getElementById('createGroupBtn')?.addEventListener('click', () => {
+                document.getElementById('groupModal').classList.add('active');
+            });
+
+            document.getElementById('cancelGroupBtn')?.addEventListener('click', () => {
+                document.getElementById('groupModal').classList.remove('active');
+            });
+
+            // Звонки
+            document.getElementById('audioCallBtn')?.addEventListener('click', () => openCallModal('📞 Аудио zaň...'));
+            document.getElementById('videoCallBtn')?.addEventListener('click', () => openCallModal('📹 Wideo zaň...'));
+            document.getElementById('endCallBtn')?.addEventListener('click', () => {
+                document.getElementById('callModal').classList.remove('active');
+            });
+
+            // Отправка текстовых сообщений
+            document.getElementById('sendBtn')?.addEventListener('click', sendMessage);
+            document.getElementById('messageInput')?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+        });
+
+        function renderDialogs(searchQuery = '') {
+            const listContainer = document.getElementById('dialogsList');
+            if (!listContainer) return;
+
+            const filtered = globalUsersRegistry.filter(user => {
+                const matchesTab = user.type === activeTab;
+                const matchesSearch = user.name.toLowerCase().includes(searchQuery) || user.lastMsg.toLowerCase().includes(searchQuery);
+                return matchesTab && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = '<div style="padding: 20px; text-align: center; opacity: 0.5;">Hiç zat tapylmady</div>';
+                return;
+            }
+
+            listContainer.innerHTML = filtered.map(user => `
+                <div class="dialog-item ${user.id === activeDialogId ? 'active' : ''}" onclick="selectDialog('${user.id}')">
+                    <div class="dialog-avatar ${user.isAI ? 'ai-avatar' : ''}">
+                        ${user.avatarIcon || (user.isAI ? '🤖' : user.name.charAt(0))}
+                        <div class="online-dot"></div>
+                    </div>
+                    <div class="dialog-info">
+                        <div class="name">${user.name} ${user.isAI ? '<span class="ai-badge">Kömekçi</span>' : ''}</div>
+                        <div class="last-msg">${user.lastMsg}</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                        <span class="dialog-time">${user.time}</span>
+                        ${user.unread > 0 ? `<span class="unread-badge">${user.unread}</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectDialog(id) {
+            activeDialogId = id;
+            const user = globalUsersRegistry.find(u => u.id === id);
+            if (!user) return;
+
+            document.getElementById('chatName').textContent = user.name;
+            document.getElementById('chatAvatar').textContent = user.avatarIcon || (user.isAI ? '🤖' : user.name.charAt(0));
+            document.getElementById('chatStatus').textContent = 'onlaýn';
+
+            const messagesBox = document.getElementById('chatMessages');
+            messagesBox.innerHTML = `
+                <div class="message received">
+                    <div>${user.lastMsg}</div>
+                    <div class="msg-time">${user.time}</div>
+                </div>
+            `;
+            renderDialogs();
+        }
+
+        /* ==========================================================================
+           ФУНКЦИОНАЛ ЗАГРУЗКИ С ПК И СКАЧИВАНИЯ НА ПК
+           ========================================================================== */
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const messagesBox = document.getElementById('chatMessages');
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileDataUrl = e.target.result;
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'message sent';
+                
+                msgDiv.innerHTML = `
+                    <div class="file-card">
+                        <span>📄 <strong>${file.name}</strong> (${(file.size / 1024).toFixed(1)} KB)</span>
+                        <button class="btn-download-file" onclick="downloadFileFromPC('${fileDataUrl}', '${file.name}')">Загрузить на ПК 💾</button>
+                    </div>
+                    <div class="msg-time">${time}</div>
+                `;
+                messagesBox.appendChild(msgDiv);
+                messagesBox.scrollTop = messagesBox.scrollHeight;
+            };
+
+            reader.readAsDataURL(file);
+            event.target.value = ''; // Сброс поля выбора файла
+        }
+
+        function downloadFileFromPC(dataUrl, fileName) {
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function exportChatToPC() {
+            const messages = document.querySelectorAll('.chat-messages .message');
+            if (messages.length === 0) return;
+
+            let exportText = `=== История чата: ${document.getElementById('chatName').textContent} ===\n\n`;
+            messages.forEach(msg => {
+                const time = msg.querySelector('.msg-time')?.textContent || '';
+                const text = msg.innerText.replace(time, '').trim();
+                const sender = msg.classList.contains('sent') ? 'Вы' : document.getElementById('chatName').textContent;
+                exportText += `[${time}] ${sender}:\n${text}\n\n`;
+            });
+
+            const blob = new Blob([exportText], { type: 'text/plain;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `Sfera_Chat_${activeDialogId}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            if (!text || !activeDialogId) return;
+
+            const messagesBox = document.getElementById('chatMessages');
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message sent';
+            msgDiv.innerHTML = `<div>${text}</div><div class="msg-time">${time}</div>`;
+            messagesBox.appendChild(msgDiv);
+
+            input.value = '';
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+
+            if (activeDialogId === 'ai_assistant') {
+                setTimeout(() => {
+                    const aiReply = document.createElement('div');
+                    aiReply.className = 'message received';
+                    aiReply.innerHTML = `<div>Sfera AI Kömekçi: Size kömek etmekden şatyn. Surawynyz kabul edildi!</div><div class="msg-time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>`;
+                    messagesBox.appendChild(aiReply);
+                    messagesBox.scrollTop = messagesBox.scrollHeight;
+                }, 800);
+            }
+        }
+
+        function initEmojiPicker() {
+            const grid = document.getElementById('emojiGrid');
+            const picker = document.getElementById('emojiPicker');
+            const btn = document.getElementById('emojiBtn');
+
+            grid.innerHTML = emojis.map(e => `<span>${e}</span>`).join('');
+            grid.querySelectorAll('span').forEach(el => {
+                el.addEventListener('click', () => {
+                    const input = document.getElementById('messageInput');
+                    input.value += el.textContent;
+                    picker.classList.remove('active');
+                });
+            });
+
+            btn?.addEventListener('click', (e) => {
+                e.stopPropagation();
+                picker.classList.toggle('active');
+            });
+
+            document.addEventListener('click', () => picker?.classList.remove('active'));
+        }
+
+        function openCallModal(statusText) {
+            if (!activeDialogId) return;
+            const user = globalUsersRegistry.find(u => u.id === activeDialogId);
+            if (user) {
+                document.getElementById('callTargetName').textContent = user.name;
+                document.getElementById('callStatusText').textContent = statusText;
+                document.getElementById('callModal').classList.add('active');
+            }
+        }
     </script>
 </body>
 </html>
